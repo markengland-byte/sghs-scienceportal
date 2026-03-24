@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High School Biology · Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--green:#1a7a4a;--cream:#f8f6f1;--border:#dde3ef;--muted:#5e6e8a;--text:#1c2333}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text)}
+
+/* top bar */
+.topbar{background:var(--navy);padding:0 40px;height:58px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.82rem;display:flex;align-items:center;gap:6px;transition:color .2s}
+.tb-back:hover{color:#fff}
+.tb-sep{color:rgba(255,255,255,.2);font-size:.9rem}
+.tb-course{font-size:.82rem;color:rgba(255,255,255,.8);font-weight:600}
+.tb-badge{margin-left:auto;background:rgba(26,122,74,.25);border:1px solid rgba(74,222,128,.2);border-radius:20px;padding:4px 14px;font-size:.72rem;color:#4ade80;font-weight:600}
+
+/* hero */
+.hero{background:linear-gradient(135deg,#0d3a22,#1a7a4a 40%,#0b8f8c);padding:56px 56px 48px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-60px;right:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.07),transparent 70%)}
+.h-crumb{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:12px}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:560px;line-height:1.7;margin-bottom:28px}
+.h-chips{display:flex;gap:10px;flex-wrap:wrap}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:.75rem;color:rgba(255,255,255,.82)}
+
+/* progress bar strip */
+.prog-strip{background:rgba(255,255,255,.06);padding:18px 56px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.ps-label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.5px}
+.ps-bar{flex:1;min-width:120px;max-width:260px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.ps-fill{height:100%;background:var(--green);border-radius:3px;transition:width .6s}
+.ps-stat{font-size:.82rem;color:var(--muted)}
+.ps-stat strong{color:var(--text)}
+
+/* main content */
+.main{max-width:900px;margin:0 auto;padding:40px 40px 80px}
+
+.unit-section{margin-bottom:48px}
+.unit-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border)}
+.unit-num{width:36px;height:36px;border-radius:9px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:.75rem;font-weight:600;color:var(--teal-light);flex-shrink:0}
+.unit-title{font-family:"Playfair Display",serif;font-size:1.25rem;font-weight:700;color:var(--navy)}
+.unit-sol{font-size:.72rem;font-weight:700;letter-spacing:1px;background:rgba(11,143,140,.1);color:var(--teal);border-radius:5px;padding:3px 10px;margin-left:auto}
+
+/* module cards */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.mod-card{border-radius:14px;border:1px solid var(--border);background:#fff;overflow:hidden;transition:box-shadow .2s,transform .2s;text-decoration:none;display:block;position:relative}
+.mod-card:not(.mod-soon):hover{box-shadow:0 8px 30px rgba(0,0,0,.1);transform:translateY(-2px)}
+.mod-card.mod-soon{cursor:default;opacity:.65}
+.mc-top{height:6px}
+.mc-live .mc-top{background:linear-gradient(90deg,var(--green),var(--teal))}
+.mc-soon .mc-top{background:var(--border)}
+.mc-body{padding:20px}
+.mc-icon{font-size:1.6rem;margin-bottom:10px;display:block}
+.mc-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.3}
+.mc-meta{font-size:.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.mc-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.mc-stat{font-size:.73rem;font-family:"JetBrains Mono",monospace;color:var(--muted);background:var(--cream);border-radius:5px;padding:3px 9px}
+.mc-cta{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)}
+.mc-cta-text{font-size:.82rem;font-weight:700;color:var(--navy)}
+.mc-cta-arrow{width:28px;height:28px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
+.mc-badge{font-size:.67rem;font-weight:700;letter-spacing:.5px;border-radius:4px;padding:2px 8px}
+.badge-live{background:rgba(26,122,74,.1);color:var(--green)}
+.badge-soon{background:var(--cream);color:var(--muted)}
+
+/* coming soon overlay */
+.soon-overlay{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:.67rem;font-weight:700;color:var(--muted);letter-spacing:.5px}
+
+/* standards table */
+.sol-table{width:100%;border-collapse:collapse;font-size:.85rem;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.sol-table th{background:var(--navy);color:#fff;padding:11px 16px;text-align:left;font-size:.74rem;font-weight:600;letter-spacing:.5px}
+.sol-table td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+.sol-table tr:nth-child(even) td{background:#f7f9fd}
+.sol-table tr:last-child td{border-bottom:none}
+
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border)}
+.sh2{font-family:"Playfair Display",serif;font-size:1.35rem;font-weight:700;color:var(--navy);margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="tb-back" href="../index.html">← Portal</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-course">High School Biology</span>
+  <span class="tb-badge">Virginia SOL</span>
+</header>
+
+<div class="hero">
+  <div class="h-crumb">Southern Gap High School · Mr. England</div>
+  <div class="h-title">High School Biology</div>
+  <div class="h-desc">Virginia SOL-aligned interactive modules covering all major biology standards. Each module includes OpenStax-based content, flip cards, written checkpoints, and data interpretation quizzes.</div>
+  <div class="h-chips"><div class="h-chip">🌿 Virginia Biology SOL</div><div class="h-chip">📖 OpenStax Biology 2e</div><div class="h-chip">📊 Data Interpretation Included</div><div class="h-chip">📅 SOL: May 2026</div></div>
+</div>
+
+<div class="prog-strip">
+  <span class="ps-label">Course Progress</span>
+  <div class="ps-bar"><div class="ps-fill" style="width:20%"></div></div>
+  <span class="ps-stat"><strong>1</strong> of 5 units active</span>
+  <span class="ps-stat" style="margin-left:auto;font-size:.75rem;color:var(--muted)">More units added regularly</span>
+</div>
+
+<main class="main">
+
+  <div class="unit-section">
+    <div class="unit-header">
+      <div class="unit-num">U1</div>
+      <div class="unit-title">Energy in Living Systems</div>
+      <span class="unit-sol">BIO.2e</span>
+    </div>
+    <div class="module-grid">
+      <a class="mod-card mc-live" href="ps-cr.html">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🌿</span>
+          <div class="mc-title">Photosynthesis &amp; Cellular Respiration</div>
+          <div class="mc-meta">Light reactions, Calvin cycle, glycolysis, Krebs cycle, ETC, and fermentation — the complete energy story.</div>
+          <div class="mc-stats"><span class="mc-stat">11 lessons</span><span class="mc-stat">14 graphs</span><span class="mc-stat">95+ Qs</span></div>
+          <div class="mc-cta"><span class="mc-cta-text mc-badge badge-live">● Live Now</span><div class="mc-cta-arrow">→</div></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="unit-section">
+    <div class="unit-header">
+      <div class="unit-num">U2</div>
+      <div class="unit-title">Cell Biology</div>
+      <span class="unit-sol">BIO.2a–d</span>
+    </div>
+    <div class="module-grid">
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🔬</span>
+          <div class="mc-title">Cell Structure &amp; Function</div>
+          <div class="mc-meta">Prokaryotic vs. eukaryotic cells, organelle functions, cell membrane, transport.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🌊</span>
+          <div class="mc-title">Passive &amp; Active Transport</div>
+          <div class="mc-meta">Diffusion, osmosis, facilitated diffusion, sodium-potassium pump, endocytosis.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit-section">
+    <div class="unit-header">
+      <div class="unit-num">U3</div>
+      <div class="unit-title">Genetics &amp; Heredity</div>
+      <span class="unit-sol">BIO.3</span>
+    </div>
+    <div class="module-grid">
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🧬</span>
+          <div class="mc-title">DNA Structure &amp; Replication</div>
+          <div class="mc-meta">Double helix, base pairing, semi-conservative replication, DNA polymerase.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🔁</span>
+          <div class="mc-title">Mendelian Genetics &amp; Heredity</div>
+          <div class="mc-meta">Dominant/recessive, Punnett squares, monohybrid/dihybrid crosses, incomplete dominance.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🧪</span>
+          <div class="mc-title">Gene Expression — Protein Synthesis</div>
+          <div class="mc-meta">Transcription, translation, codons, tRNA, ribosomes, mutations.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit-section">
+    <div class="unit-header">
+      <div class="unit-num">U4</div>
+      <div class="unit-title">Evolution</div>
+      <span class="unit-sol">BIO.4</span>
+    </div>
+    <div class="module-grid">
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🦕</span>
+          <div class="mc-title">Natural Selection &amp; Evolution</div>
+          <div class="mc-meta">Darwin's theory, evidence for evolution, adaptation, speciation, phylogenetics.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unit-section">
+    <div class="unit-header">
+      <div class="unit-num">U5</div>
+      <div class="unit-title">Ecology</div>
+      <span class="unit-sol">BIO.5</span>
+    </div>
+    <div class="module-grid">
+      <div class="mod-card mod-soon mc-soon">
+        <div class="mc-top"></div>
+        <div class="mc-body">
+          <span class="mc-icon">🌍</span>
+          <div class="mc-title">Ecosystems &amp; Ecology</div>
+          <div class="mc-meta">Biotic/abiotic factors, food webs, energy pyramids, carbon/nitrogen cycles, biomes.</div>
+          <div class="mc-cta"><span class="mc-badge badge-soon">Coming Soon</span></div>
+        </div>
+        <div class="soon-overlay">COMING SOON</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px">
+    <div class="eyebrow">Virginia SOL Standards Covered</div>
+    <div class="sh2">Biology Standards by Unit</div>
+    <table class="sol-table">
+      <tr><th>Standard</th><th>Description</th><th>Unit</th><th>Status</th></tr>
+      <tr><td><strong>BIO.2e</strong></td><td>Photosynthesis and cellular respiration as energy transformation</td><td>Unit 1</td><td style="color:var(--green);font-weight:700">✅ Live</td></tr>
+      <tr><td><strong>BIO.2a–d</strong></td><td>Cell structure, function, and membrane transport</td><td>Unit 2</td><td style="color:var(--muted)">Coming Soon</td></tr>
+      <tr><td><strong>BIO.3</strong></td><td>Genetics, heredity, and gene expression</td><td>Unit 3</td><td style="color:var(--muted)">Coming Soon</td></tr>
+      <tr><td><strong>BIO.4</strong></td><td>Evolution and natural selection</td><td>Unit 4</td><td style="color:var(--muted)">Coming Soon</td></tr>
+      <tr><td><strong>BIO.5</strong></td><td>Ecological relationships and energy flow</td><td>Unit 5</td><td style="color:var(--muted)">Coming Soon</td></tr>
+    </table>
+  </div>
+
+</main>
+
+</body>
+</html>
