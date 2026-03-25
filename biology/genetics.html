@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology · Genetics & Heredity | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--green);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(26,122,74,.2);border-right-color:var(--green);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--green);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-men{background:linear-gradient(135deg,#1a2600,#3a5c00);}
+.hero-chr{background:linear-gradient(135deg,#001a35,#0b4a7a);}
+.hero-dis{background:linear-gradient(135deg,#200030,#5a0080);}
+.hero-bio{background:linear-gradient(135deg,#002020,#005050);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--green);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4ade80;margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:#4ade80;line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--green-pale);border:1px solid var(--green);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.punnett{display:inline-grid;grid-template-columns:auto auto auto;gap:2px;background:var(--navy);padding:3px;border-radius:8px;margin:16px auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+.pcell{width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.ph{background:var(--navy);color:#4ade80;}
+.pp{background:#fff;color:var(--navy);}
+.pp.dom{background:var(--green-pale);}
+.pp.het{background:var(--amber-pale);}
+.pp.rec{background:var(--red-pale);}
+.diagram{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px;margin:20px 0;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.d-cap{font-size:.77rem;color:var(--muted);font-style:italic;margin-top:12px;line-height:1.5;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:#4ade80;}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.cc{border-radius:12px;padding:18px;}
+.cc h4{font-size:.92rem;font-weight:700;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid currentColor;}
+.cc ul{list-style:none;}
+.cc li{padding:5px 0 5px 16px;position:relative;font-size:.86rem;line-height:1.55;border-bottom:1px solid rgba(0,0,0,.05);}
+.cc li:last-child{border-bottom:none;}
+.cc li::before{content:"→";position:absolute;left:0;font-weight:700;}
+.c-green{background:var(--green-pale);color:#0a3a1a;}
+.c-green h4,.c-green li::before{color:var(--green);}
+.c-amber{background:var(--amber-pale);color:#4a2800;}
+.c-amber h4,.c-amber li::before{color:var(--amber);}
+.c-navy{background:#eef1f8;color:var(--navy);}
+.c-navy h4{color:var(--navy);}
+.c-navy li::before{color:var(--navy);}
+.c-purple{background:var(--purple-pale);color:#2a0a4a;}
+.c-purple h4,.c-purple li::before{color:var(--purple);}
+.c-teal{background:var(--teal-pale);color:#0a3a3a;}
+.c-teal h4,.c-teal li::before{color:var(--teal);}
+.c-red{background:var(--red-pale);color:#3a0a0a;}
+.c-red h4,.c-red li::before{color:var(--red);}
+.checkpoint-box{background:#fff;border:2px solid var(--green);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--green);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--green);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--green);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#0f5a32;}
+.cp-done{display:none;padding:10px 18px;background:var(--green-pale);border:1px solid var(--green);border-radius:8px;font-size:.85rem;color:var(--green);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--green-pale);border:2px solid var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--green);background:var(--green-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--green-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:#4ade80;}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--green);background:transparent;color:var(--green);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--green);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<!-- NAME MODAL -->
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">🧬</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Genetics &amp; Heredity</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#1a7a4a'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:#1a7a4a;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../biology/index.html">← Biology</a>
+  <div class="tb-logo">🧬</div>
+  <div><div class="tb-name">Southern Gap High School · Biology</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Genetics &amp; Heredity</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview &amp; Standards</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Mendelian Genetics</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Mendel &amp; Laws of Inheritance</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Patterns of Dominance</div></a>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Punnett Squares &amp; Monohybrid Crosses</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Dihybrid Crosses &amp; Independent Assortment</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Chromosomal Genetics</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Chromosomal Basis of Inheritance</div></a>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Lesson 6 · Sex-Linked Traits</div></a>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">Lesson 7 · Non-Mendelian Inheritance</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Applied Genetics</div>
+  <a class="sb-link" onclick="goTo(8)" href="#"><div class="sb-num">8</div><div class="sb-txt">Lesson 8 · Pedigree Analysis</div></a>
+  <a class="sb-link" onclick="goTo(9)" href="#"><div class="sb-num">9</div><div class="sb-txt">Lesson 9 · Human Genetic Disorders</div></a>
+  <a class="sb-link" onclick="goTo(10)" href="#"><div class="sb-num">10</div><div class="sb-txt">Lesson 10 · Biotechnology &amp; Genetic Engineering</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(11)" href="#"><div class="sb-num">11</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · Chapters 12–13 &amp; 17 · <span>Unit Overview</span></div>
+    <div class="h-title">Genetics &amp; Heredity</div>
+    <div class="h-desc">From Mendel's pea plants to CRISPR gene editing — genetics explains how traits are inherited, why siblings differ, and how we can now edit the code of life itself.</div>
+    <div class="h-meta"><div class="h-chip">📚 11 Lessons</div><div class="h-chip">🌿 OpenStax Biology 2e Ch. 12–13 &amp; 17</div><div class="h-chip">📊 Data Interpretation Included</div><div class="h-chip">✍️ Checkpoints Required</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Unit Learning Objectives</div><ul class="obj-list">
+      <li>Describe Mendel's experimental design and state the Law of Segregation and Law of Independent Assortment.</li>
+      <li>Distinguish complete dominance, incomplete dominance, codominance, and multiple alleles.</li>
+      <li>Solve monohybrid and dihybrid Punnett square crosses and calculate phenotypic ratios.</li>
+      <li>Explain how chromosomes carry genes and how meiosis ensures proper segregation.</li>
+      <li>Describe sex determination and solve sex-linked trait crosses.</li>
+      <li>Explain pleiotropy, epistasis, polygenic inheritance, and environmental effects on phenotype.</li>
+      <li>Read and interpret pedigree charts for autosomal and X-linked patterns.</li>
+      <li>Identify the chromosomal basis of common human genetic disorders.</li>
+      <li>Describe CRISPR, PCR, gel electrophoresis, and recombinant DNA technology.</li>
+    </ul></div>
+    <div class="cs">
+      <div class="eyebrow">Course Map</div>
+      <div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Lesson</th><th>Key Concepts</th></tr>
+        <tr><td>1</td><td>Mendel &amp; Laws of Inheritance</td><td>Dominant/recessive, Law of Segregation, Law of Independent Assortment, P/F1/F2 generations</td></tr>
+        <tr><td>2</td><td>Patterns of Dominance</td><td>Complete, incomplete, codominance; multiple alleles (ABO blood type); lethal alleles</td></tr>
+        <tr><td>3</td><td>Punnett Squares &amp; Monohybrid Crosses</td><td>Setting up crosses, 3:1 phenotypic ratio, 1:2:1 genotypic ratio, test crosses</td></tr>
+        <tr><td>4</td><td>Dihybrid Crosses &amp; Independent Assortment</td><td>9:3:3:1 ratio, FOIL method, forked-line method, chi-square analysis</td></tr>
+        <tr><td>5</td><td>Chromosomal Basis of Inheritance</td><td>Sutton-Boveri hypothesis, gene linkage, crossing over, recombination frequency</td></tr>
+        <tr><td>6</td><td>Sex-Linked Traits</td><td>X and Y chromosomes, X-linked recessive, carriers, hemizygous, color blindness</td></tr>
+        <tr><td>7</td><td>Non-Mendelian Inheritance</td><td>Pleiotropy, epistasis, polygenic inheritance, environmental influences, genomic imprinting</td></tr>
+        <tr><td>8</td><td>Pedigree Analysis</td><td>Reading pedigrees, autosomal dominant/recessive, X-linked patterns, carrier identification</td></tr>
+        <tr><td>9</td><td>Human Genetic Disorders</td><td>Cystic fibrosis, sickle cell, PKU, Huntington's, Down syndrome, Turner, Klinefelter</td></tr>
+        <tr><td>10</td><td>Biotechnology &amp; Genetic Engineering</td><td>PCR, gel electrophoresis, recombinant DNA, CRISPR, GMOs, gene therapy</td></tr>
+        <tr><td>11</td><td>Unit Review &amp; Practice Test</td><td>20-question Virginia SOL-style assessment</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Biology 2e — Chapters 12, 13 &amp; 17</div><div class="cx">All content is adapted from OpenStax Biology 2e. Ch. 12: Mendel's Experiments and Heredity. Ch. 13: Modern Understanding of Inheritance. Ch. 17: Biotechnology and Genomics. CC BY 4.0 — free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Quick Facts</div>
+      <div class="sh2">Genetics by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">7</div><div class="fact-l">Traits Mendel tracked in pea plants</div></div>
+        <div class="fact"><div class="fact-n">10K+</div><div class="fact-l">Known Mendelian disorders in humans</div></div>
+        <div class="fact"><div class="fact-n">3:1</div><div class="fact-l">Phenotypic ratio in a monohybrid cross</div></div>
+        <div class="fact"><div class="fact-n">9:3:3:1</div><div class="fact-l">Phenotypic ratio in a dihybrid cross</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 11</div><button class="nbtn next" onclick="goTo(1)">Lesson 1 →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-men"><div class="h-crumb">Mendelian Genetics · <span>Lesson 1</span></div><div class="h-title">Mendel &amp; the Laws of Inheritance</div><div class="h-desc">Gregor Mendel cracked the code of heredity in a monastery garden using math, pea plants, and 8 years of meticulous record-keeping — before anyone knew DNA existed.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.1–12.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe Mendel's experimental design: true-breeding lines, controlled crosses, P/F1/F2 generations.</li>
+      <li>Define gene, allele, dominant, recessive, genotype, phenotype, homozygous, heterozygous.</li>
+      <li>State the Law of Segregation and explain its chromosomal basis.</li>
+      <li>State the Law of Independent Assortment and explain when it applies.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-hint">👆 Click each card before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Gene</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A segment of DNA on a chromosome that encodes a heritable trait. Each gene has a specific location (locus) on a chromosome. Genes come in different versions called alleles.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Allele</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">One of two or more versions of a gene. Example: the flower color gene has a purple allele (P) and a white allele (p). You inherit one allele from each parent. Alleles can be dominant or recessive.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Dominant / Recessive</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Dominant alleles mask recessive alleles when both are present. Written as uppercase (P = dominant) and lowercase (p = recessive). A dominant allele only needs ONE copy to show its phenotype. A recessive allele needs TWO copies (homozygous).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Genotype / Phenotype</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Genotype = the actual allele combination an organism has (PP, Pp, or pp). Phenotype = the observable trait expressed (purple or white flowers). Two organisms with different genotypes (PP and Pp) can have the same phenotype (both purple).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Homozygous / Heterozygous</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Homozygous = two identical alleles (PP = homozygous dominant; pp = homozygous recessive). Heterozygous = two different alleles (Pp). Heterozygous individuals are called carriers when the recessive allele causes a disorder.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Law of Segregation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Mendel's 1st Law: The two alleles for each trait separate during gamete formation, so each gamete carries only ONE allele per gene. During fertilization, offspring receive one allele from each parent. Chromosomal basis: homologs separate in meiosis I.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Law of Independent Assortment</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Mendel's 2nd Law: Alleles for DIFFERENT genes assort into gametes independently of one another (when genes are on different chromosomes). Chromosomal basis: independent orientation of homolog pairs at metaphase I. Generates 2²³ gamete types in humans.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Test Cross</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A cross between an organism of unknown genotype (dominant phenotype) and a homozygous recessive individual (pp). If any offspring are recessive, the unknown parent must be heterozygous (Pp). Mendel's method for determining genotype.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.1–12.2</div><div class="sh2">Mendel's Experimental Design</div>
+      <p class="prose">According to OpenStax, "Mendel's work was unique for its time in that he employed a quantitative, mathematical analysis and used large sample sizes." He worked with the garden pea <em>Pisum sativum</em> for 8 years, choosing it because of its well-defined traits, short generation time, and ability to self-fertilize for creating true-breeding lines.</p>
+      <table class="dt">
+        <tr><th>Generation</th><th>Description</th><th>Example</th></tr>
+        <tr><td><strong>P (Parental)</strong></td><td>True-breeding parent plants crossed together</td><td>Purple (PP) × White (pp)</td></tr>
+        <tr><td><strong>F1 (First Filial)</strong></td><td>All offspring look like the dominant parent</td><td>All Pp (purple) — 100% dominant phenotype</td></tr>
+        <tr><td><strong>F2 (Second Filial)</strong></td><td>F1 plants self-crossed; recessive trait reappears</td><td>3 purple : 1 white = 3:1 ratio</td></tr>
+      </table>
+      <div class="sh3">The Seven Traits Mendel Studied</div>
+      <table class="dt">
+        <tr><th>Trait</th><th>Dominant</th><th>Recessive</th></tr>
+        <tr><td>Flower color</td><td>Purple</td><td>White</td></tr>
+        <tr><td>Flower position</td><td>Axial (along stem)</td><td>Terminal (at tip)</td></tr>
+        <tr><td>Seed color</td><td>Yellow</td><td>Green</td></tr>
+        <tr><td>Seed shape</td><td>Round</td><td>Wrinkled</td></tr>
+        <tr><td>Pod color</td><td>Green</td><td>Yellow</td></tr>
+        <tr><td>Pod shape</td><td>Inflated</td><td>Constricted</td></tr>
+        <tr><td>Plant height</td><td>Tall</td><td>Short (dwarf)</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">The Two Laws — Chromosomal Basis</div><div class="cx"><strong>Law of Segregation</strong>: Alleles separate because homologous chromosomes separate in Meiosis I — each gamete gets one chromosome from each pair. <strong>Law of Independent Assortment</strong>: Genes on different chromosomes assort independently because homolog pairs orient randomly at Metaphase I. Genes on the SAME chromosome are LINKED and do NOT assort independently (they tend to be inherited together — unless crossing over occurs).</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.1–12.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Mendel's Actual F2 Results</div>
+      <div class="graph-box"><div class="graph-title">Mendel's F2 Generation Results for All 7 Traits</div><div class="graph-cap">Dominant:Recessive ratio observed for each trait — all close to the expected 3:1</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required to unlock quiz</div></div></div>
+      <div class="cp-question">State both of Mendel's Laws in your own words. For each one, explain what it means in terms of chromosomes and meiosis.</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — Mendel &amp; Laws of Inheritance</h3><p>5 questions · includes data interpretation</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Mendel crossed true-breeding purple-flowered plants (PP) with true-breeding white-flowered plants (pp). All F1 offspring were purple. What does this demonstrate?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>White is dominant over purple</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>F1 plants are homozygous dominant</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Purple is dominant over white — heterozygous Pp plants express the dominant phenotype only</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both traits blended to produce light purple</li></ul>
+        <div class="qexp">All F1 offspring are <strong>Pp (heterozygous)</strong>. They all show the purple phenotype because purple is the dominant allele — it masks the white recessive allele. This is <strong>complete dominance</strong>: when a dominant allele is present (even in one copy), it determines the phenotype. The white allele is still there genetically — it reappears in F2 when two Pp plants cross and produce pp offspring.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Mendel's Law of Segregation states that alleles separate during gamete formation. What is the CHROMOSOMAL basis of this law?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA replication splits the two alleles into separate strands during S phase</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Homologous chromosomes (each carrying one allele) separate during Meiosis I, so each gamete receives only one allele per gene</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Sister chromatids separate in Anaphase II, splitting alleles into separate cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Crossing over in Prophase I mixes alleles between chromosomes</li></ul>
+        <div class="qexp">The Law of Segregation has a direct chromosomal explanation: <strong>homologous chromosomes</strong> (each carrying one allele of a gene — one from mom, one from dad) <strong>separate during Anaphase I of Meiosis</strong>. Each resulting gamete gets only one chromosome from each homologous pair — therefore only one allele per gene. When gametes fuse at fertilization, the two alleles are reunited in the offspring.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">📊 Based on Mendel's F2 data graph, what ratio did he consistently observe for all seven traits?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1:1 dominant to recessive</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2:1 dominant to recessive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>4:1 dominant to recessive</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Approximately 3:1 dominant to recessive — about 75% dominant phenotype, 25% recessive</li></ul>
+        <div class="qexp">Mendel consistently observed a <strong>~3:1 phenotypic ratio</strong> in F2 crosses for all 7 traits. This is mathematically explained by the Punnett square: when two Pp plants cross, they produce PP, Pp, Pp, and pp in a 1:2:1 genotypic ratio — but since PP and Pp both show the dominant phenotype, the phenotypic ratio is 3 dominant : 1 recessive. This was Mendel's key mathematical insight — the ratios were too consistent to be coincidence.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A tall pea plant (dominant phenotype) is crossed with a short plant (homozygous recessive). Half the offspring are tall and half are short. What is the genotype of the tall parent?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Tt — this is a test cross; a 1:1 ratio indicates the unknown parent is heterozygous</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>TT — homozygous dominant would produce all tall offspring</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>tt — but this would produce all short offspring</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cannot be determined without more information</li></ul>
+        <div class="qexp">This is a <strong>test cross</strong> — crossing an unknown dominant phenotype with a homozygous recessive (tt). If all offspring are tall → unknown parent is TT. If offspring are 50% tall, 50% short → unknown parent is <strong>Tt</strong> (heterozygous). Here, the 1:1 ratio of tall:short confirms the parent is Tt. Test crosses are Mendel's elegant tool for revealing hidden genotypes.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">The Law of Independent Assortment ONLY applies when two genes are located on different chromosomes (or far apart on the same chromosome). Why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Genes on the same chromosome always have identical alleles</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Genes on different chromosomes are always dominant over genes on the same chromosome</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Genes on the same chromosome tend to be inherited together (linked) because they travel on the same chromosome during meiosis — independent assortment requires genes to be on separate chromosomes that orient independently at Metaphase I</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All genes are actually on different chromosomes in diploid organisms</li></ul>
+        <div class="qexp"><strong>Gene linkage</strong>: genes on the SAME chromosome tend to be inherited together because they travel on the same chromosome during meiosis. They violate the Law of Independent Assortment unless crossing over separates them. Independent assortment requires that genes be on separate chromosomes — each chromosome pair orients independently at Metaphase I, so the two chromosomes (and their genes) end up in gametes independently. Mendel got lucky — all 7 of his traits were on different chromosomes!</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Lesson 2 →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-men"><div class="h-crumb">Mendelian Genetics · <span>Lesson 2</span></div><div class="h-title">Patterns of Dominance</div><div class="h-desc">Not every trait is simply dominant or recessive. Incomplete dominance, codominance, and multiple alleles show us that the relationship between genotype and phenotype is richer than Mendel's original model.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Distinguish complete dominance, incomplete dominance, and codominance with examples.</li>
+      <li>Explain the ABO blood type system as an example of multiple alleles and codominance.</li>
+      <li>Predict offspring phenotypes for incomplete dominance and codominance crosses.</li>
+      <li>Define lethal alleles and explain why a 2:1 ratio can indicate a lethal dominant allele.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.3</div><div class="sh2">Three Dominance Patterns</div>
+      <table class="dt">
+        <tr><th>Pattern</th><th>Description</th><th>Heterozygous Phenotype</th><th>Example</th></tr>
+        <tr><td><strong>Complete Dominance</strong></td><td>One allele fully masks the other</td><td>Identical to dominant homozygote</td><td>Mendel's pea flower color (Pp = purple)</td></tr>
+        <tr><td><strong>Incomplete Dominance</strong></td><td>Neither allele is fully dominant; heterozygote is intermediate</td><td>Blend between the two homozygotes</td><td>Snapdragon flowers: RR=red, rr=white, Rr=pink</td></tr>
+        <tr><td><strong>Codominance</strong></td><td>Both alleles are fully expressed simultaneously</td><td>Shows BOTH phenotypes at once</td><td>ABO blood type: type AB expresses both A and B antigens</td></tr>
+      </table>
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">Incomplete Dominance ≠ Blending Inheritance</div><div class="cx">Incomplete dominance looks like blending (red + white = pink) but the ALLELES themselves don't blend — they remain intact and separate during meiosis. Crossing two pink snapdragons (Rr × Rr) produces red (RR), pink (Rr), and white (rr) in a 1:2:1 ratio — proving the original alleles are preserved. True blending would make everything permanently pink with no way to recover red or white.</div></div></div>
+      <div class="sh3">ABO Blood Type — Multiple Alleles &amp; Codominance</div>
+      <p class="prose">The ABO blood type system is controlled by one gene with <strong>three alleles</strong>: I<sup>A</sup>, I<sup>B</sup>, and i. I<sup>A</sup> and I<sup>B</sup> are codominant with each other; both are dominant over i. Each person has exactly two alleles from the three options.</p>
+      <table class="dt">
+        <tr><th>Blood Type (Phenotype)</th><th>Possible Genotypes</th><th>Antigens on RBCs</th><th>Can Donate to</th></tr>
+        <tr><td><strong>Type A</strong></td><td>I<sup>A</sup>I<sup>A</sup> or I<sup>A</sup>i</td><td>A antigen only</td><td>A, AB</td></tr>
+        <tr><td><strong>Type B</strong></td><td>I<sup>B</sup>I<sup>B</sup> or I<sup>B</sup>i</td><td>B antigen only</td><td>B, AB</td></tr>
+        <tr><td><strong>Type AB</strong></td><td>I<sup>A</sup>I<sup>B</sup></td><td>Both A and B antigens</td><td>AB only (universal recipient)</td></tr>
+        <tr><td><strong>Type O</strong></td><td>ii</td><td>No ABO antigens</td><td>A, B, AB, O (universal donor)</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Mnemonic: ABCOD — Antigens determine Blood type; Codominance; O = no antigens; Donor = O, recipient = AB</div><div class="cx">Type O has NO antigens on RBCs → no immune reaction from any recipient → universal donor. Type AB has BOTH antigens → immune system is already "used to" both → accepts any blood type → universal recipient. These are not quite clinically accurate (Rh factor also matters) but capture the core ABO logic.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">ABO Blood Type Frequency by Population</div>
+      <div class="graph-box"><div class="graph-title">ABO Blood Type Distribution — U.S. Population</div><div class="graph-cap">Percentage of each blood type — O is most common; AB is rarest</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the difference between incomplete dominance and codominance. Give one example of each. Then explain why incomplete dominance is NOT the same as blending inheritance.</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — Patterns of Dominance</h3><p>5 questions · includes blood type data</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A red snapdragon (RR) is crossed with a white snapdragon (rr). All F1 offspring are pink. Which inheritance pattern is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Codominance — both red and white appear simultaneously</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Incomplete dominance — neither allele fully dominates; heterozygotes show an intermediate phenotype (pink)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Complete dominance — red is dominant over white</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Multiple allele inheritance</li></ul>
+        <div class="qexp">Pink snapdragons (Rr) demonstrate <strong>incomplete dominance</strong>: neither allele fully masks the other, producing an intermediate phenotype. The R allele produces red pigment; the r allele produces none; one copy of R produces half the pigment → pink. Crossing two pink plants (Rr × Rr) gives 1 RR (red) : 2 Rr (pink) : 1 rr (white) — a 1:2:1 phenotypic ratio, proving the alleles themselves did not blend.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A type A mother (I<sup>A</sup>i) and a type B father (I<sup>B</sup>i) have children. What blood types are possible in their offspring?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only AB and O</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only A and B</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A, B, and AB only</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A, B, AB, and O — all four blood types are possible</li></ul>
+        <div class="qexp">Cross I<sup>A</sup>i × I<sup>B</sup>i: gametes from mom = I<sup>A</sup> or i; gametes from dad = I<sup>B</sup> or i. Possible offspring: I<sup>A</sup>I<sup>B</sup> (type AB), I<sup>A</sup>i (type A), I<sup>B</sup>i (type B), ii (type O). All four ABO blood types are possible from this cross — each with 25% probability. This is a classic genetics question that requires knowing the multiple allele system of ABO.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">In codominance, what is the phenotype of a heterozygous individual?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Both alleles are fully expressed simultaneously — the heterozygote shows traits of BOTH homozygotes at the same time</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>An intermediate blend between the two homozygous phenotypes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The phenotype of the dominant homozygote only</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>No phenotype is expressed — the alleles cancel each other out</li></ul>
+        <div class="qexp">In <strong>codominance</strong>, both alleles are expressed simultaneously and fully — the heterozygote shows BOTH phenotypes, not a blend. Example: Type AB blood (I<sup>A</sup>I<sup>B</sup>) expresses both A AND B antigens on red blood cells — not a weaker version of each. Another example: spotted cattle where black and white hairs are both present in a roan coat. Compare to incomplete dominance (blend) vs. codominance (both fully visible).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the blood type distribution graph, which blood type is most common in the U.S., and what does the rarity of AB tell us?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Type A is most common; AB is rare because the IA allele is rare</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Type B is most common; AB frequency reflects mixing of populations</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Type O is most common; AB is rare because it requires inheriting BOTH IA and IB alleles — needing each from a different parent who carries the less-common alleles</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All blood types are equally common</li></ul>
+        <div class="qexp">Type O (~44% in the U.S.) is most common because the recessive i allele is the most frequent allele in most populations, and O requires ii (two recessive alleles). Type AB (~4%) is rarest because it requires inheriting I<sup>A</sup> from one parent AND I<sup>B</sup> from the other — both are less common alleles, so the probability of inheriting both together is low. Blood type frequencies follow Hardy-Weinberg equilibrium principles.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Two pink snapdragons (Rr × Rr) are crossed. What is the expected phenotypic ratio of offspring?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3 pink : 1 red (3:1 ratio — same as complete dominance)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1 red : 2 pink : 1 white (1:2:1 ratio — incomplete dominance produces three distinct phenotypes)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>All pink — incomplete dominance always produces intermediate offspring</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1 red : 1 white only — the pink disappears</li></ul>
+        <div class="qexp">Cross Rr × Rr: offspring are 1 RR (red) : 2 Rr (pink) : 1 rr (white) = <strong>1:2:1 phenotypic ratio</strong>. This is KEY — with incomplete dominance, the phenotypic ratio (1:2:1) equals the genotypic ratio, unlike complete dominance (where 3:1 phenotypic and 1:2:1 genotypic differ). This 1:2:1 phenotypic ratio is the diagnostic signature of incomplete dominance when crossing two heterozygotes.</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Lesson 3 →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-men"><div class="h-crumb">Mendelian Genetics · <span>Lesson 3</span></div><div class="h-title">Punnett Squares &amp; Monohybrid Crosses</div><div class="h-desc">The Punnett square is genetics' most powerful visual tool. Master it and you can predict the probability of any trait for any offspring from any cross.</div><div class="h-meta"><div class="h-chip">⏱ ~35 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Set up and solve a monohybrid Punnett square cross correctly.</li>
+      <li>Calculate genotypic and phenotypic ratios from a cross.</li>
+      <li>Solve test cross problems to determine unknown genotypes.</li>
+      <li>Distinguish genotypic ratio (1:2:1) from phenotypic ratio (3:1) for a Pp × Pp cross.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.2</div><div class="sh2">How to Set Up a Punnett Square</div>
+      <p class="prose">A Punnett square predicts the probability of genotypes in offspring by mapping all possible gamete combinations. <strong>Rules:</strong> (1) Write the parents' gametes across the top and side. (2) Each gamete carries ONE allele per gene. (3) Fill in each box by combining the top and side alleles. (4) Calculate ratios from the completed grid.</p>
+      <div class="sh3">Example: Pp × Pp (Purple × Purple — both heterozygous)</div>
+      <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;margin:20px 0;">
+        <div>
+          <div class="punnett">
+            <div class="pcell ph"></div><div class="pcell ph">P</div><div class="pcell ph">p</div>
+            <div class="pcell ph">P</div><div class="pcell pp dom">PP</div><div class="pcell pp het">Pp</div>
+            <div class="pcell ph">p</div><div class="pcell pp het">Pp</div><div class="pcell pp rec">pp</div>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:8px;text-align:center;">Green=dominant · Amber=hetero · Red=recessive</div>
+        </div>
+        <div style="flex:1;min-width:200px;">
+          <p class="prose"><strong>Genotypic ratio:</strong> 1 PP : 2 Pp : 1 pp</p>
+          <p class="prose"><strong>Phenotypic ratio:</strong> 3 purple (PP + Pp + Pp) : 1 white (pp) = <strong>3:1</strong></p>
+          <p class="prose"><strong>Probability purple:</strong> 3/4 = 75%</p>
+          <p class="prose"><strong>Probability white:</strong> 1/4 = 25%</p>
+        </div>
+      </div>
+      <div class="sh3">Key Ratios to Memorize</div>
+      <table class="dt">
+        <tr><th>Cross Type</th><th>Cross</th><th>Genotypic Ratio</th><th>Phenotypic Ratio</th></tr>
+        <tr><td>Homozygous dom × Homozygous rec</td><td>PP × pp</td><td>All Pp</td><td>All dominant (4:0)</td></tr>
+        <tr><td>Heterozygous × Heterozygous</td><td>Pp × Pp</td><td>1:2:1</td><td>3:1</td></tr>
+        <tr><td>Heterozygous × Homozygous rec</td><td>Pp × pp (test cross)</td><td>1:1</td><td>1:1</td></tr>
+        <tr><td>Homozygous dom × Heterozygous</td><td>PP × Pp</td><td>1:1 (PP:Pp)</td><td>All dominant (4:0)</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">The 1:1 Ratio = Test Cross Signature</div><div class="cx">Whenever you see a 1:1 offspring ratio (50% dominant, 50% recessive), it means one parent is HETEROZYGOUS (Pp) and the other is HOMOZYGOUS RECESSIVE (pp). This is the test cross. The 3:1 ratio always means BOTH parents are heterozygous (Pp × Pp). These two ratios are the most tested in genetics.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Expected vs. Observed Offspring Ratios</div>
+      <div class="graph-box"><div class="graph-title">Expected Offspring Ratios for Common Monohybrid Crosses</div><div class="graph-cap">Probability of each genotype outcome for four cross types</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">A black lab (Bb) is crossed with a chocolate lab (bb). Black is dominant over chocolate. Set up the Punnett square in words and give the expected genotypic and phenotypic ratios of offspring.</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Punnett Squares &amp; Monohybrid Crosses</h3><p>5 questions · includes ratio graph</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Two heterozygous parents (Bb × Bb) are crossed. What is the expected phenotypic ratio if B (black) is dominant over b (brown)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1:1 black to brown</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1:2:1 (BB : Bb : bb)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3:1 black to brown — 75% black (BB + Bb + Bb), 25% brown (bb)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All black offspring</li></ul>
+        <div class="qexp">Cross Bb × Bb: offspring are BB (25%), Bb (50%), bb (25%). Genotypic ratio = 1:2:1. Since B is dominant, BB and Bb both appear black → <strong>3:1 phenotypic ratio</strong>. This 3:1 ratio is the classic signature of a heterozygote × heterozygote cross with complete dominance. Remember: phenotypic ratio ≠ genotypic ratio unless you're dealing with incomplete dominance.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A pea plant with round seeds is crossed with a wrinkled-seed plant (rr). 50% of offspring have round seeds and 50% have wrinkled seeds. What is the genotype of the round-seeded parent?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Rr — the 1:1 offspring ratio is the signature of a test cross, indicating the dominant-phenotype parent is heterozygous</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RR — homozygous dominant</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>rR — same as Rr but written differently</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cannot be determined</li></ul>
+        <div class="qexp">This is a <strong>test cross</strong> (dominant phenotype × homozygous recessive). The 1:1 offspring ratio (50% round, 50% wrinkled) proves the round-seeded parent is <strong>Rr</strong>. If it were RR, all offspring would be Rr (round). The test cross is the definitive way to distinguish Rr from RR — you cannot tell from phenotype alone since both are round.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the probability that a child will have cystic fibrosis (cc) if both parents are carriers (Cc × Cc)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0% — carriers don't pass on disease</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>50%</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>75%</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>25% — a 3:1 ratio means 1 in 4 offspring will be cc (affected)</li></ul>
+        <div class="qexp">Cross Cc × Cc: offspring = CC (25%), Cc (50%), cc (25%). The probability of cc (affected with cystic fibrosis) = <strong>25% or 1/4</strong>. The probability of being a carrier (Cc) = 50%. The probability of being unaffected AND not a carrier (CC) = 25%. This 25% disease risk for two carrier parents is the most clinically important genetics calculation — used constantly in genetic counseling.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the cross ratio chart, which cross produces 100% dominant phenotype offspring?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pp × Pp</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>PP × pp — crossing homozygous dominant with homozygous recessive produces all Pp heterozygotes (all dominant phenotype)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pp × pp (test cross)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>pp × pp</li></ul>
+        <div class="qexp">PP × pp: every gamete from the PP parent is P; every gamete from the pp parent is p. All offspring must be Pp — heterozygous, showing the dominant phenotype. This is exactly what Mendel observed in the F1 generation (P cross). 100% dominant phenotype, 0% recessive. This is also the basis of hybrid vigor in agriculture — breeders cross homozygous lines to produce all-heterozygous offspring with maximum trait expression.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A homozygous dominant plant (TT — tall) is crossed with a heterozygous plant (Tt — tall). What is the expected genotypic ratio?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1:2:1 (TT:Tt:tt)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3:1 (tall:short)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1:1 (TT:Tt) — half homozygous dominant, half heterozygous, but all tall</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All TT homozygous dominant</li></ul>
+        <div class="qexp">Cross TT × Tt: gametes from TT parent = only T; gametes from Tt parent = T or t. Offspring: TT (50%) and Tt (50%). Genotypic ratio = <strong>1:1 (TT:Tt)</strong>. Phenotypic ratio = all tall (100% — since both TT and Tt are tall with complete dominance). Note: the genotypic ratio is 1:1 here but the phenotypic ratio is not 1:1 — don't confuse the two!</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Lesson 4 →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-men"><div class="h-crumb">Mendelian Genetics · <span>Lesson 4</span></div><div class="h-title">Dihybrid Crosses &amp; Independent Assortment</div><div class="h-desc">Tracking two genes at once reveals the 9:3:3:1 ratio — one of the most important numbers in all of genetics, and direct proof of Mendel's Law of Independent Assortment.</div><div class="h-meta"><div class="h-chip">⏱ ~35 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Set up and solve a 4×4 dihybrid Punnett square cross.</li>
+      <li>State the expected 9:3:3:1 phenotypic ratio and explain what each fraction represents.</li>
+      <li>Use the product rule to calculate dihybrid cross probabilities without a full Punnett square.</li>
+      <li>Explain how the 9:3:3:1 ratio provides evidence for independent assortment.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.3</div><div class="sh2">Dihybrid Cross: Two Genes at Once</div>
+      <p class="prose">A dihybrid cross tracks two independent genes simultaneously. Mendel crossed plants that were heterozygous for both seed color (Y=yellow, y=green) AND seed shape (R=round, r=wrinkled): <strong>YyRr × YyRr</strong>. The result was a 9:3:3:1 phenotypic ratio in F2.</p>
+      <div class="sh3">The 9:3:3:1 Ratio — What Each Part Means</div>
+      <table class="dt">
+        <tr><th>Ratio Part</th><th>Phenotype</th><th>Genotype Examples</th><th>Probability</th></tr>
+        <tr><td><strong>9</strong></td><td>Yellow + Round (both dominant)</td><td>Y_R_ (any combo with at least one Y and one R)</td><td>9/16 = 56.25%</td></tr>
+        <tr><td><strong>3</strong></td><td>Yellow + Wrinkled (dom + rec)</td><td>Y_rr</td><td>3/16 = 18.75%</td></tr>
+        <tr><td><strong>3</strong></td><td>Green + Round (rec + dom)</td><td>yyR_</td><td>3/16 = 18.75%</td></tr>
+        <tr><td><strong>1</strong></td><td>Green + Wrinkled (both recessive)</td><td>yyrr</td><td>1/16 = 6.25%</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">The Product Rule Shortcut — No Full Punnett Square Needed</div><div class="cx">Since the two genes assort independently, multiply the individual monohybrid probabilities. Example: What is the probability of a YyRr offspring from YyRr × YyRr? P(Yy) from Yy × Yy = 2/4 = 1/2. P(Rr) from Rr × Rr = 2/4 = 1/2. P(YyRr) = 1/2 × 1/2 = <strong>1/4</strong>. This works ONLY when genes are on different chromosomes (independent assortment). For linked genes, you must use recombination data.</div></div></div>
+      <div class="sh3">Where the 9:3:3:1 Comes From</div>
+      <p class="prose">Think of it as two independent 3:1 ratios multiplied together: <strong>(3 yellow : 1 green) × (3 round : 1 wrinkled)</strong> = 9 yellow-round : 3 yellow-wrinkled : 3 green-round : 1 green-wrinkled. This mathematical decomposition works because independent assortment makes the two genes behave as if they are separate events.</p>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">9:3:3:1 Memory Check: "Nine dominate, three plus three are singles, one is doubly recessive"</div><div class="cx"><strong>9</strong> = both dominant traits expressed. <strong>3</strong> = first gene dominant, second recessive. <strong>3</strong> = first gene recessive, second dominant. <strong>1</strong> = both genes recessive. Total = 16 boxes in the 4×4 Punnett square. Always sums to 16.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Dihybrid Cross Expected Phenotype Distribution</div>
+      <div class="graph-box"><div class="graph-title">Expected Phenotype Distribution — Dihybrid Cross (YyRr × YyRr)</div><div class="graph-cap">9:3:3:1 ratio — 16 total combinations in a 4×4 Punnett square</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain where the 9:3:3:1 ratio comes from in a dihybrid cross. How does the product rule let you solve dihybrid problems without drawing the full 4×4 Punnett square?</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — Dihybrid Crosses</h3><p>5 questions · includes 9:3:3:1 chart</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In a dihybrid cross (AaBb × AaBb), what is the expected phenotypic ratio?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3:1</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>9:3:3:1 — 9 both dominant : 3 first dominant/second recessive : 3 first recessive/second dominant : 1 both recessive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1:2:1</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1:1:1:1</li></ul>
+        <div class="qexp">The <strong>9:3:3:1 ratio</strong> is the defining result of a dihybrid cross between two double heterozygotes. It has 16 total boxes: 9 show both dominant traits (A_B_), 3 show dominant A + recessive b (A_bb), 3 show recessive a + dominant B (aaB_), and 1 shows both recessive (aabb). This ratio is only seen when the two genes are on separate chromosomes (independent assortment).</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Using the product rule: what is the probability of getting a homozygous recessive offspring (aabb) from AaBb × AaBb?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1/2</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1/8</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3/16</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1/16 — P(aa) from Aa × Aa = 1/4; P(bb) from Bb × Bb = 1/4; P(aabb) = 1/4 × 1/4 = 1/16</li></ul>
+        <div class="qexp">Product rule: P(aabb) = P(aa) × P(bb) = 1/4 × 1/4 = <strong>1/16</strong> (6.25%). This matches the "1" in the 9:3:3:1 ratio — exactly 1 out of 16 offspring should be doubly homozygous recessive. The product rule works here because the two genes are on different chromosomes (independent assortment). If they were linked, you'd need to use recombination frequency data instead.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A dihybrid cross produces offspring in a 9:3:3:1 ratio. What does this ratio provide evidence for?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Mendel's Law of Independent Assortment — the two genes are on different chromosomes and assort independently into gametes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gene linkage — the two genes are located near each other on the same chromosome</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Codominance — both alleles are expressed simultaneously</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Incomplete dominance — the traits blend in heterozygotes</li></ul>
+        <div class="qexp">The 9:3:3:1 ratio is mathematically derived from two independent 3:1 ratios multiplied together — which is only possible if the genes segregate <strong>independently</strong>. This is exactly what Mendel's Law of Independent Assortment predicts. If the genes were linked (on the same chromosome), you'd see a different ratio — closer to 3:1 for parental combinations and far fewer recombinants. Deviation from 9:3:3:1 can indicate linkage.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the dihybrid cross chart, which phenotype combination is the LEAST likely?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Both dominant traits (A_B_) at 9/16</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>First dominant, second recessive (A_bb) at 3/16</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both recessive (aabb) at 1/16 — only 6.25% probability</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>First recessive, second dominant (aaB_) at 3/16</li></ul>
+        <div class="qexp">The doubly homozygous recessive (aabb) phenotype is the rarest at <strong>1/16 (6.25%)</strong>. Getting two recessive alleles for each gene requires all four recessive alleles from the parents to combine in one offspring. This matches the product rule: P(aa) = 1/4 × P(bb) = 1/4 = 1/16. This is also why traits caused by two recessive genes are relatively rare in populations.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Two genes that are located on the same chromosome are described as "linked." How does this affect the 9:3:3:1 ratio?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Linked genes always produce a perfect 9:3:3:1 ratio</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Linked genes deviate from 9:3:3:1 — parental combinations appear more frequently; recombinant combinations appear less frequently (unless crossing over separates them)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Linked genes produce a 1:2:1 ratio instead</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Linkage has no effect on phenotypic ratios</li></ul>
+        <div class="qexp">Linked genes violate independent assortment — they tend to travel together on the same chromosome. In a dihybrid cross with linked genes, <strong>parental combinations</strong> appear more frequently than expected and <strong>recombinant combinations</strong> appear less frequently. The further apart two genes are on a chromosome, the more crossing over separates them, making them behave more independently. Very closely linked genes produce almost no recombinants. This is the basis of genetic linkage mapping.</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Lesson 5 →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-chr"><div class="h-crumb">Chromosomal Genetics · <span>Lesson 5</span></div><div class="h-title">Chromosomal Basis of Inheritance</div><div class="h-desc">Mendel described the rules. Sutton and Boveri explained why — genes are carried on chromosomes, and everything Mendel observed follows directly from how chromosomes behave in meiosis.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 13.1–13.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Explain the Sutton-Boveri chromosome theory of heredity.</li>
+      <li>Define gene linkage and explain why linked genes deviate from independent assortment.</li>
+      <li>Explain how crossing over creates recombinant chromosomes.</li>
+      <li>Use recombination frequency to estimate the relative distance between linked genes.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 13.1–13.2</div><div class="sh2">The Chromosome Theory of Heredity</div>
+      <p class="prose">According to OpenStax, "the behaviors of chromosomes during meiosis correspond perfectly to Mendel's laws." Walter Sutton and Theodor Boveri independently proposed in 1902 that genes are located on chromosomes, based on the parallel behavior of chromosomes and Mendel's factors during cell division.</p>
+      <table class="dt">
+        <tr><th>Mendel's Observation</th><th>Chromosomal Explanation</th></tr>
+        <tr><td>Alleles segregate during gamete formation</td><td>Homologous chromosomes separate at Anaphase I of meiosis</td></tr>
+        <tr><td>Traits assort independently</td><td>Genes on different chromosomes orient independently at Metaphase I</td></tr>
+        <tr><td>F1 hybrids are heterozygous</td><td>One chromosome (allele) from each parent; diploid cells have two homologs</td></tr>
+        <tr><td>F2 recessive traits reappear</td><td>Recessive alleles carried on chromosomes never disappeared — just masked</td></tr>
+      </table>
+      <div class="sh3">Gene Linkage &amp; Recombination</div>
+      <p class="prose">Genes on the <strong>same chromosome</strong> are said to be <strong>linked</strong> — they tend to be inherited together (as a unit) rather than independently. However, <strong>crossing over</strong> during Prophase I can separate linked genes by physically exchanging chromosome segments, creating new allele combinations called <strong>recombinants</strong>.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Recombination Frequency → Genetic Map Distance</div><div class="cx">The farther apart two linked genes are on a chromosome, the more likely crossing over occurs between them → higher recombination frequency. <strong>1 centimorgan (cM) = 1% recombination frequency.</strong> If genes A and B show 15% recombination, they are ~15 cM apart. Genes with &gt;50% recombination behave as if they're on different chromosomes (independent assortment). This is the basis of genetic linkage maps.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 13.1–13.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Recombination Frequency &amp; Gene Distance</div>
+      <div class="graph-box"><div class="graph-title">Recombination Frequency Between Gene Pairs (Drosophila data)</div><div class="graph-cap">Higher recombination frequency = genes farther apart on the same chromosome</div><div class="graph-wrap"><canvas id="chartL5"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the Sutton-Boveri chromosome theory. How does crossing over produce recombinant chromosomes, and why do genes far apart on the same chromosome behave more like genes on different chromosomes?</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — Chromosomal Basis of Inheritance</h3><p>5 questions · includes recombination frequency graph</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The Sutton-Boveri chromosome theory of heredity states that:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Genes are located in the cytoplasm and are distributed randomly during cell division</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Chromosomes determine sex but not other traits</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Genes are located on chromosomes, and the behavior of chromosomes during meiosis explains Mendel's laws of segregation and independent assortment</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Each gene occupies an entire chromosome</li></ul>
+        <div class="qexp">Sutton (1902) noticed that chromosomes behave exactly like Mendel's "factors": they come in pairs (one from each parent), separate during gamete formation, and recombine at fertilization. Boveri confirmed through sea urchin experiments that each chromosome carries different hereditary information. Together, their <strong>chromosome theory of heredity</strong> provided the physical basis for Mendel's mathematical rules — it explained WHY the ratios occur.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Two genes are located 8 cM apart on chromosome 3. What does this tell you about their inheritance?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They show 8% recombination frequency — they are linked and tend to be inherited together, but crossing over separates them in 8% of gametes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are on different chromosomes and assort independently</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They cannot separate during meiosis at all</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They always travel together in 100% of gametes</li></ul>
+        <div class="qexp">8 cM = 8% recombination frequency. These genes are <strong>linked</strong> (on the same chromosome). They travel together in 92% of gametes (parental combinations) and are separated by crossing over in 8% of gametes (recombinant combinations). They do NOT assort independently (that would require ~50% recombination). The 8 cM distance tells you the genes are relatively close together on the chromosome.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">📊 Based on the recombination frequency graph, which gene pair is MOST likely to assort nearly independently?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Genes with 5% recombination frequency — they are tightly linked</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Genes with 15% recombination frequency</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Genes with 30% recombination frequency</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Genes with 48–50% recombination frequency — crossing over is so frequent they behave as if on separate chromosomes</li></ul>
+        <div class="qexp">When recombination frequency approaches <strong>50%</strong>, the genes assort nearly independently — even though they're technically on the same chromosome, crossing over happens so frequently between them that the alleles are shuffled randomly. Below 50% = genes behave as linked (parental combinations more common). At exactly 50% = genes are unlinked (independent assortment). Above 50% is mathematically impossible.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Crossing over between two linked genes creates "recombinant" chromosomes. What is a recombinant chromosome?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A chromosome that has been completely duplicated during S phase</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A chromosome with a new combination of alleles not found in either parent — the result of crossing over exchanging segments between non-sister chromatids of homologs</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A chromosome that has lost some genes due to a deletion mutation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A chromosome from the recessive parent only</li></ul>
+        <div class="qexp">Recombinant chromosomes carry new allele combinations that didn't exist in either parent. Example: parent has chromosomes AB and ab (linked). Crossing over can produce Ab and aB chromosomes — new parental combinations. These recombinants are the source of genetic diversity that crossing over generates. The frequency of recombinants measures map distance between genes.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Thomas Morgan's experiments with Drosophila (fruit flies) showed that some traits deviated from the 9:3:3:1 ratio. What did he conclude?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Mendel's laws were incorrect</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Fruit flies don't follow normal inheritance patterns</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Some genes are physically linked on the same chromosome and tend to be inherited together — providing direct evidence for the chromosomal basis of inheritance</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Independent assortment applies to all genes in all organisms</li></ul>
+        <div class="qexp">Morgan's Drosophila experiments provided the first direct evidence for gene linkage. When he crossed flies for body color and wing shape (both on chromosome 2), offspring ratios deviated dramatically from 9:3:3:1 — parental combinations appeared far more often than expected. This proved the genes were <strong>linked on the same chromosome</strong>. Morgan's student Alfred Sturtevant then used recombination frequencies to build the first genetic linkage maps, confirming that genes are arranged linearly on chromosomes.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Lesson 6 →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-chr"><div class="h-crumb">Chromosomal Genetics · <span>Lesson 6</span></div><div class="h-title">Sex-Linked Traits</div><div class="h-desc">The X and Y chromosomes determine biological sex — but the X chromosome carries hundreds of non-sex genes. When one of those genes is mutated, males and females are affected differently.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 13.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe the human sex chromosomes (X and Y) and explain sex determination.</li>
+      <li>Define X-linked, hemizygous, and carrier.</li>
+      <li>Explain why X-linked recessive disorders are more common in males than females.</li>
+      <li>Solve Punnett square crosses for X-linked traits using X<sup>A</sup>/X<sup>a</sup> notation.</li>
+      <li>Give examples of X-linked traits: color blindness, hemophilia A, Duchenne muscular dystrophy.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 13.3</div><div class="sh2">Sex Chromosomes &amp; Sex-Linked Inheritance</div>
+      <p class="prose">According to OpenStax, "the presence of the Y chromosome determines male sex" in humans. Females have two X chromosomes (XX); males have one X and one Y (XY). The Y chromosome is much smaller than the X and carries few genes beyond SRY — the sex-determining region Y gene that triggers male development.</p>
+      <div class="sh3">Key Terminology</div>
+      <table class="dt">
+        <tr><th>Term</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>X-linked</strong></td><td>A gene located on the X chromosome</td><td>Color blindness gene, hemophilia A gene</td></tr>
+        <tr><td><strong>Hemizygous</strong></td><td>Having only ONE copy of an X-linked gene (males — they have only one X)</td><td>X<sup>A</sup>Y — male with one copy of color vision gene</td></tr>
+        <tr><td><strong>Carrier</strong></td><td>A heterozygous female (X<sup>A</sup>X<sup>a</sup>) who doesn't express the trait but can pass the allele to offspring</td><td>Carrier mom has 50% chance of passing X<sup>a</sup> to sons</td></tr>
+      </table>
+      <div class="sh3">Why X-Linked Recessive Disorders Affect Males More Often</div>
+      <p class="prose">Females (XX) need <strong>two copies</strong> of the recessive allele to express an X-linked recessive disorder (X<sup>a</sup>X<sup>a</sup>). Males (XY) only need <strong>one copy</strong> because they have only one X chromosome — they are hemizygous and have no second X to mask the recessive allele. This is why color blindness affects ~8% of males but only ~0.5% of females.</p>
+      <div class="sh3">Solving X-Linked Crosses</div>
+      <p class="prose">Use the notation <strong>X<sup>A</sup></strong> (dominant allele on X) and <strong>X<sup>a</sup></strong> (recessive allele on X). Example: Carrier mother × Normal father:</p>
+      <table class="dt">
+        <tr><th>Cross</th><th>Offspring Genotypes</th><th>Phenotypes</th></tr>
+        <tr><td>X<sup>A</sup>X<sup>a</sup> × X<sup>A</sup>Y (carrier mom × normal dad)</td><td>X<sup>A</sup>X<sup>A</sup>, X<sup>A</sup>X<sup>a</sup>, X<sup>A</sup>Y, X<sup>a</sup>Y</td><td>Females: all normal vision. Males: 50% normal, 50% color blind</td></tr>
+        <tr><td>X<sup>A</sup>X<sup>a</sup> × X<sup>a</sup>Y (carrier mom × affected dad)</td><td>X<sup>A</sup>X<sup>a</sup>, X<sup>a</sup>X<sup>a</sup>, X<sup>A</sup>Y, X<sup>a</sup>Y</td><td>Females: 50% carrier, 50% affected. Males: 50% normal, 50% affected</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Key X-Linked Rule: Daughters get their X from BOTH parents; Sons get their X ONLY from mom</div><div class="cx">Males inherit their Y from dad and their ONE X from mom. Therefore, sons cannot inherit X-linked traits from their fathers — only from their mothers. This "crisscross" inheritance pattern is diagnostic for X-linked traits in pedigrees. If an X-linked recessive disorder is never passed from father to son, it's X-linked.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 13.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">X-Linked Recessive Disorder Prevalence by Sex</div>
+      <div class="graph-box"><div class="graph-title">Prevalence of X-Linked Recessive Disorders: Males vs. Females</div><div class="graph-cap">Males are significantly more affected because they are hemizygous — one recessive allele is sufficient</div><div class="graph-wrap"><canvas id="chartL6"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain why X-linked recessive disorders are more common in males than females. A carrier mother and an unaffected father have children — what are the probabilities of each offspring genotype and phenotype?</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd6">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 6 Quiz — Sex-Linked Traits</h3><p>5 questions · includes prevalence graph</p></div></div>
+    <div id="q6">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A male (XY) inherits color blindness from his carrier mother. He is described as "hemizygous" for the color blindness allele. What does hemizygous mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Having two copies of the recessive allele</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Having only ONE copy of an X-linked gene — males have only one X chromosome, so they have one allele for every X-linked gene with no second allele to mask it</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Being heterozygous for an autosomal gene</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Carrying a gene on the Y chromosome</li></ul>
+        <div class="qexp"><strong>Hemizygous</strong> means having only one allele — no second copy. Males are hemizygous for all X-linked genes because they only have one X chromosome. This is why X-linked recessive traits are expressed in males whenever they inherit the recessive allele — there is no dominant allele on a second X to mask it. Females (XX) can be homozygous or heterozygous for X-linked genes; males can only be hemizygous.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A carrier mother (X<sup>H</sup>X<sup>h</sup>) for hemophilia and an unaffected father (X<sup>H</sup>Y) have children. What is the probability that their son has hemophilia?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0% — fathers pass hemophilia to sons, not mothers</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>25% of ALL offspring, or 50% of daughters</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>100% of sons</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50% of sons — sons get their X from mom; carrier mom passes X<sup>h</sup> to half her sons</li></ul>
+        <div class="qexp">Sons inherit their X from MOM only (Y comes from dad). Mom is X<sup>H</sup>X<sup>h</sup> → she passes either X<sup>H</sup> or X<sup>h</sup> to sons (50/50 chance). Sons who receive X<sup>h</sup> become X<sup>h</sup>Y — hemophilic (no second X to mask the recessive allele). So <strong>50% of sons</strong> will have hemophilia. No daughters will be affected (dad provides X<sup>H</sup> to all daughters, making them at least carriers). Overall, 25% of ALL children will have hemophilia (the affected sons).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Can a father pass an X-linked trait directly to his son? Why or why not?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>No — fathers give their Y chromosome to sons, not their X chromosome; X-linked traits pass from fathers to daughters, never directly from father to son</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Yes — fathers pass both X and Y chromosomes to sons</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Yes — but only if the mother is also a carrier</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>No — X-linked traits can only be inherited from grandfathers</li></ul>
+        <div class="qexp">Fathers give their <strong>Y chromosome to sons</strong> (that's what determines their son's sex). The father's X chromosome goes only to daughters. Therefore, an affected father (X<sup>a</sup>Y) CANNOT pass an X-linked trait directly to his sons — but he will pass it to ALL his daughters (making them all carriers). This father-to-daughter-to-grandson "crisscross" inheritance is the classic pattern of X-linked recessive disorders like hemophilia in the European royal families.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the prevalence graph, red-green color blindness affects approximately 8% of males and 0.5% of females. What explains this ~16-fold difference?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Males have a Y chromosome that actively promotes color blindness</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The color blindness gene is more common in male-associated chromosomes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Males only need ONE recessive allele (hemizygous) to be color blind; females need TWO recessive alleles — they can be carriers with one allele and not be affected</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Females have better color vision due to hormonal differences unrelated to genetics</li></ul>
+        <div class="qexp">Males need only <strong>one</strong> copy of the color blindness allele (X<sup>cb</sup>Y) to be affected — they're hemizygous. Females need <strong>two</strong> copies (X<sup>cb</sup>X<sup>cb</sup>) to be affected. A female with one copy (X<sup>cb</sup>X<sup>+</sup>) is a carrier — unaffected but can pass the allele. Since the allele frequency is ~8% in the population, ~8% of males are affected, but females being affected requires both X chromosomes to carry the allele: ~0.8% × 0.8% = ~0.5% are affected females.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A color-blind woman (X<sup>cb</sup>X<sup>cb</sup>) has children with a man with normal vision (X<sup>+</sup>Y). What are the expected phenotypes?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All daughters and sons will have normal color vision</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All daughters will be carriers (normal vision); all sons will be color blind</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>All children will be color blind</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50% of daughters and 50% of sons will be color blind</li></ul>
+        <div class="qexp">Cross X<sup>cb</sup>X<sup>cb</sup> × X<sup>+</sup>Y: daughters get X<sup>cb</sup> from mom and X<sup>+</sup> from dad → ALL daughters are X<sup>+</sup>X<sup>cb</sup> (carriers, normal vision). Sons get X<sup>cb</sup> from mom and Y from dad → ALL sons are X<sup>cb</sup>Y (color blind). This is the "obligate carrier daughter, obligate affected son" cross — a classic genetics problem. An affected mom passes her only allele (X<sup>cb</sup>) to all sons, making them all affected.</div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Lesson 7 →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-chr"><div class="h-crumb">Chromosomal Genetics · <span>Lesson 7</span></div><div class="h-title">Non-Mendelian Inheritance</div><div class="h-desc">Most traits don't follow simple Mendelian patterns. Pleiotropy, epistasis, polygenic inheritance, and environmental effects explain why the real world of genetics is far more complex — and interesting — than pea plants alone.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.3 &amp; 13.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Define pleiotropy and give an example of one gene affecting multiple traits.</li>
+      <li>Define epistasis and explain how one gene can mask the expression of another.</li>
+      <li>Describe polygenic inheritance and explain why it produces a bell-curve distribution.</li>
+      <li>Explain how environment modifies phenotype even when genotype is fixed.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.3 &amp; 13.4</div><div class="sh2">Four Extensions Beyond Mendel</div>
+      <table class="dt">
+        <tr><th>Concept</th><th>Definition</th><th>Example</th><th>Effect on Ratio</th></tr>
+        <tr><td><strong>Pleiotropy</strong></td><td>ONE gene affects MULTIPLE traits</td><td>Sickle cell gene affects RBC shape, oxygen transport, pain, organ damage — all from one mutation</td><td>Normal Mendelian ratios; multiple trait effects</td></tr>
+        <tr><td><strong>Epistasis</strong></td><td>One gene MASKS the expression of another gene at a different locus</td><td>Coat color in Labrador retrievers: B gene determines black/brown, but E gene determines if pigment is expressed at all (ee = yellow regardless of B)</td><td>Alters 9:3:3:1 to 9:3:4 or 12:3:1 depending on type</td></tr>
+        <tr><td><strong>Polygenic Inheritance</strong></td><td>ONE trait controlled by MULTIPLE genes</td><td>Human skin color (4–6 genes), height (~700 genes), IQ (~1000+ genes</td><td>No simple ratios; bell-curve (normal) distribution in population</td></tr>
+        <tr><td><strong>Environmental Influence</strong></td><td>Phenotype is modified by environmental conditions despite fixed genotype</td><td>Himalayan rabbit (cool → dark fur at extremities); siamese cats; identical twins with different diets/heights</td><td>Same genotype → different phenotypes in different environments</td></tr>
+      </table>
+      <div class="sh3">Polygenic Inheritance &amp; the Bell Curve</div>
+      <p class="prose">When a trait is controlled by many genes (polygenic), each with small additive effects, the distribution of phenotypes in a population follows a <strong>normal (bell-shaped) distribution</strong>. This explains continuous variation — traits like height and skin color don't fall into a few discrete categories but exist on a spectrum with most people clustered near the average.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Epistasis Changes the 9:3:3:1 Ratio</div><div class="cx">When one gene masks another (epistasis), the 9:3:3:1 dihybrid ratio collapses into a modified ratio. Example: Labrador coat color — 9 black : 3 brown : 4 yellow (instead of 9:3:3:1). The 4 comes from ee dogs (homozygous recessive at the E locus), which are yellow regardless of their genotype at the B locus. Recognizing modified ratios is a diagnostic skill for epistasis.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Polygenic Inheritance — Height Distribution</div>
+      <div class="graph-box"><div class="graph-title">Human Height Distribution — Classic Polygenic Bell Curve</div><div class="graph-cap">Height is controlled by hundreds of genes — continuous variation produces a normal distribution</div><div class="graph-wrap"><canvas id="chartL7"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the difference between pleiotropy and epistasis. Then explain why polygenic traits produce a bell-curve distribution rather than distinct categories. Give one example of each concept.</div>
+      <textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd7">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap7" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 7 Quiz — Non-Mendelian Inheritance</h3><p>5 questions · includes height distribution graph</p></div></div>
+    <div id="q7">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Sickle cell disease is caused by a single gene mutation — yet it causes anemia, pain crises, organ damage, increased malaria resistance, and altered RBC shape. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Epistasis — the sickle cell gene is masking other genes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Polygenic inheritance — multiple genes cause these effects together</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pleiotropy — one gene mutation affects multiple, seemingly unrelated traits simultaneously</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Incomplete dominance — sickle cell carriers have mild symptoms</li></ul>
+        <div class="qexp"><strong>Pleiotropy</strong>: one gene → multiple trait effects. The HBB gene mutation changes a single amino acid in hemoglobin → abnormally shaped (sickle-shaped) red blood cells → the sickle shape causes clogs in blood vessels, anemia, pain, organ damage, AND (in heterozygotes) increased resistance to malaria. All these diverse effects stem from one gene change. Many genes are pleiotropic — this is common, not the exception.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In Labrador retrievers, the E gene controls whether pigment is deposited in the coat. A dog that is homozygous recessive (ee) is yellow, regardless of its genotype at the B locus (black/brown). This is called:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pleiotropy</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Incomplete dominance</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Polygenic inheritance — coat color is controlled by two genes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Epistasis — the ee genotype at one locus masks the expression of the B locus entirely</li></ul>
+        <div class="qexp"><strong>Epistasis</strong>: one gene masks another. The E gene is "epistatic" to the B gene. When ee is present, no pigment is deposited at all → yellow regardless of whether the B locus says black or brown. Cross EeBb × EeBb produces: 9 E_B_ (black) : 3 E_bb (brown) : 3 eeB_ (yellow) : 1 eebb (yellow) = <strong>9:3:4</strong> (the two yellow classes merge). This modified ratio is the signature of recessive epistasis.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">📊 Based on the height distribution graph, what shape does a polygenic trait produce in a population, and why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A bimodal (two-peaked) distribution — because there are only two sexes with different average heights</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A normal (bell-shaped) distribution — many genes each with small additive effects combine to produce most individuals near the mean, with fewer at the extremes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A flat, uniform distribution — all heights are equally probable</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A discrete step pattern — each additional allele adds exactly one height category</li></ul>
+        <div class="qexp">Polygenic traits produce a <strong>normal (bell-shaped) distribution</strong>. With many genes each contributing small additive effects, the central limit theorem predicts that most individuals will cluster near the population mean (average effect of all genes) with progressively fewer individuals at the extremes (where many "tall" or "short" alleles happen to combine). This is why most people are near average height, and very tall or very short individuals are rare — they require unusual combinations of alleles at many loci.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Himalayan rabbits have a color-limiting enzyme that only works in the cold. Cool extremities (ears, nose, paws) are dark; warm body areas are white — even though all cells have the same genotype. This demonstrates:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Environmental influence on phenotype — the same genotype produces different phenotypes depending on environmental conditions (temperature here)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Epistasis — cold temperature is masking gene expression</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Incomplete dominance between light and dark alleles</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Pleiotropy — the color gene also controls temperature sensitivity</li></ul>
+        <div class="qexp">The Himalayan rabbit shows that <strong>phenotype = genotype + environment</strong>. Every cell has the same genes, but the color enzyme is heat-sensitive — it's active in cool areas (ears, nose, feet → dark pigment) and inactive in warm areas (body → no pigment = white). This demonstrates that phenotype is not fixed by genotype alone. Environment (temperature, diet, UV exposure, stress) can profoundly alter how genes are expressed — a fundamental principle of biology.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Human skin color is controlled by 4–6 genes with additive effects. Two people with identical genotypes for skin color genes could have different skin tones. What is the most likely explanation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>One person must have a de novo mutation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The skin color genes are linked and don't assort independently</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Environmental factors like UV exposure (sun tanning) can alter the expressed skin tone independently of genotype — phenotype is not determined by genotype alone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Skin color is not actually polygenic — it follows a simple dominant pattern</li></ul>
+        <div class="qexp">Sun exposure stimulates melanocytes to produce more melanin → skin darkens (tanning), even with unchanged genotype. This is the key distinction: genotype sets the POTENTIAL range of phenotype, but environment determines where within that range the phenotype actually falls. This concept — the "norm of reaction" — explains why identical twins raised in different environments can have different phenotypes despite identical genotypes.</div></div>
+    </div>
+    <div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Lesson 6</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Lesson 8 →</button></div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="hero hero-dis"><div class="h-crumb">Applied Genetics · <span>Lesson 8</span></div><div class="h-title">Pedigree Analysis</div><div class="h-desc">A pedigree chart is a family tree coded with symbols that reveals the inheritance pattern of a trait across generations — the same logic used in genetic counseling clinics worldwide.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 12.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Identify standard pedigree symbols: squares (males), circles (females), shaded (affected), half-shaded (carrier).</li>
+      <li>Distinguish autosomal dominant, autosomal recessive, and X-linked recessive patterns in pedigrees.</li>
+      <li>Determine genotypes of individuals in a pedigree.</li>
+      <li>Apply pedigree analysis to calculate probability of offspring genotypes.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 12.3</div><div class="sh2">Reading a Pedigree</div>
+      <p class="prose">Pedigrees use standardized symbols: <strong>□ = male, ○ = female, ■/● = affected individual, ◑ = carrier female, ━ = mating line, | = offspring line</strong>. Roman numerals label generations (I, II, III); Arabic numerals label individuals within generations.</p>
+      <table class="dt">
+        <tr><th>Pattern</th><th>Key Clues in the Pedigree</th><th>Example Disorder</th></tr>
+        <tr><td><strong>Autosomal Dominant (AD)</strong></td><td>• Trait appears every generation (no "skip")<br>• Affected parent always has affected parent<br>• Affects males and females equally<br>• Unaffected parents → no affected children</td><td>Huntington disease, Marfan syndrome, achondroplasia</td></tr>
+        <tr><td><strong>Autosomal Recessive (AR)</strong></td><td>• Can "skip" generations (parents unaffected, child affected)<br>• Affected child with two unaffected parents → parents are carriers<br>• Consanguinity increases risk<br>• Affects males and females equally</td><td>Cystic fibrosis, PKU, sickle cell disease, Tay-Sachs</td></tr>
+        <tr><td><strong>X-Linked Recessive (XR)</strong></td><td>• More males affected than females<br>• Affected father CANNOT pass to sons<br>• Carrier mothers pass to 50% of sons<br>• No father-to-son transmission</td><td>Color blindness, hemophilia A, Duchenne MD</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Two Unaffected Parents with an Affected Child → Autosomal Recessive</div><div class="cx">If two phenotypically normal (unaffected) parents have a child with a disorder, the disorder must be <strong>autosomal recessive</strong> — the parents are both carriers (Aa × Aa). If the disorder were autosomal dominant, at least one parent would show it. If it were X-linked recessive, no daughters would be affected (unless the father is also affected). This logic is the most common pedigree inference question on exams.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 12.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Pedigree Pattern Recognition</div>
+      <div class="graph-box"><div class="graph-title">Frequency of Affected Individuals by Sex — AD vs. AR vs. X-Linked Recessive</div><div class="graph-cap">X-linked recessive disorders disproportionately affect males; AD and AR affect both sexes equally</div><div class="graph-wrap"><canvas id="chartL8"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">List the three key clues that distinguish autosomal recessive from autosomal dominant in a pedigree. What does it mean if an X-linked disorder is never passed from father to son?</div>
+      <textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 80 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd8">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap8" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 8 Quiz — Pedigree Analysis</h3><p>5 questions · includes sex-by-pattern chart</p></div></div>
+    <div id="q8">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In a pedigree, two unaffected parents (Generation I) have three children: one affected daughter, one unaffected son, one unaffected daughter. What inheritance pattern does this indicate?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Autosomal dominant — the trait skipped the parents</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autosomal recessive — two unaffected (carrier) parents can produce an affected child; the trait appeared in both sexes, ruling out simple X-linked patterns</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>X-linked recessive — the daughter is affected</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Y-linked — the son is unaffected</li></ul>
+        <div class="qexp"><strong>Autosomal recessive (AR)</strong> is indicated when: (1) two unaffected parents have an affected child — parents must be carriers (Aa × Aa); (2) an affected daughter rules out simple X-linked recessive (X-linked would require both X chromosomes to carry the allele, requiring an affected or carrier mother AND an affected father); (3) trait appears to "skip" a generation. The affected daughter with two unaffected parents is the clearest AR signature.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A pedigree shows that every affected individual has at least one affected parent, males and females are equally affected, and the trait appears in every generation. What pattern is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Autosomal recessive — carriers in every generation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-linked recessive — males more affected</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>X-linked dominant</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Autosomal dominant — every generation affected, equal sex distribution, affected parent always present</li></ul>
+        <div class="qexp"><strong>Autosomal dominant (AD)</strong> key features: (1) trait in EVERY generation — never skips; (2) every affected person has an affected parent; (3) affects males and females equally; (4) unaffected individuals have unaffected children. Examples: Huntington disease (delayed onset), Marfan syndrome (connective tissue), achondroplasia (dwarfism). An AD disorder always comes from an affected parent — it cannot appear from two unaffected carriers.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A pedigree shows color blindness only in males, never passing from an affected father to his sons, but passing through carrier mothers to 50% of sons. What pattern is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>X-linked recessive — "no father-to-son transmission" is the defining clue; affected males got the allele from their carrier mothers</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autosomal recessive — the trait only appears in males by coincidence</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Y-linked — only males are affected</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Autosomal dominant — appears every generation through males</li></ul>
+        <div class="qexp"><strong>X-linked recessive</strong> diagnostic: (1) far more males affected than females; (2) <strong>NO father-to-son transmission</strong> — fathers give Y to sons, not X; (3) affected males got their X<sup>a</sup> from carrier mothers; (4) carrier females (half-shaded in pedigrees) are unaffected but pass the allele to sons. If you ever see a pedigree where an affected father's sons are never affected, it's X-linked — guaranteed.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Two carrier parents (Aa × Aa) for an autosomal recessive disorder have a child who is unaffected. What is the probability that this unaffected child is a carrier?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>25%</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>50%</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2/3 (about 67%) — among unaffected offspring from Aa × Aa, 2 are Aa (carriers) and 1 is AA (not a carrier), so 2/3 of unaffected children are carriers</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>100% — all unaffected children of carriers are carriers</li></ul>
+        <div class="qexp">Key conditional probability: From Aa × Aa: offspring are AA (25%), Aa (50%), aa (25%). The child is <em>known</em> to be unaffected, so aa is ruled out. Among the remaining unaffected: 1 AA and 2 Aa. P(carrier | unaffected) = 2/3 ≈ <strong>67%</strong>. This is a classic genetics probability question — genetic counselors use this to estimate carrier probability in unaffected relatives of patients with recessive disorders.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">📊 Based on the sex-by-pattern chart, which inheritance pattern shows the MOST equal distribution between affected males and affected females?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>X-linked recessive — males and females are equally likely to be affected</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autosomal dominant and autosomal recessive — both autosomal patterns affect males and females equally because the gene is on a non-sex chromosome</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>X-linked dominant — only females are affected</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Y-linked — affects males and females equally</li></ul>
+        <div class="qexp">Autosomal traits (dominant AND recessive) affect males and females equally because the gene is on an autosome (non-sex chromosome) — both sexes have the same pair of autosomes. X-linked recessive disproportionately affects males (hemizygous). X-linked dominant typically affects more females (since there are more X chromosomes in females). Y-linked only affects males. "Autosomal = equal sex distribution" is a key pedigree analysis principle.</div></div>
+    </div>
+    <div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Lesson 7</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(9)">Lesson 9 →</button></div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="hero hero-dis"><div class="h-crumb">Applied Genetics · <span>Lesson 9</span></div><div class="h-title">Human Genetic Disorders</div><div class="h-desc">Over 10,000 human disorders have a known genetic basis. Each one illustrates core genetics principles — and understanding the cause is the first step toward treatment, prevention, and genetic counseling.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 13.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Classify genetic disorders as single-gene (Mendelian) or chromosomal.</li>
+      <li>Describe the genetics and symptoms of cystic fibrosis, sickle cell disease, PKU, and Huntington disease.</li>
+      <li>Explain the chromosomal basis of Down syndrome, Turner syndrome, and Klinefelter syndrome.</li>
+      <li>Distinguish nondisjunction in meiosis I from meiosis II and its consequences.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 13.5</div><div class="sh2">Single-Gene (Mendelian) Disorders</div>
+      <table class="dt">
+        <tr><th>Disorder</th><th>Pattern</th><th>Gene / Chromosome</th><th>Key Features</th></tr>
+        <tr><td><strong>Cystic Fibrosis</strong></td><td>Autosomal Recessive</td><td>CFTR gene, Chr. 7</td><td>Defective chloride channel → thick mucus in lungs, pancreas, intestines; most common fatal AR disorder in Caucasians; ~1/25 are carriers</td></tr>
+        <tr><td><strong>Sickle Cell Disease</strong></td><td>Autosomal Recessive (incomplete dominance in carriers)</td><td>HBB gene, Chr. 11</td><td>Single amino acid change → sickle-shaped RBCs; vaso-occlusive pain crises; most common in populations from malaria-endemic regions; heterozygotes have malaria advantage</td></tr>
+        <tr><td><strong>PKU (Phenylketonuria)</strong></td><td>Autosomal Recessive</td><td>PAH gene, Chr. 12</td><td>Cannot convert phenylalanine → tyrosine; buildup causes intellectual disability; treatable with low-phenylalanine diet (newborn screening catches it)</td></tr>
+        <tr><td><strong>Huntington Disease</strong></td><td>Autosomal Dominant</td><td>HTT gene, Chr. 4 (CAG repeat expansion)</td><td>Progressive neurodegeneration; symptoms begin age 30–50; no treatment; one copy sufficient; 50% offspring risk; allele has 100% penetrance</td></tr>
+        <tr><td><strong>Hemophilia A</strong></td><td>X-linked Recessive</td><td>F8 gene, X chromosome</td><td>Deficient clotting factor VIII; prolonged bleeding; affects males; treated with factor replacement therapy</td></tr>
+      </table>
+      <div class="sh3">Chromosomal Disorders — Nondisjunction</div>
+      <p class="prose"><strong>Nondisjunction</strong> occurs when homologous chromosomes (in Meiosis I) or sister chromatids (in Meiosis II) fail to separate properly, producing gametes with the wrong chromosome number. Fertilization of abnormal gametes produces offspring with aneuploidy — extra or missing chromosomes.</p>
+      <table class="dt">
+        <tr><th>Disorder</th><th>Karyotype</th><th>Key Features</th><th>Frequency</th></tr>
+        <tr><td><strong>Down Syndrome</strong></td><td>Trisomy 21 (47, +21)</td><td>Intellectual disability, distinctive facial features, heart defects, increased leukemia risk; risk increases with maternal age</td><td>~1/700 live births</td></tr>
+        <tr><td><strong>Turner Syndrome</strong></td><td>45, X (monosomy X)</td><td>Female phenotype; short stature, ovarian dysgenesis (infertility), webbed neck; often detected at puberty</td><td>~1/2,500 female births</td></tr>
+        <tr><td><strong>Klinefelter Syndrome</strong></td><td>47, XXY</td><td>Male phenotype; tall, small testes, infertility, sometimes gynecomastia; mild learning differences; often detected incidentally</td><td>~1/500–1,000 male births</td></tr>
+        <tr><td><strong>Trisomy 18 (Edwards)</strong></td><td>47, +18</td><td>Severe disabilities, heart defects; usually fatal within first year; second most common autosomal trisomy</td><td>~1/5,000 live births</td></tr>
+      </table>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 13.5. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Down Syndrome Risk by Maternal Age</div>
+      <div class="graph-box"><div class="graph-title">Risk of Down Syndrome (Trisomy 21) by Maternal Age</div><div class="graph-cap">Nondisjunction risk increases dramatically with maternal age — especially after 35</div><div class="graph-wrap"><canvas id="chartL9"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp9"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain what nondisjunction is and when it can occur in meiosis. Describe how nondisjunction leads to Down syndrome. Why does maternal age increase the risk?</div>
+      <textarea class="cp-textarea" id="cpt9" placeholder="Write your answer here..." oninput="cpCheck(9)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc9">Characters: <span id="cpn9">0</span> / 80 required</div><button class="cp-btn" id="cpb9" onclick="cpUnlock(9)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd9">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap9" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 9 Quiz — Human Genetic Disorders</h3><p>5 questions · includes Down syndrome risk graph</p></div></div>
+    <div id="q9">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Cystic fibrosis affects ~1 in 2,500 Caucasians. Both parents must be carriers (Aa × Aa). What fraction of their children will be affected, and what fraction will be carriers?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>50% affected; 50% carriers</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>100% carriers; none affected</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25% affected (aa); 50% carriers (Aa); 25% unaffected non-carriers (AA)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>75% affected; 25% carriers</li></ul>
+        <div class="qexp">From Aa × Aa: 25% AA (unaffected, not a carrier), 50% Aa (carrier, unaffected phenotype), 25% aa (affected with cystic fibrosis). The CFTR mutation affects chloride channel function → thick mucus in lungs/pancreas. CF is the most common fatal autosomal recessive disorder in Caucasians. About 1 in 25 Caucasians are carriers — which seems high, but carrier frequency for common AR diseases is typically much higher than disease frequency.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Huntington disease is autosomal dominant. Why is it especially tragic that it's dominant?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Every person who inherits ONE copy of the HTT mutation will develop the disease — there is no "carrier" status; and since symptoms don't appear until age 30–50, people may have children before knowing they're affected — giving each child a 50% chance of inheriting the allele</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Dominant alleles are always more severe than recessive ones</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Being dominant means the mutation cannot be detected early</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dominant disorders always skip a generation</li></ul>
+        <div class="qexp">Huntington's brutal tragedy: (1) <strong>100% penetrance</strong> — every person with one copy WILL develop it (no such thing as a carrier who escapes); (2) <strong>late onset</strong> (30–50 years) — people often have children before symptoms appear; (3) each child of an affected parent has a 50% chance of inheriting the allele; (4) the HTT gene expansion (CAG repeats) causes progressive neurodegeneration with no cure. Genetic testing can detect the mutation, but this creates profound ethical dilemmas about pre-symptomatic testing.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Down syndrome is caused by trisomy 21. How does nondisjunction during meiosis lead to this condition?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Chromosome 21 is duplicated during DNA replication (S phase) but not divided at mitosis</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A mutation adds extra genetic material to chromosome 21</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Two copies of chromosome 21 are present in the egg because both X chromosomes failed to separate</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Chromosome 21 fails to separate during meiosis → one gamete receives two copies; that gamete fuses with a normal gamete (one copy) → zygote has three copies (trisomy 21 = 47 chromosomes total)</li></ul>
+        <div class="qexp">Nondisjunction: chromosome 21 homologs fail to separate in Meiosis I (or chromatids fail to separate in Meiosis II) → one gamete gets 2 copies of chr. 21, the other gets 0. If the gamete with 2 copies is fertilized by a normal gamete (1 copy) → zygote has <strong>3 copies = trisomy 21</strong> (47, +21). Down syndrome features include intellectual disability, distinctive facial features, congenital heart defects, and increased risk of leukemia and early Alzheimer disease.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the Down syndrome risk graph, at what maternal age does risk increase most steeply?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Before age 25 — young mothers have the highest risk</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>After age 35 — risk increases exponentially from about 1/400 at 35 to 1/30 at 45</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Risk is constant across all maternal ages</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Between ages 25–30 when oocytes are most active</li></ul>
+        <div class="qexp">Down syndrome risk increases dramatically after age <strong>35</strong>. A 25-year-old has ~1/1,250 risk; at 35: ~1/400; at 40: ~1/100; at 45: ~1/30. The reason: women are born with all the eggs they'll ever have, arrested in Prophase I since fetal development. Older eggs have been in this arrested state longer → meiotic spindle machinery is more likely to malfunction → nondisjunction is more frequent. This is why prenatal genetic testing (amniocentesis, CVS) is offered to mothers over 35.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Turner syndrome (45, X) and Klinefelter syndrome (47, XXY) are both sex chromosome aneuploidies. What do they have in common?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Both cause severe intellectual disability</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both affect only females</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both result from nondisjunction of sex chromosomes during meiosis and both typically cause infertility — Turner syndrome (monosomy X) causes ovarian dysgenesis; Klinefelter (XXY) causes small testes and reduced sperm</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both result in male phenotype with extra X chromosomes</li></ul>
+        <div class="qexp">Both arise from <strong>nondisjunction of sex chromosomes</strong>. Turner (45, X = monosomy X): female phenotype, short stature, ovarian dysgenesis, infertility, webbed neck; fertility possible with donor eggs. Klinefelter (47, XXY): male phenotype (SRY on Y), tall stature, small testes, infertility (rarely fertile), sometimes mild learning differences; often discovered incidentally. Both are relatively mild compared to autosomal aneuploidies (most of which are lethal) — sex chromosome number abnormalities are more compatible with life due to X inactivation.</div></div>
+    </div>
+    <div class="qscore" id="sc9"><div class="score-n" id="scn9">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">← Lesson 8</button><button class="mc-btn" onclick="markDone(9,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(10)">Lesson 10 →</button></div>
+</div>
+
+<div class="panel" id="p10">
+  <div class="hero hero-bio"><div class="h-crumb">Applied Genetics · <span>Lesson 10</span></div><div class="h-title">Biotechnology &amp; Genetic Engineering</div><div class="h-desc">Modern biotechnology lets us read, copy, cut, and rewrite the genome. These tools have transformed medicine, agriculture, forensics, and our understanding of life itself.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, Ch. 17</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe PCR (polymerase chain reaction) — purpose, steps, and applications.</li>
+      <li>Explain how gel electrophoresis separates DNA fragments and how to interpret a gel.</li>
+      <li>Describe recombinant DNA technology: restriction enzymes, ligation, vectors, and transformation.</li>
+      <li>Explain how CRISPR-Cas9 gene editing works at a molecular level.</li>
+      <li>Give examples of biotechnology applications: GMOs, gene therapy, DNA fingerprinting.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, Ch. 17</div><div class="sh2">Key Biotechnology Tools</div>
+      <table class="dt">
+        <tr><th>Tool</th><th>What It Does</th><th>Application</th></tr>
+        <tr><td><strong>PCR (Polymerase Chain Reaction)</strong></td><td>Amplifies a specific DNA segment exponentially — doubles it every cycle; ~30 cycles = 2³⁰ = over 1 billion copies from a single molecule</td><td>Forensic DNA testing, COVID-19 testing, genetic disorder diagnosis, ancient DNA analysis</td></tr>
+        <tr><td><strong>Gel Electrophoresis</strong></td><td>Separates DNA fragments by size using electrical current through agarose gel — smaller fragments travel farther; DNA visualized with fluorescent dye</td><td>DNA fingerprinting, determining PCR product size, restriction mapping</td></tr>
+        <tr><td><strong>Restriction Enzymes</strong></td><td>Bacterial "molecular scissors" that cut DNA at specific recognition sequences, creating "sticky ends" for ligation</td><td>Creating recombinant DNA by cutting and combining DNA from different sources</td></tr>
+        <tr><td><strong>Recombinant DNA / Cloning</strong></td><td>Combines DNA from different organisms; insert gene of interest into a vector (plasmid) → transform into bacteria → bacteria express the gene and produce the protein</td><td>Insulin production (human insulin gene in E. coli), growth hormone, clotting factors</td></tr>
+        <tr><td><strong>CRISPR-Cas9</strong></td><td>Guide RNA directs Cas9 nuclease to a specific DNA sequence → Cas9 cuts both strands → cell repairs the cut (knocking out a gene) or a new sequence can be inserted</td><td>Disease research, potential gene therapy for CF/sickle cell, GMO crop development</td></tr>
+      </table>
+      <div class="sh3">How PCR Works — Three Steps Per Cycle</div>
+      <table class="dt">
+        <tr><th>Step</th><th>Temperature</th><th>What Happens</th></tr>
+        <tr><td><strong>1. Denaturation</strong></td><td>~95°C</td><td>Heat breaks hydrogen bonds → DNA double helix unwinds into two single strands</td></tr>
+        <tr><td><strong>2. Annealing</strong></td><td>~55°C</td><td>Short primers (complementary to target sequence) bind to each single strand</td></tr>
+        <tr><td><strong>3. Extension</strong></td><td>~72°C</td><td>Taq polymerase (heat-stable enzyme) extends from primers → new complementary strand synthesized</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">CRISPR — The Gene Editing Revolution</div><div class="cx">CRISPR-Cas9 uses a <strong>guide RNA</strong> (gRNA) designed to match a target DNA sequence. The gRNA-Cas9 complex scans the genome, finds the matching sequence, and Cas9 cuts both DNA strands. The cell's repair machinery then either: (1) <strong>disrupts</strong> the gene (NHEJ repair = gene knockout) or (2) <strong>replaces</strong> it with a new sequence (HDR repair = precise gene editing). CRISPR is faster, cheaper, and more precise than previous gene editing tools.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 17. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Reading a Gel Electrophoresis Result</div>
+      <div class="graph-box"><div class="graph-title">Simulated Gel Electrophoresis — DNA Fragment Separation</div><div class="graph-cap">Fragments migrate toward positive electrode; smaller fragments travel farther (lower on gel); ladder provides size reference</div><div class="graph-wrap"><canvas id="chartL10"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp10"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe how PCR amplifies DNA — name the three steps and what happens at each temperature. How does CRISPR-Cas9 edit a gene?</div>
+      <textarea class="cp-textarea" id="cpt10" placeholder="Write your answer here..." oninput="cpCheck(10)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc10">Characters: <span id="cpn10">0</span> / 80 required</div><button class="cp-btn" id="cpb10" onclick="cpUnlock(10)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd10">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap10" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 10 Quiz — Biotechnology &amp; Genetic Engineering</h3><p>5 questions · includes gel electrophoresis graph</p></div></div>
+    <div id="q10">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">PCR can produce billions of copies of a DNA sequence starting from a single molecule. What enzyme does PCR use, and why must it be heat-stable?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA ligase — it joins Okazaki fragments at high temperature</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Taq polymerase — isolated from Thermus aquaticus (a hot spring bacterium); regular DNA polymerase would denature at the 95°C denaturation step</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Restriction enzyme — cuts DNA and then copies it</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA polymerase — it copies DNA at high temperature</li></ul>
+        <div class="qexp"><strong>Taq polymerase</strong> (from Thermus aquaticus) is the key innovation that made PCR practical. The denaturation step (95°C) would destroy normal DNA polymerase each cycle — you'd need to add new enzyme after every cycle. Taq polymerase is naturally heat-stable (the bacterium lives in hot springs at ~70°C) and survives the denaturation step → works continuously for 30+ cycles. This discovery by Kary Mullis won the 1993 Nobel Prize in Chemistry.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In gel electrophoresis, DNA is negatively charged and migrates toward the positive electrode. Which DNA fragment travels the FARTHEST through the gel?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The largest fragment — more charge = faster migration</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All fragments travel the same distance</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Fragments with the highest GC content</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The smallest fragment — smaller molecules navigate the agarose gel pores more easily and migrate farther in the same time</li></ul>
+        <div class="qexp"><strong>Smaller = farther</strong> in gel electrophoresis. The agarose gel acts as a molecular sieve — larger fragments are slowed more by the gel matrix. Smaller fragments slip through the pores more easily → travel farther toward the positive electrode. On a gel image: larger fragments appear near the top (wells), smaller fragments near the bottom. A DNA ladder (known-size fragments) is run alongside samples to determine sizes of unknown fragments by comparison.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A scientist wants to produce human insulin using bacteria. Which sequence of biotechnology steps would accomplish this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cut human insulin gene with restriction enzyme → ligate into bacterial plasmid (vector) → transform plasmid into E. coli → bacteria express human insulin gene → harvest insulin protein</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Use PCR to amplify the insulin gene → inject directly into bacteria → bacteria produce insulin automatically</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Use CRISPR to delete the insulin gene from bacteria → bacteria then switch to producing human insulin instead</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Run gel electrophoresis to separate the insulin gene → insert into bacterial DNA → bacteria produce insulin</li></ul>
+        <div class="qexp">Recombinant DNA / molecular cloning: (1) <strong>Restriction enzyme</strong> cuts human insulin gene from chromosomal DNA, creating sticky ends; (2) same restriction enzyme cuts a <strong>plasmid vector</strong>; (3) <strong>DNA ligase</strong> joins the insulin gene into the plasmid (recombinant plasmid); (4) <strong>transformation</strong> introduces recombinant plasmid into E. coli; (5) bacteria transcribe and translate the insulin gene → produce human insulin. This is exactly how all pharmaceutical insulin has been made since the 1980s — replacing animal insulin from pigs and cows.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the simulated gel electrophoresis, if a DNA ladder shows bands at 500, 1000, 2000, and 3000 bp, which unknown sample fragment is approximately 1000 bp?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The fragment nearest the wells (top of gel)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The fragment farthest from the wells (bottom of gel)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The fragment that migrates to the same position as the 1000 bp ladder band — same size = same migration distance under identical conditions</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The brightest band regardless of position</li></ul>
+        <div class="qexp">To size an unknown fragment: compare its position to the DNA ladder (molecular weight marker) run in an adjacent lane. The ladder contains fragments of known sizes. An unknown fragment that migrates to the <strong>same distance from the well</strong> as the 1000 bp ladder band is approximately 1000 bp. For precise sizing, you can plot ladder size vs. distance on semi-log graph paper and read off unknown sizes from the standard curve.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">CRISPR-Cas9 uses a guide RNA to direct the Cas9 enzyme to a specific DNA sequence. What happens AFTER Cas9 cuts both strands of DNA?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The cut DNA is automatically degraded and removed from the cell</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The cell repairs the double-strand break — by error-prone NHEJ (disrupts the gene = knockout) OR by HDR using a provided template (precise replacement = gene editing)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The guide RNA fills in the cut with complementary sequence</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Taq polymerase fills in the cut and amplifies the corrected sequence</li></ul>
+        <div class="qexp">After Cas9 cuts both DNA strands (double-strand break), the cell must repair it using one of two pathways: (1) <strong>NHEJ (Non-Homologous End Joining)</strong>: error-prone, often inserts/deletes bases → disrupts gene function = <strong>gene knockout</strong>. (2) <strong>HDR (Homology-Directed Repair)</strong>: if a DNA template is provided, it can be used to repair precisely → <strong>gene replacement</strong> (therapeutic editing). NHEJ is the default; HDR requires providing a repair template alongside the CRISPR components. Current clinical trials use CRISPR to treat sickle cell disease and beta-thalassemia.</div></div>
+    </div>
+    <div class="qscore" id="sc10"><div class="score-n" id="scn10">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">← Lesson 9</button><button class="mc-btn" onclick="markDone(10,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(11)">Unit Review &amp; Practice Test →</button></div>
+</div>
+
+<div class="panel" id="p11">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Practice Test</span></div><div class="h-title">Unit Review &amp; Practice Test</div><div class="h-desc">20 questions covering all 10 lessons — Mendelian genetics, dominance patterns, Punnett squares, chromosomal basis, sex-linked traits, pedigrees, human disorders, and biotechnology.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📊 Data Interpretation Included</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Unit at a Glance</div>
+      <table class="dt">
+        <tr><th>Topic</th><th>Key Terms</th></tr>
+        <tr><td>Mendel's Laws</td><td>Gene, allele, dominant, recessive, genotype, phenotype, Law of Segregation, Law of Independent Assortment, test cross</td></tr>
+        <tr><td>Dominance Patterns</td><td>Complete, incomplete, codominance; ABO blood type; I<sup>A</sup>, I<sup>B</sup>, i</td></tr>
+        <tr><td>Monohybrid Crosses</td><td>3:1 phenotypic ratio (Pp × Pp); 1:2:1 genotypic ratio; 1:1 = test cross</td></tr>
+        <tr><td>Dihybrid Crosses</td><td>9:3:3:1 ratio; product rule; 16 total boxes; independent assortment</td></tr>
+        <tr><td>Chromosomal Basis</td><td>Sutton-Boveri theory; linkage; crossing over; recombination frequency; cM</td></tr>
+        <tr><td>Sex-Linked Traits</td><td>XX=female, XY=male; hemizygous; carrier; X-linked recessive more common in males; no father-to-son transmission</td></tr>
+        <tr><td>Non-Mendelian</td><td>Pleiotropy (one gene → many traits); epistasis (one gene masks another); polygenic; environment</td></tr>
+        <tr><td>Pedigrees</td><td>AD (no skip, equal sex), AR (can skip, two carriers), X-linked (males &gt; females, no father-to-son)</td></tr>
+        <tr><td>Human Disorders</td><td>CF (AR); sickle cell (AR); Huntington (AD); hemophilia (X-linked); Down = trisomy 21; Turner = 45,X; Klinefelter = 47,XXY</td></tr>
+        <tr><td>Biotechnology</td><td>PCR (Taq polymerase, 3 steps); gel electrophoresis (small=far); recombinant DNA; CRISPR</td></tr>
+      </table>
+    </div>
+    <div class="cs"><div class="eyebrow">Review Data — Use for Questions 14 &amp; 19</div>
+      <div class="graph-box"><div class="graph-title">Mendel's F2 Generation — Observed Phenotypic Ratios</div><div class="graph-cap">Reference for Practice Test Question 14</div><div class="graph-wrap"><canvas id="chartPT1"></canvas></div></div>
+      <div class="graph-box" style="margin-top:16px;"><div class="graph-title">Down Syndrome Risk by Maternal Age</div><div class="graph-cap">Reference for Practice Test Question 19</div><div class="graph-wrap"><canvas id="chartPT2"></canvas></div></div>
+    </div>
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — Genetics &amp; Heredity</h3><p>20 questions · Virginia SOL format · auto-submitted to Mr. England</p></div></div>
+    <div id="q11">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Mendel's Law of Segregation states that:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Genes on different chromosomes always assort independently</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All offspring of a cross between two pure lines are heterozygous</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The two alleles for a gene separate during gamete formation so each gamete carries only one allele per gene</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dominant alleles always appear more frequently than recessive alleles</li></ul>
+        <div class="qexp">Law of Segregation: alleles separate during meiosis — homologous chromosomes separate in Anaphase I, so each gamete gets ONE allele per gene. When gametes fuse at fertilization, the offspring gets one allele from each parent. This explains why Mendel's F2 plants showed a 3:1 ratio — the recessive allele was never lost, just separated into different gametes.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In a monohybrid cross (Tt × Tt), what is the probability of a homozygous dominant (TT) offspring?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>50%</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>25% — genotypic ratio from Tt × Tt is 1 TT : 2 Tt : 1 tt</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>75%</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0%</li></ul>
+        <div class="qexp">From Tt × Tt: TT (25%), Tt (50%), tt (25%). Only 1/4 offspring are homozygous dominant. The phenotypic ratio is 3:1 (dominant:recessive), but within those 3 dominant phenotype individuals, only 1 is actually TT — the other 2 are Tt carriers. Never confuse 75% phenotypic dominant with 25% genotypic TT.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A purple-flowered plant is test-crossed with a white-flowered plant (pp). All 40 offspring are purple. What is the most likely genotype of the purple parent?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pp — heterozygous dominant</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>pp — homozygous recessive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Cannot be determined from this data</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>PP — if the parent were Pp, ~50% of offspring would be white; all 40 purple offspring makes PP overwhelmingly likely</li></ul>
+        <div class="qexp">Test cross logic: PP × pp → all Pp (all purple). Pp × pp → 50% Pp (purple), 50% pp (white). With 40 ALL-purple offspring, a Pp parent is essentially ruled out — probability of 40 consecutive purples from Pp = (1/2)⁴⁰ ≈ 0. PP is the conclusion. Larger sample sizes in test crosses give greater confidence in genotype determination.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Two plants heterozygous for both traits (AaBb × AaBb) are crossed. What fraction shows BOTH dominant phenotypes (A_B_)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>9/16 — the "9" in the 9:3:3:1 dihybrid ratio; product rule: 3/4 × 3/4 = 9/16</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3/16</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1/16</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>12/16</li></ul>
+        <div class="qexp">Product rule: P(A_) = 3/4 × P(B_) = 3/4 = 9/16. In the 9:3:3:1 dihybrid ratio, 9/16 of offspring show both dominant traits. The 16 total boxes in the 4×4 Punnett square represent all possible gamete combinations from AaBb × AaBb parents.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">In snapdragons (Rr = pink; incomplete dominance), two pink plants are crossed. What is the expected phenotypic ratio?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3 pink : 1 white</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All pink</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1 red : 2 pink : 1 white — three phenotypes because neither allele fully dominates</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3 red : 1 pink</li></ul>
+        <div class="qexp">Rr × Rr → RR (red 25%), Rr (pink 50%), rr (white 25%) = 1:2:1 phenotypic ratio. With incomplete dominance, the phenotypic ratio equals the genotypic ratio because each genotype produces a distinct phenotype. This 1:2:1 phenotypic ratio (three distinct phenotypes) is the diagnostic signature of incomplete dominance.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">A type A mother (I<sup>A</sup>i) and a type B father (I<sup>B</sup>i) have a type O child (ii). Is this possible?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>No — type A and B parents cannot produce type O children</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Yes — both parents carry the recessive i allele; type O (ii) has 25% probability from I<sup>A</sup>i × I<sup>B</sup>i</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Only if codominance creates a new allele in the child</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>No — one parent must be type O to produce an O child</li></ul>
+        <div class="qexp">Cross I<sup>A</sup>i × I<sup>B</sup>i: all four ABO blood types are possible — I<sup>A</sup>I<sup>B</sup> (AB), I<sup>A</sup>i (A), I<sup>B</sup>i (B), ii (O) — each 25%. Type O (ii) requires receiving one i allele from each parent. Since both parents here are heterozygous carriers of i, this is entirely possible. Classic blood typing genetics question — often misunderstood because people assume O requires at least one O parent.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">Two genes are 22 cM apart on chromosome 5. Which statement is CORRECT?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They assort independently — 22 cM means they're on different chromosomes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They never separate — they are always inherited together</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They are sex-linked genes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are linked with 22% recombination frequency — parental combinations appear in 78% of gametes; recombinants in 22%</li></ul>
+        <div class="qexp">22 cM = 22% recombination frequency. The genes are linked (same chromosome) but not tightly — crossing over separates them in 22% of meioses. Parental allele combinations appear together in 78% of gametes. Genes approaching 50 cM behave as if on different chromosomes (independent assortment). Tightly linked genes (&lt;5 cM) travel together in &gt;95% of gametes.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">8</span><span class="qt-inner">A carrier mother (X<sup>H</sup>X<sup>h</sup>) and an unaffected father (X<sup>H</sup>Y) have children. What is the probability that their DAUGHTER has hemophilia?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0% — daughters get X<sup>H</sup> from dad, making all daughters either X<sup>H</sup>X<sup>H</sup> or X<sup>H</sup>X<sup>h</sup> (both normal phenotype)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>50% of daughters</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25% of daughters</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>100% of daughters</li></ul>
+        <div class="qexp">Daughters always receive X<sup>H</sup> from an unaffected father (X<sup>H</sup>Y). Combined with mom's X<sup>H</sup> or X<sup>h</sup>, all daughters are either X<sup>H</sup>X<sup>H</sup> (normal) or X<sup>H</sup>X<sup>h</sup> (carrier but normal phenotype). To be affected, a daughter would need X<sup>h</sup>X<sup>h</sup> — requiring an affected father. With an unaffected father, NO daughters can have hemophilia.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">9</span><span class="qt-inner">One gene mutation causes anemia, pain crises, organ damage, AND increased malaria resistance. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Polygenic inheritance — multiple phenotypes from multiple genes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Epistasis — one gene masking another</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pleiotropy — one gene mutation produces multiple, diverse phenotypic effects</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Codominance — both alleles expressed in carriers</li></ul>
+        <div class="qexp">Pleiotropy: one gene → multiple phenotypic effects. The sickle cell HBB mutation alters hemoglobin → sickle-shaped RBCs → all these downstream effects. Pleiotropy is the rule, not the exception — most genes affect multiple traits. This example also illustrates balanced polymorphism: heterozygotes (sickle cell trait) have malaria resistance with minimal anemia, maintaining the allele in malaria-endemic populations.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">A pedigree shows the trait in every generation, equal sex distribution, and every affected person has an affected parent. What inheritance pattern?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Autosomal recessive</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autosomal dominant — appears every generation (no skipping), equal sex distribution, affected parent always present</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>X-linked recessive</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Y-linked</li></ul>
+        <div class="qexp">Autosomal dominant (AD): every generation affected (never skips), equal sex distribution (autosomal = not on sex chromosomes), every affected person has an affected parent. Unlike AR — which CAN skip generations via carrier parents — AD alleles always express their phenotype (assuming complete penetrance). Examples: Huntington disease, Marfan syndrome, familial hypercholesterolemia.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">11</span><span class="qt-inner">Two unaffected parents have an affected child. Males and females are equally affected. What pattern?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Autosomal dominant</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-linked recessive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Y-linked</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Autosomal recessive — two carrier parents (Aa × Aa) produce affected children; equal sex distribution rules out X-linked</li></ul>
+        <div class="qexp">Two unaffected parents → affected child = autosomal recessive (both are Aa carriers). Equal sex distribution rules out X-linked patterns (X-linked recessive affects more males). AD is impossible because an AD child requires an affected parent. This is the most tested pedigree inference: unaffected × unaffected → affected child = autosomal recessive, both parents must be carriers.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">12</span><span class="qt-inner">Human height follows a bell curve in populations and is controlled by hundreds of genes. This is because height is:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Polygenic — many genes with small additive effects produce continuous variation clustered near the population mean</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-linked — males show the full height range</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pleiotropic — one height gene has hundreds of downstream effects</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Controlled by epistasis — one master gene determines height category</li></ul>
+        <div class="qexp">Polygenic inheritance: many genes + small additive effects = continuous variation + normal distribution. Most people inherit a mix of "tall" and "short" alleles → cluster near the mean. Extreme heights (very tall or very short) require unusual combinations of alleles across hundreds of loci. Environment (nutrition) also contributes — showing that phenotype = genotype + environment.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Both parents are carriers for cystic fibrosis (Cc × Cc). What is the probability their next child will be a carrier but NOT have CF?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>25%</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>75%</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>50% — P(Cc) from Cc × Cc cross; carriers are unaffected but carry one recessive allele</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>33%</li></ul>
+        <div class="qexp">From Cc × Cc: CC (25%), Cc (50%), cc (25%). Probability of being a carrier (Cc, unaffected) = 50%. This is the most important number in AR genetic counseling. Summary: 25% affected (cc), 50% carrier unaffected (Cc), 25% unaffected non-carrier (CC). Each pregnancy is an independent event — previous children's outcomes don't change these probabilities.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">📊 Based on Mendel's F2 data graph, what ratio did he observe for all 7 traits?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1:1 dominant to recessive</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Approximately 3:1 dominant to recessive — ~75% dominant, ~25% recessive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>9:3:3:1 — because he tracked multiple traits simultaneously</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2:1 dominant to recessive</li></ul>
+        <div class="qexp">Mendel's F2 results showed ~3:1 dominant:recessive for all 7 traits. This mathematically consistent ratio convinced him the particles (alleles) follow predictable rules. The 3:1 comes from Pp × Pp producing PP + Pp + Pp + pp — three dominant-phenotype genotypes vs. one recessive. The slight deviations from exactly 3:1 in his data are due to chance variation with finite sample sizes.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">15</span><span class="qt-inner">An affected Huntington disease parent (Hh) has children with an unaffected partner (hh). What is the risk for each child?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>100% will develop Huntington disease</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>25% will develop Huntington disease</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0% — only one parent is affected so children will not be</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50% — Hh × hh → 50% Hh (will develop disease) and 50% hh (unaffected)</li></ul>
+        <div class="qexp">Cross Hh × hh: offspring are Hh (50%) and hh (50%). Huntington is autosomal dominant with 100% penetrance — every person with one H allele WILL develop the disease. Combined with late onset (30–50 years), this creates profound ethical dilemmas: people may have children before knowing they carry the allele, and pre-symptomatic genetic testing is available but agonizing to consider.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">16</span><span class="qt-inner">Down syndrome is caused by trisomy 21. What is the primary cause of this condition?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Nondisjunction during meiosis — chromosome 21 fails to separate, producing a gamete with 2 copies; fertilization with a normal gamete (1 copy) = 3 total (trisomy)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A point mutation that duplicates chromosome 21</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Translocation of chromosome 21 always (in all cases)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Viral infection during fetal development</li></ul>
+        <div class="qexp">Nondisjunction (failure of chromosomes to separate in Meiosis I or II) produces a gamete with 2 copies of chromosome 21. That gamete + a normal gamete (1 copy) = trisomy 21 (47 chromosomes, 3 of chromosome 21). Risk increases with maternal age because human oocytes are arrested in Meiosis I from fetal development until ovulation — older eggs have been arrested longer and are more prone to nondisjunction errors.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">17</span><span class="qt-inner">In gel electrophoresis, which DNA fragment migrates FARTHEST from the wells?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The largest fragment — more charge = more force</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All fragments migrate equally far</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The smallest fragment — smaller molecules move through the agarose gel pores more easily</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Fragments with the highest GC content</li></ul>
+        <div class="qexp">Smaller fragments = farther migration. The agarose gel is a molecular sieve — larger DNA molecules are slowed more by the gel matrix. All DNA has approximately the same charge-to-mass ratio, so the electrical force alone doesn't differentiate sizes. The gel matrix creates the separation: small fragments slip through pores easily (fast, far); large fragments are impeded (slow, near wells). This is the fundamental principle of gel electrophoresis.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">In CRISPR-Cas9, what is the role of the guide RNA?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It cuts the DNA directly at the target site</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It base-pairs with the complementary target DNA sequence, directing the Cas9 nuclease to the correct location in the genome</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It provides the repair template after Cas9 cuts</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It activates DNA polymerase to copy the edited gene</li></ul>
+        <div class="qexp">The guide RNA (gRNA) is complementary to the target DNA sequence — it base-pairs with it and positions Cas9 to cut precisely at that location. This RNA-guided targeting is what makes CRISPR so programmable: to edit a new gene, you just design a new 20-nucleotide gRNA matching your target. Cas9 then cuts both DNA strands, and the cell's repair machinery either disrupts (NHEJ) or replaces (HDR) the gene.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">19</span><span class="qt-inner">📊 Based on the Down syndrome risk graph, at what maternal age does risk exceed approximately 1 in 100?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Age 25</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Age 30</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Age 35</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Approximately age 40 — at 35 risk is ~1/400; at 40 ~1/100; at 45 ~1/30</li></ul>
+        <div class="qexp">Down syndrome risk exceeds 1% (~1/100) at approximately age 40. The risk is relatively low before age 35 (&lt;0.3%), then rises exponentially: 35 → 1/400 (0.25%), 40 → 1/100 (1%), 45 → 1/30 (3.3%). This exponential increase explains why prenatal genetic screening is strongly recommended for mothers over 35 — the "advanced maternal age" threshold used in clinical practice.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which statement CORRECTLY links Mendel's laws to chromosome behavior in meiosis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Segregation = homologous chromosomes separating at Anaphase I; Independent Assortment = chromosome pairs orienting independently at Metaphase I — both laws are directly explained by meiosis</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Mendel's laws only apply to genes on different chromosomes — linked genes follow entirely different rules with no chromosomal explanation</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Chromosomes have no relationship to Mendel's laws</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both laws apply to all genes equally regardless of chromosomal location</li></ul>
+        <div class="qexp">The Sutton-Boveri chromosome theory: Segregation = homologs separate in Meiosis I → each gamete gets one allele. Independent Assortment = different chromosome pairs orient independently at Metaphase I → genes on different chromosomes end up in gametes independently. Linked genes (same chromosome) violate independent assortment — they travel together unless crossing over separates them. Mendel got lucky: all 7 of his traits happened to be on different chromosomes.</div></div>
+    </div>
+    <div class="qscore" id="sc11"><div class="score-n" id="scn11">-</div><div class="score-l">out of 20 correct</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(10)">← Lesson 10</button><button class="mc-btn" onclick="markDone(11,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Unit</button></div>
+</div>
+</main>
+<script>
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec";
+const quizCounts=[0,5,5,5,5,5,5,5,5,5,5,20];
+let studentName="",currentPanel=0,scores={},done=new Set();
+
+function startModule(){
+  const n=document.getElementById("student-name").value.trim();
+  const parts=n.split(/\s+/);
+  if(parts.length<2||parts.some(p=>p.length<1)){document.getElementById("name-err").style.display="block";return;}
+  studentName=n;
+  document.getElementById("name-modal").style.display="none";
+  document.getElementById("student-badge").textContent=n+" · Genetics";
+  initCharts();
+}
+
+function goTo(n){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sb-link").forEach(l=>l.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  document.querySelectorAll(".sb-link")[n].classList.add("active");
+  currentPanel=n;window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("prog-bar").style.width=Math.round((n/11)*100)+"%";
+}
+
+function cpCheck(n){
+  const len=document.getElementById("cpt"+n).value.trim().length;
+  document.getElementById("cpn"+n).textContent=len;
+  const btn=document.getElementById("cpb"+n);
+  const ctr=document.getElementById("cpc"+n);
+  if(len>=80){ctr.className="cp-counter met";btn.className="cp-btn ready";}
+  else{ctr.className="cp-counter";btn.className="cp-btn";}
+}
+
+function cpUnlock(n){
+  if(document.getElementById("cpt"+n).value.trim().length<80)return;
+  document.getElementById("cpb"+n).style.display="none";
+  document.getElementById("cpd"+n).style.display="block";
+  const qw=document.getElementById("quiz-wrap"+n);
+  qw.style.display="block";
+  qw.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function pick(opt){
+  const qq=opt.closest(".qq");
+  if(qq.querySelector(".qo.revealed"))return;
+  const correct=qq.dataset.ans;
+  qq.querySelectorAll(".qo").forEach(o=>{
+    o.classList.add("revealed");
+    if(o.dataset.v===correct)o.classList.add("correct");
+    else if(o===opt&&opt.dataset.v!==correct)o.classList.add("incorrect");
+  });
+  const exp=qq.querySelector(".qexp");
+  if(exp)exp.classList.add("show");
+  const box=opt.closest(".quiz-box");
+  const pNum=parseInt(opt.closest(".panel").id.replace("p",""));
+  const qs=box.querySelectorAll(".qq");
+  const answered=[...qs].filter(q=>q.querySelector(".qo.revealed"));
+  if(answered.length===qs.length)tallyQuiz(box,pNum);
+}
+
+function tallyQuiz(box,pNum){
+  const qs=box.querySelectorAll(".qq");
+  let correct=0;
+  qs.forEach(q=>{const chosen=q.querySelector(".qo.correct");if(chosen&&chosen.dataset.v===q.dataset.ans)correct++;});
+  const total=qs.length;
+  box.querySelector(".score-n").textContent=correct+"/"+total;
+  box.querySelector(".qscore").style.display="block";
+  scores["L"+pNum]=correct+"/"+total;
+  sendProgress("L"+pNum,correct,total);
+}
+
+function markDone(n,btn){
+  btn.classList.add("done");btn.textContent="✓ Complete";
+  done.add(n);document.querySelectorAll(".sb-link")[n].classList.add("done");
+}
+
+function sendProgress(label,correct,total){
+  if(!studentName)return;
+  const payload={student:studentName,module:"Genetics & Heredity",lesson:label,score:correct+"/"+total,timestamp:new Date().toISOString()};
+  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>showToast("Score sent: "+label+" "+correct+"/"+total+" ✓"))
+    .catch(()=>showToast("Score recorded locally"));
+}
+
+function showToast(msg){
+  const t=document.getElementById("submit-toast");
+  document.getElementById("toast-msg").textContent=msg;
+  t.style.display="flex";setTimeout(()=>{t.style.display="none";},3500);
+}
+
+function initCharts(){
+  const G="#1a7a4a",N="#0f2240",T="#0b8f8c",A="#e8920e",R="#c0392b",P="#6c3fa0";
+
+  new Chart(document.getElementById("chartL1"),{type:"bar",data:{
+    labels:["Flower\nColor","Flower\nPosition","Seed\nColor","Seed\nShape","Pod\nColor","Pod\nShape","Plant\nHeight"],
+    datasets:[{label:"Dominant",data:[705,651,6022,5474,428,882,787],backgroundColor:G},{label:"Recessive",data:[224,207,2001,1850,152,299,277],backgroundColor:R}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"Offspring count"}}}}});
+
+  new Chart(document.getElementById("chartL2"),{type:"doughnut",data:{
+    labels:["Type O (44%)","Type A (42%)","Type B (10%)","Type AB (4%)"],
+    datasets:[{data:[44,42,10,4],backgroundColor:[N,G,A,T],borderWidth:2,borderColor:"#fff"}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right"}}}});
+
+  new Chart(document.getElementById("chartL3"),{type:"bar",data:{
+    labels:["PP×pp","Pp×Pp","Pp×pp (test)","PP×Pp"],
+    datasets:[{label:"Hom Dom",data:[0,25,0,50],backgroundColor:G},{label:"Heterozygous",data:[100,50,50,50],backgroundColor:A},{label:"Hom Rec",data:[0,25,50,0],backgroundColor:R}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{stacked:true},y:{stacked:true,max:100,title:{display:true,text:"% offspring"}}}}});
+
+  new Chart(document.getElementById("chartL4"),{type:"bar",data:{
+    labels:["A_B_ (both dom)","A_bb (dom+rec)","aaB_ (rec+dom)","aabb (both rec)"],
+    datasets:[{label:"Proportion (out of 16)",data:[9,3,3,1],backgroundColor:[G,T,A,R]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:"# of 16 boxes"},max:10}}}});
+
+  new Chart(document.getElementById("chartL5"),{type:"scatter",data:{
+    datasets:[{label:"Gene pairs",data:[{x:5,y:5},{x:8,y:8},{x:15,y:15},{x:22,y:22},{x:35,y:35},{x:48,y:48}],backgroundColor:G,pointRadius:7},{label:"Independent assortment line",data:[{x:0,y:0},{x:50,y:50}],type:"line",borderColor:R,borderDash:[5,5],pointRadius:0,borderWidth:2}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{title:{display:true,text:"Physical distance (cM)"},min:0,max:55},y:{title:{display:true,text:"Recombination frequency (%)"},min:0,max:55}}}});
+
+  new Chart(document.getElementById("chartL6"),{type:"bar",data:{
+    labels:["Red-green\nColor Blindness","Hemophilia A","Duchenne MD"],
+    datasets:[{label:"Males (%)",data:[8,0.01,0.02],backgroundColor:N},{label:"Females (%)",data:[0.5,0.0001,0.0001],backgroundColor:T}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:10}}},y:{type:"logarithmic",title:{display:true,text:"Prevalence (%)"}}}}});
+
+  const hts=[150,152,154,156,158,160,162,164,166,168,170,172,174,176,178,180,182,184,186,188,190];
+  const freq=[1,2,4,7,12,18,26,34,40,44,46,44,40,34,26,18,12,7,4,2,1];
+  new Chart(document.getElementById("chartL7"),{type:"line",data:{
+    labels:hts,datasets:[{label:"Relative frequency",data:freq,borderColor:G,backgroundColor:"rgba(26,122,74,.15)",fill:true,tension:0.4,pointRadius:3}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:"Height (cm)"}},y:{title:{display:true,text:"Relative frequency"}}}}});
+
+  new Chart(document.getElementById("chartL8"),{type:"bar",data:{
+    labels:["Autosomal\nDominant","Autosomal\nRecessive","X-linked\nRecessive"],
+    datasets:[{label:"% Males affected",data:[50,50,85],backgroundColor:N},{label:"% Females affected",data:[50,50,15],backgroundColor:T}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:10}}},y:{title:{display:true,text:"% of affected individuals"},max:100}}}});
+
+  const ages=[20,25,30,35,38,40,42,44,45];
+  const risks=[0.07,0.08,0.11,0.25,0.47,1.0,1.6,2.7,3.3];
+  new Chart(document.getElementById("chartL9"),{type:"line",data:{
+    labels:ages,datasets:[{label:"Risk (%)",data:risks,borderColor:R,backgroundColor:"rgba(192,57,43,.15)",fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:R}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},annotation:{annotations:{line1:{type:"line",xMin:35,xMax:35,borderColor:A,borderWidth:2,borderDash:[6,3],label:{content:"Age 35",display:true,position:"start"}}}}},scales:{x:{title:{display:true,text:"Maternal Age (years)"}},y:{title:{display:true,text:"Risk of Down Syndrome (%)"},min:0}}}});
+
+  new Chart(document.getElementById("chartL10"),{type:"bar",data:{
+    labels:["Ladder\n3000bp","Ladder\n2000bp","Sample A","Ladder\n1000bp","Sample B","Ladder\n500bp","Sample C"],
+    datasets:[{label:"Migration distance (mm)",data:[20,30,35,50,62,80,85],backgroundColor:[N,N,G,N,T,N,A]}]
+  },options:{responsive:true,maintainAspectRatio:false,indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:"Migration from well (mm) — larger = smaller fragment"}},y:{ticks:{font:{size:10}}}}}});
+
+  new Chart(document.getElementById("chartPT1"),{type:"bar",data:{
+    labels:["Flower Color","Seed Color","Seed Shape","Pod Color","Pod Shape","Plant Height"],
+    datasets:[{label:"Dominant",data:[705,6022,5474,428,882,787],backgroundColor:G},{label:"Recessive",data:[224,2001,1850,152,299,277],backgroundColor:R}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"# offspring"}}}}});
+
+  new Chart(document.getElementById("chartPT2"),{type:"line",data:{
+    labels:[20,25,30,35,38,40,42,44,45],
+    datasets:[{label:"Down syndrome risk (%)",data:[0.07,0.08,0.11,0.25,0.47,1.0,1.6,2.7,3.3],borderColor:R,backgroundColor:"rgba(192,57,43,.15)",fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:R}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:"Maternal Age"}},y:{title:{display:true,text:"Risk (%)"},min:0}}}});
+}
+</script>
+</body>
+</html>
