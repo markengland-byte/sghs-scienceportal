@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology · Cell Communication | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--green);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(26,122,74,.2);border-right-color:var(--green);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--green);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-sig{background:linear-gradient(135deg,#002a1a,#006040);}
+.hero-rec{background:linear-gradient(135deg,#001a30,#003a60);}
+.hero-tran{background:linear-gradient(135deg,#1a0030,#4a0080);}
+.hero-res{background:linear-gradient(135deg,#2a1a00,#6a4a00);}
+.hero-dis{background:linear-gradient(135deg,#2a0000,#700000);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--green);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4ade80;margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:#4ade80;line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--green-pale);border:1px solid var(--green);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.pathway-box{background:var(--navy);border-radius:14px;padding:24px 28px;margin:20px 0;display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.pw-step{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;text-align:center;min-width:110px;flex:1;}
+.pw-step .ps-num{font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#4ade80;margin-bottom:4px;}
+.pw-step .ps-label{font-size:.82rem;font-weight:700;color:#fff;line-height:1.3;}
+.pw-step .ps-sub{font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px;line-height:1.4;}
+.pw-arrow{font-size:1.5rem;color:#4ade80;padding:0 6px;flex-shrink:0;}
+.diagram{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px;margin:20px 0;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.d-cap{font-size:.77rem;color:var(--muted);font-style:italic;margin-top:12px;line-height:1.5;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:#4ade80;}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.checkpoint-box{background:#fff;border:2px solid var(--green);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--green);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--green);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--green);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#0f5a32;}
+.cp-done{display:none;padding:10px 18px;background:var(--green-pale);border:1px solid var(--green);border-radius:8px;font-size:.85rem;color:var(--green);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--green-pale);border:2px solid var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--green);background:var(--green-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--green-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:#4ade80;}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--green);background:transparent;color:var(--green);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--green);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">📡</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Cell Communication</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#1a7a4a'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:#1a7a4a;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../biology/index.html">← Biology</a>
+  <div class="tb-logo">📡</div>
+  <div><div class="tb-name">Southern Gap High School · Biology</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Cell Communication</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview &amp; Standards</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Signal &amp; Reception</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Introduction to Cell Signaling</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Types of Cell Communication</div></a>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Signal Molecules &amp; Ligands</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Cell-Surface Receptors</div></a>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Intracellular Receptors</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Transduction &amp; Response</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Lesson 6 · Signal Transduction Pathways</div></a>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">Lesson 7 · Second Messengers</div></a>
+  <a class="sb-link" onclick="goTo(8)" href="#"><div class="sb-num">8</div><div class="sb-txt">Lesson 8 · Cell Responses to Signals</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Applied</div>
+  <a class="sb-link" onclick="goTo(9)" href="#"><div class="sb-num">9</div><div class="sb-txt">Lesson 9 · Cell Communication &amp; Disease</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(10)" href="#"><div class="sb-num">10</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · Chapter 9 · <span>Unit Overview</span></div>
+    <div class="h-title">Cell Communication</div>
+    <div class="h-desc">Every cell in your body is constantly sending and receiving chemical messages. From insulin controlling blood sugar to nerve signals controlling movement — life depends on cells talking to each other with precision and speed.</div>
+    <div class="h-meta"><div class="h-chip">📚 10 Lessons</div><div class="h-chip">🌿 OpenStax Biology 2e Ch. 9</div><div class="h-chip">📊 Data Interpretation Included</div><div class="h-chip">✍️ Checkpoints Required</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Unit Learning Objectives</div><ul class="obj-list">
+      <li>Explain why multicellular organisms require cell-to-cell communication systems.</li>
+      <li>Distinguish the four types of cell signaling by distance: direct contact, autocrine, paracrine, and endocrine.</li>
+      <li>Describe signal molecules (ligands) and classify them as hydrophilic or hydrophobic.</li>
+      <li>Compare the three major classes of cell-surface receptors: GPCRs, RTKs, and ligand-gated ion channels.</li>
+      <li>Explain how intracellular receptors (nuclear receptors) work with steroid hormones.</li>
+      <li>Describe signal transduction as a cascade of molecular events converting an extracellular signal to an intracellular response.</li>
+      <li>Explain the role of second messengers (cAMP, Ca²⁺, IP₃/DAG) in amplifying signals.</li>
+      <li>Identify the four major types of cell responses: changes in gene expression, enzyme activity, cytoskeletal rearrangement, and apoptosis.</li>
+      <li>Explain how disrupted cell communication leads to cancer and diabetes.</li>
+    </ul></div>
+    <div class="cs">
+      <div class="eyebrow">Course Map</div>
+      <div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Lesson</th><th>Key Concepts</th></tr>
+        <tr><td>1</td><td>Introduction to Cell Signaling</td><td>Why cells communicate, evolution of signaling, stages: reception → transduction → response</td></tr>
+        <tr><td>2</td><td>Types of Cell Communication</td><td>Direct contact, autocrine, paracrine, endocrine; distance and speed tradeoffs</td></tr>
+        <tr><td>3</td><td>Signal Molecules &amp; Ligands</td><td>Hydrophilic vs. hydrophobic ligands, hormones, neurotransmitters, growth factors, specificity</td></tr>
+        <tr><td>4</td><td>Cell-Surface Receptors</td><td>G-protein coupled receptors (GPCRs), receptor tyrosine kinases (RTKs), ligand-gated ion channels</td></tr>
+        <tr><td>5</td><td>Intracellular Receptors</td><td>Steroid hormones, nuclear receptors, direct gene regulation</td></tr>
+        <tr><td>6</td><td>Signal Transduction Pathways</td><td>Phosphorylation cascades, kinases, amplification, scaffolding proteins</td></tr>
+        <tr><td>7</td><td>Second Messengers</td><td>cAMP, protein kinase A, calcium ions, IP₃/DAG, phospholipase C</td></tr>
+        <tr><td>8</td><td>Cell Responses to Signals</td><td>Gene expression changes, enzyme activation/inhibition, apoptosis, cytoskeletal changes</td></tr>
+        <tr><td>9</td><td>Cell Communication &amp; Disease</td><td>Cancer (overactive signaling), type 2 diabetes (insulin resistance), therapeutic targets</td></tr>
+        <tr><td>10</td><td>Unit Review &amp; Practice Test</td><td>20-question Virginia SOL-style assessment</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Biology 2e — Chapter 9: Cell Communication</div><div class="cx">All content is adapted from OpenStax Biology 2e, Chapter 9. CC BY 4.0 — free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Quick Facts</div>
+      <div class="sh2">Cell Communication by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">3</div><div class="fact-l">Stages of every signaling event: Reception → Transduction → Response</div></div>
+        <div class="fact"><div class="fact-n">1,000+</div><div class="fact-l">Different GPCR types encoded in the human genome — the largest receptor family</div></div>
+        <div class="fact"><div class="fact-n">10⁶×</div><div class="fact-l">Signal amplification possible through a single transduction cascade</div></div>
+        <div class="fact"><div class="fact-n">~10 sec</div><div class="fact-l">Time for epinephrine to trigger muscle glucose release via cAMP cascade</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 10</div><button class="nbtn next" onclick="goTo(1)">Lesson 1 →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sig"><div class="h-crumb">Signal &amp; Reception · <span>Lesson 1</span></div><div class="h-title">Introduction to Cell Signaling</div><div class="h-desc">From single-celled yeast to 37 trillion human cells — all living things use chemical signals to coordinate behavior. Cell signaling is one of the most conserved systems in all of biology.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Explain why multicellular organisms need a cell communication system.</li>
+      <li>Describe the three stages of cell signaling: reception, transduction, and response.</li>
+      <li>Give examples of cell signaling in yeast mating as evidence for evolutionary conservation.</li>
+      <li>Define signal molecule (ligand), receptor, and target cell.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-hint">👆 Flip each card to learn the definitions</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Signal Molecule (Ligand)</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A molecule released by a signaling cell that binds to a receptor on a target cell. Ligands are often called first messengers. Examples: epinephrine, insulin, estrogen, acetylcholine.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Receptor</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A protein (on the cell surface or inside the cell) that specifically binds a signal molecule and triggers a cellular response. Binding causes a conformational change that initiates signal transduction.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Reception</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Stage 1 of cell signaling. A signal molecule binds to a specific receptor protein, causing a conformational (shape) change. This is the detection step. Highly specific — like a lock and key.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Transduction</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Stage 2 of cell signaling. The signal is converted and relayed through a series of molecular changes (signal transduction cascade). Often amplifies the signal enormously — one ligand can activate thousands of downstream molecules.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Response</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Stage 3 of cell signaling. The cellular activity that results from the transduced signal. Can be: gene expression changes, enzyme activation/inhibition, ion channel opening, cytoskeletal changes, or apoptosis.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Target Cell</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A cell that has a specific receptor for a given signal molecule. Not all cells respond to all signals — only cells with the matching receptor are target cells. The same signal can produce different responses in different target cell types.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.1</div><div class="sh2">Why Cells Need to Communicate</div>
+      <p class="prose">In a multicellular organism, cells must coordinate their activities to maintain homeostasis, respond to environmental changes, direct development, and regulate growth. Without cell communication, your immune cells couldn't find pathogens, your muscles couldn't contract on demand, and cell division would be uncontrolled — leading to cancer.</p>
+      <div class="callout info"><div class="ci">🔬</div><div class="cb"><div class="ct">Evidence from Yeast: Cell Signaling Is Ancient</div><div class="cx">According to OpenStax, "yeast cells and human cells use similar methods of cell communication." Yeast use chemical signals called <strong>mating factors</strong> to coordinate reproduction — and the molecular machinery is remarkably similar to human signaling pathways. This conservation across 1.5 billion years of evolution indicates that cell signaling is fundamental to all eukaryotic life.</div></div></div>
+      <div class="sh3">The Three Stages of Cell Signaling</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">Stage 1</div><div class="ps-label">Reception</div><div class="ps-sub">Ligand binds receptor → shape change detected</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Stage 2</div><div class="ps-label">Transduction</div><div class="ps-sub">Signal converted, relayed &amp; amplified through cascade</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Stage 3</div><div class="ps-label">Response</div><div class="ps-sub">Gene expression, enzyme activity, or structural changes</div></div>
+      </div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Specificity: Why Not Every Cell Responds to Every Signal</div><div class="cx">A signal molecule only affects cells that have the correct <strong>receptor</strong>. Epinephrine (adrenaline) circulates throughout the blood, but it only triggers muscle cells to break down glycogen because muscle cells have the right receptor. Liver cells have different receptors and respond differently to the same epinephrine signal. Same ligand → different receptors → different responses.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Signal Amplification Through a Cascade</div>
+      <div class="graph-box"><div class="graph-title">Signal Amplification: From 1 Ligand to 1 Million Molecules</div><div class="graph-cap">Each step in a cascade multiplies the signal — one epinephrine molecule can ultimately release 100 million glucose molecules</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required to unlock quiz</div></div></div>
+      <div class="cp-question">In your own words, describe the three stages of cell signaling. Why is signal amplification important — what would happen if each step produced only one activated molecule?</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — Introduction to Cell Signaling</h3><p>5 questions · includes data interpretation</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which sequence correctly describes the three stages of cell signaling?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Response → Transduction → Reception</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Reception → Transduction → Response — ligand binds receptor, signal is relayed and amplified, then a cellular change occurs</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Transduction → Reception → Response</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Reception → Response → Transduction</li></ul>
+        <div class="qexp">The universal order is <strong>Reception → Transduction → Response</strong>. Reception: the ligand binds its specific receptor (detection). Transduction: the signal is converted and amplified through a cascade of molecular changes. Response: the cell carries out the appropriate activity — changing gene expression, activating enzymes, opening channels, or undergoing apoptosis. This three-stage framework applies to virtually all cell signaling events.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Epinephrine circulates throughout the blood but only affects cells with the correct receptor. This demonstrates:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Amplification — epinephrine activates more molecules at each step</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The transduction stage — epinephrine initiates a cascade immediately</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Specificity — only cells with the matching receptor for epinephrine are target cells and will respond</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Feedback inhibition — epinephrine shuts off cells that don't need it</li></ul>
+        <div class="qexp"><strong>Specificity</strong> in cell signaling means only cells with the correct receptor respond to a signal. Even though epinephrine is in the blood reaching every cell, only cells expressing the epinephrine receptor become "target cells." Other cells simply ignore the signal. This is how your body can send a global signal (blood-borne hormone) but get a specific, targeted response (only relevant cells react).</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Yeast mating factors use signaling pathways similar to those in human cells. What does this suggest?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Yeast and humans evolved independently and developed identical systems by chance</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Yeast signaling is simpler and serves as a model only for very primitive organisms</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Humans evolved from yeast relatively recently</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cell signaling pathways are evolutionarily ancient and conserved — the core mechanisms appeared in a common ancestor of all eukaryotes over 1.5 billion years ago</li></ul>
+        <div class="qexp">The similarity between yeast and human signaling pathways is evidence that these mechanisms evolved in a <strong>common eukaryotic ancestor</strong> and were so critical to survival that they were preserved through billions of years of evolution. This evolutionary conservation — the same molecular components performing the same functions across wildly different organisms — is one of biology's most powerful concepts. It's why yeast is used as a model organism to study human disease.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the amplification graph, why is signal amplification essential to cell signaling?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A single ligand molecule would be insufficient to produce a detectable cellular response without amplification — the cascade multiplies the signal so a tiny stimulus produces a large effect</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Amplification slows the signal down so the cell has time to respond appropriately</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Amplification ensures that all cells respond to the signal, not just target cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Amplification reduces the number of receptors needed on the cell surface</li></ul>
+        <div class="qexp">Signal amplification is essential because signal molecules often exist in tiny concentrations (nanomolar range). Without amplification, one ligand binding one receptor would produce one activated downstream molecule — far too little to change cell behavior. With a cascade, each activated protein can activate many more downstream molecules: 1 ligand → 1 receptor → 10 G proteins → 100 adenylyl cyclase → 1,000 cAMP → 10,000 kinase activations → massive response. This is why hormones work in extremely low concentrations.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">During the reception stage, what happens when a ligand binds its receptor?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ligand enters the cell and directly activates genes in the nucleus</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The receptor is destroyed and must be replaced before another signal can be received</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The receptor undergoes a conformational (shape) change that initiates the signal transduction cascade — the ligand itself typically does not enter the cell</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The cell immediately divides in response to the signal</li></ul>
+        <div class="qexp">Ligand binding causes a <strong>conformational change</strong> (shape change) in the receptor — this is the molecular "switch" that starts the transduction cascade. The ligand itself typically does NOT enter the cell (at least for hydrophilic signal molecules like epinephrine). The receptor acts as a transducer: extracellular signal in → intracellular change out. The shape change may expose active sites, enable protein-protein interactions, or activate enzymatic activity built into the receptor.</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Lesson 2 →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sig"><div class="h-crumb">Signal &amp; Reception · <span>Lesson 2</span></div><div class="h-title">Types of Cell Communication</div><div class="h-desc">Cells communicate across different distances using different strategies. From gap junctions between touching cells to hormones traveling through the bloodstream — distance determines the signaling method.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe direct contact signaling via gap junctions and cell-surface molecules.</li>
+      <li>Distinguish autocrine, paracrine, and endocrine signaling by distance and mechanism.</li>
+      <li>Give a biological example of each type of signaling.</li>
+      <li>Explain the tradeoff between speed and distance in each signaling type.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.1</div><div class="sh2">Four Types of Cell Signaling</div>
+      <table class="dt">
+        <tr><th>Type</th><th>Distance</th><th>Mechanism</th><th>Speed</th><th>Example</th></tr>
+        <tr><td><strong>Direct Contact</strong></td><td>Cell-to-cell (touching)</td><td>Gap junctions allow ions/small molecules to flow directly; or membrane-bound proteins interact</td><td>Fastest</td><td>Cardiac muscle cells coordinating contraction via gap junctions; immune cell recognition</td></tr>
+        <tr><td><strong>Autocrine</strong></td><td>Same cell (self)</td><td>Cell releases signal that acts on its own receptors</td><td>Very fast</td><td>Cancer cells stimulating their own growth; T cells amplifying immune response</td></tr>
+        <tr><td><strong>Paracrine</strong></td><td>Local (nearby cells)</td><td>Signal diffuses through extracellular fluid to neighboring cells; broken down quickly</td><td>Fast</td><td>Neurotransmitters crossing synapses; histamine in local inflammation; growth factors in wound healing</td></tr>
+        <tr><td><strong>Endocrine</strong></td><td>Long-distance (whole body)</td><td>Hormones secreted into bloodstream; travel to distant target cells throughout the body</td><td>Slowest (minutes to hours)</td><td>Insulin from pancreas regulating glucose uptake by liver and muscle cells</td></tr>
+      </table>
+      <div class="sh3">Gap Junctions: The Direct Contact Superhighway</div>
+      <p class="prose"><strong>Gap junctions</strong> are protein channels (connexins) that directly connect the cytoplasm of adjacent cells, allowing small molecules, ions, and electrical signals to pass freely between cells without entering the extracellular space. This is the fastest form of cell communication — no signal molecule, no receptor, no transduction needed. Gap junctions are critical in cardiac muscle (all heart cells contract as one unit), smooth muscle, and developing embryos.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Paracrine vs. Endocrine: Local vs. Global</div><div class="cx">Paracrine signals are rapidly degraded or taken up locally — they don't survive to reach distant cells. This keeps them local. Endocrine signals (hormones) are stable enough to survive the journey through blood (minutes to hours). The tradeoff: paracrine signals are faster and more precise (targeting neighbors only); endocrine signals are slower but can coordinate responses across the entire body.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Signaling Distance vs. Response Time</div>
+      <div class="graph-box"><div class="graph-title">Cell Signaling Types: Communication Distance &amp; Response Speed</div><div class="graph-cap">Longer distance = slower response; direct contact is fastest but limited to adjacent cells</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Compare paracrine and endocrine signaling — how do they differ in distance, speed, and mechanism? Give one real biological example of each.</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — Types of Cell Communication</h3><p>5 questions · includes distance/speed graph</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Neurons release neurotransmitters that diffuse across the synaptic cleft to bind receptors on the next neuron. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Endocrine signaling — neurotransmitters travel through blood</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autocrine signaling — the neuron signals to itself</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Paracrine signaling — the signal travels a short local distance (the synapse) to affect neighboring cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Direct contact signaling via gap junctions</li></ul>
+        <div class="qexp"><strong>Paracrine signaling</strong>: the signal (neurotransmitter) travels a short local distance across the synaptic cleft (~20 nm) to affect the adjacent neuron or muscle cell. It doesn't enter the bloodstream and is rapidly broken down by enzymes in the synapse (like acetylcholinesterase degrading acetylcholine). This precise, local, rapid signaling is exactly why neurons can transmit signals at millisecond speed — the signal doesn't have to travel far.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Cardiac muscle cells are connected by gap junctions. When one cell receives an electrical signal, all connected cells contract together. What type of signaling is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Direct contact signaling — gap junctions allow electrical signals (ions) to flow directly between cells without any extracellular signal molecule</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Paracrine signaling — the signal diffuses locally to nearby cardiac cells</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Endocrine signaling — the heart uses hormones to coordinate contraction</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Autocrine signaling — each cell signals itself to contract</li></ul>
+        <div class="qexp">Gap junctions are the hallmark of <strong>direct contact signaling</strong>. Connexin proteins form channels between adjacent cells, allowing ions (like Ca²⁺ and K⁺) and small molecules to flow freely between cytoplasms. In cardiac muscle, this is essential — all heart muscle cells must contract simultaneously for effective pumping. Electrical signals (action potentials) spread instantly through gap junctions without any secreted signal molecule. This is the fastest possible cell communication.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Insulin is produced by pancreatic beta cells and travels through the blood to stimulate glucose uptake by muscle and liver cells throughout the body. This is:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Paracrine signaling — insulin affects nearby pancreatic cells</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autocrine signaling — beta cells respond to their own insulin</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Direct contact signaling — insulin travels through gap junctions</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Endocrine signaling — a hormone secreted into the bloodstream affects distant target cells throughout the body</li></ul>
+        <div class="qexp"><strong>Endocrine signaling</strong>: hormones are released into the bloodstream and travel long distances to affect target cells throughout the body. Insulin from the pancreas reaches liver cells, muscle cells, and fat cells — all distant from the pancreas. Endocrine signals take longer to work (minutes) compared to paracrine (seconds) or direct contact (milliseconds), but they can coordinate responses across the entire body simultaneously. This is why a single insulin injection can regulate blood glucose globally.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the distance/speed chart, which type of signaling has the LONGEST communication distance but the SLOWEST response?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Direct contact — it has the longest range but is very slow</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Endocrine signaling — hormones travel through the entire body (meters) but take minutes to hours to produce a response</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Paracrine signaling — it covers the most distance while remaining local</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Autocrine — it is both the slowest and travels the farthest</li></ul>
+        <div class="qexp">Endocrine signaling covers the greatest distance (centimeters to meters through the circulation) but is the slowest. Hormones must be secreted, enter the blood, circulate throughout the body, and then bind receptors on distant target cells — a process taking minutes to hours. Direct contact is the fastest (milliseconds) over the shortest distance. This inverse relationship between speed and distance is fundamental to understanding why different signaling systems evolved for different physiological needs.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are paracrine signals (like neurotransmitters) rapidly broken down or removed from the space around the signaling cell?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To increase the speed of the signal — breakdown makes it faster</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To recycle the signal molecules for reuse by the same cell</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To keep the signal local and allow precise control — if paracrine signals persisted, they would spread throughout the body and lose their targeted, local effect</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Paracrine signals are not broken down — they persist indefinitely</li></ul>
+        <div class="qexp">Rapid degradation keeps paracrine signals <strong>local and precise</strong>. Neurotransmitters are broken down by enzymes (acetylcholinesterase) or actively pumped back into the neuron (reuptake) within milliseconds of release. This ensures the signal only affects the immediately adjacent cell. If neurotransmitters persisted and spread, you couldn't control individual muscle fibers or individual neural circuits — every signal would become a global event. Precision requires rapid termination.</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Lesson 3 →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sig"><div class="h-crumb">Signal &amp; Reception · <span>Lesson 3</span></div><div class="h-title">Signal Molecules &amp; Ligands</div><div class="h-desc">Not all signal molecules are alike. A molecule's chemical nature determines whether it can cross the plasma membrane — and that single property determines which receptor it uses and how fast it acts.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Distinguish hydrophilic signal molecules (cannot cross membrane) from hydrophobic ones (can cross membrane).</li>
+      <li>Classify signal molecules as hormones, neurotransmitters, growth factors, or local regulators.</li>
+      <li>Explain why hydrophilic signals use cell-surface receptors and hydrophobic signals use intracellular receptors.</li>
+      <li>Define ligand-receptor specificity and explain its importance.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.2</div><div class="sh2">Chemical Nature Determines Receptor Location</div>
+      <p class="prose">The most important property of a signal molecule is whether it can cross the hydrophobic phospholipid bilayer of the plasma membrane. This determines <strong>where</strong> the receptor must be located and therefore the entire downstream signaling mechanism.</p>
+      <table class="dt">
+        <tr><th>Property</th><th>Hydrophilic (Water-soluble)</th><th>Hydrophobic (Lipid-soluble)</th></tr>
+        <tr><td><strong>Can cross membrane?</strong></td><td>No — repelled by hydrophobic lipid core</td><td>Yes — dissolves in and passes through lipid bilayer</td></tr>
+        <tr><td><strong>Receptor location</strong></td><td>Cell surface (transmembrane proteins)</td><td>Inside the cell (cytoplasm or nucleus)</td></tr>
+        <tr><td><strong>Examples</strong></td><td>Epinephrine, insulin, glucagon, most neurotransmitters, peptide hormones</td><td>Steroid hormones (estrogen, testosterone, cortisol), thyroid hormones, retinoids</td></tr>
+        <tr><td><strong>Speed of response</strong></td><td>Fast (seconds to minutes) — activates pre-existing proteins</td><td>Slow (hours) — must reach nucleus and alter gene transcription</td></tr>
+        <tr><td><strong>Duration</strong></td><td>Short-lived — signal removed quickly</td><td>Long-lasting — new proteins persist after signal removed</td></tr>
+      </table>
+      <div class="sh3">Major Classes of Signal Molecules</div>
+      <table class="dt">
+        <tr><th>Class</th><th>Nature</th><th>Source</th><th>Examples</th></tr>
+        <tr><td><strong>Protein/Peptide Hormones</strong></td><td>Hydrophilic</td><td>Endocrine glands</td><td>Insulin (pancreas), glucagon, growth hormone, ADH</td></tr>
+        <tr><td><strong>Steroid Hormones</strong></td><td>Hydrophobic</td><td>Gonads, adrenal cortex</td><td>Estrogen, testosterone, cortisol, aldosterone</td></tr>
+        <tr><td><strong>Neurotransmitters</strong></td><td>Hydrophilic (most)</td><td>Nerve terminals</td><td>Acetylcholine, dopamine, serotonin, GABA, glutamate</td></tr>
+        <tr><td><strong>Growth Factors</strong></td><td>Hydrophilic (proteins)</td><td>Various tissues</td><td>EGF (epidermal), VEGF (vascular), NGF (nerve)</td></tr>
+        <tr><td><strong>Gases</strong></td><td>Nonpolar — cross membrane</td><td>Endothelial cells, neurons</td><td>Nitric oxide (NO), carbon monoxide (CO)</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Mnemonic: "Steroids Go Inside; Peptides Stay Outside"</div><div class="cx">Steroid hormones (hydrophobic) cross the membrane → intracellular receptors → slow gene changes. Peptide hormones (hydrophilic) can't cross → cell-surface receptors → fast enzyme activation. This single rule predicts the entire signaling mechanism. If you know a molecule's solubility, you know where its receptor is, how fast it acts, and how long its effects last.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Signal Molecule Classes by Properties</div>
+      <div class="graph-box"><div class="graph-title">Signal Molecule Properties: Response Speed vs. Duration of Effect</div><div class="graph-cap">Hydrophilic signals act fast but briefly; hydrophobic (steroid) signals act slowly but produce long-lasting gene expression changes</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Why do hydrophilic signal molecules use cell-surface receptors while hydrophobic signals use intracellular receptors? What does this difference mean for response speed and duration?</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Signal Molecules &amp; Ligands</h3><p>5 questions · includes signal property graph</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Estrogen is a steroid hormone. Where would you expect to find its receptor, and why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>On the cell surface — all hormones use surface receptors for speed</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Inside the cell (cytoplasm or nucleus) — estrogen is hydrophobic and can cross the plasma membrane to reach intracellular receptors</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>In the extracellular matrix — estrogen binds proteins outside the cell</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>On the nuclear pore — estrogen needs special transport to enter the nucleus</li></ul>
+        <div class="qexp">Estrogen is a steroid hormone (hydrophobic / lipid-soluble) → it can diffuse freely through the phospholipid bilayer → its receptor is <strong>intracellular</strong> (estrogen receptor, ER, in the cytoplasm or nucleus). Once estrogen binds the receptor, the complex acts as a transcription factor — directly regulating gene expression. This is why estrogen effects take hours (must synthesize new proteins) but are long-lasting (new protein levels persist after estrogen is removed).</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Epinephrine (adrenaline) is a hydrophilic amino acid-derived hormone. What does this tell you about its receptor location and the speed of its effects?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Intracellular receptor — slow effects through gene expression changes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>No receptor needed — it enters cells directly to activate enzymes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Intracellular receptor — fast effects because it enters cells quickly</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cell-surface receptor — fast effects (seconds) by activating pre-existing intracellular proteins through a cascade</li></ul>
+        <div class="qexp">Epinephrine is hydrophilic → it cannot cross the membrane → its receptor (adrenergic receptor, a GPCR) is on the <strong>cell surface</strong>. Epinephrine binds → receptor activates G proteins → G proteins activate adenylyl cyclase → cAMP produced → protein kinase A activated → glycogen breakdown. This entire cascade takes seconds — no new protein synthesis needed. This is why a burst of adrenaline produces near-immediate "fight or flight" responses.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why do steroid hormones (like cortisol) produce longer-lasting effects than peptide hormones (like insulin)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steroid hormones act through gene expression — they cause new protein synthesis; the new proteins persist long after the steroid is removed, extending the effect for hours or days</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Steroid hormones are stored in larger amounts and released more slowly</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Steroid hormones have larger receptors that stay active longer</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Peptide hormones are broken down by enzymes but steroids are not</li></ul>
+        <div class="qexp">Steroids act by changing <strong>gene expression</strong> — they alter which proteins are made. Once new proteins are synthesized (enzymes, structural proteins, transcription factors), those proteins remain in the cell long after the steroid signal is gone. Peptide hormones activate pre-existing proteins (phosphorylation, allosteric changes) — effects last only as long as the signal is present. This is why a single dose of a steroid drug (like prednisone) can have effects for days.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the signal property graph, which type of signal molecule acts most quickly but produces the briefest response?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steroid hormones — fast and brief</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Growth factors — fastest with longest duration</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neurotransmitters — hydrophilic signals acting in milliseconds at synapses, with effects lasting only milliseconds to seconds before degradation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Peptide hormones — fastest and longest acting</li></ul>
+        <div class="qexp">Neurotransmitters act in <strong>milliseconds</strong> (extremely fast) at the synapse but are removed within milliseconds to seconds by enzymatic degradation or reuptake. They are the fastest and most transient of all signal molecules — designed for high-frequency, precise communication between neurons. Compare this to steroid hormones: slow onset (hours) but long duration (days). Signal molecules span the entire spectrum from millisecond/millisecond to hours/days.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Nitric oxide (NO) is a gas produced by endothelial cells that causes smooth muscle relaxation (vasodilation). Why can NO use a different receptor strategy than peptide hormones?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>NO is a hormone, so it must use a cell-surface receptor like all hormones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>NO is nonpolar and can cross the plasma membrane freely, so it acts directly on intracellular enzymes (guanylyl cyclase) without needing a traditional cell-surface receptor</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>NO is too small to bind any receptor — it acts through random chemical reactions</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>NO requires a carrier protein to enter cells and reach its receptor</li></ul>
+        <div class="qexp">Nitric oxide is a small nonpolar gas that diffuses freely through membranes. Unlike most hydrophilic signal molecules, NO doesn't need a cell-surface receptor — it diffuses directly into the target cell and activates <strong>guanylyl cyclase</strong> (an intracellular enzyme that produces cGMP). This is why nitroglycerin (which releases NO) works so rapidly for angina — NO diffuses instantly into smooth muscle cells, activates guanylyl cyclase, produces cGMP → muscle relaxation → vasodilation → reduced cardiac workload.</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Lesson 4 →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-rec"><div class="h-crumb">Signal &amp; Reception · <span>Lesson 4</span></div><div class="h-title">Cell-Surface Receptors</div><div class="h-desc">Three families of transmembrane proteins dominate cell-surface signaling — GPCRs, RTKs, and ion channel receptors. Each uses a fundamentally different mechanism to convert an extracellular signal into an intracellular response.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe G-protein coupled receptors (GPCRs): structure, mechanism, and examples.</li>
+      <li>Describe receptor tyrosine kinases (RTKs): structure, dimerization, autophosphorylation, and examples.</li>
+      <li>Describe ligand-gated ion channel receptors: structure, mechanism, and examples.</li>
+      <li>Compare the three receptor types by speed, amplification, and downstream effects.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.2</div><div class="sh2">The Three Major Cell-Surface Receptor Families</div>
+      <table class="dt">
+        <tr><th>Receptor Type</th><th>Structure</th><th>Mechanism</th><th>Signal Speed</th><th>Examples</th></tr>
+        <tr><td><strong>G-Protein Coupled Receptors (GPCRs)</strong></td><td>7 transmembrane α-helices; coupled to intracellular G-proteins (α, β, γ subunits); most common receptor family (&gt;1,000 types in humans)</td><td>Ligand binds → conformation change → G-protein GDP→GTP exchange → α subunit dissociates → activates effector enzyme (e.g., adenylyl cyclase) → second messengers produced</td><td>Seconds to minutes</td><td>Epinephrine receptor, olfactory receptors, many drug targets (opioids, beta-blockers, antihistamines)</td></tr>
+        <tr><td><strong>Receptor Tyrosine Kinases (RTKs)</strong></td><td>Single transmembrane domain; extracellular ligand-binding domain; intracellular kinase domain (phosphorylates tyrosine)</td><td>Ligand binds → receptor DIMERIZES (two receptors pair) → mutual phosphorylation of tyrosine residues (autophosphorylation) → phosphorylated tyrosines recruit relay proteins → multiple pathways activated simultaneously</td><td>Minutes</td><td>Insulin receptor, EGF receptor, VEGF receptor — many cancer drivers</td></tr>
+        <tr><td><strong>Ligand-Gated Ion Channels</strong></td><td>Transmembrane protein pore; ligand binding opens or closes the ion channel</td><td>Ligand binds → channel opens → ions flow in/out rapidly → changes membrane potential or ion concentrations → direct electrical or chemical effect</td><td>Milliseconds — fastest</td><td>Acetylcholine receptor (neuromuscular junction), GABA receptor, glutamate receptor (NMDA)</td></tr>
+      </table>
+      <div class="sh3">GPCRs: The Body's Most Versatile Receptor Family</div>
+      <p class="prose">GPCRs are the largest family of membrane receptors in humans — over 1,000 genes encode different GPCRs. They mediate responses to hormones, neurotransmitters, light (rhodopsin in the eye), smell (olfactory receptors), and taste. Most common medications target GPCRs: beta-blockers (heart), antihistamines (allergies), opioids (pain), antipsychotics (brain).</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">RTK Dimerization: Why Two Receptors Are Better Than One</div><div class="cx">Unlike GPCRs, RTKs must dimerize (pair up) to be activated. When a growth factor binds, it bridges two RTK monomers → they pair → each phosphorylates the other on tyrosine residues (cross-phosphorylation) → the phosphorylated tyrosines act as docking sites for multiple relay proteins → one RTK can simultaneously activate multiple different signaling pathways. This "fan-out" activation explains why growth factors produce such diverse and complex cellular responses.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Receptor Activation Speeds Compared</div>
+      <div class="graph-box"><div class="graph-title">Time to Initial Response: Three Cell-Surface Receptor Types</div><div class="graph-cap">Ligand-gated ion channels are fastest (milliseconds); GPCRs and RTKs take longer to activate downstream pathways</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Compare GPCRs and RTKs. How does each type of receptor work after a ligand binds? Why must RTKs dimerize to be activated?</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — Cell-Surface Receptors</h3><p>5 questions · includes receptor speed graph</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A GPCR (G-protein coupled receptor) is activated by a ligand. What is the IMMEDIATE molecular event after ligand binding?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The receptor dimerizes with another GPCR and phosphorylates itself</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A ligand-gated ion channel opens and ions flow into the cell</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The receptor undergoes a conformational change that causes the associated G-protein to exchange GDP for GTP — activating the G-protein α subunit, which dissociates and activates an effector enzyme</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The receptor directly phosphorylates tyrosine residues on downstream proteins</li></ul>
+        <div class="qexp">GPCR mechanism: Ligand binds → receptor shape change → G-protein (heterotrimeric: α, β, γ) activated → α subunit exchanges GDP for GTP → α subunit dissociates from β-γ complex → activated α subunit binds and activates an effector enzyme (e.g., adenylyl cyclase) → second messenger (e.g., cAMP) produced → cascade continues. GTP hydrolysis by the α subunit itself eventually deactivates the G-protein — built-in "off switch."</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why do receptor tyrosine kinases (RTKs) require dimerization (pairing of two receptors) for activation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>One RTK cannot span the membrane — two are needed to create a complete transmembrane pore</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The kinase active site of one RTK can only phosphorylate the other RTK's intracellular domain (cross/auto-phosphorylation) — a single RTK cannot phosphorylate its own activation sites</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Two ligands must bind simultaneously — one to each receptor — before either can be activated</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dimerization is not required — RTKs can be activated as monomers</li></ul>
+        <div class="qexp">RTK dimerization enables <strong>cross-phosphorylation</strong> (autophosphorylation): each RTK in the dimer phosphorylates key tyrosine residues on the OTHER receptor's intracellular tail. A single RTK cannot access its own activation sites because of geometric constraints — but the paired RTK can reach them. The resulting phosphorylated tyrosines then serve as docking sites for multiple downstream relay proteins, triggering several pathways simultaneously. This is why RTKs produce complex, multifaceted cellular responses.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">At a neuromuscular junction, acetylcholine binds receptors on muscle cells, causing them to contract within milliseconds. What type of receptor is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>GPCR — G-protein activation takes milliseconds</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RTK — phosphorylation cascade is very rapid</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Intracellular receptor — acetylcholine crosses the membrane quickly</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ligand-gated ion channel (nicotinic acetylcholine receptor) — ligand binding directly opens the ion channel, allowing Na⁺ influx that triggers muscle action potential in milliseconds</li></ul>
+        <div class="qexp">The neuromuscular junction uses <strong>nicotinic acetylcholine receptors</strong> — ligand-gated ion channels. When acetylcholine binds, the channel opens instantly → Na⁺ floods in → membrane depolarization → action potential → muscle contraction. This is measured in milliseconds — the fastest possible receptor mechanism. Ligand-gated ion channels have no second messenger, no cascade — the channel opening IS the response. This speed is essential for motor control (imagine if your muscles had a 10-second delay).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the receptor response time graph, which receptor type would be MOST appropriate for rapid pain reflex responses requiring millisecond timing?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ligand-gated ion channels — their direct ion flow mechanism produces responses in milliseconds, essential for neural circuits requiring rapid signal transmission</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>GPCRs — their second messenger cascades are fast enough for reflex responses</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RTKs — phosphorylation is near-instantaneous</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Intracellular receptors — steroid hormones act fastest</li></ul>
+        <div class="qexp">Ligand-gated ion channels respond in <strong>milliseconds</strong> — orders of magnitude faster than GPCRs (seconds) or RTKs (minutes). Pain reflexes, muscle contractions, and other time-critical neural responses require this speed. GPCRs and RTKs are too slow for rapid neural signaling. Intracellular receptors are the slowest of all (hours). The speed hierarchy: ion channels (ms) &gt;&gt; GPCRs (s-min) &gt; RTKs (min) &gt;&gt; intracellular receptors (hours).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are GPCRs often called the most important drug targets in medicine?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>GPCRs are only found in diseased cells, making them ideal targets without side effects</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>GPCRs are the only type of receptor that can be blocked by drugs</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Over 1,000 different GPCRs exist in humans, mediating responses to hormones, neurotransmitters, light, smell, and taste — approximately 30–40% of all drugs on the market target GPCRs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>GPCRs are found only in the brain, making them specific targets for neurological drugs</li></ul>
+        <div class="qexp">GPCRs are the largest receptor family in the human genome (&gt;1,000 types) and mediate responses across virtually every physiological system. Drugs targeting GPCRs include: beta-blockers (heart disease, hypertension), antihistamines (allergies), opioids (pain), antipsychotics (schizophrenia), antidepressants (SSRIs affect serotonin GPCRs), anti-asthma medications, and many more. Because they're so diverse and accessible on the cell surface, GPCRs make ideal drug targets — you can design ligands (agonists or antagonists) that specifically activate or block particular receptor subtypes.</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Lesson 5 →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-rec"><div class="h-crumb">Signal &amp; Reception · <span>Lesson 5</span></div><div class="h-title">Intracellular Receptors</div><div class="h-desc">When a signal molecule can cross the membrane, there's no need for a surface receptor. Steroid hormones slip directly into cells and bind receptors that act as gene switches — turning specific genes on or off for hours to days.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Explain why lipid-soluble signal molecules use intracellular receptors.</li>
+      <li>Describe how a steroid hormone-receptor complex acts as a transcription factor.</li>
+      <li>Trace the pathway from steroid hormone binding to gene expression change.</li>
+      <li>Compare intracellular receptor signaling to cell-surface receptor signaling in terms of speed, duration, and effect.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.2</div><div class="sh2">Nuclear Receptors: Gene Regulators in Disguise</div>
+      <p class="prose">Intracellular receptors are proteins located in the cytoplasm or nucleus that bind signal molecules that have crossed the plasma membrane. According to OpenStax, "intracellular receptors are proteins in the cytoplasm or nucleus that bind to lipid-soluble ligands" — primarily steroid hormones, thyroid hormones, and retinoids (Vitamin A derivatives).</p>
+      <div class="sh3">The Steroid Hormone Signaling Pathway</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">Step 1</div><div class="ps-label">Hormone Diffuses In</div><div class="ps-sub">Steroid crosses membrane (lipid-soluble)</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 2</div><div class="ps-label">Binds Receptor</div><div class="ps-sub">Receptor in cytoplasm or nucleus; dissociates from chaperones</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 3</div><div class="ps-label">Complex to Nucleus</div><div class="ps-sub">Hormone-receptor complex enters nucleus (if receptor was in cytoplasm)</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 4</div><div class="ps-label">Binds DNA</div><div class="ps-sub">Complex binds hormone response element (HRE) — specific DNA sequence</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 5</div><div class="ps-label">Gene Expression Changed</div><div class="ps-sub">Transcription activated or repressed → new proteins made</div></div>
+      </div>
+      <table class="dt">
+        <tr><th>Steroid / Hormone</th><th>Receptor</th><th>Primary Effect</th></tr>
+        <tr><td>Estrogen</td><td>Estrogen Receptor (ER)</td><td>Female secondary sex characteristics, uterine growth, bone maintenance</td></tr>
+        <tr><td>Testosterone</td><td>Androgen Receptor (AR)</td><td>Male secondary sex characteristics, muscle growth, bone density</td></tr>
+        <tr><td>Cortisol</td><td>Glucocorticoid Receptor (GR)</td><td>Anti-inflammatory response, glucose metabolism, stress response</td></tr>
+        <tr><td>Aldosterone</td><td>Mineralocorticoid Receptor (MR)</td><td>Kidney Na⁺/K⁺ balance, blood pressure</td></tr>
+        <tr><td>Thyroid hormone (T3, T4)</td><td>Thyroid Receptor (TR) — nuclear</td><td>Metabolic rate, development, growth</td></tr>
+      </table>
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">Why Anabolic Steroids Work — and Why They're Dangerous</div><div class="cx">Anabolic steroids are synthetic analogs of testosterone. They cross cell membranes, bind androgen receptors in muscle cells, and activate genes for muscle protein synthesis → muscle growth. But the same androgen receptors are present in the liver (toxicity), heart (hypertrophy), skin (acne), testes (suppressed natural testosterone), and the brain (mood effects). Using external steroids disrupts the hormonal system's feedback loops, causing widespread side effects — all because intracellular receptors are present in many tissue types.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Steroid vs. Peptide Hormone: Response Kinetics</div>
+      <div class="graph-box"><div class="graph-title">Onset and Duration of Response: Steroid vs. Peptide Hormones</div><div class="graph-cap">Steroid hormones (orange) have slow onset but long duration; peptide hormones (green) act fast but effects fade quickly</div><div class="graph-wrap"><canvas id="chartL5"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Trace the path of a steroid hormone from the bloodstream to a gene being turned on. Why does this process take hours while a GPCR response takes seconds?</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — Intracellular Receptors</h3><p>5 questions · includes response kinetics graph</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A steroid hormone-receptor complex functions primarily as a:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Second messenger — it relays the signal through the cytoplasm</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Ion channel — it opens membrane pores for ion flow</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Kinase — it phosphorylates downstream proteins in the cytoplasm</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Transcription factor — it binds hormone response elements (HREs) in DNA and regulates gene expression directly</li></ul>
+        <div class="qexp">The steroid hormone-receptor complex acts as a <strong>transcription factor</strong> — a protein that binds specific DNA sequences (hormone response elements, HREs) and controls whether adjacent genes are transcribed into mRNA. This is why steroid hormone signaling directly changes which proteins the cell makes. The receptor protein has a DNA-binding domain that contacts the HRE and an activation domain that interacts with the transcription machinery. This direct nuclear action is what makes steroid hormones so powerful and long-acting.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why do steroid hormone effects take hours to appear while epinephrine (GPCR pathway) produces effects in seconds?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steroids must first be transported to the liver for activation before they can work</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Steroid effects require new protein synthesis — the hormone must change gene transcription → mRNA made → ribosomes translate mRNA → new proteins accumulate. This takes hours. Epinephrine activates already-present enzymes, which takes seconds</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Steroids are large molecules that diffuse through the membrane slowly</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Epinephrine's receptor is faster because GPCRs have more transmembrane domains than steroid receptors</li></ul>
+        <div class="qexp">Steroid signaling requires: diffusion into cell → receptor binding → nuclear entry → DNA binding → transcription → mRNA processing → translation → protein folding → accumulation = hours. Epinephrine signaling activates proteins already present in the cell (G protein → adenylyl cyclase → cAMP → protein kinase A → phosphorylation of existing enzymes) = seconds. The difference is whether <em>new</em> protein synthesis is required (steroid) or existing proteins are merely activated (GPCR).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Cortisol (a glucocorticoid) reduces inflammation by suppressing immune gene expression. This effect can last for days after a single dose. Why is this effect so long-lasting?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The proteins produced in response to cortisol (including proteins that suppress immune genes) persist in the cell long after cortisol is removed — effects last as long as the newly made proteins remain active</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cortisol is stored in cells and slowly released over days</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Cortisol permanently modifies the DNA, so the effect is irreversible</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cortisol receptors are not degraded, so they keep signaling indefinitely</li></ul>
+        <div class="qexp">Steroid hormone effects are long-lasting because they produce <strong>new proteins</strong> that persist after the hormone is removed. Cortisol induces production of anti-inflammatory proteins (like annexin A1, which inhibits phospholipase A2, reducing prostaglandin production). These proteins have their own half-lives — they remain active for hours to days. This is why steroid drugs (prednisone, dexamethasone) have prolonged effects and why abrupt discontinuation can cause problems — the body's own cortisol production has been suppressed.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the response kinetics graph, which statement best describes the difference between steroid and peptide hormone response profiles?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steroid hormones produce faster and more intense peak responses than peptide hormones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both types produce identical response profiles with similar onset and duration</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Peptide hormones (like insulin) act quickly but effects dissipate quickly; steroid hormones have delayed onset (hours) but effects persist long after the hormone is removed</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Steroid hormones produce stronger responses because they directly activate enzymes without any delay</li></ul>
+        <div class="qexp">The kinetic profiles are fundamentally different: Peptide hormones (fast onset, fast offset — like insulin lowering blood glucose within minutes, returning to baseline when insulin is removed). Steroid hormones (slow onset — hours for gene expression to change — but long duration — effects persist hours/days after the hormone signal ends). This is clinically important: anabolic steroid effects on muscle persist weeks after use; cortisol anti-inflammatory effects persist days after a single injection.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Hormone Response Elements (HREs) are specific DNA sequences that steroid hormone-receptor complexes bind to. What determines which genes a steroid hormone affects?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The size of the steroid molecule — larger steroids affect more genes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The specific HRE sequences present near certain genes — only genes with the matching HRE sequence are regulated by that particular hormone-receptor complex</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>All genes are equally affected by steroid hormones — steroid effects are nonspecific</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The number of introns in the target gene determines which steroids regulate it</li></ul>
+        <div class="qexp">Steroid specificity comes from <strong>hormone response elements (HREs)</strong> — specific DNA sequences upstream of target genes. Each type of steroid receptor recognizes a different HRE sequence. The estrogen receptor binds estrogen response elements (EREs) near estrogen-responsive genes. The androgen receptor binds androgen response elements (AREs) near androgen-responsive genes. Only genes with the correct HRE for that particular receptor are regulated — providing exquisite specificity of gene regulation.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Lesson 6 →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-tran"><div class="h-crumb">Transduction &amp; Response · <span>Lesson 6</span></div><div class="h-title">Signal Transduction Pathways</div><div class="h-desc">A transduction cascade is a molecular relay race — each protein passes the signal to the next, amplifying it at every step. Understanding phosphorylation cascades is the key to understanding cancer, diabetes, and most of modern drug development.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe phosphorylation and explain the role of protein kinases and phosphatases in signal cascades.</li>
+      <li>Explain how signal transduction amplifies the original signal.</li>
+      <li>Trace a complete phosphorylation cascade from receptor activation to cellular response.</li>
+      <li>Explain the role of scaffolding proteins in organizing signaling pathways.</li>
+      <li>Describe how signals are terminated (signal deactivation mechanisms).</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.3</div><div class="sh2">Phosphorylation: The Molecular On/Off Switch</div>
+      <p class="prose">The most common mechanism in signal transduction is <strong>phosphorylation</strong> — the addition of a phosphate group (PO₄³⁻) to a protein, catalyzed by <strong>protein kinases</strong>. Phosphorylation changes the protein's shape, which can activate or inhibit it. <strong>Protein phosphatases</strong> remove phosphate groups, reversing the activation. This on/off switching system is fast, reversible, and infinitely regulatable.</p>
+      <table class="dt">
+        <tr><th>Molecule</th><th>Function</th><th>Direction</th></tr>
+        <tr><td><strong>Protein Kinase</strong></td><td>Transfers phosphate group from ATP to a protein (serine, threonine, or tyrosine residues)</td><td>Signal ON (usually activating)</td></tr>
+        <tr><td><strong>Protein Phosphatase</strong></td><td>Removes phosphate group from a protein by hydrolysis</td><td>Signal OFF (usually inactivating)</td></tr>
+        <tr><td><strong>ATP → ADP</strong></td><td>Energy donor for phosphorylation</td><td>Consumed in each kinase reaction</td></tr>
+      </table>
+      <div class="sh3">The MAP Kinase Cascade: A Classic Example</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">Step 1</div><div class="ps-label">RTK Activated</div><div class="ps-sub">Growth factor binds → RTK dimerizes &amp; autophosphorylates</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 2</div><div class="ps-label">Ras Activated</div><div class="ps-sub">Ras (small GTPase) exchanges GDP for GTP</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 3</div><div class="ps-label">RAF Kinase</div><div class="ps-sub">Ras-GTP activates RAF → RAF phosphorylates MEK</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 4</div><div class="ps-label">MEK Kinase</div><div class="ps-sub">MEK phosphorylates ERK (MAP kinase)</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 5</div><div class="ps-label">ERK Response</div><div class="ps-sub">ERK enters nucleus → activates transcription factors → cell proliferation, survival, differentiation</div></div>
+      </div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Amplification: Why One Ligand Can Change Thousands of Proteins</div><div class="cx">Each kinase in a cascade can phosphorylate <em>many</em> downstream molecules before being inactivated. If each step activates 10 molecules: 1 receptor → 10 Ras → 100 RAF → 1,000 MEK → 10,000 ERK → 100,000 transcription factor activations. This exponential amplification explains why hormones work at nanomolar concentrations — a tiny signal becomes a massive cellular response.</div></div></div>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Termination: Signals Must Have an Off Switch</div><div class="cx">Cell signaling must be terminated precisely. Mechanisms include: <strong>ligand removal</strong> (degraded, taken back up, or washed away); <strong>receptor inactivation</strong> (internalized/degraded); <strong>GTP hydrolysis</strong> by G proteins or Ras (built-in timer); <strong>phosphatase activation</strong> (removes phosphate groups added by kinases); <strong>inhibitor proteins</strong> block cascade proteins. Without these off-switches, cells would remain permanently stimulated — a hallmark of cancer.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Phosphorylation Cascade Amplification</div>
+      <div class="graph-box"><div class="graph-title">Signal Amplification Through a 5-Step Kinase Cascade</div><div class="graph-cap">Each step activates ~10 downstream molecules — exponential amplification from 1 ligand to &gt;100,000 activated molecules</div><div class="graph-wrap"><canvas id="chartL6"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain how phosphorylation works as a molecular on/off switch. How do protein kinases and phosphatases work together to control signaling? Why must signals have termination mechanisms?</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd6">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 6 Quiz — Signal Transduction Pathways</h3><p>5 questions · includes amplification graph</p></div></div>
+    <div id="q6">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Protein kinases are essential components of signal transduction cascades. What do they do?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They remove phosphate groups from proteins, turning signals off</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They produce second messengers like cAMP</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They transfer a phosphate group from ATP to specific amino acid residues (serine, threonine, or tyrosine) on target proteins — changing their shape and activity</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They degrade signal molecules after the response is complete</li></ul>
+        <div class="qexp">Protein kinases catalyze <strong>phosphorylation</strong>: ATP + protein → ADP + phosphoprotein. Adding a phosphate group (negatively charged) changes the protein's electrostatic properties and 3D shape → activating or inhibiting it. Kinases are classified by which amino acid they phosphorylate: serine/threonine kinases (most common) and tyrosine kinases (RTKs, Src). Kinases are the main on/off switches in virtually all signal transduction pathways. About 2% of the human genome encodes kinases — reflecting their importance.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In the MAP kinase cascade (Ras→RAF→MEK→ERK), why does the signal grow stronger at each step?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Each activated kinase can phosphorylate many downstream molecules before being inactivated — one active RAF can activate many MEK molecules, each of which activates many ERK molecules, producing exponential amplification</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Each step produces a new signal molecule that binds additional receptors on the cell surface</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The signal molecule (ligand) is duplicated at each step in the cascade</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>More ATP is consumed at each step, releasing more energy for signaling</li></ul>
+        <div class="qexp">Amplification occurs because each active kinase can catalyze phosphorylation of <em>many</em> substrate molecules before being inactivated. This is enzyme-like amplification: one RAF kinase molecule can phosphorylate 10+ MEK molecules; each MEK can phosphorylate 10+ ERK molecules → exponential growth of signal strength. Starting from one growth factor molecule: 1 RTK → 1 active Ras → ~10 active RAF → ~100 active MEK → ~1,000 active ERK → massive proliferation signal. This amplification is why cancer mutations in Ras (found in ~30% of all human cancers) are so devastating — even a small increase in Ras activity produces enormous downstream signaling.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Ras is a GTPase that is mutated in about 30% of all human cancers. In the mutant form, Ras is permanently "stuck on" (cannot hydrolyze GTP to GDP). What is the consequence?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The cell cannot receive any growth factor signals</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Ras permanently inactivates all downstream kinases, stopping cell division</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The cell becomes hypersensitive to apoptosis signals</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The MAP kinase cascade remains permanently active — signaling continuous cell proliferation even without growth factor — driving uncontrolled cell division (cancer)</div></ul>
+        <div class="qexp">Normally, Ras turns itself off by hydrolyzing GTP → GDP (intrinsic GTPase activity). Mutant Ras cannot hydrolyze GTP → permanently GTP-bound → permanently "on" → continuously signals RAF → MEK → ERK → proliferation genes, even without any growth factor signal. This is a constitutively active oncogene — it drives constant cell division without external permission. Mutant RAS is found in ~90% of pancreatic cancers, ~50% of colorectal cancers, and ~30% of lung cancers. It's one of the most common cancer drivers known.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the amplification cascade graph, approximately how many ERK molecules are activated by a cascade starting from ONE receptor activation (with ~10× amplification per step)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>~100 (10² amplification over 2 steps)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>~10,000 (10⁴ amplification over 4 steps from receptor to ERK)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>~1,000 (10³ amplification)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>~100,000 (one-to-one amplification at each step)</li></ul>
+        <div class="qexp">With 10× amplification per step over 4 steps (RTK → Ras → RAF → MEK → ERK): 1 × 10 × 10 × 10 × 10 = <strong>10,000 ERK molecules</strong> (10⁴). This is a conservative estimate — real cascades often achieve even higher amplification. At each kinase step, the active enzyme can phosphorylate many substrate molecules before it's inactivated. This is why nanomolar concentrations of hormones can produce dramatic cellular responses — the signal is amplified by orders of magnitude through the cascade.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">After a signal is received and transduced, how is the signaling cascade terminated to prevent a continuous response?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The cell is destroyed and replaced by a new cell with fresh receptors</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Signal molecules permanently bind their receptors, locking the pathway in an inactive state</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Multiple mechanisms: ligand removal/degradation, receptor internalization, G-protein GTP hydrolysis (intrinsic timer), protein phosphatases removing phosphate groups, and inhibitor proteins binding cascade components</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Termination only occurs when the cell divides and dilutes the signaling molecules</li></ul>
+        <div class="qexp">Signal termination is as important as initiation. Multiple redundant mechanisms ensure signals stop: (1) Signal molecule removed (enzyme degradation, reuptake, diffusion away); (2) Receptor internalized and degraded (downregulation); (3) G-protein self-inactivates (hydrolyzes GTP → GDP); (4) Phosphatases remove phosphate groups added by kinases; (5) Inhibitory proteins (like MAP kinase phosphatases) block cascade proteins. Without termination, cells would be permanently stimulated — a feature of many cancers where termination mechanisms are mutated or lost.</div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Lesson 7 →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-tran"><div class="h-crumb">Transduction &amp; Response · <span>Lesson 7</span></div><div class="h-title">Second Messengers</div><div class="h-desc">Second messengers are small intracellular molecules that carry the signal from the cell surface deep into the cell. cAMP and calcium are the two most important — and understanding them explains everything from the "fight or flight" response to how your heart beats.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Define second messenger and explain why they are needed.</li>
+      <li>Trace the cAMP pathway: epinephrine → GPCR → G-protein → adenylyl cyclase → cAMP → protein kinase A → cellular response.</li>
+      <li>Describe calcium as a second messenger: sources, IP₃/DAG pathway, calmodulin.</li>
+      <li>Explain how second messengers amplify and distribute signals within the cell.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.3</div><div class="sh2">Why Second Messengers Are Needed</div>
+      <p class="prose">Most signal molecules (like epinephrine) are hydrophilic — they cannot cross the plasma membrane. So how does the extracellular signal get inside the cell? The answer is <strong>second messengers</strong> — small, water-soluble molecules that are rapidly produced inside the cell in response to receptor activation. They diffuse through the cytoplasm and relay the signal to downstream targets, amplifying it enormously along the way.</p>
+      <div class="sh3">The cAMP Pathway: Epinephrine and the Fight-or-Flight Response</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">1</div><div class="ps-label">Epinephrine Binds</div><div class="ps-sub">Binds β-adrenergic receptor (GPCR) on muscle/liver cell</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">2</div><div class="ps-label">G-Protein ON</div><div class="ps-sub">Gα exchanges GDP→GTP, dissociates from Gβγ</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">3</div><div class="ps-label">Adenylyl Cyclase</div><div class="ps-sub">Gα activates adenylyl cyclase enzyme in membrane</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">4</div><div class="ps-label">cAMP Made</div><div class="ps-sub">ATP → cyclic AMP (cAMP) — second messenger floods cytoplasm</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">5</div><div class="ps-label">PKA Activated</div><div class="ps-sub">cAMP activates Protein Kinase A → phosphorylates many targets → glycogen breakdown, cell response</div></div>
+      </div>
+      <div class="sh3">Calcium (Ca²⁺) as a Second Messenger</div>
+      <p class="prose">Calcium ions (Ca²⁺) are another crucial second messenger. At rest, cytoplasmic Ca²⁺ is kept extremely low (~100 nM). When a signal activates the IP₃/DAG pathway, Ca²⁺ floods in from the ER or extracellular space → concentration spikes 10–100 fold → Ca²⁺ binds <strong>calmodulin</strong> (a calcium-sensing protein) → calmodulin activates many enzymes including calmodulin-dependent kinases. Calcium signaling controls muscle contraction, neurotransmitter release, cell motility, and gene expression.</p>
+      <table class="dt">
+        <tr><th>Second Messenger</th><th>Produced By</th><th>Activates</th><th>Terminated By</th><th>Example Role</th></tr>
+        <tr><td><strong>cAMP</strong></td><td>Adenylyl cyclase (from ATP)</td><td>Protein Kinase A (PKA)</td><td>Phosphodiesterase (breaks cAMP → AMP)</td><td>Epinephrine → glycogen breakdown; glucagon → glucose release</td></tr>
+        <tr><td><strong>Ca²⁺</strong></td><td>Released from ER (via IP₃) or entered through channels</td><td>Calmodulin, protein kinase C, calcineurin</td><td>Ca²⁺ pumped back into ER (SERCA) or out of cell</td><td>Muscle contraction, neurotransmitter release, T cell activation</td></tr>
+        <tr><td><strong>IP₃/DAG</strong></td><td>Phospholipase C cleaves PIP₂ → IP₃ + DAG</td><td>IP₃ opens Ca²⁺ channels (ER); DAG activates Protein Kinase C (PKC)</td><td>IP₃ dephosphorylated; DAG metabolized</td><td>Many growth factor receptors; T cell receptor signaling</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory Hook: "Camp gives you energy for the fight; Calcium makes your muscles contract"</div><div class="cx">cAMP → PKA → glycogen phosphorylase → glucose release (energy for fight or flight). Ca²⁺ → calmodulin → myosin light chain kinase → muscle contraction (fight or flight movement). Both are activated by epinephrine but in different tissues: cAMP pathway in liver/muscle for glucose; Ca²⁺ pathway in smooth/cardiac muscle for contraction.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">cAMP Levels During Epinephrine Signaling</div>
+      <div class="graph-box"><div class="graph-title">Intracellular cAMP Concentration Following Epinephrine Stimulation</div><div class="graph-cap">cAMP rises rapidly after epinephrine binding, peaks, then returns to baseline as phosphodiesterase breaks it down</div><div class="graph-wrap"><canvas id="chartL7"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Trace the cAMP signaling pathway from epinephrine binding through to the cellular response. What role does cAMP play as a second messenger — why is it called a "second" messenger?</div>
+      <textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd7">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap7" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 7 Quiz — Second Messengers</h3><p>5 questions · includes cAMP kinetics graph</p></div></div>
+    <div id="q7">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Why is cAMP called a "second messenger" when epinephrine triggers its production?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the second hormone released after epinephrine — the first messenger produces it as a backup signal</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Epinephrine is the "first messenger" (extracellular signal). cAMP is the "second messenger" — the intracellular molecule that carries the signal from the cell surface into the cytoplasm, where it activates Protein Kinase A</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>cAMP is the second ATP molecule produced during the reaction</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>cAMP is only produced as a secondary, backup pathway when the primary pathway fails</li></ul>
+        <div class="qexp">The first/second messenger terminology: the <strong>first messenger</strong> is the extracellular signal molecule (ligand/hormone — e.g., epinephrine). It cannot enter the cell. The <strong>second messenger</strong> is the intracellular molecule produced inside the cell in response to receptor activation — it relays the signal to downstream effectors. cAMP is produced by adenylyl cyclase (activated by G-protein), diffuses through the cytoplasm, and activates Protein Kinase A. Other second messengers: Ca²⁺, IP₃, DAG, cGMP.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Adenylyl cyclase produces cAMP from ATP. What enzyme terminates the cAMP signal?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Protein kinase A — it destroys cAMP after using it</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>ATP synthase — it converts cAMP back to ATP</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Adenylyl cyclase — it reverses its own reaction</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Phosphodiesterase — it hydrolyzes cAMP to 5'-AMP, inactivating the second messenger</li></ul>
+        <div class="qexp"><strong>Phosphodiesterase (PDE)</strong> terminates the cAMP signal by hydrolyzing the cyclic phosphodiester bond in cAMP → produces 5'-AMP (inactive). This is why caffeine enhances adrenaline effects — caffeine inhibits phosphodiesterase, preventing cAMP breakdown → cAMP levels stay elevated longer → prolonged PKA activation → more alertness, increased heart rate. Drugs like sildenafil (Viagra) also inhibit a specific phosphodiesterase (PDE5) in vascular smooth muscle → cGMP persists → vasodilation.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Calcium (Ca²⁺) is released from the endoplasmic reticulum (ER) in response to IP₃ signaling. What triggers this release?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>PKA phosphorylates the ER membrane, opening Ca²⁺ pores</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>cAMP directly binds the ER Ca²⁺ channels, opening them</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>IP₃ (inositol trisphosphate) — produced by phospholipase C cleaving PIP₂ — binds IP₃-gated Ca²⁺ channels on the ER membrane, opening them and releasing Ca²⁺ into the cytoplasm</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Epinephrine directly binds ER receptors, causing Ca²⁺ release</li></ul>
+        <div class="qexp">The IP₃/Ca²⁺ pathway: Ligand binds GPCR → Gq activates phospholipase C (PLC) → PLC cleaves PIP₂ (membrane phospholipid) → IP₃ + DAG. IP₃ is water-soluble, diffuses to ER → binds IP₃-gated Ca²⁺ channels (IP₃ receptors) → channels open → Ca²⁺ floods out of ER into cytoplasm. DAG remains in membrane and activates Protein Kinase C. This dual second messenger system (IP₃ for Ca²⁺ release + DAG for PKC) produces two simultaneous but distinct downstream effects.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the cAMP graph, what happens to cAMP levels after epinephrine is removed from the receptor?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>cAMP levels decline back to baseline — phosphodiesterase breaks down remaining cAMP, terminating the signal</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>cAMP levels remain elevated permanently — the second messenger cannot be removed once produced</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>cAMP levels drop to zero immediately upon ligand removal</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>cAMP levels increase further because adenylyl cyclase becomes self-sustaining</li></ul>
+        <div class="qexp">After epinephrine dissociates from its receptor: adenylyl cyclase is no longer activated → no new cAMP produced; phosphodiesterase continuously degrades existing cAMP → cAMP levels return to baseline. The graph shows a rapid rise (adenylyl cyclase producing cAMP), a peak, then a gradual decline (phosphodiesterase activity). The rate of decline reflects the balance between production stopping and degradation continuing. This ensures the response is proportional to how long the signal is present — not permanent.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Calmodulin is a calcium-binding protein that acts as a calcium sensor. When Ca²⁺ rises in the cytoplasm, calmodulin changes shape and activates enzymes. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Phosphorylation — calmodulin is phosphorylated by Ca²⁺</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Allosteric regulation — Ca²⁺ binding causes a conformational change in calmodulin that activates its interaction with target enzymes (calmodulin-dependent kinases, nitric oxide synthase, myosin light chain kinase)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Signal termination — calmodulin shuts off the Ca²⁺ signal</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Second messenger production — calmodulin synthesizes more Ca²⁺</li></ul>
+        <div class="qexp"><strong>Allosteric regulation</strong>: Ca²⁺ binding causes a dramatic conformational change in calmodulin (from compact to "dumbbell" shape with exposed hydrophobic patches) → calmodulin can now bind and activate target enzymes like CaM kinase II (regulates neurotransmitter synthesis), myosin light chain kinase (smooth muscle contraction), calcineurin (immune cell signaling — target of immunosuppressant drugs like FK506), and nitric oxide synthase. Calmodulin is the cell's master Ca²⁺ decoder — one sensor protein activates many different downstream responses.</div></div>
+    </div>
+    <div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Lesson 6</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Lesson 8 →</button></div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="hero hero-res"><div class="h-crumb">Transduction &amp; Response · <span>Lesson 8</span></div><div class="h-title">Cell Responses to Signals</div><div class="h-desc">The same signal can produce completely different responses in different cell types. How a cell responds depends on which receptors it has, which transduction proteins it expresses, and which genes are ready to be turned on.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Identify the four major types of cell responses to signals: gene expression, enzyme activation/inhibition, cytoskeletal changes, and apoptosis.</li>
+      <li>Explain how the same signal molecule can produce different responses in different cell types.</li>
+      <li>Describe apoptosis (programmed cell death) and its importance in development and disease.</li>
+      <li>Explain feedback loops in signaling: positive feedback amplifies, negative feedback limits response.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.4</div><div class="sh2">Four Major Categories of Cell Response</div>
+      <table class="dt">
+        <tr><th>Response Type</th><th>Mechanism</th><th>Timescale</th><th>Examples</th></tr>
+        <tr><td><strong>Gene Expression Change</strong></td><td>Transcription factors activated → target genes turned on or off → mRNA produced → new proteins synthesized</td><td>Hours to days</td><td>Steroid hormones inducing protein synthesis; growth factors activating proliferation genes; cortisol suppressing inflammation genes</td></tr>
+        <tr><td><strong>Enzyme Activation/Inhibition</strong></td><td>Phosphorylation or allosteric change activates/inhibits specific enzymes → metabolic pathways activated or shut down</td><td>Seconds to minutes</td><td>Epinephrine → PKA → glycogen phosphorylase activation → glycogen breakdown; insulin → PKB activation → glucose uptake</td></tr>
+        <tr><td><strong>Cytoskeletal Rearrangement</strong></td><td>Signals activate proteins that reorganize actin filaments and microtubules → changes cell shape, movement, and division</td><td>Minutes</td><td>Immune cells extending pseudopods toward bacteria; cell division (spindle assembly); wound healing migration</td></tr>
+        <tr><td><strong>Apoptosis (Programmed Cell Death)</strong></td><td>Pro-apoptotic signals activate caspase cascade → proteolytic destruction of cellular components → orderly cell death</td><td>Hours</td><td>Development (finger formation — cells between digits must die); immune cell elimination; cancer cell removal</td></tr>
+      </table>
+      <div class="sh3">Why the Same Signal Produces Different Responses</div>
+      <p class="prose">Epinephrine (adrenaline) binds adrenergic receptors throughout the body — yet it causes different responses in different tissues: heart muscle beats faster, liver releases glucose, bronchioles dilate, digestive tract slows down, pupils dilate. The signal (epinephrine) is the same. What differs is:</p>
+      <ul style="list-style:disc;padding-left:24px;margin-bottom:14px;font-size:.96rem;color:#2a3245;">
+        <li style="margin-bottom:8px;line-height:1.7;"><strong>Which receptor subtype</strong> is present (β₁ in heart → faster rate; β₂ in bronchioles → dilation; α₁ in blood vessels → constriction)</li>
+        <li style="margin-bottom:8px;line-height:1.7;"><strong>Which G-protein subtype</strong> is coupled to that receptor (Gs, Gi, or Gq → different effectors)</li>
+        <li style="margin-bottom:8px;line-height:1.7;"><strong>Which downstream proteins</strong> the cell expresses (glycogen phosphorylase in liver; myosin light chain kinase in smooth muscle)</li>
+        <li style="margin-bottom:8px;line-height:1.7;"><strong>Which genes</strong> are accessible for expression in that particular cell type</li>
+      </ul>
+      <div class="sh3">Apoptosis: Programmed Cell Death</div>
+      <p class="prose">Apoptosis is the orderly, genetically controlled self-destruction of a cell. It is essential for development (sculpting fingers and toes by eliminating interdigital cells), immune function (killing autoreactive T cells), and tumor suppression (eliminating DNA-damaged cells). Apoptosis is executed by <strong>caspases</strong> — proteases that dismantle cellular components in an organized sequence. The cell shrinks, DNA fragments, and cell-derived vesicles are phagocytized — no inflammatory response.</p>
+      <div class="callout red"><div class="ci">⚠️</div><div class="cb"><div class="ct">Cancer = Apoptosis Failure + Signaling Overactivation</div><div class="cx">Cancer requires at minimum: (1) pro-growth signals become permanently active (e.g., mutant Ras); AND (2) apoptosis signals fail (e.g., p53 tumor suppressor mutated — p53 normally triggers apoptosis in DNA-damaged cells). When both fail simultaneously, cells divide without limit AND don't die when they should → tumor formation. Most cancers require mutations in multiple signaling control points.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Cell Response Types and Their Timescales</div>
+      <div class="graph-box"><div class="graph-title">Timescale of Cell Responses to Signals</div><div class="graph-cap">Enzyme activation is fastest; gene expression changes and apoptosis take much longer</div><div class="graph-wrap"><canvas id="chartL8"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain why the same signal molecule (like epinephrine) can produce different responses in different cell types. Describe two specific examples with different organs/tissues.</div>
+      <textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 80 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd8">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap8" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 8 Quiz — Cell Responses to Signals</h3><p>5 questions · includes response timescale graph</p></div></div>
+    <div id="q8">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">During embryonic development, the cells between your fingers and toes die in an organized way to produce distinct digits. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Necrosis — uncontrolled cell death caused by injury</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autocrine signaling — the cells signal themselves to stop growing</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Apoptosis — genetically programmed cell death that sculpts tissues by eliminating specific cells in an organized, non-inflammatory manner</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Endocrine signaling — a hormone from the pituitary eliminates excess cells</li></ul>
+        <div class="qexp"><strong>Apoptosis</strong> sculpts developing fingers by eliminating interdigital cells. Death signals activate caspases → cell shrinks, chromatin condenses, DNA fragments, membrane blebs → apoptotic bodies are phagocytized by macrophages. No inflammation. This is why you have 5 distinct fingers rather than a "paddle hand." Apoptosis is not failure — it's programmed, essential, and beautiful. Compare to necrosis (uncontrolled death from injury/toxins → inflammation, cell swelling, membrane rupture → inflammatory response).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Epinephrine causes heart muscle cells to beat faster and liver cells to release glucose — but NOT via gene expression. This shows that the response to a signal is determined by:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Which receptor subtype is present, which G-protein is coupled to it, and which downstream proteins/enzymes are expressed in that particular cell type</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The concentration of epinephrine — high concentrations affect heart, low concentrations affect liver</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Whether the signal molecule is hydrophilic or hydrophobic</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The number of chromosomes in each cell type</li></ul>
+        <div class="qexp">Same signal → different responses because: (1) Heart muscle has β₁-adrenergic receptors coupled to Gs → cAMP → PKA → phosphorylation of L-type Ca²⁺ channels → increased heart rate/force. (2) Liver has β₂ and glucagon receptors → cAMP → PKA → glycogen phosphorylase activation → glucose release. Same second messenger (cAMP), same kinase (PKA), but different PKA substrates in each cell type → different responses. Cell identity (what proteins it expresses) determines the response, not just the signal.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A drug that BLOCKS caspase activity would most likely:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Increase the rate of cell division by preventing cell cycle arrest</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Activate G-protein coupled receptors nonspecifically</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Increase production of second messengers like cAMP</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Inhibit apoptosis — since caspases execute programmed cell death, blocking them would prevent cells from dying even when they should (e.g., DNA-damaged or cancerous cells)</li></ul>
+        <div class="qexp">Caspases are the executioner proteases of apoptosis. Blocking caspases = blocking apoptosis. This has double implications: (1) Could protect healthy cells from unwanted apoptosis in some diseases (e.g., preventing neuronal death in stroke). (2) Would be dangerous in cancer — cancer cells already often have impaired apoptosis; blocking caspases further would make tumors even harder to treat. Many cancer therapies work BY activating caspases (inducing apoptosis in tumor cells). Caspase inhibition is actually being explored for neurodegenerative diseases where neurons die inappropriately.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the response timescale graph, which type of cell response is fastest and which is slowest?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gene expression (fastest) and cytoskeletal changes (slowest)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Enzyme activation (fastest — seconds); gene expression changes and apoptosis (slowest — hours)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Apoptosis (fastest) and enzyme activation (slowest)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All responses occur at the same speed — timing is irrelevant</li></ul>
+        <div class="qexp">Speed hierarchy: Enzyme activation (seconds — just phosphorylation changes an already-present enzyme) &gt; Cytoskeletal rearrangement (minutes — actin polymerization) &gt; Gene expression changes (hours — transcription + translation + protein accumulation) ≈ Apoptosis (hours — caspase cascade takes time, and it should: irreversible cell death must be executed carefully). Speed correlates with how many molecular steps and whether new protein synthesis is needed.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Negative feedback in a signaling pathway means that the response itself reduces or terminates the original signal. Why is negative feedback important?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Negative feedback amplifies the signal — each response triggers more signaling</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Negative feedback is not important — cells rely on positive feedback for all responses</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Negative feedback prevents overstimulation, ensures responses are proportional and temporary, and returns the cell to homeostasis — without it, signaling would be uncontrolled and permanent, which is a feature of cancer</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Negative feedback makes signals faster by shortcutting the transduction cascade</li></ul>
+        <div class="qexp">Negative feedback is the cornerstone of homeostasis in signaling. Example: Insulin → glucose uptake → blood glucose drops → less insulin secretion (negative feedback limits the response). Without negative feedback: blood glucose would keep dropping → hypoglycemia. In signaling cascades: activated PKA can phosphorylate and inactivate upstream components → self-limiting response. Loss of negative feedback is characteristic of cancer: tumor cells often mutate negative regulators (tumor suppressors, phosphatases) → permanent pro-growth signaling.</div></div>
+    </div>
+    <div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Lesson 7</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(9)">Lesson 9 →</button></div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="hero hero-dis"><div class="h-crumb">Applied · <span>Lesson 9</span></div><div class="h-title">Cell Communication &amp; Disease</div><div class="h-desc">Cancer and diabetes represent opposite failures of cell communication — one is overactivation (cells divide without stopping), the other is under-response (cells can't hear the insulin signal). Both show what happens when signaling goes wrong.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 9.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Explain how cancer arises from mutations that permanently activate growth signaling (proto-oncogenes → oncogenes).</li>
+      <li>Explain how tumor suppressors normally limit signaling and why their loss promotes cancer.</li>
+      <li>Describe the normal insulin signaling pathway and how insulin resistance in type 2 diabetes disrupts it.</li>
+      <li>Identify therapeutic strategies that target signaling pathway components (e.g., kinase inhibitors).</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 9.4</div><div class="sh2">Cancer: When Growth Signals Never Turn Off</div>
+      <p class="prose">Cancer is fundamentally a disease of cell signaling. Normal cells receive growth signals → divide → signals stop → cells stop dividing. Cancer cells have mutations in signaling pathway components that make growth signals permanent — even without any growth factor present.</p>
+      <table class="dt">
+        <tr><th>Gene Type</th><th>Normal Function</th><th>When Mutated</th><th>Example</th></tr>
+        <tr><td><strong>Proto-oncogene</strong></td><td>Encodes a normal signaling protein (growth factor receptor, kinase, transcription factor) — promotes cell growth when stimulated</td><td>Becomes an <strong>oncogene</strong> — permanently active; promotes growth constantly without external signal. ONE mutated copy sufficient (dominant gain-of-function)</td><td>RAS (GTPase stuck ON in 30% of cancers); HER2 (RTK amplified in breast cancer); MYC (transcription factor overexpressed)</td></tr>
+        <tr><td><strong>Tumor Suppressor</strong></td><td>Encodes proteins that inhibit cell division, promote apoptosis, or repair DNA — brakes on cell cycle and signaling</td><td>Brakes removed — cell division accelerates unchecked. BOTH copies must be lost (recessive loss-of-function — "two-hit hypothesis")</td><td>p53 (mutated in &gt;50% of all cancers — triggers apoptosis in DNA-damaged cells); RB (retinoblastoma protein — blocks cell cycle)</td></tr>
+      </table>
+      <div class="callout red"><div class="ci">🔬</div><div class="cb"><div class="ct">Targeted Cancer Therapy: Attacking Signaling Proteins Directly</div><div class="cx">Modern cancer drugs target specific signaling proteins rather than killing all dividing cells (traditional chemotherapy). Examples: <strong>Imatinib (Gleevec)</strong> — blocks the BCR-ABL tyrosine kinase in chronic myeloid leukemia (CML) → dramatic remission. <strong>Herceptin (trastuzumab)</strong> — blocks HER2 RTK in HER2-positive breast cancer. <strong>Vemurafenib</strong> — blocks mutant BRAF kinase in melanoma. These precision drugs target the exact mutated signaling protein, sparing normal cells.</div></div></div>
+      <div class="sh3">Type 2 Diabetes: When Cells Stop Listening to Insulin</div>
+      <p class="prose">In type 2 diabetes, the signaling pathway is intact — but cells stop responding to insulin (insulin resistance). Here's why this matters:</p>
+      <table class="dt">
+        <tr><th>Step</th><th>Normal Function</th><th>In Type 2 Diabetes</th></tr>
+        <tr><td>Blood glucose rises after a meal</td><td>Pancreatic β cells detect glucose and secrete insulin</td><td>Initially normal — insulin is produced</td></tr>
+        <tr><td>Insulin binds insulin receptor (RTK) on muscle/liver/fat cells</td><td>Insulin receptor autophosphorylates → activates PI3K pathway → AKT (PKB) activated</td><td>Receptor still binds insulin, but downstream signaling is impaired (multiple defects in IRS-1, PI3K, AKT)</td></tr>
+        <tr><td>GLUT4 transporters move to cell surface</td><td>Glucose enters cells → blood glucose falls</td><td>GLUT4 fails to translocate → glucose stays in blood → hyperglycemia</td></tr>
+        <tr><td>Feedback shuts off insulin secretion</td><td>Normal homeostasis maintained</td><td>Pancreas compensates by making MORE insulin → eventually β cells exhausted → insulin deficiency develops</td></tr>
+      </table>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 9.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Signaling Pathway Mutations in Common Cancers</div>
+      <div class="graph-box"><div class="graph-title">Frequency of Key Signaling Pathway Mutations Across Common Cancers</div><div class="graph-cap">RAS mutations are the most common signaling driver mutation; found at high frequency across many cancer types</div><div class="graph-wrap"><canvas id="chartL9"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp9"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the difference between a proto-oncogene and a tumor suppressor gene. How do mutations in each contribute to cancer? Give one specific example of each.</div>
+      <textarea class="cp-textarea" id="cpt9" placeholder="Write your answer here..." oninput="cpCheck(9)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc9">Characters: <span id="cpn9">0</span> / 80 required</div><button class="cp-btn" id="cpb9" onclick="cpUnlock(9)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd9">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap9" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 9 Quiz — Cell Communication &amp; Disease</h3><p>5 questions · includes cancer mutation graph</p></div></div>
+    <div id="q9">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A mutation converts RAS from a proto-oncogene to an oncogene by making it permanently GTP-bound. Why does this cause cancer?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Mutant Ras blocks all cell signaling, preventing normal cell division regulation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Mutant Ras permanently activates the MAP kinase cascade (RAF→MEK→ERK) — driving continuous cell proliferation and survival even without any growth factor signal</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Mutant Ras prevents apoptosis by blocking caspase activity directly</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Mutant Ras increases the cell's sensitivity to growth factors — it responds to weaker signals</li></ul>
+        <div class="qexp">Normal Ras acts like a timer: GTP-bound (active) → hydrolyzes GTP to GDP (off). Mutant Ras cannot hydrolyze GTP → permanently ON → continuously signals RAF→MEK→ERK→proliferation genes. The cell divides continuously without any growth factor permission. Only ONE mutant RAS allele is needed (dominant gain-of-function). RAS is mutated in ~90% of pancreatic cancers, ~50% of colorectal cancers, ~30% of lung cancers — making it the single most common cancer-driving mutation in humans.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">p53 is a tumor suppressor that triggers apoptosis when DNA is damaged. Cancer requires mutations in BOTH copies of p53 (two-hit hypothesis). Why are both copies needed?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because p53 is located on both chromosomes and must be removed from each independently</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because one normal copy is enough to suppress tumor growth — the cell's remaining normal allele can still produce enough functional p53 protein to maintain growth control</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because one copy of the mutant p53 actively promotes cancer — both copies turn cancerous</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both B is correct — one normal p53 allele produces sufficient protein to maintain tumor suppression; only when BOTH alleles are mutated or deleted does p53 function fail completely</li></ul>
+        <div class="qexp">Tumor suppressors follow the <strong>two-hit hypothesis</strong> (Knudson, 1971): one functional allele is sufficient to suppress tumor growth (haploinsufficiency doesn't occur — the remaining allele compensates). Cancer requires loss of BOTH functional copies: hit 1 = first allele mutated; hit 2 = second allele mutated or deleted. This is why tumor suppressors are recessive at the cellular level. In hereditary retinoblastoma: children inherit one defective RB allele (hit 1 from birth) — only need one more somatic mutation (hit 2) → very early tumor development.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">In type 2 diabetes, insulin binds its receptor normally but cells still don't take up glucose properly. The defect is in:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Signal transduction — the downstream signaling cascade (IRS-1→PI3K→AKT→GLUT4 translocation) is impaired, preventing glucose transporters from moving to the cell surface even though insulin bound correctly</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Signal reception — insulin cannot bind its receptor in type 2 diabetics</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Signal molecule production — the pancreas stops making insulin immediately in type 2 diabetes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Glucose transport — GLUT4 genes are deleted in type 2 diabetics</li></ul>
+        <div class="qexp">Type 2 diabetes = <strong>insulin resistance</strong>: insulin binds its receptor (RTK) normally, but the downstream transduction cascade is defective. The IRS-1 (insulin receptor substrate) is improperly phosphorylated → PI3K not fully activated → AKT/PKB not activated → GLUT4 vesicles don't merge with plasma membrane → glucose can't enter cells → hyperglycemia. Contributing factors: excess fatty acids, inflammatory cytokines (TNF-α), ER stress — all interfere with IRS-1 signaling. Treatment: metformin activates AMPK (bypasses insulin resistance); exercise increases GLUT4 expression independently of insulin signaling.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the cancer mutation graph, which signaling pathway mutation is most commonly found across multiple cancer types?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>HER2 amplification — found in nearly all cancer types</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>BRAF mutation — the most universal cancer mutation</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RAS mutation — present at high frequency across pancreatic, colorectal, lung, and many other cancers, making it the most commonly mutated signaling protein in human cancer</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>p53 loss — because it's a tumor suppressor, not a signaling protein</li></ul>
+        <div class="qexp">RAS is mutated in ~20–30% of ALL human cancers overall, with much higher rates in specific types: ~90% of pancreatic adenocarcinoma, ~50% of colorectal cancer, ~30% of lung adenocarcinoma. Its position at the hub of the MAPK cascade — receiving signals from many RTKs and controlling many downstream pathways — makes it an especially impactful mutation. Unfortunately, mutant RAS has proven extremely difficult to drug (the binding pocket for GTP is too smooth for drug attachment) — this is an active area of cancer drug development.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Imatinib (Gleevec) treats chronic myeloid leukemia (CML) by blocking the BCR-ABL tyrosine kinase — a constitutively active fusion protein. How does this therapy work?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Imatinib kills all rapidly dividing cells, including leukemia cells</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Imatinib occupies the ATP-binding site of BCR-ABL, blocking its kinase activity — the leukemia cells can no longer signal for uncontrolled proliferation, causing them to stop dividing and undergo apoptosis</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Imatinib activates p53 in leukemia cells, triggering apoptosis directly</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Imatinib prevents BCR-ABL from reaching the nucleus by blocking nuclear pores</li></ul>
+        <div class="qexp">Imatinib is the prototype <strong>targeted kinase inhibitor</strong>. BCR-ABL is a fusion oncogene (chromosome translocation in CML) → constitutively active tyrosine kinase → permanent proliferation signal. Imatinib fits into the ATP-binding pocket of BCR-ABL → blocks phosphorylation → shuts off the proliferation signal → leukemia cells stop dividing and undergo apoptosis. Normal cells are largely unaffected because they don't have BCR-ABL. CML remission rates went from ~30% with conventional chemo to &gt;90% with imatinib — the first targeted cancer therapy and proof of concept for precision oncology.</div></div>
+    </div>
+    <div class="qscore" id="sc9"><div class="score-n" id="scn9">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">← Lesson 8</button><button class="mc-btn" onclick="markDone(9,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(10)">Unit Review &amp; Practice Test →</button></div>
+</div>
+
+<div class="panel" id="p10">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Practice Test</span></div><div class="h-title">Unit Review &amp; Practice Test</div><div class="h-desc">20 questions covering all 9 lessons — from the three stages of signaling to cancer and diabetes as signaling diseases.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📊 Data Interpretation Included</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Unit at a Glance</div>
+      <table class="dt">
+        <tr><th>Topic</th><th>Key Points</th></tr>
+        <tr><td>Introduction to Signaling</td><td>Reception → Transduction → Response; specificity (target cells); amplification; evolutionary conservation (yeast)</td></tr>
+        <tr><td>Types of Communication</td><td>Direct contact (gap junctions), autocrine (self), paracrine (local — neurotransmitters), endocrine (blood — hormones)</td></tr>
+        <tr><td>Signal Molecules</td><td>Hydrophilic → cell-surface receptors (fast, brief); hydrophobic (steroids) → intracellular receptors (slow, long)</td></tr>
+        <tr><td>Cell-Surface Receptors</td><td>GPCRs (7-TM, G-protein, cAMP); RTKs (dimerize, autophosphorylate, growth factors); ion channels (fastest)</td></tr>
+        <tr><td>Intracellular Receptors</td><td>Steroid + receptor → transcription factor → HRE → gene expression change; slow onset, long duration</td></tr>
+        <tr><td>Signal Transduction</td><td>Phosphorylation cascades; kinase (adds PO₄); phosphatase (removes PO₄); MAP kinase cascade (Ras→RAF→MEK→ERK)</td></tr>
+        <tr><td>Second Messengers</td><td>cAMP (adenylyl cyclase → PKA, terminated by phosphodiesterase); Ca²⁺ (IP₃ from PLC → ER release → calmodulin)</td></tr>
+        <tr><td>Cell Responses</td><td>Gene expression (hours), enzyme activation (seconds), cytoskeletal changes (minutes), apoptosis (hours)</td></tr>
+        <tr><td>Disease</td><td>Cancer = proto-oncogene → oncogene (gain of function); tumor suppressor loss (two-hit); T2DM = insulin resistance (transduction defect)</td></tr>
+      </table>
+    </div>
+    <div class="cs"><div class="eyebrow">Review Data — Use for Questions 6 &amp; 18</div>
+      <div class="graph-box"><div class="graph-title">Signal Amplification Through a 5-Step Cascade</div><div class="graph-cap">Reference for Practice Test Question 6</div><div class="graph-wrap"><canvas id="chartPT1"></canvas></div></div>
+      <div class="graph-box" style="margin-top:16px;"><div class="graph-title">Signaling Pathway Mutations in Common Cancers</div><div class="graph-cap">Reference for Practice Test Question 18</div><div class="graph-wrap"><canvas id="chartPT2"></canvas></div></div>
+    </div>
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — Cell Communication</h3><p>20 questions · Virginia SOL format · auto-submitted to Mr. England</p></div></div>
+    <div id="q10">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which sequence correctly describes the three universal stages of cell signaling?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Transduction → Reception → Response</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Reception → Transduction → Response</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Response → Reception → Transduction</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Reception → Response → Transduction</li></ul>
+        <div class="qexp">Reception → Transduction → Response. (1) Reception: ligand binds receptor → conformational change. (2) Transduction: signal relayed and amplified through cascade. (3) Response: cellular activity changes (gene expression, enzyme activity, etc.). This three-stage framework applies universally to all cell signaling events.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Insulin travels through the bloodstream from the pancreas to liver and muscle cells. This is an example of:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Paracrine signaling</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autocrine signaling</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Direct contact signaling</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Endocrine signaling — a hormone secreted into the bloodstream affects distant target cells throughout the body</li></ul>
+        <div class="qexp">Endocrine signaling: hormones travel long distances through the blood to reach target cells throughout the body. Insulin from pancreatic β cells reaches liver, muscle, and fat cells — all distant. Endocrine signals are slow (minutes) but coordinate whole-body responses. Compare to paracrine (local), autocrine (self), and direct contact (touching cells).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Neurotransmitters diffuse across a 20 nm synaptic cleft and are rapidly degraded after release. What type of signaling is this and why is rapid degradation important?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Endocrine — degradation prevents hormone accumulation in the blood</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autocrine — the neuron signals itself</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Paracrine — rapid degradation keeps the signal local and allows precise timing, preventing spread to non-target cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Direct contact — gap junctions connect neurons at the synapse</li></ul>
+        <div class="qexp">Neurotransmitters are paracrine signals — local, fast, and rapidly terminated. Degradation (e.g., acetylcholinesterase breaking down ACh) or reuptake keeps the signal confined to the synapse and allows precise timing for high-frequency neural signaling. Without rapid removal, neurotransmitters would spread, persist, and prevent the precise millisecond-level control needed for neural circuits.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Estrogen (a steroid hormone) produces slow, long-lasting effects. Insulin (a peptide hormone) produces fast, brief effects. What accounts for this difference?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Estrogen (hydrophobic) crosses the membrane, binds an intracellular receptor, and changes gene expression — new protein synthesis takes hours. Insulin (hydrophilic) cannot cross the membrane, uses a cell-surface receptor, and activates pre-existing enzymes in seconds</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Estrogen is a larger molecule and travels more slowly to its receptor</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Insulin requires a co-receptor that makes it slower; estrogen has no co-receptor</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Estrogen activates cAMP pathways, which are inherently slower than insulin's kinase pathways</li></ul>
+        <div class="qexp">The fundamental difference is receptor location and mechanism: Estrogen (hydrophobic) → crosses membrane → intracellular receptor → transcription factor → gene expression change → new protein synthesis (hours). Insulin (hydrophilic) → cannot cross membrane → cell-surface RTK → phosphorylation cascade → activates existing proteins (seconds-minutes). Speed is determined by whether new protein synthesis is required (slow) or existing proteins are just activated/inhibited (fast).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A G-protein coupled receptor (GPCR) is activated. Which of the following is the FIRST intracellular event?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>cAMP is produced by adenylyl cyclase</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Protein kinase A is activated</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The G-protein α subunit exchanges GDP for GTP and dissociates from the β-γ complex</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The receptor dimerizes with another GPCR</li></ul>
+        <div class="qexp">GPCR activation sequence: Ligand binds GPCR → receptor shape change → G-protein (αβγ heterotrimer) interacts with activated receptor → α subunit exchanges GDP for GTP (FIRST intracellular event) → α-GTP dissociates from βγ → α-GTP binds and activates adenylyl cyclase → cAMP produced → PKA activated. The G-protein GDP→GTP exchange is the molecular switch that kicks off the entire cascade. GTP hydrolysis by the α subunit itself eventually terminates signaling.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">📊 Based on the amplification graph, why can a single ligand molecule produce such a dramatic cellular response?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ligands are much larger than downstream molecules, so one ligand physically displaces many targets</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Each activated protein in the cascade can activate many downstream molecules before being inactivated — exponential amplification multiplies the signal at every step, converting one ligand binding event into thousands of activated effectors</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>One ligand binds multiple receptors simultaneously</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Signal amplification only occurs in the nucleus, not in the cytoplasm</li></ul>
+        <div class="qexp">Cascade amplification: each enzyme in the cascade can activate many substrate molecules before being inactivated. With 10× amplification per step across 5 steps: 1 → 10 → 100 → 1,000 → 10,000 → 100,000 activated molecules. This exponential amplification is why hormones work at nanomolar concentrations (10⁻⁹ M). One epinephrine molecule can ultimately trigger the release of millions of glucose molecules from glycogen. Without amplification, nanomolar hormone concentrations would produce imperceptible effects.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">Receptor tyrosine kinases (RTKs) must dimerize before they are fully activated. Why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Two ligands must bind before any signaling can occur</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Dimerization creates a larger receptor that spans the membrane more effectively</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Two receptors create twice as many binding sites for downstream relay proteins</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The kinase domain of each RTK phosphorylates tyrosines on the other — cross-phosphorylation (autophosphorylation) activates both receptors; a single RTK cannot phosphorylate its own activation sites due to geometric constraints</li></ul>
+        <div class="qexp">RTK dimerization enables cross-phosphorylation: RTK A phosphorylates tyrosines on RTK B's intracellular tail, and vice versa. These phosphotyrosines then serve as docking sites for SH2-domain-containing relay proteins → multiple downstream pathways activated simultaneously. A single RTK monomer cannot access its own activation sites. Importantly, some ligands (like EGF) bind one receptor and induce dimerization with an identical or similar RTK — the ligand acts as a "glue" that brings two receptors together.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">8</span><span class="qt-inner">At a neuromuscular junction, acetylcholine binding causes a muscle cell to depolarize within 1 millisecond. What type of receptor mediates this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ligand-gated ion channel — acetylcholine binding directly opens a Na⁺/K⁺ channel, depolarizing the membrane in milliseconds without any second messenger</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>GPCR — G-protein activation takes milliseconds</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RTK — phosphorylation occurs in milliseconds</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Intracellular receptor — ACh crosses the muscle cell membrane</li></ul>
+        <div class="qexp">The nicotinic acetylcholine receptor is a <strong>ligand-gated ion channel</strong>. ACh binding → channel opens immediately → Na⁺ flows in, K⁺ flows out → membrane depolarization → action potential → muscle contraction. This requires no second messenger, no cascade — the channel opening IS the response. Speed: milliseconds. This is why you can control muscle movement with millisecond precision. GPCRs take seconds; RTKs take minutes — too slow for precise neuromuscular control.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">9</span><span class="qt-inner">A steroid hormone-receptor complex binds a Hormone Response Element (HRE) in the cell's DNA. What is the functional consequence?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The HRE becomes permanently methylated and silenced</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The receptor phosphorylates histones in the HRE region</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Transcription of adjacent genes is activated or repressed — the hormone-receptor complex acts as a transcription factor, changing which proteins the cell produces</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The gene is copied to produce more DNA for immediate use</li></ul>
+        <div class="qexp">The steroid hormone-receptor complex acts as a <strong>transcription factor</strong> by binding HREs — specific DNA sequences near regulated genes. Binding either: (1) recruits transcription machinery → gene ON (activated transcription) or (2) blocks transcription factors → gene OFF (repressed transcription). Result: new proteins are made (or existing proteins are no longer made). This is the mechanistic basis for all steroid hormone effects — from testosterone building muscle to cortisol reducing inflammation.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Protein kinases ADD phosphate groups to proteins; protein phosphatases REMOVE them. Together, they function as:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Second messengers that relay signals through the cytoplasm</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Molecular on/off switches — phosphorylation changes protein shape (on), dephosphorylation restores it (off) — enabling rapid, reversible, and precise regulation of signaling protein activity</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>G-protein activators that amplify receptor signals</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA-binding proteins that regulate gene expression</li></ul>
+        <div class="qexp">Kinase/phosphatase pairs are the cell's fundamental signaling switches. Kinase ON: phosphorylation changes protein shape → activates (usually) or inhibits enzyme/protein. Phosphatase OFF: removes phosphate → restores original shape → inactivates. These switches are: (1) Fast (milliseconds to seconds); (2) Reversible (unlike proteolysis); (3) Regulated (kinases and phosphatases are themselves regulated); (4) Amplifiable (each kinase can switch many substrate molecules). About 2% of the human genome encodes kinases — reflecting their central importance in all biological regulation.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">11</span><span class="qt-inner">In the cAMP signaling pathway, what enzyme produces cAMP and what is cAMP's immediate target?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Phospholipase C produces cAMP; cAMP activates calmodulin</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Protein kinase A produces cAMP; cAMP activates adenylyl cyclase</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>G-protein directly produces cAMP; cAMP activates phospholipase C</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Adenylyl cyclase produces cAMP (from ATP); cAMP activates Protein Kinase A (PKA) by binding its regulatory subunits and releasing active catalytic subunits</li></ul>
+        <div class="qexp">cAMP pathway: G-protein α subunit (Gαs) activates adenylyl cyclase → adenylyl cyclase converts ATP to cAMP → cAMP binds PKA regulatory subunits → regulatory subunits release catalytic subunits → active PKA phosphorylates many targets. Terminated by phosphodiesterase (PDE) hydrolyzing cAMP to 5'-AMP. Classic physiological example: epinephrine → cAMP → PKA → phosphorylation of glycogen phosphorylase → glycogen breakdown → glucose release for energy.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">12</span><span class="qt-inner">IP₃ is produced by phospholipase C cleaving PIP₂. What does IP₃ directly do?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Binds IP₃-gated Ca²⁺ channels on the endoplasmic reticulum, opening them and releasing Ca²⁺ into the cytoplasm</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Activates Protein Kinase A in the cytoplasm</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Enters the nucleus and activates transcription factors</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Binds calmodulin directly, activating calmodulin-dependent kinases</li></ul>
+        <div class="qexp">IP₃ is a water-soluble second messenger that diffuses through the cytoplasm → binds IP₃ receptor channels on the ER membrane → channels open → Ca²⁺ stored in the ER floods into the cytoplasm → cytoplasmic Ca²⁺ spikes 10–100 fold → Ca²⁺ binds calmodulin → calmodulin activates multiple downstream kinases. DAG (the other PLC product) remains in the membrane and activates Protein Kinase C (PKC). Together, IP₃/Ca²⁺ and DAG/PKC create two simultaneous intracellular signals from one extracellular event.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Apoptosis (programmed cell death) is important for development. Which developmental process requires apoptosis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cell division during growth — cells must die between each division</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA replication — cells that fail to copy DNA correctly undergo necrosis</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Digit formation — interdigital cells between developing fingers and toes must undergo apoptosis to produce distinct digits; failure results in webbed digits</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Heart formation — cardiac cells undergo apoptosis to create the four-chamber structure</li></ul>
+        <div class="qexp">Interdigital apoptosis sculpts hands and feet. During embryonic development, a "paddle" of tissue forms first → apoptosis eliminates cells between the developing digits → five distinct fingers/toes emerge. This is why the apoptosis signal (BMP → caspase activation) is as important as the growth signal. Other developmental apoptosis examples: elimination of autoreactive immune cells in the thymus (prevents autoimmunity), tadpole tail resorption during metamorphosis, brain neuron pruning (eliminating neurons that didn't make useful connections).</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">The same epinephrine signal causes the heart to beat faster AND the liver to release glucose. This is possible because:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Different amounts of epinephrine reach the heart versus the liver</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Different cell types express different receptor subtypes, different G-proteins, and different downstream effector proteins — so the same signal triggers different responses based on the cellular context</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Heart cells use a different form of epinephrine than liver cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The heart processes the signal before the liver, creating a time-delayed response</li></ul>
+        <div class="qexp">One ligand, many responses — because cell identity determines the response. Heart (β₁ receptor → Gs → cAMP → PKA → phosphorylates L-type Ca²⁺ channels → increased contraction force/rate). Liver (β₂ receptor + glucagon receptor → cAMP → PKA → phosphorylates glycogen phosphorylase → glycogen breakdown → glucose release). Same second messenger (cAMP), same kinase (PKA), but different substrates in each cell. The cell's protein repertoire — set during differentiation — determines what PKA phosphorylates.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">15</span><span class="qt-inner">Phosphodiesterase (PDE) terminates the cAMP signal. What drug mechanism would INCREASE cAMP levels by blocking PDE?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>This would decrease cAMP — blocking PDE would stop cAMP production</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>No effect — cAMP levels are regulated by adenylyl cyclase only</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It would cause immediate cell death by flooding cells with cAMP</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Blocking PDE prevents cAMP degradation → cAMP accumulates → prolonged PKA activation. Caffeine works this way (blocks PDE → prolonged cAMP → enhanced alertness, heart rate). Sildenafil (Viagra) blocks a specific PDE → cGMP accumulates in vascular smooth muscle → vasodilation</li></ul>
+        <div class="qexp">Phosphodiesterase inhibitors prevent cAMP (or cGMP) breakdown → second messenger levels stay elevated → prolonged downstream signaling. Caffeine blocks PDE → cAMP persists → PKA activation extends → enhances epinephrine effects (alertness, heart rate, lipolysis). Sildenafil blocks PDE5 specifically → cGMP accumulates in smooth muscle of blood vessels → activates protein kinase G → smooth muscle relaxation → vasodilation (the intended effect in pulmonary hypertension; the erectile dysfunction application exploits the same mechanism in penile vasculature).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">16</span><span class="qt-inner">Why is the RAS GTPase called a "proto-oncogene"?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>In its normal form, RAS is a beneficial signaling protein; a single point mutation can convert it to a constitutively active oncogene that drives cancer — it has the potential to become an oncogene</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RAS is a tumor suppressor in its normal state but becomes a growth promoter when mutated</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RAS was one of the first proteins discovered — "proto" means "first"</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RAS directly causes cancer in its normal form without requiring mutation</li></ul>
+        <div class="qexp">Proto-oncogenes are normal cellular genes encoding proteins involved in growth, division, or survival signaling. They become oncogenes through: point mutations (RAS: single amino acid change → can't hydrolyze GTP → stuck on), gene amplification (HER2: too many copies → too much receptor → constant signaling), or chromosomal translocation (BCR-ABL fusion in CML). "Proto" means "before" — they are oncogenes waiting to happen. The key distinction from tumor suppressors: oncogenic mutations are dominant (one altered copy is sufficient); tumor suppressor mutations are recessive (both copies must be lost).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">17</span><span class="qt-inner">In type 2 diabetes, insulin binds its receptor (an RTK) normally, but cells don't respond adequately. The defect is in:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Insulin production — the pancreas makes insufficient insulin from the start</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Insulin receptor — the insulin receptor is absent or defective</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Signal transduction — downstream signaling from the insulin receptor is impaired (IRS-1, PI3K, or AKT dysfunction), preventing GLUT4 translocation and glucose uptake</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Glucose itself — glucose in type 2 diabetes cannot bind GLUT4 transporters</li></ul>
+        <div class="qexp">Type 2 diabetes = insulin resistance = transduction failure. Insulin still binds its RTK; the receptor still autophosphorylates; but downstream: IRS-1 (insulin receptor substrate 1) is inappropriately phosphorylated on serine residues by inflammatory kinases → IRS-1 can't properly activate PI3K → PI3K → PIP3 → AKT/PKB pathway is impaired → GLUT4 vesicles don't translocate to membrane → glucose stays in blood. Treatment: metformin (activates AMPK, bypassing the blockade); thiazolidinediones (improve insulin sensitivity at IRS-1/PPAR level); exercise (increases GLUT4 expression independently of insulin).</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">📊 Based on the cancer mutation graph, which of the following is a clinically important implication of RAS being mutated so frequently across cancer types?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>RAS should be easy to target with drugs because it appears in so many cancers</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Developing an effective RAS inhibitor could treat a very large proportion of all cancers — but RAS has historically been difficult to drug due to its smooth surface lacking suitable binding pockets for traditional small molecules</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RAS mutations only appear in pancreatic cancer and are not relevant to other tumor types</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All cancers with RAS mutations respond identically to the same treatment</li></ul>
+        <div class="qexp">RAS mutations are present in ~30% of all human cancers (higher in specific types). A drug that effectively inhibits mutant RAS would be transformative — treating pancreatic (~90%), colorectal (~50%), lung (~30%), and many other cancers. However, RAS has been called "undruggable" for decades because its surface is smooth without obvious binding pockets. Recent breakthroughs: sotorasib (approved 2021) and adagrasib specifically inhibit KRAS G12C mutation — one particular RAS variant. These are the first approved direct RAS inhibitors after 40 years of attempts.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">19</span><span class="qt-inner">The tumor suppressor p53 is mutated in more than 50% of all human cancers. p53's normal function is to:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Produce growth factors that stimulate cell division in damaged areas</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Serve as a G-protein that activates adenylyl cyclase</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Phosphorylate oncoproteins to activate them when needed</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Act as a transcription factor that activates DNA repair genes and apoptosis genes when DNA is damaged — serving as the cell's "guardian of the genome" and preventing damaged cells from dividing</li></ul>
+        <div class="qexp">p53 is the "guardian of the genome." When DNA is damaged: DNA damage sensors → p53 stabilized and activated → p53 (transcription factor) activates: (1) p21 → inhibits CDKs → cell cycle arrest; (2) DNA repair genes; (3) BAX/PUMA → apoptosis if damage is irreparable. This prevents DNA-damaged cells from dividing and accumulating further mutations. When both p53 alleles are mutated: DNA-damaged cells continue dividing → more mutations accumulate → cancer progression. p53 mutation alone doesn't cause cancer but enables further mutation accumulation.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which statement BEST summarizes the relationship between cell signaling and disease?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cancer results from signaling pathways being permanently activated (oncogenes) or deactivated (tumor suppressors) — leading to uncontrolled growth; type 2 diabetes results from insulin signaling cascade failure — leading to glucose metabolic dysfunction. Both diseases involve mutations or defects at specific points in signaling pathways</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All diseases are caused by too much signaling — reducing all cell signaling would cure most diseases</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Cell signaling only becomes relevant in disease — it is not important for normal physiology</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cancer and diabetes are unrelated to cell signaling and are caused purely by genetic inheritance</li></ul>
+        <div class="qexp">Disease as signaling failure: Cancer = signaling stuck ON (oncogenes: mutant RAS, BCR-ABL) or brakes removed (tumor suppressors: p53, RB loss) → uncontrolled cell division + failed apoptosis. Type 2 Diabetes = insulin receptor signal not transmitted properly downstream → glucose homeostasis failure → hyperglycemia. Both illustrate that normal physiology requires exquisitely precise signaling — and that targeted therapies (kinase inhibitors for cancer, insulin sensitizers for diabetes) work by restoring or correcting specific molecular defects in signaling pathways.</div></div>
+    </div>
+    <div class="qscore" id="sc10"><div class="score-n" id="scn10">-</div><div class="score-l">out of 20 correct</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">← Lesson 9</button><button class="mc-btn" onclick="markDone(10,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Unit</button></div>
+</div>
+</main>
+<script>
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec";
+const quizCounts=[0,5,5,5,5,5,5,5,5,5,20];
+let studentName="",currentPanel=0,scores={},done=new Set();
+function startModule(){
+  const n=document.getElementById("student-name").value.trim();
+  const parts=n.split(/\s+/);
+  if(parts.length<2||parts.some(p=>p.length<1)){document.getElementById("name-err").style.display="block";return;}
+  studentName=n;
+  document.getElementById("name-modal").style.display="none";
+  document.getElementById("student-badge").textContent=n+" · Cell Comm";
+  initCharts();
+}
+function goTo(n){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sb-link").forEach(l=>l.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  document.querySelectorAll(".sb-link")[n].classList.add("active");
+  currentPanel=n;window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("prog-bar").style.width=Math.round((n/10)*100)+"%";
+}
+function cpCheck(n){
+  const len=document.getElementById("cpt"+n).value.trim().length;
+  document.getElementById("cpn"+n).textContent=len;
+  const btn=document.getElementById("cpb"+n);
+  const ctr=document.getElementById("cpc"+n);
+  if(len>=80){ctr.className="cp-counter met";btn.className="cp-btn ready";}
+  else{ctr.className="cp-counter";btn.className="cp-btn";}
+}
+function cpUnlock(n){
+  if(document.getElementById("cpt"+n).value.trim().length<80)return;
+  document.getElementById("cpb"+n).style.display="none";
+  document.getElementById("cpd"+n).style.display="block";
+  const qw=document.getElementById("quiz-wrap"+n);
+  qw.style.display="block";
+  qw.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function pick(opt){
+  const qq=opt.closest(".qq");
+  if(qq.querySelector(".qo.revealed"))return;
+  const correct=qq.dataset.ans;
+  qq.querySelectorAll(".qo").forEach(o=>{
+    o.classList.add("revealed");
+    if(o.dataset.v===correct)o.classList.add("correct");
+    else if(o===opt&&opt.dataset.v!==correct)o.classList.add("incorrect");
+  });
+  const exp=qq.querySelector(".qexp");
+  if(exp)exp.classList.add("show");
+  const box=opt.closest(".quiz-box");
+  const pNum=parseInt(opt.closest(".panel").id.replace("p",""));
+  const qs=box.querySelectorAll(".qq");
+  const answered=[...qs].filter(q=>q.querySelector(".qo.revealed"));
+  if(answered.length===qs.length)tallyQuiz(box,pNum);
+}
+function tallyQuiz(box,pNum){
+  const qs=box.querySelectorAll(".qq");
+  let correct=0;
+  qs.forEach(q=>{const chosen=q.querySelector(".qo.correct");if(chosen&&chosen.dataset.v===q.dataset.ans)correct++;});
+  const total=qs.length;
+  box.querySelector(".score-n").textContent=correct+"/"+total;
+  box.querySelector(".qscore").style.display="block";
+  scores["L"+pNum]=correct+"/"+total;
+  sendProgress("L"+pNum,correct,total);
+}
+function markDone(n,btn){
+  btn.classList.add("done");btn.textContent="✓ Complete";
+  done.add(n);document.querySelectorAll(".sb-link")[n].classList.add("done");
+}
+function sendProgress(label,correct,total){
+  if(!studentName)return;
+  const payload={student:studentName,module:"Cell Communication",lesson:label,score:correct+"/"+total,timestamp:new Date().toISOString()};
+  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>showToast("Score sent: "+label+" "+correct+"/"+total+" ✓"))
+    .catch(()=>showToast("Score recorded locally"));
+}
+function showToast(msg){
+  const t=document.getElementById("submit-toast");
+  document.getElementById("toast-msg").textContent=msg;
+  t.style.display="flex";setTimeout(()=>{t.style.display="none";},3500);
+}
+function initCharts(){
+  const G="#1a7a4a",N="#0f2240",T="#0b8f8c",A="#e8920e",R="#c0392b",P="#6c3fa0";
+
+  /* chartL1 — Amplification cascade */
+  new Chart(document.getElementById("chartL1"),{type:"bar",data:{
+    labels:["1 Ligand","10 G-proteins","100 Adenylyl
+Cyclase","1,000 cAMP
+molecules","10,000 PKA
+activations","100,000+
+downstream effects"],
+    datasets:[{label:"Activated molecules",data:[1,10,100,1000,10000,100000],backgroundColor:[N,T,G,A,R,P]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{type:"logarithmic",title:{display:true,text:"# molecules (log scale)"}}}}});
+
+  /* chartL2 — Signaling types: distance vs response time */
+  new Chart(document.getElementById("chartL2"),{type:"bar",data:{
+    labels:["Direct Contact
+(gap junctions)","Autocrine
+(self)","Paracrine
+(local)","Endocrine
+(blood)"],
+    datasets:[
+      {label:"Communication distance (relative)",data:[1,1,10,1000],backgroundColor:[T,G,A,N]},
+      {label:"Response time (ms → min → hr scale)",data:[1,5,50,3000],backgroundColor:["rgba(11,143,140,.4)","rgba(26,122,74,.4)","rgba(232,146,14,.4)","rgba(15,34,64,.4)"]}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{type:"logarithmic",title:{display:true,text:"Relative scale (log)"}}}}});
+
+  /* chartL3 — Signal molecule properties */
+  const signalData = {
+    labels: ["Neurotrans-
+mitters","Peptide
+Hormones","Steroid
+Hormones","Growth
+Factors"],
+    datasets:[
+      {label:"Speed of onset (inverse — lower=faster)",data:[1,3,8,5],backgroundColor:G},
+      {label:"Duration of effect (relative)",data:[1,4,10,7],backgroundColor:A}
+    ]
+  };
+  new Chart(document.getElementById("chartL3"),{type:"bar",data:signalData,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"Relative scale"}}}}});
+
+  /* chartL4 — Receptor activation speeds */
+  new Chart(document.getElementById("chartL4"),{type:"bar",data:{
+    labels:["Ligand-gated
+Ion Channel","GPCR
+(G-protein)","Receptor
+Tyrosine Kinase"],
+    datasets:[{label:"Time to initial response (ms)",data:[1,500,2000],backgroundColor:[G,T,N]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{type:"logarithmic",title:{display:true,text:"Response time (ms, log scale)"}}}}});
+
+  /* chartL5 — Steroid vs peptide kinetics */
+  const timePoints=[0,1,2,3,4,5,6,8,10,12,14,16,20,24];
+  new Chart(document.getElementById("chartL5"),{type:"line",data:{
+    labels:timePoints.map(t=>t===0?"0":t<1?(t*60)+"min":t+"hr"),
+    datasets:[
+      {label:"Peptide hormone (fast/brief)",data:[0,90,95,80,60,40,20,5,0,0,0,0,0,0],borderColor:G,backgroundColor:"rgba(26,122,74,.1)",fill:true,tension:0.4,pointRadius:3},
+      {label:"Steroid hormone (slow/sustained)",data:[0,5,15,30,50,65,75,85,90,88,82,75,60,45],borderColor:A,backgroundColor:"rgba(232,146,14,.1)",fill:true,tension:0.4,pointRadius:3}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{title:{display:true,text:"Time after hormone exposure"}},y:{title:{display:true,text:"% maximum response"},max:100}}}});
+
+  /* chartL6 — MAP kinase amplification */
+  new Chart(document.getElementById("chartL6"),{type:"bar",data:{
+    labels:["RTK
+(start)","Ras
+activated","RAF
+activated","MEK
+activated","ERK
+activated"],
+    datasets:[{label:"Activated molecules",data:[1,10,100,1000,10000],backgroundColor:[N,T,G,A,R]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{type:"logarithmic",title:{display:true,text:"# molecules (log scale)"}}}}});
+
+  /* chartL7 — cAMP kinetics */
+  const cAMPtime=[0,10,20,30,45,60,90,120,180,240,300,360];
+  const cAMPlevel=[0,50,180,320,450,380,250,150,80,40,15,5];
+  new Chart(document.getElementById("chartL7"),{type:"line",data:{
+    labels:cAMPtime.map(t=>t+"s"),
+    datasets:[{label:"cAMP (relative units)",data:cAMPlevel,borderColor:G,backgroundColor:"rgba(26,122,74,.15)",fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:G}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},annotation:{annotations:{add1:{type:"line",xMin:2,xMax:2,borderColor:N,borderWidth:2,borderDash:[4,4]}}}},scales:{x:{title:{display:true,text:"Time after epinephrine (seconds)"}},y:{title:{display:true,text:"Intracellular cAMP (relative)"},min:0}}}});
+
+  /* chartL8 — Response timescales */
+  new Chart(document.getElementById("chartL8"),{type:"bar",data:{
+    labels:["Ion channel
+opening","Enzyme
+activation","Cytoskeletal
+rearrangement","Gene expression
+change","Apoptosis"],
+    datasets:[{label:"Response timescale (minutes)",data:[0.001,0.1,5,120,240],backgroundColor:[G,T,A,N,R]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{type:"logarithmic",title:{display:true,text:"Time to response (minutes, log scale)"}}}}});
+
+  /* chartL9 — Cancer mutations */
+  new Chart(document.getElementById("chartL9"),{type:"bar",data:{
+    labels:["RAS
+mutation","p53
+loss","BRAF
+mutation","HER2
+amplification","PIK3CA
+mutation"],
+    datasets:[
+      {label:"Pancreatic (%)",data:[90,70,3,5,4],backgroundColor:N},
+      {label:"Colorectal (%)",data:[50,60,10,2,18],backgroundColor:G},
+      {label:"Lung adenocarcinoma (%)",data:[30,50,2,2,4],backgroundColor:T},
+      {label:"Breast (%)",data:[5,30,3,20,30],backgroundColor:A}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"% of tumors with mutation"},max:100}}}});
+
+  /* chartPT1 — same as chartL6 */
+  new Chart(document.getElementById("chartPT1"),{type:"bar",data:{
+    labels:["Ligand
+(1)","Step 2
+(10)","Step 3
+(100)","Step 4
+(1,000)","Step 5
+(10,000)"],
+    datasets:[{label:"Activated molecules",data:[1,10,100,1000,10000],backgroundColor:[N,T,G,A,R]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{type:"logarithmic",title:{display:true,text:"# molecules (log)"}}}}});
+
+  /* chartPT2 — same as chartL9 */
+  new Chart(document.getElementById("chartPT2"),{type:"bar",data:{
+    labels:["RAS
+mutation","p53
+loss","BRAF
+mutation","HER2
+amplification","PIK3CA
+mutation"],
+    datasets:[
+      {label:"Pancreatic (%)",data:[90,70,3,5,4],backgroundColor:N},
+      {label:"Colorectal (%)",data:[50,60,10,2,18],backgroundColor:G},
+      {label:"Lung (%)",data:[30,50,2,2,4],backgroundColor:T},
+      {label:"Breast (%)",data:[5,30,3,20,30],backgroundColor:A}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"% of tumors"},max:100}}}});
+}
+</script>
+</body>
+</html>

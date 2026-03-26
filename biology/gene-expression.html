@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology · Gene Expression | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--green);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(26,122,74,.2);border-right-color:var(--green);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--green);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-cd{background:linear-gradient(135deg,#001535,#003580);}
+.hero-tx{background:linear-gradient(135deg,#001a20,#004050);}
+.hero-tl{background:linear-gradient(135deg,#200030,#500080);}
+.hero-mut{background:linear-gradient(135deg,#2a0015,#700040);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--green);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4ade80;margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:14px;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:#4ade80;line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--green-pale);border:1px solid var(--green);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.pathway-box{background:var(--navy);border-radius:14px;padding:24px 28px;margin:20px 0;display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.pw-step{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;text-align:center;min-width:100px;flex:1;}
+.pw-step .ps-num{font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#4ade80;margin-bottom:4px;}
+.pw-step .ps-label{font-size:.82rem;font-weight:700;color:#fff;line-height:1.3;}
+.pw-step .ps-sub{font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px;line-height:1.4;}
+.pw-arrow{font-size:1.5rem;color:#4ade80;padding:0 6px;flex-shrink:0;}
+.codon-table{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;font-family:"JetBrains Mono",monospace;font-size:.75rem;margin:16px 0;}
+.ct-hdr{background:var(--navy);color:#fff;padding:8px 6px;text-align:center;font-weight:700;font-size:.72rem;}
+.ct-cell{background:#fff;border:1px solid var(--border);padding:6px 4px;text-align:center;line-height:1.4;}
+.ct-cell.stop{background:var(--red-pale);color:var(--red);font-weight:700;}
+.ct-cell.met{background:var(--green-pale);color:var(--green);font-weight:700;}
+.dna-strand{font-family:"JetBrains Mono",monospace;font-size:.88rem;background:var(--navy);color:#4ade80;padding:18px 22px;border-radius:10px;margin:16px 0;line-height:2.2;}
+.dna-comp{color:#60a5fa;}
+.dna-rna{color:#fbbf24;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:#4ade80;}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.checkpoint-box{background:#fff;border:2px solid var(--green);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--green);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--green);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--green);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#0f5a32;}
+.cp-done{display:none;padding:10px 18px;background:var(--green-pale);border:1px solid var(--green);border-radius:8px;font-size:.85rem;color:var(--green);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--green-pale);border:2px solid var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--green);background:var(--green-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--green-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:#4ade80;}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--green);background:transparent;color:var(--green);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--green);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">🔬</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Gene Expression</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#1a7a4a'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:#1a7a4a;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../biology/index.html">← Biology</a>
+  <div class="tb-logo">🔬</div>
+  <div><div class="tb-name">Southern Gap High School · Biology</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Gene Expression</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview &amp; Standards</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">From DNA to RNA</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · The Central Dogma</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · RNA Types &amp; Structure</div></a>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Transcription</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · RNA Processing</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">From RNA to Protein</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · The Genetic Code</div></a>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Lesson 6 · Translation: Initiation</div></a>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">Lesson 7 · Translation: Elongation &amp; Termination</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Mutations</div>
+  <a class="sb-link" onclick="goTo(8)" href="#"><div class="sb-num">8</div><div class="sb-txt">Lesson 8 · Mutations &amp; Consequences</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(9)" href="#"><div class="sb-num">9</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · Chapter 15 · <span>Unit Overview</span></div>
+    <div class="h-title">Gene Expression</div>
+    <div class="h-desc">DNA is the blueprint. RNA is the messenger. Protein is the machine. The journey from gene to functional protein — transcription and translation — is the central process of all life. Every cell in your body performs it tens of thousands of times per second.</div>
+    <div class="h-meta"><div class="h-chip">📚 10 Lessons</div><div class="h-chip">🌿 OpenStax Biology 2e Ch. 15</div><div class="h-chip">📊 Data Interpretation</div><div class="h-chip">✍️ Checkpoints Required</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Unit Learning Objectives</div><ul class="obj-list">
+      <li>State the Central Dogma: DNA → RNA → Protein, and describe the two exceptions.</li>
+      <li>Compare mRNA, tRNA, and rRNA by structure and function.</li>
+      <li>Describe transcription: promoter recognition, RNA polymerase, template vs. coding strand, 5'→3' synthesis.</li>
+      <li>Explain eukaryotic RNA processing: 5' cap, 3' poly-A tail, and intron splicing (spliceosomes).</li>
+      <li>Read the genetic code table to identify codons, start codon, and stop codons.</li>
+      <li>Explain the wobble hypothesis and why the code is degenerate.</li>
+      <li>Describe translation initiation: ribosome assembly, start codon (AUG), initiator tRNA (Met).</li>
+      <li>Trace elongation: A-site, P-site, E-site, peptide bond formation, translocation.</li>
+      <li>Explain translation termination: stop codons, release factors, polypeptide release.</li>
+      <li>Classify mutations by type (silent, missense, nonsense, frameshift) and predict protein consequences.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Course Map</div><div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Lesson</th><th>Key Concepts</th></tr>
+        <tr><td>1</td><td>The Central Dogma</td><td>DNA→RNA→Protein; transcription; translation; reverse transcription; RNA world</td></tr>
+        <tr><td>2</td><td>RNA Types &amp; Structure</td><td>mRNA (messenger), tRNA (transfer/anticodon), rRNA (ribosomal); single-stranded; uracil replaces thymine</td></tr>
+        <tr><td>3</td><td>Transcription</td><td>Promoter (TATA box), RNA polymerase II, template strand, non-template (coding) strand, termination</td></tr>
+        <tr><td>4</td><td>RNA Processing</td><td>5' 7-methylguanosine cap, 3' poly-A tail, pre-mRNA, introns vs. exons, spliceosome, alternative splicing</td></tr>
+        <tr><td>5</td><td>The Genetic Code</td><td>Codon = 3 nucleotides, 64 codons, 20 amino acids, start codon AUG (Met), 3 stop codons, degeneracy, wobble</td></tr>
+        <tr><td>6</td><td>Translation: Initiation</td><td>Ribosomes (small/large subunit), P-site/A-site/E-site, initiator tRNA (Met), Kozak sequence, 43S complex</td></tr>
+        <tr><td>7</td><td>Translation: Elongation &amp; Termination</td><td>Elongation cycle (decode → bond → translocate), peptide bond formation, release factors, polyribosomes</td></tr>
+        <tr><td>8</td><td>Mutations &amp; Consequences</td><td>Silent, missense, nonsense, frameshift; how each affects protein; clinical examples</td></tr>
+        <tr><td>9</td><td>Unit Review &amp; Practice Test</td><td>20-question Virginia SOL-style assessment</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Biology 2e — Chapter 15: Genes and Proteins</div><div class="cx">All content adapted from OpenStax Biology 2e, Chapter 15. CC BY 4.0 — free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs"><div class="eyebrow">Quick Facts</div><div class="sh2">Gene Expression by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">64</div><div class="fact-l">Total codons in the genetic code (4³ = 4×4×4)</div></div>
+        <div class="fact"><div class="fact-n">20</div><div class="fact-l">Amino acids encoded by the genetic code</div></div>
+        <div class="fact"><div class="fact-n">~15/sec</div><div class="fact-l">Amino acids added per second during translation</div></div>
+        <div class="fact"><div class="fact-n">~20,000</div><div class="fact-l">Protein-coding genes in the human genome</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div>Overview · 0 of 9</div><button class="nbtn next" onclick="goTo(1)">Lesson 1 →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-cd"><div class="h-crumb">DNA to RNA · <span>Lesson 1</span></div><div class="h-title">The Central Dogma</div><div class="h-desc">Francis Crick formulated the Central Dogma in 1958 — the fundamental principle that information flows from DNA to RNA to protein. It is called a "dogma" not because it cannot be questioned, but because it was proposed before the evidence was complete. The evidence turned out to be overwhelming.</div><div class="h-meta"><div class="h-chip">⏱ ~20 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>State the Central Dogma: DNA → RNA → Protein.</li>
+      <li>Distinguish transcription (DNA→RNA) from translation (RNA→Protein).</li>
+      <li>Explain the two known exceptions: reverse transcription (RNA→DNA) and direct RNA replication.</li>
+      <li>Explain why information flows in this direction and not in reverse (protein→RNA).</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Central Dogma</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The fundamental principle of molecular biology: genetic information flows from DNA → RNA → Protein. Proposed by Francis Crick (1958). Describes how inherited information in DNA is decoded to make functional proteins.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Transcription</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The synthesis of RNA from a DNA template. Occurs in the NUCLEUS (eukaryotes). DNA → mRNA. Uses RNA polymerase. The RNA copy carries the gene's coding information to the ribosome. Similar chemistry to DNA replication but produces a single-stranded RNA product.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Translation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The synthesis of protein from an mRNA template. Occurs at RIBOSOMES in the cytoplasm. mRNA → Protein. Ribosomes "read" the mRNA three nucleotides (one codon) at a time and tRNA delivers the matching amino acid. Produces the polypeptide chain.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Reverse Transcription</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">An exception to the Central Dogma: RNA → DNA. Carried out by retroviruses (HIV) using the enzyme reverse transcriptase. The viral RNA genome is copied into DNA, which integrates into the host chromosome. Basis for antiretroviral drugs and PCR-based RNA detection (RT-PCR).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Gene Expression</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The process by which the information encoded in a gene is used to produce a functional product (usually a protein). Includes both transcription AND translation. Different genes are expressed in different cell types at different times — this is how all cells in your body (same DNA) can perform different functions.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">RNA Polymerase</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The enzyme that synthesizes RNA from a DNA template during transcription. Unlike DNA polymerase, RNA polymerase does NOT need a primer — it can start a new chain de novo. It synthesizes RNA in the 5'→3' direction by reading the DNA template strand 3'→5'. Three types in eukaryotes (I, II, III); RNA Pol II makes mRNA.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.1</div><div class="sh2">The Flow of Genetic Information</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">DNA</div><div class="ps-label">Gene</div><div class="ps-sub">Permanent storage in nucleus; double-stranded; never leaves nucleus</div></div>
+        <div class="pw-arrow">→<br><span style="font-size:.65rem;color:rgba(255,255,255,.5)">Transcription<br>(RNA Pol II)</span></div>
+        <div class="pw-step"><div class="ps-num">RNA</div><div class="ps-label">mRNA</div><div class="ps-sub">Single-stranded messenger; processed; exits nucleus to ribosome</div></div>
+        <div class="pw-arrow">→<br><span style="font-size:.65rem;color:rgba(255,255,255,.5)">Translation<br>(Ribosome)</span></div>
+        <div class="pw-step"><div class="ps-num">Protein</div><div class="ps-label">Polypeptide</div><div class="ps-sub">Folds into functional 3D shape; does the work of the cell</div></div>
+      </div>
+      <table class="dt">
+        <tr><th>Step</th><th>Location (Eukaryote)</th><th>Template</th><th>Product</th><th>Key Enzyme</th></tr>
+        <tr><td><strong>Transcription</strong></td><td>Nucleus</td><td>DNA template strand (3'→5')</td><td>pre-mRNA (5'→3')</td><td>RNA Polymerase II</td></tr>
+        <tr><td><strong>RNA Processing</strong></td><td>Nucleus</td><td>pre-mRNA</td><td>mature mRNA</td><td>Spliceosome, capping enzymes</td></tr>
+        <tr><td><strong>Translation</strong></td><td>Ribosomes (cytoplasm/ER)</td><td>mature mRNA (5'→3')</td><td>Polypeptide (N→C terminus)</td><td>Ribosome (rRNA + proteins)</td></tr>
+      </table>
+      <div class="sh3">Exceptions to the Central Dogma</div>
+      <table class="dt">
+        <tr><th>Exception</th><th>Direction</th><th>Enzyme</th><th>Example</th></tr>
+        <tr><td><strong>Reverse transcription</strong></td><td>RNA → DNA</td><td>Reverse transcriptase</td><td>HIV, other retroviruses; RT-PCR technique</td></tr>
+        <tr><td><strong>RNA replication</strong></td><td>RNA → RNA</td><td>RNA-dependent RNA polymerase</td><td>RNA viruses (influenza, SARS-CoV-2, poliovirus)</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Why Information Cannot Flow Protein → RNA (The True Dogma)</div><div class="cx">The original Central Dogma states that information cannot flow from protein back to nucleic acid. No enzyme can "read" a protein sequence and synthesize the corresponding DNA or RNA. This is the truly inviolable rule — the two exceptions (RNA→DNA, RNA→RNA) violate the simplified version but not the core principle. There is no known mechanism for protein→DNA or protein→RNA information flow. This means genetic information is always stored in nucleic acids, never in proteins.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Where Transcription and Translation Occur</div>
+      <div class="graph-box"><div class="graph-title">Gene Expression Compartmentalization in Eukaryotes vs. Prokaryotes</div><div class="graph-cap">Eukaryotes separate transcription (nucleus) from translation (cytoplasm); prokaryotes couple them simultaneously</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">State the Central Dogma of molecular biology. What are the two known exceptions? Why can information NOT flow from protein back to DNA or RNA?</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — The Central Dogma</h3><p>5 questions · includes compartmentalization data</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The Central Dogma of molecular biology describes the flow of genetic information. Which sequence is CORRECT?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Protein → RNA → DNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RNA → DNA → Protein</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA → RNA → Protein — transcription converts DNA to mRNA; translation converts mRNA to protein</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA → Protein → RNA</li></ul>
+        <div class="qexp">The Central Dogma: DNA → RNA (transcription) → Protein (translation). DNA stores hereditary information in the nucleus. RNA polymerase transcribes a gene into mRNA. Ribosomes translate the mRNA codon by codon into a polypeptide chain. Information always flows this direction in normal cellular function. The term "dogma" is historical — Crick used it before verification, but the evidence is now overwhelming.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">HIV is a retrovirus. Its genome is single-stranded RNA. After entering a cell, it converts its RNA genome to DNA. What enzyme carries out this process?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA polymerase — it copies RNA using normal replication machinery</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Reverse transcriptase — an enzyme that synthesizes DNA from an RNA template (RNA→DNA), the opposite of normal transcription</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RNA polymerase — it runs the transcription reaction backwards</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ribonuclease — it degrades RNA and uses the nucleotides to build DNA</li></ul>
+        <div class="qexp">Reverse transcriptase: synthesizes DNA from an RNA template — the reverse of normal transcription. HIV packages reverse transcriptase in its virion. After infection: reverse transcriptase copies viral RNA → DNA; the DNA integrates into the host chromosome (becoming the "provirus") where it is expressed using host cellular machinery. Antiretroviral drugs (nucleoside/nucleotide reverse transcriptase inhibitors = NRTIs) target this enzyme. Reverse transcriptase is also used in the lab for RT-PCR (detecting RNA viruses like SARS-CoV-2).</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Transcription and translation occur at different locations in eukaryotic cells. Why is this separation important?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The nucleus is warmer, which is required for transcription but would damage ribosomes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA must be translated into protein before it can be transcribed into RNA</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ribosomes are too large to enter the nucleus where transcription occurs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Separation allows eukaryotes to process the pre-mRNA (add cap, poly-A tail, remove introns) before it reaches the ribosome — ensuring only mature, correct mRNA is translated. Prokaryotes lack this capability since they have no nucleus (transcription and translation are coupled).</li></ul>
+        <div class="qexp">The nuclear/cytoplasmic compartmentalization allows eukaryotes to extensively process pre-mRNA before translation. This includes: 5' capping (protects from degradation, helps ribosome recognition), 3' polyadenylation (stability, nuclear export), and splicing (removes introns, can join exons in different combinations = alternative splicing). Prokaryotes: no nucleus → transcription and translation coupled — ribosomes begin translating the mRNA while it's still being transcribed. This prokaryotic "cotranscriptional translation" is faster but allows no processing.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why is the statement "information cannot flow from protein to nucleic acid" considered the true, inviolable core of the Central Dogma?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>No known enzyme can read a protein's amino acid sequence and synthesize a corresponding nucleic acid — protein sequences carry no mechanism for directing their own encoding back into DNA or RNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Proteins are in the cytoplasm and cannot access the DNA in the nucleus</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Proteins are made of amino acids which are chemically incompatible with nucleotide synthesis</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The Central Dogma was proven absolute — no exceptions exist at all</li></ul>
+        <div class="qexp">The absolute rule: protein sequence information CANNOT be converted back to nucleic acid sequence. There is no "reverse translation" enzyme. Even prions (misfolded proteins that cause other proteins to misfold) don't violate this — they propagate structural information, not sequence information. The exceptions (RNA→DNA via reverse transcriptase; RNA→RNA via RNA-dependent RNA polymerase) don't violate the core principle because they are nucleic acid to nucleic acid transfers, not protein to nucleic acid. Crick's insight was that the information alphabet of proteins (20 amino acids) has no chemical equivalence to nucleic acids (4 bases).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">📊 Based on the compartmentalization graph, what is the key difference between eukaryotes and prokaryotes in terms of gene expression?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Eukaryotes perform translation in the nucleus; prokaryotes do not</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Prokaryotes require RNA processing before translation; eukaryotes do not</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Eukaryotes separate transcription (nucleus) from translation (cytoplasm), allowing RNA processing; prokaryotes couple transcription and translation simultaneously in the cytoplasm — ribosomes begin translating mRNA while it is still being transcribed</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both eukaryotes and prokaryotes couple transcription and translation in the nucleus</li></ul>
+        <div class="qexp">Prokaryotes: no nucleus → mRNA is translated as fast as it's transcribed (coupled). Ribosomes attach to the mRNA 5' end before transcription is even complete. Very fast but no RNA processing possible. Eukaryotes: nuclear membrane separates transcription from translation → pre-mRNA is transcribed in the nucleus → extensively processed (cap, poly-A, splicing) → exported through nuclear pores → translated on cytoplasmic ribosomes. This separation takes more time but enables much more complex gene regulation and diverse protein products.</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Lesson 2 →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-cd"><div class="h-crumb">DNA to RNA · <span>Lesson 2</span></div><div class="h-title">RNA Types &amp; Structure</div><div class="h-desc">RNA is DNA's working copy — but it's much more than a passive messenger. Three major types of RNA each perform a distinct, critical role in decoding genetic information.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>State four structural differences between RNA and DNA.</li>
+      <li>Describe mRNA, tRNA, and rRNA: structure, location, and function.</li>
+      <li>Explain the tRNA anticodon and how it matches codons on the mRNA.</li>
+      <li>Explain why RNA uses uracil instead of thymine.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.1</div><div class="sh2">DNA vs. RNA: Four Key Differences</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>DNA</th><th>RNA</th></tr>
+        <tr><td><strong>Sugar</strong></td><td>Deoxyribose (no -OH at 2' carbon)</td><td>Ribose (has -OH at 2' carbon → makes RNA less stable)</td></tr>
+        <tr><td><strong>Bases</strong></td><td>Adenine, Thymine, Guanine, Cytosine</td><td>Adenine, <strong>Uracil</strong>, Guanine, Cytosine (no thymine — uracil pairs with A)</td></tr>
+        <tr><td><strong>Strands</strong></td><td>Double-stranded (dsDNA)</td><td>Single-stranded (can fold back on itself)</td></tr>
+        <tr><td><strong>Location</strong></td><td>Nucleus (mainly); mitochondria, chloroplasts</td><td>Nucleus + cytoplasm; various compartments depending on type</td></tr>
+      </table>
+      <div class="sh3">The Three Major Types of RNA</div>
+      <table class="dt">
+        <tr><th>Type</th><th>Full Name</th><th>Structure</th><th>Function</th><th>% of Total RNA</th></tr>
+        <tr><td><strong>mRNA</strong></td><td>Messenger RNA</td><td>Linear, single-stranded; carries codons (triplet code); 5' UTR, coding sequence, 3' UTR</td><td>Carries genetic message from nucleus to ribosome; serves as template for protein synthesis</td><td>~5%</td></tr>
+        <tr><td><strong>tRNA</strong></td><td>Transfer RNA</td><td>Cloverleaf secondary structure (anticodon loop at one end; amino acid attachment at 3' CCA end); ~73–93 nucleotides</td><td>Adapter molecule — translates codon language into amino acid language; carries specific amino acid to ribosome</td><td>~15%</td></tr>
+        <tr><td><strong>rRNA</strong></td><td>Ribosomal RNA</td><td>Complex 3D folded structures; ~1500–5000 nucleotides; combines with ribosomal proteins to form ribosomes</td><td>Structural and catalytic component of ribosomes; the 23S/28S rRNA has peptidyl transferase activity (a ribozyme!)</td><td>~80%</td></tr>
+      </table>
+      <div class="sh3">The tRNA: Translation's Adapter Molecule</div>
+      <p class="prose">The tRNA is the key adapter in translation. Each tRNA has two critical regions: (1) the <strong>anticodon loop</strong> — three nucleotides complementary to a specific mRNA codon; and (2) the <strong>3' CCA end</strong> (acceptor stem) — where the specific amino acid is covalently attached by aminoacyl-tRNA synthetase enzymes.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">The Ribosome Is a Ribozyme — RNA Does the Catalysis</div><div class="cx">The peptidyl transferase activity that forms peptide bonds during translation is catalyzed by the 23S rRNA (prokaryotes) / 28S rRNA (eukaryotes) — not by ribosomal proteins. This means the ribosome is a <strong>ribozyme</strong> — an RNA molecule with enzymatic activity. This discovery (2009 Nobel Prize, Steitz, Ramakrishnan, Yonath) supports the "RNA world" hypothesis that RNA preceded both DNA and proteins in early evolution.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">RNA Composition of a Cell</div>
+      <div class="graph-box"><div class="graph-title">Types of RNA in a Typical Eukaryotic Cell (% of Total RNA)</div><div class="graph-cap">rRNA dominates because ribosomes are the most abundant RNA-containing structure in the cell</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the structure and function of tRNA. What is the anticodon and how does it interact with the mRNA? What is attached to the 3' end of the tRNA?</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — RNA Types &amp; Structure</h3><p>5 questions · includes RNA composition data</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">RNA contains uracil where DNA contains thymine. What is the base-pairing rule for uracil?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Uracil pairs with guanine in RNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Uracil pairs with adenine (like thymine does in DNA) — both uracil and thymine have a 2-hydrogen bond interaction with adenine</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Uracil pairs with cytosine in RNA</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Uracil pairs with thymine when RNA forms a hybrid with DNA</li></ul>
+        <div class="qexp">Uracil pairs with Adenine — it has the same hydrogen-bonding pattern as thymine (two H-bonds with A). Uracil is essentially thymine without the 5-methyl group. Why does RNA use uracil instead of thymine? Thymine is made from uracil by adding a methyl group (requiring an extra enzyme and energy). Since RNA is a temporary molecule that doesn't need the extra stability that the methyl group provides, uracil suffices. Also: if uracil appeared in DNA by deamination of cytosine (a common mutation), it can be recognized and repaired — but in RNA, uracil is normal and would be ignored.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A tRNA has the anticodon 3'-UAC-5'. Which mRNA codon does it recognize, and which amino acid does it carry?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>mRNA codon UAC; carries tyrosine</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>mRNA codon AUC; carries isoleucine</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>mRNA codon CAU; carries histidine</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>mRNA codon AUG; carries methionine — the anticodon 3'-UAC-5' is complementary and antiparallel to the codon 5'-AUG-3' (the start codon)</li></ul>
+        <div class="qexp">Anticodon-codon pairing is complementary AND antiparallel. Anticodon 3'-UAC-5' pairs with: 5'-AUG-3' (mRNA). Read 5'→3': the codon is AUG — the universal start codon. AUG codes for Methionine (Met). This is the initiator tRNA. When the ribosome encounters AUG: the initiator Met-tRNA (carrying methionine, with anticodon 3'-UAC-5') base-pairs with the start codon. Translation always begins with methionine — though it is often removed post-translationally.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The ribosome is described as a "ribozyme." What does this mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ribosome's catalytic activity (peptide bond formation) is carried out by its rRNA component, not its protein components — rRNA is the catalyst (ribozyme = RNA enzyme)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ribosome synthesizes RNA as well as protein</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ribosomal proteins catalyze peptide bond formation while rRNA provides structural support only</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ribosomes contain both RNA and enzymes, making them "ribonucleoenzymes"</li></ul>
+        <div class="qexp">The ribosome is a ribozyme because its catalytic center — the peptidyl transferase center (PTC) — is composed of rRNA, not protein. The 23S rRNA (prokaryotes) / 28S rRNA (eukaryotes) catalyzes the formation of peptide bonds between amino acids. This was confirmed by crystallographic studies of the ribosome (Steitz, Ramakrishnan, Yonath — 2009 Nobel Prize in Chemistry). The discovery that RNA can be catalytic supported the "RNA world" hypothesis and resolved the "chicken and egg" problem of how proteins could have evolved before the DNA replication machinery needed to encode them.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the RNA composition graph, which type of RNA is most abundant in a typical cell? Why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>mRNA — cells need large amounts to make all their proteins</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>tRNA — one tRNA is needed for every codon translated</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>rRNA (~80%) — ribosomes contain 3-4 rRNA molecules and cells contain thousands of ribosomes, each actively translating; the structural rRNA vastly outnumbers the transient mRNAs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All three types are present in equal amounts</li></ul>
+        <div class="qexp">rRNA constitutes ~80% of total cellular RNA because ribosomes are enormously abundant: a rapidly dividing E. coli cell has ~15,000 ribosomes; a mammalian cell has millions. Each ribosome contains 3 (prokaryotes) or 4 (eukaryotes) rRNA molecules. rRNAs are large (1,500–5,000+ nucleotides) and stable. mRNA, despite encoding all proteins, is only ~5% because individual mRNAs are typically short-lived (half-life of minutes to hours in the cytoplasm). tRNA (~15%) is stable and reused many times.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">RNA is less stable than DNA. What structural feature of RNA makes it more susceptible to hydrolysis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The uracil bases are more reactive than thymine bases and are easily degraded</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RNA has a 2'-OH group on the ribose sugar — this hydroxyl group can attack the adjacent phosphodiester bond, catalyzing self-cleavage (hydrolysis), making RNA intrinsically less stable than DNA</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RNA is single-stranded and lacks the protective double-helix structure of DNA</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA molecules are smaller than DNA and therefore degrade faster</li></ul>
+        <div class="qexp">The 2'-OH group on ribose is the key: in RNA, the 2'-OH of ribose is free → under slightly alkaline conditions, this -OH attacks the adjacent 3',5'-phosphodiester bond → RNA is cleaved (2',3'-cyclic phosphate intermediate). DNA lacks the 2'-OH (has H instead) → cannot undergo this cleavage → inherently more stable. This is why: (1) DNA is better for long-term hereditary storage; (2) RNA serves as a temporary, disposable message; (3) RNA extraction requires much more careful technique than DNA extraction. Why use RNA at all? Because single-stranded RNA can fold into complex functional 3D structures (ribozymes, aptamers).</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Lesson 3 →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-tx"><div class="h-crumb">DNA to RNA · <span>Lesson 3</span></div><div class="h-title">Transcription</div><div class="h-desc">Transcription is the first step of gene expression — copying a gene's DNA sequence into RNA. RNA polymerase reads the DNA template and assembles a complementary RNA strand, producing a faithful RNA copy of the gene.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Identify the template strand and the non-template (coding/sense) strand and explain which is read by RNA polymerase.</li>
+      <li>Describe the three stages of transcription: initiation, elongation, termination.</li>
+      <li>Explain the promoter and TATA box — how RNA polymerase II finds where to start.</li>
+      <li>State the direction of RNA synthesis (5'→3') and compare it to the direction DNA template is read (3'→5').</li>
+      <li>Distinguish eukaryotic transcription from prokaryotic transcription (sigma factor, no nucleus).</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.2</div><div class="sh2">Template vs. Coding Strand — The Naming Convention</div>
+      <table class="dt">
+        <tr><th>Strand Name</th><th>Also Called</th><th>Direction Read/Written</th><th>Relationship to mRNA</th></tr>
+        <tr><td><strong>Template strand</strong></td><td>Antisense strand, minus (−) strand</td><td>Read 3'→5' by RNA pol</td><td>Complementary to mRNA (opposite sequence)</td></tr>
+        <tr><td><strong>Non-template strand</strong></td><td>Coding strand, sense strand, plus (+) strand</td><td>5'→3' (same direction as RNA)</td><td>SAME sequence as mRNA (with T instead of U)</td></tr>
+      </table>
+      <div class="dna-strand">
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-bottom:4px;">Non-template (coding) strand — same sequence as mRNA:</div>
+        5' — ATG · GCT · TAC · GAA · TGA — 3'
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin:8px 0 4px;">Template strand — READ by RNA Polymerase:</div>
+        3' — <span class="dna-comp">TAC · CGA · ATG · CTT · ACT</span> — 5'
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin:8px 0 4px;">mRNA produced (5'→3'):</div>
+        5' — <span class="dna-rna">AUG · GCU · UAC · GAA · UGA</span> — 3'
+      </div>
+      <div class="sh3">Three Stages of Transcription</div>
+      <table class="dt">
+        <tr><th>Stage</th><th>Key Events</th><th>Key Players</th></tr>
+        <tr><td><strong>Initiation</strong></td><td>
+          • Transcription factors bind the promoter region (upstream of gene)<br>
+          • TATA-binding protein (TBP) recognizes the TATA box (TATAAA ~25 bp upstream of start)<br>
+          • RNA Polymerase II recruited to form the pre-initiation complex<br>
+          • DNA double helix unwound at the start site
+        </td><td>Promoter, TATA box, TBP, general transcription factors (TFIID, TFIIB, etc.), RNA Pol II</td></tr>
+        <tr><td><strong>Elongation</strong></td><td>
+          • RNA Pol II moves 3'→5' along template strand<br>
+          • Synthesizes RNA 5'→3' (adds ribonucleotides to 3'-OH end)<br>
+          • RNA-DNA hybrid ~8 bp at the active site<br>
+          • Newly synthesized RNA displaced as single strand
+        </td><td>RNA Pol II (no proofreading), ribonucleotide triphosphates (NTPs)</td></tr>
+        <tr><td><strong>Termination</strong></td><td>
+          • Eukaryotes: cleavage/polyadenylation signal (AAUAAA) → cleavage of RNA → release<br>
+          • Prokaryotes: intrinsic terminator (stem-loop) or Rho factor-dependent<br>
+          • RNA Pol II dissociates from template
+        </td><td>Poly-A signal sequence, cleavage factors, polyadenylate polymerase</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory: "Template is Transcribed; Coding = same as mRNA Code"</div><div class="cx">Template strand: read by RNA pol, produces the complementary RNA. Coding strand: NOT read, but has the same sequence as the mRNA (just with T→U). When scientists write "the gene sequence," they typically write the coding strand (5'→3'). When RNA pol reads the template, the RNA produced is identical to the coding strand — so the coding strand is also called the "sense" strand.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Transcription Rate Data</div>
+      <div class="graph-box"><div class="graph-title">RNA Polymerase Transcription Rates: Prokaryotes vs. Eukaryotes</div><div class="graph-cap">Prokaryotic RNA polymerase is faster; eukaryotic Pol II is slower but more regulated</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the difference between the template strand and the coding strand. Which one does RNA polymerase read? What is the sequence of the mRNA produced from the template strand 3'-TACGCATGA-5'?</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Transcription</h3><p>5 questions · includes transcription rate data</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A gene's template strand has the sequence 3'-ATCGTA-5'. What is the sequence of the mRNA transcribed from this template?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3'-ATCGTA-5' — the mRNA is identical to the template</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5'-ATCGTA-3' — the mRNA is the same sequence written 5'→3'</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5'-UAGCAU-3' — RNA pol reads 3'→5' and synthesizes the complement with U instead of T</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3'-TAGCAT-5' — the DNA complement of the template</li></ul>
+        <div class="qexp">RNA pol reads template 3'→5' and synthesizes mRNA 5'→3'. Template 3'-ATCGTA-5': A→U, T→A, C→G, G→C, T→A, A→U = UAGCAU. Written 5'→3': <strong>5'-UAGCAU-3'</strong>. Note: T in DNA becomes U in RNA (uracil replaces thymine). The mRNA is complementary to the template strand AND the same sequence as the coding strand (with U instead of T). Remember: RNA pol reads template 3'→5', produces RNA 5'→3'.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The TATA box is found in eukaryotic promoters ~25 bp upstream of the transcription start site. What is its function?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The TATA box is transcribed into the 5' UTR of the mRNA and helps ribosome binding</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>TATA-binding protein (TBP) recognizes and binds the TATA box, initiating assembly of the general transcription factor complex (TFIID, TFIIB, etc.) and RNA Pol II at the transcription start site</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The TATA box signals the end of transcription and triggers RNA polymerase release</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The TATA box is part of the mRNA that is translated into the signal peptide</li></ul>
+        <div class="qexp">TATA box (TATAAA): an AT-rich promoter element bound by TBP (TATA-Binding Protein). TBP binding dramatically bends the DNA → creates a platform for recruiting general transcription factors (TFIID, TFIIB, TFIIF, TFIIE, TFIIH) and RNA Pol II → forms the pre-initiation complex (PIC) → TFIIH helicase unwinds the DNA at the start site → transcription begins. Many genes lack a TATA box and use alternative promoter elements (Inr, BRE, DPE). AT-richness of the TATA box makes it easier to melt (unwind) the DNA duplex — important for RNA pol access.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">RNA polymerase does NOT require a primer to begin transcription. Why is this different from DNA polymerase?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>RNA is shorter than DNA and easier to initiate de novo</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>RNA polymerase uses a pre-existing RNA strand from a previous cycle as its primer</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RNA polymerase uses ATP rather than NTPs, and ATP can self-initiate</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA polymerase can catalyze the formation of the first phosphodiester bond between two free nucleotides de novo — DNA polymerase cannot because its active site geometry requires an existing 3'-OH to position the incoming nucleotide correctly</li></ul>
+        <div class="qexp">RNA polymerase has a different active site geometry that allows it to initiate synthesis without a primer — it can bring together two free NTPs and form the first phosphodiester bond de novo. DNA polymerase III has a strict requirement for a pre-existing 3'-OH because of how its active site positions the incoming dNTP — without the 3'-OH, the chemistry cannot proceed. The tradeoff: RNA pol has NO proofreading activity (no 3'→5' exonuclease), so RNA synthesis is less accurate than DNA replication. But since RNA is a temporary molecule, occasional errors are tolerable.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the transcription rate comparison, why might prokaryotic gene expression respond faster to environmental changes than eukaryotic expression?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Prokaryotic RNA polymerase transcribes faster AND translation begins simultaneously during transcription (coupled) — a new protein can be produced within seconds of gene activation; eukaryotes must complete transcription, process mRNA, export it, and then translate it — taking much longer</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Prokaryotes have smaller genomes so there is less DNA to search through</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Prokaryotic ribosomes are smaller and translate mRNA faster</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Eukaryotic RNA polymerase is slower because it produces longer mRNAs</li></ul>
+        <div class="qexp">Prokaryotic speed advantage: (1) Faster RNA pol (~80 nt/sec vs ~30 nt/sec); (2) No nucleus — ribosomes begin translating mRNA while it's still being transcribed (coupled transcription-translation); (3) No RNA processing needed. A prokaryotic cell can respond to a sugar source and start producing the metabolic enzymes within ~1-2 minutes. Eukaryotic response takes longer: transcription (~minutes) + processing (~minutes) + nuclear export + translation. This is why fast-responding organisms like bacteria can outcompete each other on seconds-to-minutes timescales.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What determines which strand of DNA is used as the template strand for a given gene?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The template strand is always the strand closest to the centromere</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both strands are always used as templates simultaneously by two RNA polymerases</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The promoter sequence determines which strand RNA polymerase binds and in which direction it reads — the promoter is directional, specifying both the template strand AND the direction of transcription for each gene</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA polymerase randomly selects either strand for different transcription events</li></ul>
+        <div class="qexp">The promoter is directional: it specifies both which strand RNA pol will use as template AND which direction it will move along the DNA. Different genes on the same chromosome can use different strands as their template — some genes on the (+) strand and others on the (−) strand — as long as each has its own directional promoter. This is why genes are depicted with arrows in genome browser views: the arrow direction shows which strand is the coding strand and which way RNA pol moves. RNA pol doesn't randomly choose — it's recruited specifically to each gene's directional promoter.</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Lesson 4 →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-tx"><div class="h-crumb">DNA to RNA · <span>Lesson 4</span></div><div class="h-title">RNA Processing</div><div class="h-desc">The pre-mRNA made in the nucleus is not yet ready for translation. Eukaryotic cells perform three major modifications — adding a protective cap, a stability tail, and cutting out non-coding introns — before the mature mRNA is shipped to the cytoplasm.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe the 5' 7-methylguanosine cap: when it is added and what it does.</li>
+      <li>Describe the 3' poly-A tail: how it is added and its functions.</li>
+      <li>Distinguish introns from exons and explain the spliceosome's role.</li>
+      <li>Explain alternative splicing and how it increases protein diversity.</li>
+      <li>State the overall outcome: mature mRNA ready for export and translation.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.3</div><div class="sh2">Three Modifications to Pre-mRNA</div>
+      <table class="dt">
+        <tr><th>Modification</th><th>When Added</th><th>Structure</th><th>Functions</th></tr>
+        <tr><td><strong>5' 7-methylguanosine (m⁷G) Cap</strong></td><td>Co-transcriptionally, as soon as the 5' end emerges from RNA Pol II</td><td>Methylated guanosine nucleotide added in an unusual 5'→5' triphosphate linkage</td><td>
+          • Protects mRNA from 5' exonuclease degradation<br>
+          • Required for ribosome recognition (small subunit scanning)<br>
+          • Promotes nuclear export<br>
+          • Needed for splicing
+        </td></tr>
+        <tr><td><strong>3' Poly-A Tail</strong></td><td>After cleavage at the poly-A signal (AAUAAA) ~10-30 nt downstream</td><td>~200 adenine nucleotides added by poly(A) polymerase (no template needed)</td><td>
+          • Protects mRNA from 3' exonuclease degradation<br>
+          • Promotes nuclear export<br>
+          • Stimulates translation<br>
+          • Progressive shortening (deadenylation) triggers mRNA decay
+        </td></tr>
+        <tr><td><strong>Splicing</strong></td><td>Co-transcriptionally and post-transcriptionally in the nucleus</td><td>Spliceosome (5 snRNAs + ~150 proteins) catalyzes removal of introns; exons joined</td><td>
+          • Removes non-coding intron sequences<br>
+          • Joins exons to form final coding sequence<br>
+          • Alternative splicing: different exon combinations → multiple proteins from one gene
+        </td></tr>
+      </table>
+      <div class="sh3">Introns vs. Exons</div>
+      <p class="prose">The pre-mRNA of most human genes contains non-coding sequences (<strong>introns</strong>) interrupting coding sequences (<strong>exons</strong>). The average human gene has ~8 introns; some have over 100. Introns must be precisely removed and exons joined — a single nucleotide error in splicing can cause disease (many splicing mutations cause human genetic disorders).</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Alternative Splicing: One Gene → Many Proteins</div><div class="cx">Alternative splicing is the process of including or excluding different exons in the final mRNA. Example: the DSCAM gene in Drosophila can produce over 38,000 different proteins from a single gene through alternative splicing — more than the total number of genes in the fly! In humans, ~95% of multi-exon genes are alternatively spliced. This is why humans (~20,000 genes) can produce an estimated 90,000+ different proteins.</div></div></div>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory: "EXons are EXpressed; INtrons stay IN the nucleus"</div><div class="cx">Exons: the sequences that end up in the mature mRNA and are expressed (translated). Introns: intervening sequences removed during splicing; they remain in the nucleus (as lariat structures) and are degraded. Exons are the coding parts; introns are the interruptions. In the final mature mRNA, only exon sequences remain — joined together in order.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Alternative Splicing Produces Protein Diversity</div>
+      <div class="graph-box"><div class="graph-title">Alternative Splicing: Exon Usage in Human Tissue-Specific mRNA Isoforms</div><div class="graph-cap">The same pre-mRNA can produce multiple mRNA isoforms by including or excluding different exons</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the three modifications made to pre-mRNA before it becomes a mature mRNA. What is the function of each modification? What is the difference between an intron and an exon?</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — RNA Processing</h3><p>5 questions · includes alternative splicing data</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the function of the 5' 7-methylguanosine cap on mature mRNA?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It signals the ribosome where to stop translation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It protects the mRNA's 5' end from exonuclease degradation, is recognized by the small ribosomal subunit to initiate translation, and promotes nuclear export of the mRNA</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It provides the energy needed to power ribosome movement during translation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It methylates the mRNA to prevent intron-containing sequences from being translated</li></ul>
+        <div class="qexp">The 5' cap (m⁷G) has multiple critical functions: (1) Protection: the 5'→5' unusual linkage is resistant to normal 5'→3' exonucleases → protects mRNA from degradation at its 5' end; (2) Ribosome recognition: the eIF4E cap-binding protein recognizes m⁷G → recruits the 43S pre-initiation complex for translation; (3) Nuclear export: cap-binding complex (CBC) assists in nuclear export through nuclear pore complexes; (4) Splicing: the cap promotes recognition of the first intron. Uncapped mRNA is rapidly degraded in the cytoplasm. This is why mRNA vaccines (Moderna, Pfizer) include a 5' cap in their in vitro transcribed mRNAs.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The 3' poly-A tail is added to mRNA after cleavage at the poly-A signal (AAUAAA). Why is progressive shortening (deadenylation) of the poly-A tail important?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Shortening the poly-A tail signals ribosomes to begin translation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Deadenylation exports the mRNA from the nucleus to the cytoplasm</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The poly-A tail is shortened to the correct length before translation can begin</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Progressive deadenylation is the primary trigger for mRNA decay — when the poly-A tail is shortened below a critical threshold, it triggers decapping and 5'→3' or 3'→5' exonuclease degradation of the mRNA</li></ul>
+        <div class="qexp">The poly-A tail protects mRNA from 3' exonuclease degradation. As mRNA is translated, deadenylases (CCR4-NOT complex) progressively shorten the tail. When the tail shortens below a threshold (~10-15 A residues): (1) PABP (poly-A binding protein) can no longer bind; (2) Decapping enzymes are recruited; (3) DCP2 removes the 5' cap; (4) Rapid 5'→3' degradation by Xrn1. Alternatively, 3'→5' degradation by the exosome complex. This deadenylation-dependent decay controls mRNA half-life — critical for regulating how much protein each mRNA produces over its lifetime.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A mutation at the splice site of an intron prevents the spliceosome from removing it. What would be the consequence for the resulting protein?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The intron sequence would be retained in the mRNA and translated — inserting extra (typically non-functional) amino acids into the protein, usually causing loss of function; alternatively, the intron may contain stop codons causing premature termination</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The gene would not be transcribed until the splice site is repaired</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The entire mRNA would be degraded and no protein would be produced</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The ribosome would skip the intron sequence automatically and translate only the exons</li></ul>
+        <div class="qexp">Splice site mutations cause <strong>intron retention</strong> — the intron's sequence stays in the mRNA and is translated. Since introns often contain stop codons in multiple reading frames, the most common consequence is premature termination of translation → truncated, non-functional protein. If no stop codon: extra amino acid sequence is inserted into the protein at the exon-intron boundary → likely disrupts protein folding → loss of function. Splice site mutations cause many human genetic diseases: ~15% of all disease-causing mutations affect splicing. Famous example: BRCA1 and BRCA2 have many pathogenic splice site mutations.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the alternative splicing graph, what does it mean when different tissues show different exon inclusion patterns for the same gene?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Different tissues have different copies of the same gene with mutations in specific exons</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The gene is only expressed in some tissues and not others</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The same pre-mRNA is spliced differently in different tissues — producing distinct protein isoforms with potentially different functions, sizes, or regulatory properties from the same gene sequence</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Different tissues degrade specific exons after transcription</li></ul>
+        <div class="qexp">Alternative splicing: tissue-specific splicing factors (SR proteins, hnRNPs) recognize exonic/intronic splicing enhancers or silencers → spliceosome includes or skips specific exons → different mRNA isoforms → different protein isoforms with distinct functions in each tissue. Classic example: the <em>tropomyosin</em> gene produces different isoforms in muscle, brain, and fibroblasts — each with different actin-binding properties suited to that cell type. Alternative splicing allows one gene to perform multiple functions in different contexts, dramatically expanding the proteome beyond what gene number alone would suggest.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why do prokaryotic cells NOT require RNA processing before translation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Prokaryotic mRNAs are perfectly stable and don't need protection from nucleases</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Prokaryotic genes generally lack introns — the mRNA sequence is collinear with the protein sequence; also, there is no nucleus to separate transcription from translation, making immediate translation possible</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Prokaryotic ribosomes can remove introns during translation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Prokaryotic mRNAs do require processing but it happens faster than in eukaryotes</li></ul>
+        <div class="qexp">Prokaryotic genes are "intronless" (with rare exceptions like some archaeal genes) — the mRNA sequence is directly collinear with the protein. No splicing required. Also: no nucleus → ribosomes begin translating mRNA before it's even completely transcribed (coupled transcription-translation). Prokaryotic mRNAs do have some stability mechanisms but lack the elaborate 5' cap and poly-A tail processing of eukaryotes. This simpler gene structure is one reason why bacterial gene expression is faster and more directly responsive to regulatory signals. Eukaryotic introns are thought to have evolved as a mechanism for increasing protein diversity via alternative splicing.</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Lesson 5 →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-tl"><div class="h-crumb">RNA to Protein · <span>Lesson 5</span></div><div class="h-title">The Genetic Code</div><div class="h-desc">Four bases. Three-letter words. Twenty amino acids. The genetic code translates the language of nucleic acids into the language of proteins — and it is nearly universal across all life on Earth.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Define codon and explain why the genetic code is a triplet code (not doublet or singlet).</li>
+      <li>Identify the start codon (AUG) and its meaning, and the three stop codons (UAA, UAG, UGA).</li>
+      <li>Use a codon table to identify the amino acid encoded by a given codon.</li>
+      <li>Explain degeneracy (redundancy) of the genetic code and the wobble hypothesis.</li>
+      <li>Explain why the genetic code is described as "nearly universal."</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.1</div><div class="sh2">Why a Triplet Code?</div>
+      <p class="prose">With 4 bases, a doublet code (4² = 16 codons) could only encode 16 amino acids — not enough for the 20 standard amino acids. A triplet code (4³ = <strong>64 codons</strong>) encodes more than enough: 20 amino acids + start + stop signals, with room to spare. That "room to spare" gives us the degeneracy of the code — most amino acids are encoded by multiple codons.</p>
+      <div class="sh3">Key Features of the Genetic Code</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>Detail</th></tr>
+        <tr><td><strong>Start codon</strong></td><td>AUG — codes for Methionine (Met); every protein begins with Met (often cleaved post-translationally); sets the reading frame</td></tr>
+        <tr><td><strong>Stop codons</strong></td><td>UAA (ochre), UAG (amber), UGA (opal) — no amino acid; recognized by release factors that terminate translation</td></tr>
+        <tr><td><strong>Degeneracy (redundancy)</strong></td><td>61 codons encode 20 amino acids → most amino acids have 2-6 synonymous codons (e.g., Leu has 6; Met has only 1). Synonymous codons often differ only in the 3rd position (wobble position)</td></tr>
+        <tr><td><strong>Wobble hypothesis</strong></td><td>The third base of a codon can pair with a non-standard base in the tRNA anticodon (wobble position). A single tRNA can recognize multiple codons — reduces the number of tRNAs needed from 61 to ~45</td></tr>
+        <tr><td><strong>Universal</strong></td><td>Nearly all organisms use the same genetic code — strong evidence for common ancestry. Minor variations: some mitochondria and organisms use slightly different codons; UGA = Trp in some mitochondria</td></tr>
+        <tr><td><strong>Non-overlapping</strong></td><td>Each nucleotide is part of only one codon; codons are read sequentially, not overlapping</td></tr>
+        <tr><td><strong>Unambiguous</strong></td><td>Each codon specifies only one amino acid (though multiple codons can specify the same amino acid)</td></tr>
+      </table>
+      <div class="sh3">Reading the Genetic Code Table</div>
+      <div class="graph-box" style="padding:16px;">
+        <div class="graph-title" style="margin-bottom:8px;">Partial Genetic Code — Selected Codons</div>
+        <table class="dt" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:.82rem;">
+          <tr><th>Codon</th><th>Amino Acid</th><th>Codon</th><th>Amino Acid</th><th>Codon</th><th>Amino Acid</th></tr>
+          <tr><td>AUG</td><td style="color:var(--green);font-weight:700;">Met (START)</td><td>UUU/UUC</td><td>Phe</td><td>GGU/GGC/GGA/GGG</td><td>Gly</td></tr>
+          <tr><td>UGG</td><td>Trp</td><td>UUA/UUG/CUU/CUC/CUA/CUG</td><td>Leu (6 codons)</td><td>GAU/GAC</td><td>Asp</td></tr>
+          <tr><td>UAA</td><td style="color:var(--red);font-weight:700;">STOP (ochre)</td><td>GAA/GAG</td><td>Glu</td><td>CCU/CCC/CCA/CCG</td><td>Pro</td></tr>
+          <tr><td>UAG</td><td style="color:var(--red);font-weight:700;">STOP (amber)</td><td>CAU/CAC</td><td>His</td><td>ACU/ACC/ACA/ACG</td><td>Thr</td></tr>
+          <tr><td>UGA</td><td style="color:var(--red);font-weight:700;">STOP (opal)</td><td>AAU/AAC</td><td>Asn</td><td>GUU/GUC/GUA/GUG</td><td>Val</td></tr>
+        </table>
+      </div>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Stop Codon Memory: "U Are Annoying / U Are Gone / U Go Away"</div><div class="cx">UAA = "U Are Away" (ochre). UAG = "U Are Gone" (amber). UGA = "U Go Away" (opal). All three start with U and have A in the second or last position. Only TWO amino acids have just ONE codon: Met (AUG) and Trp (UGG) — both are easy to remember because they are the start codon and the only tryptophan codon. If you see AUG, it's always Met; if you see UGG, it's always Trp.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Codon Usage &amp; Degeneracy</div>
+      <div class="graph-box"><div class="graph-title">Number of Codons Per Amino Acid (Degeneracy of the Genetic Code)</div><div class="graph-cap">Most amino acids have multiple codons; Met and Trp have only one each; 3 codons are stop signals</div><div class="graph-wrap"><canvas id="chartL5"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain what is meant by the "degeneracy" of the genetic code. Why does most degeneracy occur at the third codon position? Name the start codon and all three stop codons.</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — The Genetic Code</h3><p>5 questions · includes codon degeneracy graph</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Using the partial codon table above, what is the amino acid sequence encoded by the mRNA: 5'-AUG-UUU-GAA-UGG-UAA-3'?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Met-Phe-Glu-Trp-Met</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Met-Leu-Glu-Trp (stop)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Met-Phe-Glu-Trp (stop) — AUG=Met, UUU=Phe, GAA=Glu, UGG=Trp, UAA=STOP</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Met-Phe-Asp-Trp (stop)</li></ul>
+        <div class="qexp">Reading 5'→3' in triplets: AUG = Met (start); UUU = Phe; GAA = Glu; UGG = Trp (the only tryptophan codon); UAA = STOP (ochre). Protein: Met-Phe-Glu-Trp. Four amino acids long (not counting the stop signal). Reading the genetic code: first find the first base in the rows, second base in the columns, third base in sub-columns. Practice until it's automatic — codon table reading is a core skill for every molecular biology question.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The codons CUU, CUC, CUA, and CUG all encode leucine. This is an example of the "degeneracy" of the genetic code. What is the biological advantage of a degenerate code?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Degeneracy means any codon can encode any amino acid — giving cells flexibility</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Degeneracy provides a buffer against mutations — a single nucleotide change in the third codon position often produces a synonymous (silent) codon that encodes the same amino acid, reducing the functional impact of point mutations</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Degeneracy allows ribosomes to skip damaged codons during translation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Degeneracy reduces the amount of tRNA needed because each tRNA can recognize any codon</li></ul>
+        <div class="qexp">Degeneracy provides <strong>mutational buffering</strong>: most third-position point mutations → synonymous codons → same amino acid → no protein change (silent mutation). Without degeneracy, every mutation would change an amino acid (missense or nonsense). Degeneracy also explains why the wobble position (3rd codon position) is tolerated — a single tRNA can recognize multiple codons differing only at the 3rd position. This reduces the minimum number of tRNAs needed from 61 to ~45. The degeneracy pattern is not random: similar amino acids tend to share the first two codon positions, so even missense mutations at the 3rd position often substitute chemically similar amino acids.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The genetic code is described as "nearly universal." What does this mean, and what is its significance?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All organisms use exactly the same genetic code with no exceptions</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Most organisms use the same code but there are many different versions in different species</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The code is universal for all viruses but varies among cellular organisms</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The vast majority of organisms (bacteria, plants, animals, fungi) use the same codon assignments, with rare minor exceptions (some mitochondria, a few microorganisms) — this universality is strong evidence for a single common ancestor of all life</li></ul>
+        <div class="qexp">The nearly universal genetic code is one of biology's strongest pieces of evidence for universal common descent. If life evolved independently multiple times, there would be no reason to expect the same arbitrary code everywhere. The same code in bacteria, archaea, plants, animals, and fungi means it was established in the last universal common ancestor (LUCA) ~3.5-4 billion years ago. Minor exceptions: mammalian mitochondria use UGA for Trp (not stop); some ciliates use UAA/UAG for Gln instead of stop. These exceptions prove the code CAN change — it's just frozen in place because any change would be catastrophic (altering thousands of proteins simultaneously).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the codon degeneracy graph, which two amino acids have only ONE codon each?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Methionine (AUG) and Tryptophan (UGG) — each has exactly one codon; mutations in either codon's first or second position will always change the amino acid (no silent mutations possible at positions 1 or 2)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Glycine and Proline</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Lysine and Glutamine</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Aspartate and Asparagine</li></ul>
+        <div class="qexp">Met (AUG) and Trp (UGG) each have exactly ONE codon — the least degenerate in the code. This means: any point mutation at their codon's 1st or 2nd position will always cause a missense or nonsense mutation (no synonymous alternatives). AUG is also the universal start codon. Leucine and Serine are the most degenerate, each with 6 codons. The asymmetry in degeneracy is thought to reflect the order in which amino acids joined the genetic code during early evolution — the "standard amino acids" (like Met, Trp) joined later and got fewer codons.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What does it mean that the genetic code is "unambiguous"?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Each amino acid is encoded by only one codon</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The genetic code is the same in all organisms</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Each codon specifies exactly one amino acid (or stop signal) — a given codon cannot specify two different amino acids; though one amino acid may have multiple codons (degeneracy), one codon never maps to multiple amino acids</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The reading frame is always unambiguous — the ribosome never makes frame-shifting errors</li></ul>
+        <div class="qexp">Unambiguous: one codon → one outcome (one specific amino acid or one stop signal). This is different from degeneracy: degeneracy means many codons → one amino acid. But the reverse is NOT true: one codon never → two different amino acids. If the code were ambiguous, the ribosome would sometimes insert alanine and sometimes glycine for the same codon → unpredictable protein sequences → non-functional proteins. The code must be unambiguous for reproducible protein synthesis. This is enforced by the specificity of aminoacyl-tRNA synthetase enzymes — each charges one tRNA species with one specific amino acid.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Lesson 6 →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-tl"><div class="h-crumb">RNA to Protein · <span>Lesson 6</span></div><div class="h-title">Translation: Ribosomes &amp; Initiation</div><div class="h-desc">Translation begins with assembly — the ribosome must find the right place on the mRNA, assemble around it, and position the first tRNA. In eukaryotes, this initiation process is the most regulated step in all of protein synthesis.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe ribosome structure: two subunits (small/large), three tRNA-binding sites (A, P, E).</li>
+      <li>Compare prokaryotic (70S) and eukaryotic (80S) ribosomes by Svedberg units.</li>
+      <li>Trace eukaryotic translation initiation: cap recognition, scanning, AUG recognition, 80S assembly.</li>
+      <li>Explain the role of the Shine-Dalgarno sequence in prokaryotic initiation.</li>
+      <li>Identify the initiator tRNA and what amino acid it carries.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.4</div><div class="sh2">Ribosome Structure</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>Prokaryotes</th><th>Eukaryotes</th></tr>
+        <tr><td><strong>Overall size</strong></td><td>70S (Svedberg units)</td><td>80S</td></tr>
+        <tr><td><strong>Small subunit</strong></td><td>30S (16S rRNA + ~21 proteins)</td><td>40S (18S rRNA + ~33 proteins)</td></tr>
+        <tr><td><strong>Large subunit</strong></td><td>50S (23S + 5S rRNA + ~31 proteins)</td><td>60S (28S + 5.8S + 5S rRNA + ~49 proteins)</td></tr>
+        <tr><td><strong>tRNA sites</strong></td><td>A site, P site, E site (same in both)</td><td>A site, P site, E site</td></tr>
+        <tr><td><strong>Clinical relevance</strong></td><td>Many antibiotics target 30S or 50S — safe because eukaryotic ribosomes are different enough</td><td>Not targeted by most antibiotics</td></tr>
+      </table>
+      <div class="sh3">The Three tRNA Sites</div>
+      <table class="dt">
+        <tr><th>Site</th><th>Full Name</th><th>What Occupies It</th><th>Event</th></tr>
+        <tr><td><strong>A site</strong></td><td>Aminoacyl site</td><td>Incoming aminoacyl-tRNA (new amino acid)</td><td>Decoding: new tRNA enters; anticodon checked against mRNA codon</td></tr>
+        <tr><td><strong>P site</strong></td><td>Peptidyl site</td><td>tRNA carrying the growing peptide chain</td><td>Peptide bond formation: peptide transferred from P-site tRNA to A-site amino acid</td></tr>
+        <tr><td><strong>E site</strong></td><td>Exit site</td><td>Discharged (empty) tRNA leaving the ribosome</td><td>tRNA without amino acid exits; ribosome translocates</td></tr>
+      </table>
+      <div class="sh3">Eukaryotic Translation Initiation</div>
+      <div class="pathway-box">
+        <div class="pw-step"><div class="ps-num">Step 1</div><div class="ps-label">Cap Recognition</div><div class="ps-sub">eIF4E binds m⁷G cap; recruits eIF4G, eIF4A (helicase)</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 2</div><div class="ps-label">43S Complex</div><div class="ps-sub">40S + initiator Met-tRNA + eIF2-GTP forms 43S complex</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 3</div><div class="ps-label">Scanning</div><div class="ps-sub">43S scans 5'→3' searching for AUG in Kozak context</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 4</div><div class="ps-label">AUG Recognition</div><div class="ps-sub">Initiator Met-tRNA anticodon pairs with AUG; GTP hydrolyzed</div></div>
+        <div class="pw-arrow">→</div>
+        <div class="pw-step"><div class="ps-num">Step 5</div><div class="ps-label">80S Assembly</div><div class="ps-sub">60S subunit joins; all eIFs released; elongation begins</div></div>
+      </div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Prokaryotic Initiation Uses the Shine-Dalgarno Sequence Instead of Scanning</div><div class="cx">Prokaryotes don't scan from a 5' cap. Instead, the 30S subunit recognizes a purine-rich sequence ~5-10 bases upstream of the AUG start codon called the <strong>Shine-Dalgarno (SD) sequence</strong> (consensus: AGGAGG). The SD sequence base-pairs directly with the 16S rRNA of the 30S subunit, positioning the ribosome precisely at the AUG. This allows prokaryotic mRNAs to be polycistronic — multiple start codons on one mRNA, each with its own SD sequence. Most eukaryotic mRNAs are monocistronic (one protein per mRNA).</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Antibiotic Targets on the Ribosome</div>
+      <div class="graph-box"><div class="graph-title">Ribosome Subunit Targeting by Common Antibiotics</div><div class="graph-cap">Antibiotics targeting prokaryotic ribosome subunits (30S and 50S) are safe in humans because eukaryotic ribosomes (40S and 60S) differ structurally</div><div class="graph-wrap"><canvas id="chartL6"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the three tRNA binding sites of the ribosome (A, P, E sites) and what occupies each during elongation. What is the first amino acid in every newly synthesized protein?</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd6">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 6 Quiz — Translation: Initiation</h3><p>5 questions · includes antibiotic ribosome targeting data</p></div></div>
+    <div id="q6">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the first amino acid incorporated into every new protein during translation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Glycine — the smallest amino acid, used to start all proteins</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Alanine — the default starter amino acid</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Methionine (Met) — the start codon AUG codes for Met; the initiator tRNA carries Met; every polypeptide begins with Met (though it is often removed post-translationally)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Valine — because AUG encodes valine in the mitochondrial code</li></ul>
+        <div class="qexp">AUG (start codon) codes for Methionine. During initiation, the initiator Met-tRNA (charged with Met) base-pairs with the AUG and occupies the P site of the fully assembled ribosome. Every polypeptide therefore begins with Met. However, ~50% of eukaryotic proteins have their N-terminal Met removed by methionine aminopeptidase post-translationally. The initiator tRNA (tRNA<sup>i</sup><sub>Met</sub>) is different from the elongation Met-tRNA (tRNA<sub>Met</sub>) — the initiator tRNA goes directly to the P site; the elongation Met-tRNA enters via the A site.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">During translation, a tRNA carrying two amino acids is in the P site, and a new aminoacyl-tRNA enters the A site. What happens next?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ribosome translocates — P-site tRNA moves to E site</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Peptide bond formation: the ribosomal peptidyl transferase (23S/28S rRNA) catalyzes transfer of the growing peptide chain from the P-site tRNA to the amino acid on the A-site tRNA — forming a peptide bond; the P-site tRNA is now empty</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The A-site tRNA immediately exits via the E site</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The mRNA is degraded after the P-site codon is translated</li></ul>
+        <div class="qexp">The elongation cycle: (1) DECODE: aminoacyl-tRNA enters A site; anticodon checked against codon; GTP hydrolysis confirms match. (2) TRANSFER: peptide bond formation — the 23S/28S rRNA (peptidyl transferase activity) catalyzes transfer of the growing peptide from P-site tRNA → amino acid on A-site tRNA. The P-site tRNA is now uncharged (empty). (3) TRANSLOCATE: EF-G (prokaryote) or eEF2 (eukaryote) + GTP hydrolysis → mRNA+tRNAs shift 3 nucleotides in 5'→3' direction: A→P, P→E, E exits. One cycle = one amino acid added.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Tetracycline blocks the A site of the bacterial 30S subunit, preventing aminoacyl-tRNA entry. Why doesn't tetracycline harm human cells?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Human cells degrade tetracycline with specific enzymes</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Tetracycline cannot enter human cells</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Human ribosomes have a protective protein that blocks tetracycline binding</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Human 40S ribosomal subunits have a different structure than bacterial 30S subunits — tetracycline's binding site has low affinity for the eukaryotic 40S rRNA; selective toxicity is exploited therapeutically</li></ul>
+        <div class="qexp">Selective toxicity: tetracycline binds specifically to the A site of the bacterial 30S subunit (16S rRNA). The eukaryotic 40S subunit (18S rRNA) has different nucleotide sequences and protein composition at the equivalent region → tetracycline binds with much lower affinity → human cells are largely spared. This structural difference between prokaryotic and eukaryotic ribosomes is the basis for many antibiotics: tetracyclines, aminoglycosides, macrolides, chloramphenicol, linezolid. Mitochondria (descendants of bacteria) do have 70S-like ribosomes — this is why some antibiotics have mitochondrial side effects at high doses.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">In prokaryotes, the Shine-Dalgarno sequence base-pairs with the 16S rRNA. In eukaryotes, the ribosome finds AUG by scanning. What is the KEY functional difference?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Prokaryotic Shine-Dalgarno allows multiple start codons on one polycistronic mRNA (each with its own SD sequence); eukaryotic scanning typically starts at the first AUG on a monocistronic mRNA — one protein per mRNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Eukaryotic scanning is faster than Shine-Dalgarno recognition</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both methods produce the same protein output — only the mechanism differs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Shine-Dalgarno is less accurate than scanning, producing more translation errors</li></ul>
+        <div class="qexp">Prokaryotic Shine-Dalgarno: each AUG on a polycistronic mRNA has its own SD sequence → 30S can initiate at any of them → one mRNA encodes multiple proteins (all in one operon, e.g., lactose operon). Eukaryotic scanning: 43S complex loads at 5' cap and scans 5'→3' until it finds the first AUG in a good context (Kozak sequence: GCCACCAUGG) → typically translates only the first ORF. This is why bacteria can coordinate expression of entire metabolic pathways (e.g., lac operon) on one mRNA, while eukaryotic gene regulation requires individual mRNAs per gene.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">📊 Based on the antibiotic ribosome targeting graph, which ribosomal subunit do the most antibiotics target, and why is this clinically important?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The 60S eukaryotic subunit — targeting it kills bacteria more effectively</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The 40S eukaryotic subunit — human ribosomes are more sensitive</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The prokaryotic 50S subunit has the most antibiotic targets (macrolides, chloramphenicol, linezolid, clindamycin) — clinically this means a wide arsenal of antibiotics block peptide bond formation or translocation in bacteria while leaving human 60S ribosomes unaffected</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both subunits are equally targeted by all antibiotics</li></ul>
+        <div class="qexp">The prokaryotic large subunit (50S) is targeted by many clinically important antibiotics: macrolides (erythromycin, azithromycin) block the exit tunnel; chloramphenicol blocks peptidyl transferase; linezolid blocks A-site tRNA entry to 50S; clindamycin blocks peptidyl transferase. The 50S subunit is an attractive target because: (1) peptide bond formation is the core of protein synthesis — blocking it arrests bacterial growth; (2) the 50S structure is sufficiently different from eukaryotic 60S to allow selective inhibition. This structural selectivity is the pharmacological basis for antibiotic safety in humans (though mitochondria can be affected at high doses).</div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Lesson 7 →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-tl"><div class="h-crumb">RNA to Protein · <span>Lesson 7</span></div><div class="h-title">Translation: Elongation &amp; Termination</div><div class="h-desc">Elongation is the ribosome reading the mRNA three letters at a time, adding one amino acid per codon, until it hits a stop sign. Termination releases the completed polypeptide — which then folds into its functional 3D shape.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Trace the three steps of the elongation cycle: decoding (A site), peptide bond formation, translocation.</li>
+      <li>Explain why the polypeptide grows from N-terminus to C-terminus.</li>
+      <li>Describe termination: stop codon recognition, release factor, polypeptide release.</li>
+      <li>Explain polyribosomes (polysomes) and why they increase protein production efficiency.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.4</div><div class="sh2">The Elongation Cycle: Three Steps, Repeated</div>
+      <table class="dt">
+        <tr><th>Step</th><th>Event</th><th>Energy</th><th>Key Protein</th></tr>
+        <tr><td><strong>1. Decoding (A-site)</strong></td><td>Aminoacyl-tRNA delivered to A site by EF-Tu (prokaryote) / eEF1A (eukaryote); anticodon checked against mRNA codon — correct: GTP hydrolyzed, tRNA accommodated; incorrect: tRNA rejected (proofreading)</td><td>GTP → GDP + Pᵢ</td><td>EF-Tu/eEF1A</td></tr>
+        <tr><td><strong>2. Peptide Bond Formation</strong></td><td>Peptidyl transferase (23S/28S rRNA) catalyzes transfer of growing chain from P-site tRNA to the amino group of A-site amino acid; P-site tRNA is now discharged (empty)</td><td>None (thermodynamically favorable)</td><td>rRNA (ribozyme!)</td></tr>
+        <tr><td><strong>3. Translocation</strong></td><td>mRNA + tRNAs shift 3 nucleotides (one codon) toward 3' end: A→P, P→E, E exits; A site is now empty and ready for next aminoacyl-tRNA</td><td>GTP → GDP + Pᵢ</td><td>EF-G/eEF2 (translocase)</td></tr>
+      </table>
+      <div class="sh3">Termination: Three Stop Codons, One Release</div>
+      <p class="prose">When a stop codon (UAA, UAG, or UGA) enters the A site, no aminoacyl-tRNA matches it. Instead, <strong>release factors</strong> (RF1 or RF2 in prokaryotes; eRF1 in eukaryotes) bind the A site and mimic tRNA shape. The release factor triggers the peptidyl transferase to add water (hydrolysis) instead of an amino acid → the polypeptide chain is released from the P-site tRNA. The ribosome subunits then dissociate from the mRNA.</p>
+      <div class="sh3">Polyribosomes (Polysomes): Assembly Line Efficiency</div>
+      <p class="prose">Once the first ribosome has translated far enough from the 5' end, a second ribosome can load onto the mRNA's 5' cap and begin scanning. Multiple ribosomes translate the same mRNA simultaneously — called a <strong>polyribosome (polysome)</strong>. This dramatically increases protein production per mRNA molecule: a single mRNA with 10 ribosomes produces 10 protein copies simultaneously.</p>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Direction Summary: Ribosome → mRNA reads 5'→3'; protein grows N-terminus → C-terminus</div><div class="cx">RNA pol reads template 3'→5' and makes mRNA 5'→3'. Ribosome moves along mRNA 5'→3'. New amino acids are always added to the C-terminal end of the growing polypeptide (the growing chain is attached to the P-site tRNA at its C-terminus; the new amino acid's amino group attacks it). Therefore protein grows N→C while mRNA is read 5'→3'. The ribosome moves one codon (3 nt) per elongation cycle, adding one amino acid, taking ~50 msec per cycle.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Polysome Profile</div>
+      <div class="graph-box"><div class="graph-title">Polyribosome (Polysome) Profile: Ribosome Distribution on mRNA</div><div class="graph-cap">Multiple ribosomes on one mRNA simultaneously increase protein output; monosomes = single ribosome per mRNA</div><div class="graph-wrap"><canvas id="chartL7"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the three steps of the elongation cycle in translation. How does termination occur? What happens when a stop codon enters the A site instead of a tRNA?</div>
+      <textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd7">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap7" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 7 Quiz — Elongation &amp; Termination</h3><p>5 questions · includes polysome profile data</p></div></div>
+    <div id="q7">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">During translation elongation, which molecule catalyzes peptide bond formation between amino acids?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A ribosomal protein (peptidyl transferase protein)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The 23S rRNA (prokaryotes) or 28S rRNA (eukaryotes) — the ribosome is a ribozyme; its RNA component is the peptidyl transferase that catalyzes peptide bond formation</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The elongation factor EF-G/eEF2</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The aminoacyl-tRNA synthetase enzyme</li></ul>
+        <div class="qexp">The peptidyl transferase center (PTC) of the ribosome is composed of <strong>rRNA</strong> — not protein. The 23S rRNA (bacteria) / 28S rRNA (eukaryotes) at the core of the large subunit catalyzes the formation of the peptide bond: it positions the P-site tRNA's 3' end and the A-site amino acid, and catalyzes the nucleophilic attack of the A-site amino group on the P-site carbonyl carbon. This was proven by structural studies showing that the PTC is a protein-free RNA environment. The discovery that the ribosome is a ribozyme earned the 2009 Nobel Prize in Chemistry.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">After peptide bond formation, translocation moves the ribosome one codon along the mRNA. What happens to each tRNA during translocation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Both tRNAs remain in the same sites; the mRNA moves under them</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The A-site tRNA moves to E site; P-site tRNA is released directly</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The A-site tRNA moves to P site; P-site tRNA is destroyed and recycled</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The A-site tRNA (now carrying the growing peptide chain) moves to the P site; the P-site tRNA (now empty/discharged) moves to the E site and exits; the A site is now empty for the next aminoacyl-tRNA</li></ul>
+        <div class="qexp">Translocation (catalyzed by EF-G/eEF2 + GTP hydrolysis): tRNAs and mRNA shift together by exactly 3 nucleotides (one codon) in the 5'→3' direction. The tRNA carrying the growing peptide moves A→P. The discharged tRNA moves P→E. The E-site tRNA exits. The A site is now exposed with the next codon positioned. GTP hydrolysis by EF-G/eEF2 provides energy and ensures the movement is unidirectional. Fusidic acid (antibiotic) works by locking EF-G in the post-translocation state after GTP hydrolysis — the ribosome cannot reset for the next cycle.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A stop codon (UAG) enters the A site. What happens next?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A release factor protein (not a tRNA) binds the A site, mimics tRNA shape, and triggers hydrolysis of the ester bond linking the polypeptide to the P-site tRNA — releasing the completed polypeptide into the cytoplasm</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Translation simply pauses until the ribosome finds the next start codon</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A special "stop tRNA" enters carrying a termination signal amino acid</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The ribosome dissociates immediately without completing the current peptide</li></ul>
+        <div class="qexp">Stop codons (UAA, UAG, UGA) are recognized by <strong>release factors</strong> (RF1, RF2 in bacteria; eRF1 in eukaryotes) — proteins that structurally mimic tRNAs and fit into the A site. The release factor's GGQ motif (highly conserved) triggers the peptidyl transferase to catalyze hydrolysis of the ester bond between the polypeptide and the P-site tRNA → polypeptide released. Then RF3 (bacteria) / eRF3 (eukaryotes) + GTP triggers dissociation of the ribosome → 80S separates into 40S + 60S. The free polypeptide then folds into its functional 3D shape.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the polysome profile graph, what is the advantage of polysomes (multiple ribosomes on one mRNA) over a single ribosome per mRNA?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Polysomes allow the mRNA to be spliced while it is being translated</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Polysomes increase the accuracy of translation by having multiple ribosomes check each codon</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Polysomes multiply protein output from a single mRNA simultaneously — if 10 ribosomes are translating one mRNA at once, 10 protein copies are being produced in parallel, dramatically increasing the cell's protein production rate without requiring more mRNA molecules</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Polysomes protect the mRNA from degradation by physically covering it</li></ul>
+        <div class="qexp">Polysomes (polyribosomes) are one of the cell's key mechanisms for amplifying gene expression. A single highly-expressed mRNA can be loaded with dozens of ribosomes simultaneously — like multiple cars on the same highway. Highly expressed proteins (hemoglobin, collagen, secreted proteins) are often produced from polysomes with 10-80 ribosomes per mRNA. Electron microscopy of polysomes shows the characteristic "beads on a string" appearance. In rapidly growing E. coli: every ribosome is engaged in translation essentially continuously, coordinating with transcription through the same mRNA.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">In which direction does the ribosome move along the mRNA, and in which direction does the polypeptide chain grow?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ribosome moves 3'→5' on mRNA; polypeptide grows C-terminus to N-terminus</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Ribosome moves 5'→3' on mRNA; polypeptide grows N-terminus to C-terminus — the first codon (AUG) encodes the N-terminal Met; each subsequent codon adds one amino acid to the C-terminal end</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ribosome moves 5'→3' on mRNA; polypeptide grows C-terminus to N-terminus</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ribosome moves 3'→5' on mRNA; polypeptide grows N-terminus to C-terminus</li></ul>
+        <div class="qexp">Ribosome moves 5'→3' along mRNA (same direction as transcription). Polypeptide grows N→C: the first codon (AUG) encodes Met = the N-terminus. Each subsequent codon adds one amino acid to the C-terminal end (the growing chain's C-terminus is always in the P site, attached to the P-site tRNA). The last amino acid added before termination becomes the C-terminus of the final protein. This N→C direction is fixed by chemistry: amino acids can only be added to the carboxyl end (C-terminus) of the growing chain via peptide bond formation.</div></div>
+    </div>
+    <div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Lesson 6</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Lesson 8 →</button></div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="hero hero-mut"><div class="h-crumb">Mutations · <span>Lesson 8</span></div><div class="h-title">Mutations &amp; Their Consequences</div><div class="h-desc">A single changed nucleotide can mean nothing — or everything. Understanding how point mutations, frameshifts, and nonsense mutations affect the protein product is fundamental to genetics, medicine, and evolution.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 15.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Distinguish germline mutations from somatic mutations in terms of heritability.</li>
+      <li>Classify point mutations as silent (synonymous), missense, or nonsense and predict the effect on the protein.</li>
+      <li>Explain frameshift mutations and why insertions/deletions of 1-2 nt cause more severe effects than substitutions.</li>
+      <li>Trace the path from a DNA mutation to a changed protein using transcription and translation.</li>
+      <li>Give a real clinical example of each mutation type.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 15.5</div><div class="sh2">From DNA Change to Protein Change: The Chain</div>
+      <p class="prose">A mutation in the DNA sequence may or may not affect the final protein — it depends on the type of mutation, its location in the gene, and the degeneracy of the genetic code. The path: <strong>DNA mutation → mRNA codon change → (possible) amino acid change → protein structure change → protein function change</strong>.</p>
+      <table class="dt">
+        <tr><th>Mutation Type</th><th>DNA Change</th><th>mRNA Effect</th><th>Protein Effect</th><th>Severity</th><th>Example</th></tr>
+        <tr><td><strong>Silent (Synonymous)</strong></td><td>Base substitution in 3rd codon position</td><td>Different codon but encodes same amino acid (degeneracy)</td><td>No change — identical protein</td><td>None</td><td>CGA→CGG (both = Arg)</td></tr>
+        <tr><td><strong>Missense</strong></td><td>Base substitution → different codon</td><td>Codon encodes different amino acid</td><td>One amino acid changed — may or may not affect function depending on location/chemistry</td><td>Variable (mild to severe)</td><td>Sickle cell: GAG→GTG (Glu→Val); PKU: Phe hydroxylase missense</td></tr>
+        <tr><td><strong>Nonsense</strong></td><td>Base substitution → stop codon</td><td>Premature UAA, UAG, or UGA</td><td>Truncated protein — usually non-functional; often triggeres NMD (nonsense-mediated mRNA decay)</td><td>Usually severe</td><td>Many cancer-causing mutations in p53, BRCA1; Duchenne MD</td></tr>
+        <tr><td><strong>Frameshift (insertion)</strong></td><td>1-2 nucleotide insertion (not multiple of 3)</td><td>Reading frame shifted — all downstream codons altered; new stop codon often appears</td><td>Completely different amino acid sequence downstream; truncated or non-functional protein</td><td>Usually severe</td><td>+1 insertion in CFTR → cystic fibrosis; Tay-Sachs +TATC insertion</td></tr>
+        <tr><td><strong>Frameshift (deletion)</strong></td><td>1-2 nucleotide deletion</td><td>Same as insertion — reading frame shifted</td><td>Completely different downstream sequence; often premature stop</td><td>Usually severe</td><td>Duchenne MD: large deletions/frameshifts in dystrophin gene</td></tr>
+      </table>
+      <div class="sh3">Working Through an Example: From DNA to Protein</div>
+      <div class="dna-strand">
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-bottom:4px;">Original coding strand (5'→3'):</div>
+        ATG · GCT · GAA · UGA
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin:6px 0 4px;">Original mRNA / protein:</div>
+        <span class="dna-rna">AUG · GCU · GAA · UGA</span> → Met - Ala - Glu - STOP
+        <br><br>
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-bottom:4px;">Missense: GAA → GUA (A→U at position 8):</div>
+        <span class="dna-rna">AUG · GCU · <span style="color:#f87171;">GUA</span> · UGA</span> → Met - Ala - <span style="color:#f87171;">Val</span> - STOP (Glu replaced by Val)
+        <br><br>
+        <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-bottom:4px;">Frameshift: insert C after position 6:</div>
+        <span class="dna-rna">AUG · GCU · C<span style="color:#f87171;">GA</span> · AUG · A...</span> → Met - Ala - <span style="color:#f87171;">Arg - Met - ...</span> (all wrong downstream!)
+      </div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Why Silent Mutations Are Not Always "Silent"</div><div class="cx">Silent mutations change the DNA/mRNA sequence without changing the amino acid — usually no protein effect. But exceptions exist: (1) A silent mutation in a splice site can disrupt splicing → retained intron → frameshift; (2) A silent mutation can affect mRNA secondary structure → altered mRNA stability or translation rate; (3) A synonymous codon change may use a rare codon → slower translation → altered protein folding. These exceptions are important in disease — some "synonymous" SNPs in human disease genes affect phenotype through non-obvious mechanisms.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 15.5. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Mutation Severity vs. Protein Disruption</div>
+      <div class="graph-box"><div class="graph-title">Relative Protein Disruption by Mutation Type</div><div class="graph-cap">Frameshifts and nonsense mutations are most disruptive; silent mutations produce no protein change</div><div class="graph-wrap"><canvas id="chartL8"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">A mutation changes codon 6 of hemoglobin from GAG (Glu) to GTG (Val). Trace this mutation from the DNA change through transcription and translation to explain why this causes sickle cell disease. What type of mutation is this?</div>
+      <textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 80 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd8">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap8" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 8 Quiz — Mutations</h3><p>5 questions · includes mutation severity data</p></div></div>
+    <div id="q8">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A mutation changes the mRNA codon UGG (Trp) to UGA. What type of mutation is this and what happens during translation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense — UGA codes for a different amino acid</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Silent — UGG and UGA encode the same amino acid</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Nonsense — UGA is a stop codon; translation terminates prematurely at this position, producing a truncated polypeptide that is usually non-functional</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Frameshift — UGG → UGA shifts the reading frame</li></ul>
+        <div class="qexp">UGG (Trp) → UGA: UGA is a stop codon (opal) — this is a <strong>nonsense mutation</strong>. When this codon enters the ribosome A site: no aminoacyl-tRNA matches UGA; release factor eRF1 binds instead; polypeptide hydrolyzed and released prematurely. The truncated protein is typically non-functional. Additionally, mRNAs with premature stop codons are often recognized and degraded by nonsense-mediated mRNA decay (NMD) — a surveillance pathway that detects premature stop codons and degrades the aberrant mRNA, preventing production of potentially dominant-negative truncated proteins.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A single adenine nucleotide is inserted into the middle of a coding sequence. What is the consequence for the protein?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A single alanine amino acid is inserted at that position in the protein</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The reading frame shifts for all codons downstream of the insertion — every amino acid from that point to the C-terminus is changed; a premature stop codon typically appears in the altered frame, producing a truncated, non-functional protein</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The insertion is silent — single nucleotide insertions don't affect the reading frame</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The ribosome skips the inserted nucleotide automatically and translates normally</li></ul>
+        <div class="qexp">A +1 insertion shifts the reading frame: codons are triplets read from a fixed start point. Adding one nucleotide shifts every downstream codon into a new (wrong) frame → completely different amino acid sequence downstream. Example: original ...GCA-TTC-GAA... becomes ...GCA-TCA-AGA-A... after inserting a C. All amino acids from position of insertion onward are wrong. Usually a premature stop codon appears in the new frame. Tay-Sachs disease: +4 bp TATC insertion in HEXA gene → frameshift → non-functional hexosaminidase A → GM2 ganglioside accumulation → neurodegeneration.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Sickle cell disease is caused by a single A→T transversion at codon 6 of the β-globin gene (GAG→GTG). What type of mutation is this and why does it cause disease?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Frameshift — the single nucleotide change shifts the reading frame</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Silent — GAG and GTG encode the same amino acid</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Nonsense — GTG is a stop codon</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Missense — GAG (Glu, hydrophilic) → GTG (Val, hydrophobic) causes hemoglobin molecules to polymerize under low oxygen, deforming red blood cells into a sickle shape that causes vascular occlusion and anemia</li></ul>
+        <div class="qexp">Sickle cell = missense mutation: one nucleotide change (A→T at position 17 of exon 1) → codon change GAG→GTG → Glu→Val. Glutamate is hydrophilic and charged; valine is hydrophobic and uncharged. Under deoxygenated conditions: the hydrophobic Val at position 6 fits into a hydrophobic pocket on adjacent HbS molecules → polymerization into long stiff fibers → RBCs deform into sickle shape → get stuck in capillaries → vaso-occlusion → pain crises, anemia, organ damage. One nucleotide change in 3.2 billion → life-threatening systemic disease. This example beautifully illustrates how molecular structure determines biological function.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the mutation severity graph, which mutation type causes the LEAST protein disruption and why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Silent (synonymous) mutations — the nucleotide sequence changes but the codon still encodes the same amino acid due to genetic code degeneracy; the protein is completely unchanged</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Missense mutations — only one amino acid is changed so the protein still mostly works</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Frameshift mutations — they only affect the C-terminal end of the protein</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Nonsense mutations — stop codons shorten the protein but retain function</li></ul>
+        <div class="qexp">Silent mutations produce NO protein change — the amino acid sequence is identical. This is possible because of genetic code degeneracy: most amino acids are encoded by multiple synonymous codons. Silent mutations are therefore "selectively neutral" in most cases. In contrast: missense can impair function (variable — depends on whether the amino acid change affects a critical region); nonsense creates truncated non-functional protein; frameshift completely scrambles the C-terminal protein sequence. Silent mutations accumulate over evolutionary time as neutral variation — they're used to trace evolutionary relationships through molecular clock analysis.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Nonsense-mediated mRNA decay (NMD) degrades mRNAs with premature stop codons. Why is NMD beneficial to the cell?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>NMD increases the efficiency of translation by removing short mRNAs</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>NMD prevents the accumulation of potentially toxic truncated proteins — a truncated protein retaining a functional domain but lacking regulatory domains could act as a dominant-negative inhibitor of the normal protein, causing more damage than no protein at all</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>NMD corrects the premature stop codon mutation by repairing the mRNA sequence</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>NMD accelerates gene expression by quickly turning over aberrant mRNAs to make room for normal mRNAs</li></ul>
+        <div class="qexp">NMD is a quality control system: when the ribosome encounters a premature stop codon and terminates early, NMD machinery (UPF1, UPF2, UPF3 proteins) recognizes exon junction complexes (EJCs) downstream of the stop codon — these shouldn't be downstream of a normal stop codon — triggers mRNA degradation. This prevents: (1) Waste of ribosomes on aberrant mRNAs; (2) Production of truncated proteins that might act as dominant-negative inhibitors. Without NMD: nonsense mutations in tumor suppressors (p53, BRCA1) would produce truncated dominant-negative proteins that inactivate the remaining normal allele — making the disease worse than simple loss of function.</div></div>
+    </div>
+    <div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Lesson 7</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(9)">Unit Review &amp; Practice Test →</button></div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Practice Test</span></div><div class="h-title">Unit Review &amp; Practice Test</div><div class="h-desc">20 questions covering the entire gene expression pathway — from Central Dogma to mutations.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~30 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Unit at a Glance</div>
+      <table class="dt">
+        <tr><th>Topic</th><th>Key Points</th></tr>
+        <tr><td>Central Dogma</td><td>DNA → RNA (transcription) → Protein (translation); exceptions: reverse transcription (RNA→DNA, retroviruses), RNA replication (RNA viruses)</td></tr>
+        <tr><td>RNA Types</td><td>mRNA (carries code), tRNA (anticodon + amino acid), rRNA (structural/catalytic in ribosomes); RNA uses ribose + uracil; single-stranded</td></tr>
+        <tr><td>Transcription</td><td>Template strand read 3'→5'; mRNA synthesized 5'→3'; RNA Pol II; TATA box + transcription factors; 3 stages (initiation, elongation, termination)</td></tr>
+        <tr><td>RNA Processing</td><td>5' m⁷G cap (protection + ribosome recognition), 3' poly-A tail (stability), splicing (introns removed, exons joined); alternative splicing → protein diversity</td></tr>
+        <tr><td>Genetic Code</td><td>64 codons = 61 amino acid + 3 stop; AUG = start (Met); UAA/UAG/UGA = stop; degenerate (most AAs have multiple codons); nearly universal</td></tr>
+        <tr><td>Translation Initiation</td><td>Ribosome = small + large subunit; A/P/E sites; eukaryotes: 43S scans from 5' cap to AUG; prokaryotes: Shine-Dalgarno sequence</td></tr>
+        <tr><td>Elongation &amp; Termination</td><td>Decode (A site) → peptide bond (rRNA ribozyme) → translocate; ribosome 5'→3'; protein N→C; stop codon → release factor → polypeptide released</td></tr>
+        <tr><td>Mutations</td><td>Silent (same AA), missense (different AA), nonsense (stop codon, truncated protein), frameshift (+/- not multiples of 3, all downstream changed)</td></tr>
+      </table>
+    </div>
+    <div class="cs"><div class="eyebrow">Review Charts</div>
+      <div class="graph-box"><div class="graph-title">RNA Types and Their Cellular Roles</div><div class="graph-cap">Reference for Question 5</div><div class="graph-wrap"><canvas id="chartPT1"></canvas></div></div>
+      <div class="graph-box" style="margin-top:16px;"><div class="graph-title">Mutation Type vs. Protein Disruption</div><div class="graph-cap">Reference for Question 16</div><div class="graph-wrap"><canvas id="chartPT2"></canvas></div></div>
+    </div>
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — Gene Expression</h3><p>20 questions · Virginia SOL format · auto-submitted to Mr. England</p></div></div>
+    <div id="q9">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which correctly states the Central Dogma of molecular biology?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Protein → RNA → DNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA → RNA → Protein: transcription converts DNA to RNA; translation converts RNA to protein</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RNA → DNA → Protein</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA → Protein → RNA</li></ul>
+        <div class="qexp">DNA → RNA (transcription) → Protein (translation). This is the normal flow of genetic information. The two known exceptions: RNA→DNA (reverse transcriptase in retroviruses like HIV) and RNA→RNA (RNA-dependent RNA polymerase in RNA viruses). The truly inviolable rule is that information cannot flow from protein back to nucleic acid.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">HIV is a retrovirus that carries the enzyme reverse transcriptase. This enzyme violates the simplified Central Dogma by copying:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Protein into DNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA into protein directly</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA into RNA</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA into DNA — the viral RNA genome is copied into DNA which integrates into the host chromosome</li></ul>
+        <div class="qexp">Reverse transcriptase: RNA → DNA. HIV's RNA genome → reverse transcriptase copies it into DNA → integrase inserts viral DNA into host chromosome → provirus expressed using host RNA Pol II → new viral proteins and RNA genomes → new virions. Antiretroviral drugs (NRTIs, NNRTIs) target reverse transcriptase. RT-PCR uses reverse transcriptase to detect RNA viruses (SARS-CoV-2) in diagnostic tests.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">RNA uses uracil where DNA uses thymine. What base does uracil pair with during translation (mRNA-tRNA base pairing)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Guanine</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cytosine</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Adenine — uracil has the same hydrogen-bonding pattern as thymine, forming 2 H-bonds with adenine</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Thymine</li></ul>
+        <div class="qexp">U pairs with A (like T pairs with A in DNA). During translation: mRNA codon pairs with tRNA anticodon by standard Watson-Crick base pairing. If the codon is 5'-AUG-3', the anticodon is 3'-UAC-5'. The 2 H-bonds between U and A are the same as T-A in DNA. The only difference: RNA uses U where DNA uses T — U lacks the 5-methyl group of thymine but pairs identically.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A gene's template strand is 3'-TACCCGATT-5'. What is the sequence of the mRNA produced?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5'-AUGGGCUAA-3' — RNA pol reads template 3'→5', synthesizes mRNA 5'→3', T→A, A→U, C→G, G→C</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5'-TACCCGATT-3' — same as template but 5'→3'</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3'-AUGGGCUAA-5'</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5'-ATGGGCTAA-3' — same but with T instead of U</li></ul>
+        <div class="qexp">Template 3'-TACCCGATT-5': T→A, A→U, C→G, C→G, C→G, G→C, A→U, T→A, T→A = AUGGGCUAA written 5'→3'. mRNA = 5'-AUGGGCUAA-3'. Also note: AUG is the start codon (Met), UAA is a stop codon — this mRNA encodes Met-Gly-STOP (a 2-amino acid peptide, or really just Met since Gly is the second codon before stop). Remember: RNA pol reads template 3'→5', produces RNA 5'→3', T in DNA → U in RNA.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">📊 Based on the RNA types chart, which RNA type carries the genetic message from DNA to the ribosome?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>tRNA — it carries amino acids to the ribosome</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>rRNA — it is the most abundant and is the main component of ribosomes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>mRNA — messenger RNA carries the sequence of codons transcribed from the gene to the ribosome where it is translated</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All three RNA types carry genetic information equally</li></ul>
+        <div class="qexp">mRNA (messenger RNA) carries the genetic message. Its codon sequence is a direct copy of the gene's coding sequence (with U instead of T). mRNA goes from nucleus (where it's made) to cytoplasm (where it's translated). tRNA is the adapter — it bridges codons (mRNA) and amino acids. rRNA is the structural/catalytic component of the ribosome. The ribosome is the machine; mRNA is the blueprint; tRNA is the parts delivery.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">What is the function of the TATA box in eukaryotic transcription?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The TATA box signals the end of the gene and triggers RNA Pol II termination</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>TATA-binding protein (TBP) recognizes the TATA box ~25 bp upstream of the start site, initiating assembly of the pre-initiation complex (general transcription factors + RNA Pol II) and marking where transcription will begin</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The TATA box is translated into the signal peptide at the start of the protein</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The TATA box is a ribosome binding site in eukaryotes</li></ul>
+        <div class="qexp">TATA box (consensus: TATAAA) is a core promoter element ~25 bp upstream of the transcription start site. TBP (TATA-Binding Protein) recognizes and binds it → DNA bent ~80° → scaffold for TFIID, TFIIB, TFIIF, TFIIE, TFIIH → RNA Pol II recruited → TFIIH helicase melts DNA at start site → transcription initiates. The TATA box is NOT transcribed into mRNA — it is upstream of the +1 start site.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">A mature eukaryotic mRNA has a 5' cap and 3' poly-A tail. What is the PRIMARY function of the 5' cap?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The 5' cap codes for the first amino acid of the protein</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The 5' cap signals ribosomes where to stop translation</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The 5' cap is added by polyadenylate polymerase after transcription</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The 5' cap (m⁷G) protects the mRNA from 5' exonuclease degradation and is recognized by eIF4E to initiate ribosome assembly for translation</li></ul>
+        <div class="qexp">The 5' cap (7-methylguanosine in an unusual 5'→5' triphosphate linkage): protects from 5'→3' exonucleases; recognized by eIF4E cap-binding protein → recruits 43S pre-initiation complex for translation initiation scanning; promotes nuclear export; helps splicing. Uncapped mRNA is rapidly degraded. The poly-A tail protects the 3' end, promotes export, and stability. Together they define a "complete" mRNA ready for efficient translation.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">8</span><span class="qt-inner">What is an intron, and what happens to it during RNA processing?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Introns are non-coding intervening sequences within pre-mRNA that are precisely removed by the spliceosome; exons (expressed sequences) are joined together to form the mature mRNA coding sequence</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Introns are the coding sequences that are translated into protein</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Introns are promoter sequences located inside the gene</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Introns are transposable elements that must be removed before translation</li></ul>
+        <div class="qexp">Introns ("intervening sequences") are non-coding sequences interrupting coding sequences (exons) in pre-mRNA. The spliceosome (5 snRNAs + ~150 proteins) precisely cuts at splice sites (GT...AG rule: introns start with GU and end with AG in RNA) → joins exons → intron is released as a lariat structure and degraded. Memory: EXons are EXpressed; INtrons stay IN the nucleus. Alternative splicing: including/excluding different exons from the same pre-mRNA → multiple protein isoforms from one gene.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">9</span><span class="qt-inner">The genetic code is described as "degenerate." What does this mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The code has deteriorated over evolutionary time and no longer functions perfectly</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Some amino acids have no codons in the genetic code</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Most amino acids are specified by more than one codon (synonym codons) — 61 codons encode only 20 amino acids, so multiple codons share the same amino acid</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The genetic code is gradually being replaced by a more efficient system</li></ul>
+        <div class="qexp">Degeneracy (redundancy): 64 codons - 3 stop = 61 coding codons for only 20 amino acids → most amino acids have 2-6 synonymous codons. Degeneracy provides mutational buffering: synonymous (silent) mutations at the 3rd codon position usually don't change the amino acid. Most degeneracy is at the "wobble position" (3rd base of codon). Only Met and Trp have just one codon each — any substitution there is guaranteed to be non-synonymous.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Using the genetic code, what amino acid sequence is encoded by: 5'-AUG-UUU-GGG-UAG-3'?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Met-Leu-Gly-Stop</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Met-Phe-Gly-Stop — AUG=Met (start), UUU=Phe, GGG=Gly, UAG=Stop (amber)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Met-Phe-Gly-Arg</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Met-Phe-Val-Stop</li></ul>
+        <div class="qexp">AUG = Met (start); UUU = Phe (U in 1st position, U in 2nd = Phe/Leu family; UUU/UUC = Phe); GGG = Gly (all four G__ codons = Gly); UAG = Stop (amber). Protein = Met-Phe-Gly (3 amino acids then stop). Practice reading codons systematically: 1st base → row; 2nd base → column; 3rd base → confirms specific codon within the group.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">11</span><span class="qt-inner">The start codon AUG sets the reading frame for translation. What happens if AUG is changed to CUG by a mutation?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Translation still starts normally — CUG is a common alternative start codon</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ribosome reads the mRNA backwards from the 3' end</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Translation starts at the next downstream AUG codon with no effect</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Translation is usually abolished or severely reduced — the initiator Met-tRNA cannot base-pair with CUG; the ribosome may scan past and initiate at the next AUG, possibly producing a shorter, non-functional protein or no protein at all</li></ul>
+        <div class="qexp">The start codon AUG is specifically recognized by the initiator Met-tRNA. Changing AUG → CUG prevents Met-tRNA anticodon (3'-UAC-5') from base-pairing → no initiation at this site. The ribosome may continue scanning and initiate at the next downstream AUG, if present, producing a shorter protein (missing the N-terminal portion). Sometimes this is less functional; sometimes it's completely non-functional. AUG mutations causing diseases: some hereditary conditions involve mutations in the Kozak context (sequence surrounding AUG) that reduce initiation efficiency.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">12</span><span class="qt-inner">What are the three tRNA-binding sites in the ribosome, and in what order does a tRNA pass through them?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A site (aminoacyl — new tRNA enters) → P site (peptidyl — growing chain attached) → E site (exit — discharged tRNA leaves)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>P site → A site → E site</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>E site → A site → P site</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A site → E site → P site</li></ul>
+        <div class="qexp">tRNA journey through the ribosome: A site (Aminoacyl) → P site (Peptidyl) → E site (Exit). New aminoacyl-tRNA enters A site with its amino acid. After peptide bond formation: tRNA with growing chain moves A→P; discharged tRNA moves P→E; E-site tRNA exits. The ribosome translocates one codon after each elongation cycle. During initiation: initiator Met-tRNA goes directly to the P site (not through A). This APE order is universal in all living organisms.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Translation stops when a stop codon enters the A site. Which molecule recognizes stop codons?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A special "stop tRNA" with a complementary anticodon</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The rRNA component of the large subunit</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Release factors (RF1/RF2 in prokaryotes, eRF1 in eukaryotes) — proteins that mimic tRNA shape and bind the A site when a stop codon is present, triggering polypeptide release</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The 5' cap of the mRNA signals the ribosome to terminate when the stop codon is reached</li></ul>
+        <div class="qexp">Release factors: protein molecules that structurally mimic tRNAs and enter the A site when stop codons appear. eRF1 (eukaryotes) recognizes all three stop codons (UAA, UAG, UGA). RF1 (bacteria) recognizes UAA and UAG; RF2 recognizes UAA and UGA. Upon binding: release factor's GGQ motif triggers hydrolysis of the peptide-tRNA ester bond → polypeptide released into cytoplasm. RF3/eRF3 + GTP promotes dissociation of the release factor. Then recycling factors dissociate the ribosomal subunits for the next round of translation.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">In which direction does the ribosome move along the mRNA, and in which direction does the polypeptide grow?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3'→5' along mRNA; C-terminus to N-terminus</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5'→3' along mRNA; N-terminus to C-terminus — first codon (AUG) = N-terminal Met; each new amino acid added to C-terminal end</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5'→3' along mRNA; C-terminus to N-terminus</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3'→5' along mRNA; N-terminus to C-terminus</li></ul>
+        <div class="qexp">Ribosome: 5'→3' along mRNA (same direction RNA pol moved during transcription). Polypeptide: N→C (N-terminus first, C-terminus last). The AUG start codon encodes the N-terminal Met. Each elongation cycle adds one amino acid to the C-terminal end. This N→C directionality is fixed by chemistry: new amino acids can only be added to the free carboxyl (C-terminal) end via the peptidyl transferase reaction.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">15</span><span class="qt-inner">A codon change from CGU (Arg) to CGC (Arg) — what type of mutation is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense mutation — a different amino acid is inserted</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutation — CGC is a stop codon</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Frameshift mutation — the reading frame shifts at this codon</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Silent (synonymous) mutation — both CGU and CGC encode Arginine; the protein sequence is unchanged</li></ul>
+        <div class="qexp">CGU and CGC are synonymous codons — both encode Arginine. This is a silent (synonymous) mutation: the nucleotide changed (U→C at the third position) but the amino acid is the same → protein identical. This is possible due to genetic code degeneracy. Arginine has 6 codons: CGU, CGC, CGA, CGG, AGA, AGG — silent mutations between any of these produce no protein change. Third-position (wobble) substitutions are most commonly silent because the code is most degenerate there.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">16</span><span class="qt-inner">📊 Based on the mutation severity graph, which mutation type causes the most severe protein disruption and why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense mutations — changing one amino acid always destroys protein function</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Silent mutations — they are the most common and collectively cause the most disruption</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Frameshift mutations (insertions/deletions of 1-2 nt) — they shift the reading frame, changing every amino acid from the mutation site onward AND often creating premature stop codons; the protein is completely scrambled downstream</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Nonsense mutations — stopping protein synthesis is always more disruptive than changing amino acids</div></ul>
+        <div class="qexp">Frameshifts are most disruptive: shifting the reading frame changes ALL downstream codons — the protein has a completely alien amino acid sequence from the mutation site to the premature stop codon (which almost always appears). Compare: missense = 1 amino acid changed (may or may not be functional); nonsense = protein truncated at specific point (may retain some function if late in sequence); frameshift = total scrambling of everything downstream. +1 or -1 nucleotide insertions/deletions are catastrophic for protein function.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">17</span><span class="qt-inner">The sickle cell mutation (GAG→GTG) causes Glu→Val at position 6 of β-globin. Why does this cause RBCs to sickle?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Val at position 6 creates a new active site that cleaves hemoglobin fibers</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Val (hydrophobic) at position 6 fits into a hydrophobic pocket on adjacent deoxy-HbS molecules, causing hemoglobin to polymerize into stiff fibers that deform RBCs into rigid sickle shapes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Glu is required for hemoglobin to bind oxygen — losing it prevents oxygenation</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Val disrupts the iron-binding porphyrin ring of hemoglobin</li></ul>
+        <div class="qexp">Missense Glu→Val: Glu is charged/hydrophilic and normally faces outward into the aqueous environment. Val is uncharged/hydrophobic. Under low-O₂: deoxyHbS undergoes conformational change exposing a hydrophobic pocket on the α-chain → the hydrophobic Val-6 on an adjacent HbS molecule inserts into this pocket → HbS molecules "stick together" end-to-end → long rigid fiber polymers → RBC deformed into inflexible sickle shape → gets stuck in small blood vessels → vaso-occlusive pain crises, anemia, organ damage. One-letter molecular change → life-threatening systemic disease.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">18</span><span class="qt-inner">Why do antibiotics like tetracycline selectively kill bacteria without harming human cells?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Tetracycline specifically inhibits the bacterial 30S ribosomal subunit (16S rRNA) — human ribosomes have a structurally different 40S small subunit (18S rRNA) that tetracycline binds with much lower affinity</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Human cells pump tetracycline out before it can reach the ribosomes</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Human cells use a different genetic code that makes ribosomes immune to tetracycline</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Human ribosomes have a protein cap that blocks antibiotic binding sites</li></ul>
+        <div class="qexp">Selective toxicity exploits structural differences between prokaryotic (70S = 30S+50S) and eukaryotic (80S = 40S+60S) ribosomes. Tetracycline binds the 30S A-site region (16S rRNA) → blocks aminoacyl-tRNA entry → halts elongation in bacteria. The eukaryotic 40S subunit (18S rRNA) is structurally different → tetracycline binds much more weakly → human ribosomes are largely unaffected. This is the pharmacological basis for antibiotic safety. Mitochondria (with 70S-like ribosomes) can be affected at high antibiotic doses — explaining some rare mitochondrial side effects.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Alternative splicing of a single gene can produce different proteins in different tissues. How is this possible?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Different tissues have different mutations in the gene that change the splicing pattern</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The gene is transcribed differently in different tissues, producing distinct pre-mRNAs</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Tissue-specific splicing regulatory proteins (SR proteins, hnRNPs) bind to splicing enhancers or silencers in the pre-mRNA, directing the spliceosome to include or exclude specific exons — producing different mature mRNA isoforms from the same pre-mRNA sequence</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Different ribosomes in each tissue translate the mRNA in different reading frames</li></ul>
+        <div class="qexp">Alternative splicing: the same pre-mRNA can be spliced differently in different tissues by tissue-specific splicing factors (SR proteins, hnRNPs) that bind exonic/intronic splicing enhancers (ESEs/ISEs) or silencers (ESSs/ISSs) → spliceosome includes or skips different exons → multiple distinct protein isoforms. ~95% of human multi-exon genes undergo alternative splicing. This allows ~20,000 human genes to produce 90,000+ protein isoforms. Different isoforms may have different functions, cellular locations, stability, or activity — dramatically expanding proteome complexity without more genes.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which statement BEST summarizes how a single gene produces a functional protein?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA is directly translated into protein by ribosomes reading the gene sequence</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The protein is first made, then retrocopied into DNA for storage</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA is replicated to make more copies, which are directly converted to protein</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>RNA Pol II transcribes the gene into pre-mRNA (nucleus) → 5' cap + poly-A tail added + introns spliced out → mature mRNA exported → ribosome scans from 5' cap → initiates at AUG → elongation adds amino acids codon by codon (A→P→E) → stop codon triggers release → polypeptide folds into functional protein</li></ul>
+        <div class="qexp">Complete gene expression pathway: (1) Transcription: RNA Pol II + transcription factors bind promoter (TATA box) → RNA synthesized 5'→3' from template strand; (2) Processing: 5' cap added co-transcriptionally; poly-A tail added at cleavage/polyadenylation site; spliceosome removes introns; (3) Nuclear export; (4) Translation: 43S complex loads at 5' cap → scans → AUG recognized → 80S assembled → elongation: decode/bond/translocate repeats; (5) Stop codon → release factor → polypeptide released; (6) Folding (often assisted by chaperones) → functional protein. This entire pathway from gene activation to functional protein can take ~30-60 minutes in eukaryotes.</div></div>
+    </div>
+    <div class="qscore" id="sc9"><div class="score-n" id="scn9">-</div><div class="score-l">out of 20 correct</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">← Lesson 8</button><button class="mc-btn" onclick="markDone(9,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Unit</button></div>
+</div>
+</main>
+<script>
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec";
+let studentName="",currentPanel=0,scores={},done=new Set();
+function startModule(){
+  const n=document.getElementById("student-name").value.trim();
+  const parts=n.split(/\s+/);
+  if(parts.length<2||parts.some(p=>p.length<1)){document.getElementById("name-err").style.display="block";return;}
+  studentName=n;
+  document.getElementById("name-modal").style.display="none";
+  document.getElementById("student-badge").textContent=n+" · Gene Expression";
+  initCharts();
+}
+function goTo(n){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sb-link").forEach(l=>l.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  document.querySelectorAll(".sb-link")[n].classList.add("active");
+  currentPanel=n;window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("prog-bar").style.width=Math.round((n/9)*100)+"%";
+}
+function cpCheck(n){
+  const len=document.getElementById("cpt"+n).value.trim().length;
+  document.getElementById("cpn"+n).textContent=len;
+  const btn=document.getElementById("cpb"+n);
+  const ctr=document.getElementById("cpc"+n);
+  if(len>=80){ctr.className="cp-counter met";btn.className="cp-btn ready";}
+  else{ctr.className="cp-counter";btn.className="cp-btn";}
+}
+function cpUnlock(n){
+  if(document.getElementById("cpt"+n).value.trim().length<80)return;
+  document.getElementById("cpb"+n).style.display="none";
+  document.getElementById("cpd"+n).style.display="block";
+  const qw=document.getElementById("quiz-wrap"+n);
+  qw.style.display="block";
+  qw.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function pick(opt){
+  const qq=opt.closest(".qq");
+  if(qq.querySelector(".qo.revealed"))return;
+  const correct=qq.dataset.ans;
+  qq.querySelectorAll(".qo").forEach(o=>{
+    o.classList.add("revealed");
+    if(o.dataset.v===correct)o.classList.add("correct");
+    else if(o===opt&&opt.dataset.v!==correct)o.classList.add("incorrect");
+  });
+  const exp=qq.querySelector(".qexp");
+  if(exp)exp.classList.add("show");
+  const box=opt.closest(".quiz-box");
+  const pNum=parseInt(opt.closest(".panel").id.replace("p",""));
+  const qs=box.querySelectorAll(".qq");
+  if([...qs].filter(q=>q.querySelector(".qo.revealed")).length===qs.length)tallyQuiz(box,pNum);
+}
+function tallyQuiz(box,pNum){
+  const qs=box.querySelectorAll(".qq");
+  let correct=0;
+  qs.forEach(q=>{const c=q.querySelector(".qo.correct");if(c&&c.dataset.v===q.dataset.ans)correct++;});
+  const total=qs.length;
+  box.querySelector(".score-n").textContent=correct+"/"+total;
+  box.querySelector(".qscore").style.display="block";
+  sendProgress("L"+pNum,correct,total);
+}
+function markDone(n,btn){
+  btn.classList.add("done");btn.textContent="✓ Complete";
+  done.add(n);document.querySelectorAll(".sb-link")[n].classList.add("done");
+}
+function sendProgress(label,correct,total){
+  if(!studentName)return;
+  const payload={student:studentName,module:"Gene Expression",lesson:label,score:correct+"/"+total,timestamp:new Date().toISOString()};
+  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>showToast("Score sent: "+label+" "+correct+"/"+total+" ✓"))
+    .catch(()=>showToast("Score recorded locally"));
+}
+function showToast(msg){
+  const t=document.getElementById("submit-toast");
+  document.getElementById("toast-msg").textContent=msg;
+  t.style.display="flex";setTimeout(()=>{t.style.display="none";},3500);
+}
+function initCharts(){
+  const G="#1a7a4a",N="#0f2240",T="#0b8f8c",A="#e8920e",R="#c0392b",P="#6c3fa0";
+
+  /* L1 — Compartmentalization */
+  new Chart(document.getElementById("chartL1"),{type:"bar",data:{
+    labels:["Transcription\nlocation","RNA Processing","Translation\nlocation","Transcription+\nTranslation coupled?"],
+    datasets:[
+      {label:"Eukaryotes",data:[2,2,1,0],backgroundColor:G},
+      {label:"Prokaryotes",data:[1,0,1,2],backgroundColor:N}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"},tooltip:{callbacks:{label:ctx=>{const labels={2:"Nucleus",1:"Cytoplasm",0:"No"};return ctx.dataset.label+": "+(labels[ctx.raw]||ctx.raw);}}}},scales:{x:{ticks:{font:{size:9}}},y:{display:false,max:3}}}});
+
+  /* L2 — RNA types doughnut */
+  new Chart(document.getElementById("chartL2"),{type:"doughnut",data:{
+    labels:["rRNA (~80%)","tRNA (~15%)","mRNA (~5%)"],
+    datasets:[{data:[80,15,5],backgroundColor:[N,G,A],borderWidth:2,borderColor:"#fff"}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right"}}}});
+
+  /* L3 — Transcription rates */
+  new Chart(document.getElementById("chartL3"),{type:"bar",data:{
+    labels:["E. coli RNA\nPolymerase","Human RNA\nPolymerase II","Yeast RNA\nPolymerase II"],
+    datasets:[{label:"Nucleotides per second",data:[80,30,25],backgroundColor:[N,G,T]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"nt/sec"},max:100}}}});
+
+  /* L4 — Alternative splicing */
+  new Chart(document.getElementById("chartL4"),{type:"bar",data:{
+    labels:["Brain\nisoform","Muscle\nisoform","Liver\nisoform","Ubiquitous\nisoform"],
+    datasets:[
+      {label:"Exon 1",data:[1,1,1,1],backgroundColor:N},
+      {label:"Exon 2 (brain-specific)",data:[1,0,0,0],backgroundColor:R},
+      {label:"Exon 3",data:[1,1,1,1],backgroundColor:G},
+      {label:"Exon 4 (muscle-specific)",data:[0,1,0,0],backgroundColor:A},
+      {label:"Exon 5",data:[1,1,0,1],backgroundColor:T},
+      {label:"Exon 6",data:[1,1,1,1],backgroundColor:P}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:9}}}},scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,title:{display:true,text:"Exons included"},max:7}}}});
+
+  /* L5 — Codon degeneracy */
+  new Chart(document.getElementById("chartL5"),{type:"bar",data:{
+    labels:["Leu","Ser","Arg","Ala","Gly","Pro","Thr","Val","Ile","Phe","Tyr","His","Gln","Asn","Lys","Asp","Glu","Cys","Met","Trp","STOP"],
+    datasets:[{label:"# of codons",data:[6,6,6,4,4,4,4,4,3,2,2,2,2,2,2,2,2,2,1,1,3],backgroundColor:[N,N,N,G,G,G,G,G,T,A,A,A,A,A,A,A,A,A,R,R,P]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8}}},y:{title:{display:true,text:"Number of codons"},max:7}}}});
+
+  /* L6 — Antibiotic ribosome targeting */
+  new Chart(document.getElementById("chartL6"),{type:"bar",data:{
+    labels:["Tetracycline\n(30S A-site)","Streptomycin\n(30S decoding)","Erythromycin\n(50S exit tunnel)","Chloramphenicol\n(50S PTC)","Linezolid\n(50S A-site)"],
+    datasets:[{label:"Ribosome subunit targeted",data:[30,30,50,50,50],backgroundColor:[G,T,N,A,R]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+"S subunit targeted"}}},scales:{x:{ticks:{font:{size:8}}},y:{title:{display:true,text:"Subunit (S value)"},min:0,max:60,ticks:{stepSize:10}}}}});
+
+  /* L7 — Polysome profile */
+  new Chart(document.getElementById("chartL7"),{type:"bar",data:{
+    labels:["Monosome\n(1 ribosome)","Disome\n(2)","Trisome\n(3)","Tetrasome\n(4)","Pentasome\n(5)","Hexasome+\n(≥6)"],
+    datasets:[
+      {label:"Lowly expressed mRNA",data:[40,25,15,10,6,4],backgroundColor:T},
+      {label:"Highly expressed mRNA",data:[5,8,12,18,22,35],backgroundColor:G}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"% of mRNA molecules"},max:50}}}});
+
+  /* L8 — Mutation severity */
+  new Chart(document.getElementById("chartL8"),{type:"bar",data:{
+    labels:["Silent\n(synonymous)","Missense\n(conservative)","Missense\n(non-conservative)","Nonsense\n(premature stop)","Frameshift\n(+1 or -1 nt)"],
+    datasets:[{label:"Relative protein disruption",data:[0,2,6,8,10],backgroundColor:[G,T,A,R,P]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"Relative disruption (0-10)"},max:12}}}});
+
+  /* PT1 — RNA roles summary */
+  new Chart(document.getElementById("chartPT1"),{type:"bar",data:{
+    labels:["mRNA","tRNA","rRNA"],
+    datasets:[
+      {label:"Carries genetic code",data:[1,0,0],backgroundColor:N},
+      {label:"Carries amino acid",data:[0,1,0],backgroundColor:G},
+      {label:"Forms ribosome structure",data:[0,0,1],backgroundColor:T}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{stacked:true},y:{stacked:true,max:2,title:{display:true,text:"Function present (1=yes)"}}}}});
+
+  /* PT2 — Mutation disruption (same as L8) */
+  new Chart(document.getElementById("chartPT2"),{type:"bar",data:{
+    labels:["Silent","Missense\n(conservative)","Missense\n(drastic)","Nonsense","Frameshift"],
+    datasets:[{label:"Relative disruption",data:[0,2,6,8,10],backgroundColor:[G,T,A,R,P]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"Relative disruption (0-10)"},max:12}}}});
+}
+</script>
+</body>
+</html>

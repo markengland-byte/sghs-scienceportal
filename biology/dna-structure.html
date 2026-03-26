@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology · DNA Structure & Replication | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--green);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(26,122,74,.2);border-right-color:var(--green);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--green);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-disc{background:linear-gradient(135deg,#1a1500,#4a4000);}
+.hero-str{background:linear-gradient(135deg,#001a3a,#004090);}
+.hero-rep{background:linear-gradient(135deg,#001a15,#004040);}
+.hero-mut{background:linear-gradient(135deg,#2a0015,#700040);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--green);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4ade80;margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:#4ade80;font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:#4ade80;line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--green-pale);border:1px solid var(--green);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.dna-strand{font-family:"JetBrains Mono",monospace;font-size:.9rem;background:var(--navy);color:#4ade80;padding:18px 22px;border-radius:10px;margin:16px 0;line-height:2;}
+.dna-comp{color:#60a5fa;}
+.dna-label{font-size:.72rem;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:1px;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:#4ade80;}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.checkpoint-box{background:#fff;border:2px solid var(--green);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--green);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--green);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--green);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#0f5a32;}
+.cp-done{display:none;padding:10px 18px;background:var(--green-pale);border:1px solid var(--green);border-radius:8px;font-size:.85rem;color:var(--green);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--green-pale);border:2px solid var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--green);background:var(--green-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--green-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:#4ade80;}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--green);background:transparent;color:var(--green);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--green);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">🧬</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">DNA Structure &amp; Replication</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#1a7a4a'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:#1a7a4a;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../biology/index.html">← Biology</a>
+  <div class="tb-logo">🧬</div>
+  <div><div class="tb-name">Southern Gap High School · Biology</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">DNA Structure &amp; Replication</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview &amp; Standards</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">DNA Structure</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Discovery of DNA</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · DNA Structure &amp; the Double Helix</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">DNA Replication</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Replication Overview &amp; Enzymes</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Leading &amp; Lagging Strand</div></a>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Telomeres &amp; Fidelity</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Mutations</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Lesson 6 · Mutations: Types &amp; Consequences</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · Chapter 14 · <span>Unit Overview</span></div>
+    <div class="h-title">DNA Structure &amp; Replication</div>
+    <div class="h-desc">DNA is the molecule of life — a double helix encoding every instruction for building and running every organism on Earth. Understanding its structure and how it copies itself is the foundation of all modern biology and medicine.</div>
+    <div class="h-meta"><div class="h-chip">📚 8 Lessons</div><div class="h-chip">🌿 OpenStax Biology 2e Ch. 14</div><div class="h-chip">📊 Data Interpretation</div><div class="h-chip">✍️ Checkpoints Required</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Unit Learning Objectives</div><ul class="obj-list">
+      <li>Describe the key experiments that identified DNA as the genetic material (Griffith, Avery, Hershey-Chase).</li>
+      <li>Identify the components of a nucleotide: sugar, phosphate, and nitrogenous base.</li>
+      <li>Distinguish purines from pyrimidines and state Chargaff's base-pairing rules.</li>
+      <li>Describe the structure of the DNA double helix: antiparallel strands, base pairs, sugar-phosphate backbone.</li>
+      <li>Explain semiconservative replication and describe the Meselson-Stahl experiment.</li>
+      <li>Name and describe the function of the major enzymes of DNA replication: helicase, primase, DNA polymerase, ligase.</li>
+      <li>Explain the leading strand vs. lagging strand and the role of Okazaki fragments.</li>
+      <li>Describe the end-replication problem and how telomerase solves it.</li>
+      <li>Classify mutations by type (substitution, insertion, deletion) and effect (silent, missense, nonsense, frameshift).</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Course Map</div><div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Lesson</th><th>Key Concepts</th></tr>
+        <tr><td>1</td><td>Discovery of DNA as Genetic Material</td><td>Griffith (transformation), Avery-MacLeod-McCarty, Hershey-Chase blender experiment, bacteriophage</td></tr>
+        <tr><td>2</td><td>DNA Structure &amp; the Double Helix</td><td>Nucleotides, purines/pyrimidines, Chargaff's rules, X-ray crystallography (Franklin), Watson-Crick double helix</td></tr>
+        <tr><td>3</td><td>Replication Overview &amp; Enzymes</td><td>Semiconservative replication, Meselson-Stahl, origins of replication, helicase, primase, DNA polymerase, ligase</td></tr>
+        <tr><td>4</td><td>Leading &amp; Lagging Strand Synthesis</td><td>5'→3' directionality, continuous leading strand, Okazaki fragments, lagging strand, replication fork</td></tr>
+        <tr><td>5</td><td>Telomeres &amp; Replication Fidelity</td><td>End-replication problem, telomeres, telomerase, proofreading, mismatch repair, cancer connection</td></tr>
+        <tr><td>6</td><td>Mutations: Types &amp; Consequences</td><td>Point mutations (substitution, transition, transversion), insertions, deletions, silent/missense/nonsense/frameshift</td></tr>
+        <tr><td>7</td><td>Unit Review &amp; Practice Test</td><td>20-question Virginia SOL-style assessment</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Biology 2e — Chapter 14: DNA Structure and Function</div><div class="cx">All content adapted from OpenStax Biology 2e, Chapter 14. CC BY 4.0 — free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs"><div class="eyebrow">Quick Facts</div><div class="sh2">DNA by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">3.2B</div><div class="fact-l">Base pairs in the human genome</div></div>
+        <div class="fact"><div class="fact-n">2 nm</div><div class="fact-l">Width of the DNA double helix</div></div>
+        <div class="fact"><div class="fact-n">0.34 nm</div><div class="fact-l">Distance between adjacent base pairs</div></div>
+        <div class="fact"><div class="fact-n">~1,000</div><div class="fact-l">Bases added per second by DNA pol III (E. coli)</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div>Overview · 0 of 7</div><button class="nbtn next" onclick="goTo(1)">Lesson 1 →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-disc"><div class="h-crumb">DNA Structure · <span>Lesson 1</span></div><div class="h-title">Discovery of DNA as Genetic Material</div><div class="h-desc">For decades scientists debated whether proteins or DNA carried hereditary information. Three elegant experiments settled the question — and the answer changed biology forever.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe Griffith's transformation experiment and what it demonstrated.</li>
+      <li>Explain how Avery, MacLeod, and McCarty identified DNA as the transforming principle.</li>
+      <li>Describe the Hershey-Chase blender experiment and why it was conclusive.</li>
+      <li>Define bacteriophage and explain why phage were useful in these experiments.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Transformation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The uptake and incorporation of foreign DNA by a cell, changing its genetic characteristics. Griffith showed that dead smooth bacteria could "transform" live rough bacteria into smooth (virulent) bacteria.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Transforming Principle</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The mystery molecule in Griffith's experiment that converted rough (non-virulent) bacteria into smooth (virulent). Avery et al. (1944) identified it as DNA — not protein as many had assumed.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Bacteriophage</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A virus that infects bacteria ("phage" = eater). Hershey and Chase used T2 phage — which has a protein coat and DNA core — to determine which component (protein or DNA) enters bacterial cells during infection.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Radioactive Labeling</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Hershey-Chase used ³⁵S (sulfur) to label proteins and ³²P (phosphorus) to label DNA. Since DNA contains phosphorus but not sulfur, and proteins contain sulfur but not phosphorus, they could trace which molecule entered bacterial cells.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.1</div><div class="sh2">Three Experiments That Proved DNA Is the Genetic Material</div>
+      <table class="dt">
+        <tr><th>Experiment</th><th>Year</th><th>Method</th><th>Key Finding</th></tr>
+        <tr><td><strong>Griffith's Transformation</strong></td><td>1928</td><td>Mixed heat-killed smooth (S) Streptococcus with live rough (R) bacteria; injected into mice</td><td>Some factor from dead S bacteria could transform live R bacteria into virulent S bacteria — a "transforming principle" was identified, but its identity was unknown</td></tr>
+        <tr><td><strong>Avery, MacLeod &amp; McCarty</strong></td><td>1944</td><td>Systematically destroyed proteins, RNA, or DNA from S bacteria extract; tested which treatment abolished transformation</td><td>Only DNase (enzyme that destroys DNA) abolished transformation — proving DNA is the transforming principle, not protein</td></tr>
+        <tr><td><strong>Hershey &amp; Chase</strong></td><td>1952</td><td>Labeled T2 bacteriophage with ³⁵S (protein) or ³²P (DNA); allowed phage to infect bacteria; blended and centrifuged; measured radioactivity in bacteria vs. supernatant</td><td>³²P (DNA) was found INSIDE bacteria; ³⁵S (protein) remained OUTSIDE in the supernatant — definitively proving DNA (not protein) is the genetic material injected to direct viral replication</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Why the Hershey-Chase Experiment Was Conclusive</div><div class="cx">The blender step is genius: blending shears off the phage protein coats from the bacterial surface without lysing the bacteria. Centrifugation pellets the bacteria (heavy) and leaves the empty phage coats in the supernatant (light). Measuring ³²P in the bacterial pellet (DNA went IN) and ³⁵S in the supernatant (protein coat stayed OUT) proved that DNA — not protein — is the molecule that carries genetic instructions into the cell.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Hershey-Chase Results</div>
+      <div class="graph-box"><div class="graph-title">Hershey-Chase Experiment: Radioactivity Distribution After Blending &amp; Centrifugation</div><div class="graph-cap">³²P (DNA) found inside bacteria; ³⁵S (protein) remained in supernatant — DNA is the genetic material</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the Hershey-Chase experiment. What two radioactive isotopes were used and why? What did the results in the bacterial pellet vs. the supernatant prove?</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — Discovery of DNA</h3><p>5 questions · includes Hershey-Chase data</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In Griffith's 1928 experiment, he injected mice with a mixture of heat-killed smooth (S) bacteria and live rough (R) bacteria. The mice died and live smooth bacteria were recovered. What did this demonstrate?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Heat-killed bacteria can spontaneously regenerate when warmed</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Rough bacteria mutated spontaneously into smooth bacteria</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Some molecule from the dead S bacteria could "transform" live R bacteria into virulent S bacteria — a transforming principle existed, though its identity was unknown</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Proteins from dead smooth bacteria restored virulence to rough bacteria</li></ul>
+        <div class="qexp">Griffith's transformation experiment showed that something from the dead smooth (virulent) bacteria could chemically convert live rough (non-virulent) bacteria into smooth bacteria — a process he called transformation. The "transforming principle" was some biological molecule (unknown in 1928) that carried genetic information from the S strain and incorporated it into the R strain. Griffith suspected protein; Avery et al. later proved it was DNA.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Avery, MacLeod, and McCarty (1944) treated S bacteria extract with different enzymes and tested whether transformation still occurred. What was the critical result?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Protease (destroys protein) abolished transformation — protein is the genetic material</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNase (destroys DNA) was the only enzyme that abolished transformation — definitively identifying DNA as the transforming principle</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>RNase (destroys RNA) abolished transformation — RNA carries genetic information</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All enzymes abolished transformation equally — multiple molecules carry genetic information</li></ul>
+        <div class="qexp">Avery et al. used a process of elimination: destroy each major molecular class and see which destroys the transforming ability. Protease → still transforms. RNase → still transforms. DNase → transformation abolished. Conclusion: DNA is the transforming principle. This was the first direct biochemical evidence that DNA is the genetic material. Despite its elegance, many scientists (including Avery's own director) were skeptical because the prevailing view was that proteins (with their 20 amino acid variety) were more suitable for encoding information than DNA (with only 4 bases).</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">In the Hershey-Chase experiment, why did they use ³⁵S to label proteins and ³²P to label DNA?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>³⁵S and ³²P were the cheapest radioactive isotopes available in 1952</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both isotopes emit the same type of radiation, making comparison easier</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>³⁵S labels carbohydrates; ³²P labels lipids in the phage</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Sulfur (S) is found in amino acids (protein) but NOT in DNA; phosphorus (P) is found in the phosphate backbone of DNA but NOT in proteins — so each isotope uniquely labels only one molecule type</li></ul>
+        <div class="qexp">The key is biochemical specificity: Sulfur is present in the amino acids methionine and cysteine (therefore in proteins) but absent from DNA. Phosphorus is present in the phosphate groups of the DNA backbone but absent from proteins. So: ³⁵S uniquely labels protein; ³²P uniquely labels DNA. This allows them to track each molecule separately. The experiment's brilliance is in the choice of tracers — they exploit the known biochemical differences between proteins and DNA to distinguish them unambiguously.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the Hershey-Chase data graph, what does finding ³²P (DNA tracer) primarily in the bacterial PELLET prove?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA entered the bacterial cells — the phage injected its DNA into the bacteria to direct new phage production; DNA is the genetic material that carries replication instructions</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA remained outside the bacteria attached to the phage coat</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Bacteria selectively absorbed phosphorus from the culture medium</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA was too large to enter bacteria and was trapped in the pellet by its mass</li></ul>
+        <div class="qexp">³²P (DNA label) in the bacterial pellet means phage DNA entered the bacteria — it was injected through the bacterial membrane. The bacteria then used this injected DNA as a template to produce hundreds of new phage. ³⁵S (protein label) stayed in the supernatant (with the empty phage coats that were sheared off by blending). Together: DNA went in and directed replication; protein stayed out. This proved that DNA — not the protein coat — carries the genetic information needed to produce new viruses.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why did scientists initially suspect PROTEIN rather than DNA to be the genetic material?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Proteins are found only in the nucleus where chromosomes are located</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA was not discovered until after Griffith's experiment</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Proteins are made of 20 different amino acids (providing enormous information complexity), while DNA appeared to have only 4 repeating bases — proteins seemed more capable of encoding the diversity of life's traits</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Early experiments consistently showed protein entering bacterial cells during phage infection</li></ul>
+        <div class="qexp">The "protein hypothesis" was based on chemical logic: proteins have 20 different amino acid building blocks that can be arranged in virtually limitless combinations — providing more than enough informational capacity to encode hereditary traits. DNA appeared to consist of only 4 bases (A, T, G, C) in a seemingly monotonous repeating pattern (the "tetranucleotide hypothesis"). It seemed implausible that such a simple molecule could encode the complexity of life. Watson and Crick's double helix (1953) revealed that 4 bases are more than sufficient for unlimited information storage through sequence variation.</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Lesson 2 →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-str"><div class="h-crumb">DNA Structure · <span>Lesson 2</span></div><div class="h-title">DNA Structure &amp; the Double Helix</div><div class="h-desc">Watson and Crick's 1953 model was one of the greatest scientific achievements of the 20th century — but it was built on the work of at least four other scientists. Understanding DNA's structure explains everything about how it functions.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe the three components of a nucleotide: pentose sugar (deoxyribose), phosphate group, and nitrogenous base.</li>
+      <li>Distinguish purines (adenine, guanine — double ring) from pyrimidines (thymine, cytosine — single ring).</li>
+      <li>State Chargaff's rules: A=T and G=C in any DNA molecule.</li>
+      <li>Describe the DNA double helix: antiparallel strands, base pairs (hydrogen bonds), sugar-phosphate backbone, 3.4 nm per turn.</li>
+      <li>Explain Franklin's X-ray crystallography contribution to the discovery of the double helix structure.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Nucleotide</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The monomer of DNA. Consists of three parts: (1) deoxyribose (5-carbon sugar), (2) one phosphate group, (3) one nitrogenous base (A, T, G, or C). Nucleotides link via phosphodiester bonds to form the DNA strand backbone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Purines vs. Pyrimidines</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Purines: Adenine (A) and Guanine (G) — double-ring structures. Pyrimidines: Thymine (T) and Cytosine (C) — single-ring structures. Purines always pair with pyrimidines (A-T, G-C) — keeping the helix width constant at 2 nm. Memory: "Pure As Gold" (Purines = Adenine, Guanine).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Chargaff's Rules</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">In any DNA molecule: %A = %T and %G = %C. Also: A+G = T+C (purines = pyrimidines). Discovered by Erwin Chargaff in 1950. These ratios are consistent regardless of species — the key clue that A pairs with T and G pairs with C in the double helix.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Antiparallel</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The two DNA strands run in opposite directions: one 5'→3' and the other 3'→5'. The 5' end has a free phosphate group; the 3' end has a free hydroxyl (-OH) group. Antiparallel orientation is required for proper base pairing and is essential for replication directionality.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hydrogen Bonds</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The weak bonds holding complementary base pairs together. A-T: 2 hydrogen bonds. G-C: 3 hydrogen bonds. Individually weak, but collectively (billions of base pairs) they stabilize the helix. Their weakness allows the strands to be separated during replication and transcription.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sugar-Phosphate Backbone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The structural "rails" of the DNA ladder formed by alternating deoxyribose sugars and phosphate groups linked by strong covalent phosphodiester bonds. The bases project inward like "rungs." The backbone is hydrophilic (faces water); the bases are hydrophobic (face inward — stabilized by base stacking).</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.2</div><div class="sh2">The DNA Double Helix: Key Structural Features</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>Detail</th><th>Why It Matters</th></tr>
+        <tr><td><strong>Width</strong></td><td>2 nm (constant)</td><td>Purine always pairs with pyrimidine — double ring + single ring = constant width. If two purines paired, helix would bulge; two pyrimidines would shrink it.</td></tr>
+        <tr><td><strong>Helix pitch</strong></td><td>3.4 nm per full turn (10 base pairs per turn, 0.34 nm per bp)</td><td>From Franklin's X-ray data — confirmed by Watson &amp; Crick's model</td></tr>
+        <tr><td><strong>Base pairing</strong></td><td>A-T (2 H-bonds); G-C (3 H-bonds)</td><td>GC-rich regions are more thermally stable (harder to melt) than AT-rich regions — relevant for PCR annealing temperatures</td></tr>
+        <tr><td><strong>Strand orientation</strong></td><td>Antiparallel (5'→3' and 3'→5')</td><td>Required for DNA polymerase to function (only synthesizes 5'→3')</td></tr>
+        <tr><td><strong>Grooves</strong></td><td>Major groove (wide) and minor groove (narrow)</td><td>Transcription factors and DNA-binding proteins recognize base sequences through the major groove without unwinding the helix</td></tr>
+      </table>
+      <div class="sh3">Complementary Base Pairing: Reading the Code</div>
+      <div class="dna-strand">
+        <div class="dna-label">5' → 3' (Template strand)</div>
+        5' — A — T — G — C — G — T — A — C — 3'<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|<br>
+        3' — <span class="dna-comp">T — A — C — G — C — A — T — G</span> — 5'
+        <div class="dna-label" style="margin-top:8px;">3' → 5' (Complementary strand)</div>
+      </div>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Mnemonics for Base Pairing</div><div class="cx"><strong>"A-T: After Thinking" (A pairs with T)</strong>. <strong>"G-C: Got Confused" (G pairs with C)</strong>. Or simply: the two letters that look similar DON'T pair — A doesn't pair with G; T doesn't pair with C. The two with more hydrogen bonds are G≡C (three bonds, both have extra H-bond donors/acceptors). A=T has two bonds. G-C pairs are stronger and more thermally stable.</div></div></div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Rosalind Franklin's Critical Contribution</div><div class="cx">Rosalind Franklin's X-ray crystallography (Photo 51, 1952) provided the key data that revealed: (1) DNA is a helix, (2) it has 2 strands, (3) the sugar-phosphate backbone is on the OUTSIDE, (4) the helix dimensions (3.4 nm pitch, 2 nm width). Watson and Crick used Franklin's data (shared without her knowledge by Wilkins) to build their correct model. Franklin died in 1958 before the Nobel Prize was awarded to Watson, Crick, and Wilkins in 1962 — Nobel Prizes are not awarded posthumously.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Chargaff's Base Composition Data</div>
+      <div class="graph-box"><div class="graph-title">Chargaff's Data: Base Composition (%) in DNA from Different Species</div><div class="graph-cap">In every organism: %A ≈ %T and %G ≈ %C — but A+T:G+C ratio varies between species</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">State Chargaff's rules and explain why A pairs with T and G pairs with C. What are the structural features of the double helix that make base pairing specific?</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — DNA Structure</h3><p>5 questions · includes base composition data</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A DNA sample has 28% adenine. What percentage of the bases are guanine?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>28% — G equals A by Chargaff's rules</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>22% — A=T (28%+28%=56% of bases), leaving 44% for G+C; G=C so G = 22%</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>44% — G+C equals the remaining percentage</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>72% — G is the complement of A</li></ul>
+        <div class="qexp">Chargaff's rules: A=T and G=C. If A = 28%, then T = 28%. A+T = 56%. Remaining: G+C = 100% − 56% = 44%. Since G=C: G = 44%/2 = <strong>22%</strong>. Also: C = 22%. Check: 28+28+22+22 = 100%. This calculation is one of the most tested in molecular biology — know it cold: given A%, find T (=A%), then G = C = (100% − 2A%) / 2.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Adenine is a purine and thymine is a pyrimidine. Why must a purine always pair with a pyrimidine?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Purines and pyrimidines have complementary charges that attract each other</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Purines are water-soluble; pyrimidines are not — they balance each other chemically</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Purines are only found on the template strand; pyrimidines only on the coding strand</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A purine (double-ring) paired with a pyrimidine (single-ring) gives a constant 2 nm width — if two purines paired, the helix would bulge wider; two pyrimidines would make it too narrow</li></ul>
+        <div class="qexp">The DNA helix maintains a constant 2 nm width because purines (2-ring, large) always pair with pyrimidines (1-ring, small): large + small = constant width. Purine + purine = too wide; pyrimidine + pyrimidine = too narrow. This structural constraint, plus the specific hydrogen bonding geometry (A-T: 2 H-bonds; G-C: 3 H-bonds), means only A-T and G-C pairings are sterically and energetically favored. Mismatched pairs (A-G, T-C) are detected and repaired by DNA mismatch repair machinery.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The two strands of DNA are described as "antiparallel." What does this mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The two strands run in opposite directions — one 5'→3' and the other 3'→5'; the 5' end (free phosphate) of one strand is adjacent to the 3' end (free -OH) of the other</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The two strands have opposite base compositions — one strand is all purines, the other all pyrimidines</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The two strands wind in opposite directions around the helix axis</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The two strands are parallel but face opposite directions in 3D space</li></ul>
+        <div class="qexp">Antiparallel means the two strands run in opposite 5'→3' directions. If one strand runs 5'→3' left-to-right, the complementary strand runs 5'→3' right-to-left (or 3'→5' left-to-right). This is critical for: (1) Proper base pairing geometry; (2) DNA replication — DNA polymerase can only add nucleotides to the 3' end, so the two strands are synthesized differently (leading vs. lagging). The 5' carbon of deoxyribose attaches to the phosphate group; the 3' carbon has the free -OH where new nucleotides are added.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on Chargaff's data, what is true about ALL the organisms shown in the graph?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All organisms have equal amounts of A+T and G+C — the ratio is always 1:1 between these pairs</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All organisms have the same total base composition (same %A, %T, %G, %C)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>In every organism %A ≈ %T and %G ≈ %C — but the A+T:G+C ratio varies between species (it reflects species-specific DNA composition)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Higher organisms have more G+C than lower organisms</li></ul>
+        <div class="qexp">Chargaff's universal rule: %A = %T and %G = %C in any DNA molecule from any organism. But the A+T:G+C ratio varies between species — some organisms have AT-rich DNA; others have GC-rich DNA. Example: Human DNA is ~41% GC; some bacteria have ~70% GC content. The universal A=T, G=C rule was the key clue for Watson and Crick — it implied A pairs specifically with T and G pairs specifically with C in the double helix. Chargaff's rules are the biochemical fingerprint of the double helix structure.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">G-C base pairs are held together by 3 hydrogen bonds; A-T pairs have 2 hydrogen bonds. What is the biological consequence of this difference?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA regions with more A-T pairs are more stable and harder to separate during replication</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA regions with more G-C pairs require more energy (higher temperature) to separate the strands — GC-rich regions have a higher melting temperature than AT-rich regions</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>G-C pairs provide structural support; A-T pairs are where genes are located</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The number of hydrogen bonds has no biological significance</li></ul>
+        <div class="qexp">More hydrogen bonds = more energy required to separate strands. GC-rich DNA has a higher melting temperature (Tm) than AT-rich DNA. This has practical applications: PCR annealing temperature depends on primer GC content (more GC = higher annealing temperature needed). In gene regulation: promoter regions often have AT-rich sequences (TATA box) — they melt more easily at physiological temperature, facilitating RNA polymerase entry. Genome stability: centromeres and telomeres are often AT-rich; coding regions of thermophilic bacteria living at high temperature tend to have higher GC content for thermal stability.</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Lesson 3 →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-rep"><div class="h-crumb">DNA Replication · <span>Lesson 3</span></div><div class="h-title">DNA Replication: Overview &amp; Enzymes</div><div class="h-desc">Every time a cell divides, it must copy 3.2 billion base pairs with near-perfect accuracy. An entire molecular machine — assembled from dozens of proteins — accomplishes this feat in a matter of hours.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Define semiconservative replication and describe the Meselson-Stahl experiment that proved it.</li>
+      <li>Explain what an origin of replication is and why eukaryotes need multiple origins.</li>
+      <li>Name and describe the function of each major replication enzyme: helicase, primase, DNA polymerase III, DNA polymerase I, ligase.</li>
+      <li>Explain why DNA polymerase requires a primer and which enzyme supplies it.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.3</div><div class="sh2">Semiconservative Replication: The Meselson-Stahl Proof</div>
+      <p class="prose">Three models for DNA replication were proposed after Watson-Crick: <strong>conservative</strong> (old helix stays together; new helix is all new), <strong>semiconservative</strong> (each new helix has one old + one new strand), and <strong>dispersive</strong> (old and new DNA mixed throughout both helices). In 1958, Meselson and Stahl used density-gradient centrifugation with ¹⁵N (heavy) and ¹⁴N (light) nitrogen to prove the model is <strong>semiconservative</strong>.</p>
+      <table class="dt">
+        <tr><th>Generation</th><th>Predicted Band Position (Semiconservative)</th><th>Result</th></tr>
+        <tr><td>Start (grown in ¹⁵N)</td><td>One heavy band (¹⁵N/¹⁵N)</td><td>One heavy band ✓</td></tr>
+        <tr><td>1st replication (in ¹⁴N)</td><td>One intermediate band only (¹⁵N/¹⁴N hybrid)</td><td>One intermediate band ✓ — ruled out conservative model (would show heavy + light)</td></tr>
+        <tr><td>2nd replication (in ¹⁴N)</td><td>Equal intermediate + light bands</td><td>Equal intermediate + light bands ✓ — ruled out dispersive model</td></tr>
+      </table>
+      <div class="sh3">The Major Enzymes of DNA Replication</div>
+      <table class="dt">
+        <tr><th>Enzyme</th><th>Function</th><th>Key Detail</th></tr>
+        <tr><td><strong>Helicase</strong></td><td>Unwinds the double helix by breaking hydrogen bonds between base pairs at the replication fork</td><td>Creates positive supercoiling ahead — relieved by <strong>topoisomerase</strong> (DNA gyrase in bacteria)</td></tr>
+        <tr><td><strong>Single-strand binding proteins (SSBPs)</strong></td><td>Stabilize separated single strands; prevent re-annealing</td><td>Keep template strands available for polymerase</td></tr>
+        <tr><td><strong>Primase</strong></td><td>Synthesizes a short RNA primer (8–10 nucleotides) complementary to the template strand</td><td>Required because DNA polymerase CANNOT start a new strand from scratch — it can only extend an existing 3'-OH</td></tr>
+        <tr><td><strong>DNA Polymerase III</strong></td><td>Main replication enzyme — adds deoxyribonucleotides to the 3' end of the growing strand (5'→3' direction only)</td><td>Also has 3'→5' exonuclease proofreading activity — removes mismatched bases</td></tr>
+        <tr><td><strong>DNA Polymerase I</strong></td><td>Removes RNA primers and replaces them with DNA</td><td>Has 5'→3' exonuclease activity (removes primer) AND polymerase activity (fills in with DNA)</td></tr>
+        <tr><td><strong>DNA Ligase</strong></td><td>Seals the nick (phosphodiester bond) between adjacent DNA fragments — joins Okazaki fragments</td><td>Uses NAD⁺ (bacteria) or ATP (eukaryotes) as energy source</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Why DNA Polymerase Needs a Primer</div><div class="cx">DNA polymerase III can only ADD nucleotides to an existing 3'-OH group — it cannot initiate a new strand de novo. Therefore, the enzyme primase first synthesizes a short RNA primer to provide the initial 3'-OH. DNA pol III then extends from the primer's 3' end. Later, DNA pol I removes the RNA primer (5'→3' exonuclease) and fills in the gap with DNA. Ligase seals the final nick. This requirement for a primer is also the basis for PCR — you must provide synthetic DNA primers for each target sequence.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Meselson-Stahl Experiment Results</div>
+      <div class="graph-box"><div class="graph-title">Meselson-Stahl: DNA Band Position After Each Round of Replication</div><div class="graph-cap">Density-gradient centrifugation separates heavy (¹⁵N/¹⁵N), intermediate (¹⁵N/¹⁴N), and light (¹⁴N/¹⁴N) DNA</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain semiconservative replication. Why can't DNA polymerase start a new strand without a primer? What does primase do and why is it necessary?</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Replication Overview &amp; Enzymes</h3><p>5 questions · includes Meselson-Stahl data</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What does "semiconservative replication" mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The original DNA strands are destroyed during replication — only new strands are conserved</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The original double helix is entirely conserved — a completely new helix is synthesized alongside it</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Each new DNA double helix consists of one original (parental) strand and one newly synthesized strand — the original strands serve as templates and are "conserved" in each daughter molecule</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The original DNA is broken into fragments and distributed between daughter molecules</li></ul>
+        <div class="qexp">Semiconservative: each daughter DNA molecule has one <strong>original (parental) strand</strong> and one <strong>new strand</strong>. The parental strands are never destroyed — they serve as templates and become part of the daughter molecules. This is "semi" (half) conserved: each parental strand is conserved, but the original double-stranded helix is not (it's split). Meselson-Stahl proved this model by showing that after one replication, ALL DNA was intermediate density (one ¹⁵N strand + one ¹⁴N strand) — not the mix of heavy and light that conservative replication would produce.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">DNA polymerase III can only synthesize DNA in the 5'→3' direction. Why does this create a problem, and what is its biological significance?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It means DNA can only replicate when the cell is at a specific temperature</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Since the template strands are antiparallel, one template can be read 3'→5' (allowing continuous synthesis), but the other template runs 5'→3' — so synthesis on that template must be discontinuous (Okazaki fragments), creating the leading/lagging strand problem</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It means DNA pol III can only replicate DNA in the S phase of the cell cycle</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It requires two separate DNA polymerases — one for each strand</li></ul>
+        <div class="qexp">Because DNA pol III only works 5'→3', it reads the template 3'→5'. The two template strands are antiparallel: one template runs 3'→5' relative to the replication fork → DNA pol can synthesize continuously in the direction of fork movement (leading strand). The other template runs 5'→3' → DNA pol must move AWAY from the fork to synthesize 5'→3', making short Okazaki fragments that are later joined (lagging strand). This 5'→3' constraint is fundamental to understanding the leading/lagging strand mechanism.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the function of DNA ligase in replication?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ligase unwinds the double helix ahead of the replication fork</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Ligase removes RNA primers from the lagging strand</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ligase synthesizes new DNA at the 3' end of the primer</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ligase seals the phosphodiester bond (nick) between adjacent DNA fragments — joining Okazaki fragments after primers are replaced with DNA, producing a continuous lagging strand</li></ul>
+        <div class="qexp">After DNA Pol I removes each RNA primer and fills in with DNA, a "nick" remains in the phosphodiester backbone — a break where one fragment ends and the next begins (the 3'-OH of one fragment is adjacent to the 5'-phosphate of the next but not covalently bonded). DNA <strong>ligase</strong> seals this nick by forming a phosphodiester bond, using ATP (eukaryotes) or NAD⁺ (bacteria) as energy. This joins all the Okazaki fragments into a continuous lagging strand. Ligase is also essential in DNA repair — it seals nicks after repair polymerases fill in gaps.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the Meselson-Stahl graph, what result at the SECOND replication generation (2nd generation) would have been seen if replication were CONSERVATIVE (not semiconservative)?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Conservative replication at generation 2 would show a HEAVY band (the conserved original ¹⁵N/¹⁵N helix) AND a LIGHT band (the all-new ¹⁴N/¹⁴N helices) — but NO intermediate band</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All DNA would be light (¹⁴N/¹⁴N) at generation 2 with conservative replication</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Equal amounts of heavy, intermediate, and light bands at generation 2</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Conservative replication would produce the same result as semiconservative replication at generation 2</li></ul>
+        <div class="qexp">Conservative replication predictions: Generation 1: heavy (original intact) + light (new helix). Generation 2: same heavy + light bands (original still intact + more new light helices). But Meselson-Stahl found only ONE intermediate band at generation 1 (no heavy + light mix) — immediately ruling out conservative replication. Semiconservative predicts the observed intermediate-only band at gen 1 (both new helices have one ¹⁵N + one ¹⁴N strand). The gen 2 result (equal intermediate + light) further confirmed semiconservative and ruled out dispersive.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why does eukaryotic DNA replication begin at multiple origins of replication simultaneously, unlike most bacteria that begin at a single origin?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Eukaryotic DNA polymerase is slower than bacterial DNA polymerase, requiring more origins to compensate</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Multiple origins allow error correction — if one origin fails, others continue</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Eukaryotic chromosomes are enormously longer than bacterial chromosomes — replicating from a single origin would take days; multiple origins (thousands per chromosome) allow the entire genome to be replicated in hours</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Eukaryotes have multiple nuclei that each require their own origin of replication</li></ul>
+        <div class="qexp">Human chromosomes average ~150 million bp each. DNA pol III (bacteria) replicates at ~1,000 bp/sec. A single origin on one human chromosome: 150,000,000 bp ÷ 1,000 bp/sec = 150,000 seconds = ~42 hours for that chromosome alone! With thousands of origins firing simultaneously on each chromosome, human DNA replication completes in ~6-8 hours. E. coli has a 4.6 million bp circular chromosome — a single origin is sufficient. Origins in eukaryotes are licensed by ORC (Origin Recognition Complex) proteins and are regulated to fire exactly once per cell cycle.</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Lesson 4 →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-rep"><div class="h-crumb">DNA Replication · <span>Lesson 4</span></div><div class="h-title">Leading &amp; Lagging Strand Synthesis</div><div class="h-desc">Both strands of DNA must be replicated simultaneously, but both strands cannot be read in the same direction. The cell's solution — Okazaki fragments on the lagging strand — is one of the most elegant compromises in molecular biology.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Describe the replication fork and explain which direction it moves relative to each template strand.</li>
+      <li>Distinguish the leading strand (continuous synthesis) from the lagging strand (discontinuous synthesis).</li>
+      <li>Explain what Okazaki fragments are, how they form, and how they are joined.</li>
+      <li>Trace the complete sequence of events on the lagging strand from primer synthesis to final continuous strand.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.3</div><div class="sh2">The Replication Fork</div>
+      <p class="prose">DNA replication proceeds bidirectionally from each origin of replication, forming two replication forks. At each fork, helicase unwinds the DNA ahead, creating a Y-shaped structure. Both strands serve as templates simultaneously — but since DNA pol III can only work 5'→3', the two strands are synthesized by different mechanisms.</p>
+      <table class="dt">
+        <tr><th>Feature</th><th>Leading Strand</th><th>Lagging Strand</th></tr>
+        <tr><td><strong>Template direction</strong></td><td>3'→5' relative to fork movement</td><td>5'→3' relative to fork movement</td></tr>
+        <tr><td><strong>Synthesis direction</strong></td><td>5'→3', same as fork movement direction</td><td>5'→3', OPPOSITE to fork movement direction</td></tr>
+        <tr><td><strong>Synthesis pattern</strong></td><td>Continuous — one primer, one long extension</td><td>Discontinuous — new primer needed for each Okazaki fragment</td></tr>
+        <tr><td><strong>Okazaki fragments?</strong></td><td>No</td><td>Yes — short (~100-200 bp in eukaryotes; ~1000-2000 bp in prokaryotes)</td></tr>
+        <tr><td><strong>Primers needed</strong></td><td>One per replication origin</td><td>One per Okazaki fragment (many primers total)</td></tr>
+        <tr><td><strong>Final step</strong></td><td>Remove primer, fill with DNA pol I, ligate</td><td>Remove primers, fill gaps with DNA pol I, ligate all fragments</td></tr>
+      </table>
+      <div class="sh3">The Lagging Strand: Step-by-Step</div>
+      <div style="background:var(--navy);border-radius:12px;padding:22px 26px;margin:16px 0;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;display:flex;gap:14px;"><span style="color:#4ade80;font-weight:700;font-size:.85rem;min-width:60px;">Step 1</span><span style="color:rgba(255,255,255,.85);font-size:.85rem;line-height:1.5;">Primase synthesizes a short RNA primer (~10 nt) complementary to the lagging strand template, providing a 3'-OH for DNA pol III</span></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;display:flex;gap:14px;"><span style="color:#4ade80;font-weight:700;font-size:.85rem;min-width:60px;">Step 2</span><span style="color:rgba(255,255,255,.85);font-size:.85rem;line-height:1.5;">DNA Pol III extends the primer 5'→3', synthesizing a new Okazaki fragment away from the fork (~100-200 bp in eukaryotes) until it reaches the previous fragment's primer</span></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;display:flex;gap:14px;"><span style="color:#4ade80;font-weight:700;font-size:.85rem;min-width:60px;">Step 3</span><span style="color:rgba(255,255,255,.85);font-size:.85rem;line-height:1.5;">DNA Pol I uses its 5'→3' exonuclease activity to remove the RNA primer ahead of it, simultaneously filling in with DNA behind (nick translation)</span></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;display:flex;gap:14px;"><span style="color:#4ade80;font-weight:700;font-size:.85rem;min-width:60px;">Step 4</span><span style="color:rgba(255,255,255,.85);font-size:.85rem;line-height:1.5;">DNA Ligase seals the nick between the end of the newly-filled gap and the start of the next Okazaki fragment, creating a continuous strand</span></div>
+        </div>
+      </div>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory: "Leading goes with the fork; Lagging goes against it"</div><div class="cx">Leading strand: synthesis moves IN the same direction as the fork opens. One primer, continuous synthesis, simple. Lagging strand: synthesis moves AWAY from the fork (must work backwards relative to fork movement). Multiple primers, multiple Okazaki fragments, complex. To remember which needs Okazaki fragments: "Lagging behind = needs lots of starts (Okazaki)".</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Replication Fork Dynamics</div>
+      <div class="graph-box"><div class="graph-title">Replication Speed and Primer Usage: Leading vs. Lagging Strand</div><div class="graph-cap">Lagging strand requires far more primers and ligase events — reflecting its discontinuous synthesis mechanism</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain why the lagging strand is synthesized discontinuously as Okazaki fragments. Trace the complete sequence of steps needed to complete one Okazaki fragment and join it to the next.</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — Leading &amp; Lagging Strand</h3><p>5 questions · includes replication fork data</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The leading strand is synthesized continuously, while the lagging strand is synthesized as Okazaki fragments. What single fact about DNA polymerase explains this difference?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA polymerase cannot work on both strands at the same time</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA polymerase can only synthesize DNA in the 5'→3' direction — so it can only continuously follow the template on the strand oriented 3'→5' (leading). The other template runs 5'→3', forcing synthesis to proceed in short segments moving away from the fork (lagging)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The lagging strand uses a different DNA polymerase that works in the 3'→5' direction</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Helicase unwinds only the leading strand template — the lagging strand must be replicated in fragments before helicase can unwind it</li></ul>
+        <div class="qexp">The 5'→3' constraint of DNA pol III is the single root cause of all leading/lagging strand complexity. Leading strand template runs 3'→5' relative to fork direction → DNA pol reads it 3'→5' and synthesizes the new strand 5'→3', moving in the same direction as fork opening → continuous. Lagging strand template runs 5'→3' relative to fork direction → DNA pol must still synthesize 5'→3' but that's AWAY from the fork → discontinuous synthesis of Okazaki fragments. Both strand solutions use the same enzyme (DNA pol III) — just with different outcomes due to template polarity.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Okazaki fragments on the lagging strand are eventually joined into a continuous strand. What three enzymes are required to complete this, and in what order?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Helicase → primase → ligase</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA pol III → DNA pol I → helicase</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Primase → DNA pol III → topoisomerase</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA Pol I (removes RNA primer + fills gap with DNA) → then DNA Ligase (seals the nick between the filled gap and the adjacent Okazaki fragment) — producing a continuous strand</li></ul>
+        <div class="qexp">After Okazaki fragments are synthesized by DNA pol III: (1) <strong>DNA Pol I</strong> uses its 5'→3' exonuclease activity to simultaneously remove the RNA primer and fill in the gap with DNA (nick translation — it moves 5'→3', removing RNA ahead and laying DNA behind). (2) <strong>DNA Ligase</strong> seals the final nick between the DNA Pol I product and the adjacent Okazaki fragment. The result: all Okazaki fragments joined into one continuous lagging strand. DNA pol III is not needed at this stage — it already synthesized the Okazaki fragments themselves.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A new Okazaki fragment needs to be started on the lagging strand. What must happen FIRST before DNA pol III can synthesize it?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Primase must synthesize a new short RNA primer on the exposed lagging strand template — DNA pol III requires a 3'-OH to extend from, and only primase can initiate synthesis de novo on single-stranded DNA</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>DNA pol I must remove the previous Okazaki fragment to expose a template</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ligase must seal the previous fragment before a new one can start</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Topoisomerase must relieve supercoiling before primase can access the template</li></ul>
+        <div class="qexp">DNA pol III CANNOT start de novo — it requires a primer with a free 3'-OH. For every Okazaki fragment on the lagging strand, primase must first synthesize a new RNA primer (~10 nt) on the exposed single-stranded template. Only then can DNA pol III extend from the primer's 3'-OH. This means primase acts repeatedly on the lagging strand — synthesizing a new primer for every Okazaki fragment (hundreds to thousands per chromosome replication). The leading strand only needs one primer per replication bubble.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the replication fork comparison graph, which feature shows the most dramatic difference between leading and lagging strand synthesis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Replication speed — the lagging strand is synthesized much more slowly</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Accuracy — the lagging strand has higher error rates due to Okazaki fragment synthesis</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Number of primers and ligase events required — the lagging strand needs many primers (one per fragment) and many ligase events vs. just one primer for the leading strand</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The size of DNA polymerase — different polymerases with different sizes work on each strand</li></ul>
+        <div class="qexp">The most dramatic difference is in primer requirement: leading strand needs ONE primer (per replication bubble); lagging strand needs hundreds to thousands of primers — one per Okazaki fragment. Similarly, ligase events: leading = one ligation (sealing where the one primer was removed); lagging = one ligation per Okazaki fragment. Both strands have similar error rates (DNA pol III proofreads both equally). Replication speeds are similar — the replisome machine coordinates both strands simultaneously despite their different synthesis mechanisms.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">The replication fork moves in the 5'→3' direction along the leading strand template. In which direction does DNA synthesis proceed on the LAGGING strand relative to the replication fork?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>In the same direction as the replication fork movement</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Away from the replication fork (opposite to fork movement) — each Okazaki fragment is synthesized moving backwards relative to the direction the fork is opening</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Perpendicular to the replication fork</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In no consistent direction — Okazaki fragments are synthesized randomly</li></ul>
+        <div class="qexp">On the lagging strand, each Okazaki fragment is synthesized <strong>away from the replication fork</strong> — opposite to the direction the fork is moving. This is the mechanical consequence of the 5'→3' constraint: the lagging strand template runs 5'→3' in the direction of fork movement → DNA pol must synthesize 5'→3' by reading 3'→5' → it moves away from the fork. As the fork opens new template, a new primer is made near the fork and synthesis of the next fragment begins, again moving away. This looping of the lagging strand template through the replisome creates the "trombone model" of lagging strand synthesis.</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Lesson 5 →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-rep"><div class="h-crumb">DNA Replication · <span>Lesson 5</span></div><div class="h-title">Telomeres &amp; Replication Fidelity</div><div class="h-desc">Every time your cells divide, your chromosomes get a little shorter — unless telomerase intervenes. And despite copying 3.2 billion bases, DNA replication makes fewer than one error per billion bases. How?</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Explain the end-replication problem: why linear chromosomes shorten with each division.</li>
+      <li>Describe telomeres: structure (TTAGGG repeats), function, and role of telomerase.</li>
+      <li>Explain DNA polymerase proofreading (3'→5' exonuclease) and how it reduces errors.</li>
+      <li>Describe mismatch repair and its importance for genome stability.</li>
+      <li>Connect telomere shortening to aging and telomerase activation to cancer.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.3</div><div class="sh2">The End-Replication Problem</div>
+      <p class="prose">Linear chromosomes have a critical problem: when the RNA primer at the very 5' end of the lagging strand is removed, there is no upstream 3'-OH for DNA pol I to use to fill in the gap. Result: each round of replication leaves the chromosome slightly shorter at each end. After many divisions, essential genes would be lost.</p>
+      <table class="dt">
+        <tr><th>Feature</th><th>Detail</th></tr>
+        <tr><td><strong>Telomere sequence</strong></td><td>TTAGGG repeats (humans) — 100 to 1,000+ repeats at each chromosome end; non-coding "buffer" DNA</td></tr>
+        <tr><td><strong>Problem</strong></td><td>Each replication removes ~50-100 bp from each chromosome end (one primer length)</td></tr>
+        <tr><td><strong>Telomerase</strong></td><td>A ribonucleoprotein (RNA + protein) enzyme. Uses its own built-in RNA template (5'-AAUCCC-3') to extend the 3' end of chromosomes, adding TTAGGG repeats — lengthening the telomere so subsequent primer removal doesn't shorten the chromosome into coding regions</td></tr>
+        <tr><td><strong>Cancer connection</strong></td><td>~85% of cancer cells upregulate telomerase — allowing indefinite cell division; normal somatic cells have little to no telomerase (they are programmed to senesce)</td></tr>
+        <tr><td><strong>Aging connection</strong></td><td>Telomere shortening in somatic cells with each division is a proposed mechanism of cellular aging — cells become senescent when telomeres critically shorten</td></tr>
+      </table>
+      <div class="sh3">Replication Fidelity: How Does the Cell Make So Few Errors?</div>
+      <table class="dt">
+        <tr><th>Mechanism</th><th>Error Reduction</th><th>Detail</th></tr>
+        <tr><td><strong>Base selection accuracy</strong></td><td>1 error per 10⁵ bases</td><td>DNA pol III selects the correct dNTP via hydrogen bonding geometry — wrong bases don't fit properly in the active site</td></tr>
+        <tr><td><strong>Proofreading (3'→5' exonuclease)</strong></td><td>Additional 10²–10³ improvement</td><td>DNA pol III checks each newly-added base; if a mismatch is detected, the exonuclease removes it and replication retries</td></tr>
+        <tr><td><strong>Mismatch repair (MMR)</strong></td><td>Additional 10²–10³ improvement</td><td>Post-replication: MutS protein scans for distortions from mismatched bases; recruits repair machinery to replace the incorrect base. MSH2/MLH1 in humans — mutations cause Lynch syndrome (hereditary colon cancer)</td></tr>
+        <tr><td><strong>Combined fidelity</strong></td><td>~1 error per 10⁹–10¹⁰ bases</td><td>One error per billion bases — equivalent to making 3 typos in a text the length of 3 copies of the human genome</td></tr>
+      </table>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Telomere Length &amp; Cell Division</div>
+      <div class="graph-box"><div class="graph-title">Telomere Length vs. Number of Cell Divisions (Somatic vs. Cancer Cells)</div><div class="graph-cap">Somatic cells lose telomere length with each division; cancer cells maintain telomere length via telomerase activation</div><div class="graph-wrap"><canvas id="chartL5"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the end-replication problem and how telomerase solves it. Why is telomerase active in cancer cells but not most normal somatic cells?</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — Telomeres &amp; Fidelity</h3><p>5 questions · includes telomere length graph</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Why do linear eukaryotic chromosomes shorten with each round of replication?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA ligase degrades the chromosome ends after each replication cycle</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Helicase removes a small segment from each end to relieve supercoiling</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The RNA primer at the 5' end of the lagging strand cannot be replaced with DNA — when the primer is removed, no upstream 3'-OH exists for DNA pol I to fill in the gap, leaving a shorter chromosome</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Exonucleases degrade unprotected chromosome ends between cell divisions</li></ul>
+        <div class="qexp">The end-replication problem: On the lagging strand, the outermost RNA primer at the very end of the chromosome is removed by DNA Pol I, but the resulting gap cannot be filled — there is no upstream DNA strand to provide a 3'-OH for extension. The chromosome is now shorter by one primer length (~10 nucleotides) at each end after each division. Over many divisions: ~50–100 bp lost per replication per chromosome end. Without protection (telomeres), coding sequences would eventually be lost → cell death or cancer.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Telomerase is described as a "reverse transcriptase that carries its own template." What does this mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Telomerase uses mRNA as a template to synthesize telomere DNA — it's a standard reverse transcriptase found in all cells</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Telomerase is a ribonucleoprotein that contains its own built-in RNA template sequence (complementary to TTAGGG) — it uses this RNA to add telomeric TTAGGG repeats to chromosome 3' ends, then translocates to repeat the process</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Telomerase transcribes telomere sequences into RNA, which is then reverse-transcribed back to DNA by other enzymes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Telomerase only works in germ cells and has no template — it randomly adds nucleotides to chromosome ends</li></ul>
+        <div class="qexp">Telomerase (hTERT protein + hTR RNA component) carries a built-in RNA template (5'-AAUCCC-3') that is complementary to the telomere repeat sequence TTAGGG. It: (1) Anneals its RNA template to the chromosome 3' end; (2) Extends the 3' end by reverse transcription (using the RNA template to add DNA); (3) Translocates (shuffles along); (4) Repeats. This lengthens the 3' overhang. Then conventional DNA replication fills in the complementary strand. Net result: telomere maintained or lengthened despite end-replication problem.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">DNA polymerase III has a 3'→5' exonuclease activity. How does this "proofreading" activity improve replication accuracy?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It degrades mismatched bases on the template strand before they can interfere with synthesis</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It checks that the template strand has the correct sequence before replication begins</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It removes extra DNA if too many nucleotides were added during synthesis</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Immediately after adding a nucleotide, DNA pol III checks the newly formed base pair; if mismatched, the 3'→5' exonuclease excises the incorrect nucleotide and the correct one is added in its place — reducing errors by 100–1,000 fold</li></ul>
+        <div class="qexp">Proofreading works like a "spell-check while typing": after adding each nucleotide, DNA pol III pauses and checks if the new base pair is correct. A mismatched base causes a distortion in the active site → activates the 3'→5' exonuclease → excises the mismatched nucleotide from the 3' end → DNA pol III tries again. This reduces the raw error rate from ~1/10⁵ to ~1/10⁷-10⁸. Proofreading defects cause "mutator phenotype" — cells accumulate mutations far faster than normal. POLE and POLD1 mutations in human cancers cause hypermutation through proofreading defects.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the telomere length graph, why do cancer cells NOT show the progressive telomere shortening seen in normal somatic cells?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>~85% of cancer cells upregulate telomerase — the enzyme adds new TTAGGG repeats after each replication, maintaining or even lengthening telomeres despite continuous cell division</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cancer cells replicate their DNA more accurately, preventing any chromosome shortening</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Cancer chromosomes lack telomeres — they are circular, like bacterial chromosomes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cancer cells divide so rarely that telomere shortening is negligible</li></ul>
+        <div class="qexp">~85% of cancer cells activate telomerase (TERT gene re-expressed) — allowing indefinite division without telomere crisis. This is a hallmark of cancer (Hanahan & Weinberg). Normal somatic cells: telomeres shorten ~50-100 bp per division → after ~50-70 divisions (Hayflick limit) → telomeres critically short → p53 activated → senescence or apoptosis. Cancer cells escape this senescence program. Telomerase inhibitors are being developed as cancer drugs — targeting this dependency on telomere maintenance. The remaining ~15% of cancers use Alternative Lengthening of Telomeres (ALT) via recombination.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Lynch syndrome is caused by mutations in mismatch repair genes (MSH2, MLH1). Patients have greatly elevated cancer risk. Why?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Mismatch repair proteins also function as tumor suppressors that directly inhibit cell division</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>MSH2/MLH1 mutations prevent DNA replication entirely, forcing cells into uncontrolled mitosis</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Without mismatch repair, replication errors (base mismatches) that slip past proofreading accumulate at ~100-1,000× normal rate — producing a "mutator phenotype" that accelerates the accumulation of cancer-causing mutations in oncogenes and tumor suppressors</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>MSH2 and MLH1 normally activate telomerase — their loss shortens telomeres and triggers cancer</li></ul>
+        <div class="qexp">Mismatch repair (MMR) catches errors that DNA pol III proofreading misses: MutS (MSH2) recognizes distortions from mismatched bases → recruits MutL (MLH1) → recruits excision nuclease → removes the incorrect strand → DNA pol fills in correctly. Without MMR: error rate increases ~100-1,000 fold → "microsatellite instability" (unstable DNA repeat regions) → mutations accumulate rapidly in growth-regulatory genes → Lynch syndrome patients develop colorectal, endometrial, and other cancers. Lynch syndrome is the most common hereditary colorectal cancer syndrome, affecting ~1 in 300 people.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Lesson 6 →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-mut"><div class="h-crumb">Mutations · <span>Lesson 6</span></div><div class="h-title">Mutations: Types &amp; Consequences</div><div class="h-desc">A mutation is any permanent change in the DNA sequence. Some are harmless. Some cause cancer. A few are beneficial. Understanding mutation types — and their consequences for the protein product — is fundamental to genetics, medicine, and evolution.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax Biology 2e, 14.3 &amp; 15.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Lesson Objectives</div><ul class="obj-list">
+      <li>Define mutation and distinguish germline mutations from somatic mutations.</li>
+      <li>Classify point mutations: transitions (purine↔purine or pyrimidine↔pyrimidine) vs. transversions (purine↔pyrimidine).</li>
+      <li>Describe the four functional outcomes of point mutations: silent, missense, nonsense, and frameshift.</li>
+      <li>Explain insertions and deletions and why they cause frameshifts.</li>
+      <li>Give a clinical example of each mutation type.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax Biology 2e, 14.3 &amp; 15.5</div><div class="sh2">What Is a Mutation?</div>
+      <p class="prose">A mutation is any permanent alteration in the nucleotide sequence of DNA. Mutations can occur in two contexts: <strong>germline mutations</strong> occur in egg or sperm cells and are inherited by offspring; <strong>somatic mutations</strong> occur in body cells and affect only the individual (not passed to offspring). Mutations can be caused by replication errors, spontaneous chemical changes, or mutagens (UV light, radiation, chemical carcinogens).</p>
+      <div class="sh3">Substitution (Point) Mutations</div>
+      <p class="prose">A <strong>substitution</strong> replaces one nucleotide with another. Two subtypes:</p>
+      <table class="dt">
+        <tr><th>Subtype</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>Transition</strong></td><td>Purine → Purine OR Pyrimidine → Pyrimidine (same ring type)</td><td>A→G, G→A, C→T, T→C — most common mutation type; less disruptive to helix geometry</td></tr>
+        <tr><td><strong>Transversion</strong></td><td>Purine → Pyrimidine OR Pyrimidine → Purine (different ring types)</td><td>A→C, A→T, G→C, G→T (and reverses) — less frequent; more disruptive to helix geometry</td></tr>
+      </table>
+      <div class="sh3">Functional Consequences of Substitutions</div>
+      <table class="dt">
+        <tr><th>Type</th><th>What Happens</th><th>Protein Effect</th><th>Example</th></tr>
+        <tr><td><strong>Silent Mutation</strong></td><td>Nucleotide changes but the codon still codes for the SAME amino acid (due to genetic code degeneracy)</td><td>No change — protein is identical</td><td>CGA → CGG (both code for Arg); synonymous substitution</td></tr>
+        <tr><td><strong>Missense Mutation</strong></td><td>Nucleotide change → codon codes for a DIFFERENT amino acid</td><td>One amino acid substitution in the protein — may or may not affect function depending on where it occurs</td><td>Sickle cell disease: GAG→GTG → Glu→Val in hemoglobin β-chain → sickle-shaped RBCs</td></tr>
+        <tr><td><strong>Nonsense Mutation</strong></td><td>Nucleotide change → codon becomes a STOP codon (UAA, UAG, or UGA)</td><td>Premature termination — truncated, usually non-functional protein</td><td>Duchenne muscular dystrophy; many hereditary cancers</td></tr>
+        <tr><td><strong>Frameshift Mutation</strong></td><td>Insertion or deletion of nucleotides NOT in multiples of 3 → shifts the reading frame of ALL downstream codons</td><td>Completely different amino acid sequence from mutation site onward → virtually always non-functional</td><td>+1 insertion shifts entire downstream reading frame; Tay-Sachs disease; BRCA1 frameshift mutations</td></tr>
+      </table>
+      <div class="sh3">Insertions and Deletions</div>
+      <div class="dna-strand">
+        <div class="dna-label">Original sequence:</div>
+        5'- ATG · GCA · TTC · GAA · TGA -3'<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Met · Ala · Phe · Glu · STOP
+        <br><br>
+        <div class="dna-label">After insertion of ONE base (C after position 4):</div>
+        5'- ATG · <span class="dna-comp">GC</span>C · ATT · CGA · ATG · A -3'<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Met · Ala · Ile · Arg · Met · (wrong!)
+      </div>
+      <div class="callout red"><div class="ci">⚠️</div><div class="cb"><div class="ct">Frameshift = Catastrophic Change Downstream</div><div class="cx">Because codons are read in non-overlapping triplets from a fixed start point, adding or removing nucleotides (not in multiples of 3) shifts every downstream codon. ALL amino acids from the mutation site to the end of the protein are changed. Frameshifts almost always produce a completely non-functional protein — and often create a new premature stop codon. Insertions or deletions of 3 nucleotides (or multiples of 3) add or remove whole codons without a frameshift — these can still be pathogenic but are less catastrophic.</div></div></div>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Sickle Cell: The Power of One Missense Mutation</div><div class="cx">Sickle cell disease is caused by a single A→T transversion in codon 6 of the β-globin gene: GAG (glutamic acid, hydrophilic) → GTG (valine, hydrophobic). This one amino acid change: (1) causes hemoglobin molecules to polymerize under low-oxygen conditions; (2) deforms red blood cells into sickle shapes; (3) causes vaso-occlusion, pain crises, anemia, and organ damage. One nucleotide change out of 3.2 billion → life-threatening disease. This example illustrates why the specific location and type of amino acid substitution matters enormously.</div></div></div>
+      <p class="os-credit">📖 Adapted from OpenStax Biology 2e, Ch. 14.3 &amp; 15.5. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Mutation Type Frequency &amp; Consequences</div>
+      <div class="graph-box"><div class="graph-title">Relative Frequency of Mutation Types in Human Cancer Genomes</div><div class="graph-cap">Transitions are most common; silent mutations have no phenotypic effect; nonsense and frameshift typically most severe</div><div class="graph-wrap"><canvas id="chartL6"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Explain the difference between a missense mutation and a nonsense mutation. Why do frameshift mutations (insertions/deletions of 1-2 nucleotides) typically cause more severe effects than missense mutations?</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd6">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 6 Quiz — Mutations</h3><p>5 questions · includes mutation frequency data</p></div></div>
+    <div id="q6">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The codon for glutamic acid (Glu) in the sickle cell hemoglobin gene changes from GAG to GTG. What type of mutation is this and what is its functional consequence?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Silent mutation — no change in amino acid sequence</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutation — creates a stop codon causing premature termination</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Missense mutation — the codon now specifies valine (Val) instead of glutamic acid (Glu); substituting a hydrophobic for a hydrophilic amino acid at position 6 causes hemoglobin to polymerize under low oxygen conditions</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Frameshift mutation — the reading frame shifts after position 6</li></ul>
+        <div class="qexp">GAG (Glu) → GTG (Val) is a classic <strong>missense mutation</strong> — one nucleotide change causes one amino acid substitution. Glutamic acid is hydrophilic (charged, faces outward in normal Hb); Valine is hydrophobic (uncharged, tends to pack against hydrophobic surfaces). Under low oxygen: HbS (sickle hemoglobin) molecules polymerize via hydrophobic valine contacts → long rigid fibers → deform RBCs into sickle shapes → vaso-occlusion → pain and organ damage. One point mutation with devastating systemic consequences — the most studied missense mutation in medicine.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A mutation changes the codon UGG (Tryptophan) to UAG. What type of mutation is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense mutation — UAG codes for a different amino acid</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutation — UAG is a stop codon (amber stop), causing premature termination of translation at this position</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Silent mutation — UGG and UAG code for the same amino acid</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Frameshift mutation — a single base change shifted the reading frame</li></ul>
+        <div class="qexp">UGG (Trp) → UAG: UAG is one of three stop codons (UAA = ochre, UAG = amber, UGA = opal). A <strong>nonsense mutation</strong> creates a premature stop codon → ribosome terminates translation early → truncated protein, usually non-functional. If this mutation occurs early in the gene, the resulting protein fragment is very short and likely degraded. Nonsense-mediated mRNA decay (NMD) often eliminates mRNAs with premature stop codons. Nonsense mutations in tumor suppressors (p53, BRCA1) are common in cancer.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A single nucleotide is inserted into the middle of a gene. What effect does this have on the resulting protein?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>One amino acid is added to the protein at the insertion site; all other amino acids are unchanged</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The protein is completely unaffected — single nucleotide insertions are usually silent</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The protein is slightly larger due to the extra nucleotide being translated</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The reading frame shifts for all codons DOWNSTREAM of the insertion — every amino acid from the insertion point to the end of the protein is altered; the protein is almost certainly non-functional and a premature stop codon often appears</li></ul>
+        <div class="qexp">A +1 insertion shifts the reading frame: codons are now read in a shifted triplet grouping from that point forward → completely different amino acid sequence downstream. Example: original reading: ATG-GCA-TTC-GAA becomes ATG-GCA-CTC-CAA after one C insertion → every amino acid from position 3 onward is wrong. Often a premature stop codon appears in the altered reading frame, truncating the protein. This is why frameshifts are almost always pathogenic — the entire downstream protein sequence is randomized.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">📊 Based on the mutation frequency graph, which type of mutation is most common in human cancer genomes, and what does the high frequency of "silent" mutations tell us about cancer progression?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Transitions (A↔G, C↔T) are most common; silent mutations are frequent but don't contribute to cancer progression — they're "passenger" mutations that accumulated by chance along with the cancer-causing "driver" mutations</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutations are most common and directly drive cancer</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Frameshifts are most common because insertions and deletions are the easiest errors for DNA pol to make</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Silent mutations must be the most common because they don't affect the protein</li></ul>
+        <div class="qexp">Transitions (C→T especially, driven by deamination of 5-methylcytosine or UV light) are the most common mutation type in cancer genomes. Silent mutations are frequent "passengers" — they occurred randomly in the cancer cell's DNA along with the rare "driver" mutations that actually caused the cancer. Cancer genome sequencing finds thousands of silent mutations per tumor but typically only a handful of true driver mutations (in oncogenes/tumor suppressors). This passenger/driver distinction is critical for cancer genomics — finding which mutations actually caused the cancer versus which just accumulated.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A gene has the original codon CGU (Arginine). Which mutation would have NO effect on the protein product?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>CGU → UAG — creates a stop codon (nonsense mutation)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>CGU → CAU — codes for Histidine instead of Arginine (missense mutation)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>CGU → CGC — both code for Arginine (Arg); the third base change is a silent/synonymous mutation due to degeneracy of the genetic code</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Inserting one nucleotide between positions 1 and 2 — frameshift mutation</li></ul>
+        <div class="qexp">CGU → CGC: both codons specify Arginine (Arg). This is a <strong>silent (synonymous) mutation</strong> — the nucleotide changed but the protein is identical. This is possible due to the <strong>degeneracy</strong> of the genetic code: most amino acids are specified by multiple codons (Arg has 6 codons: CGU, CGC, CGA, CGG, AGA, AGG). Silent mutations are especially common at the third codon position (wobble position) because the code is most degenerate there. Silent mutations have no effect on protein function, though they can occasionally affect mRNA stability, translation rate, or splicing.</div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Unit Review &amp; Practice Test →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Practice Test</span></div><div class="h-title">Unit Review &amp; Practice Test</div><div class="h-desc">20 questions covering DNA discovery, structure, replication, and mutations — from Chargaff's rules to frameshift consequences.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~30 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Unit at a Glance</div>
+      <table class="dt">
+        <tr><th>Topic</th><th>Key Points</th></tr>
+        <tr><td>Discovery of DNA</td><td>Griffith (transformation), Avery et al. (DNase destroys transforming principle = DNA), Hershey-Chase (³²P in bacteria, ³⁵S outside = DNA is genetic material)</td></tr>
+        <tr><td>DNA Structure</td><td>Nucleotide = deoxyribose + phosphate + base; Purines (A,G — double ring), Pyrimidines (T,C — single ring); Chargaff: A=T, G=C; Antiparallel double helix; A-T (2 H-bonds), G-C (3 H-bonds)</td></tr>
+        <tr><td>Semiconservative Replication</td><td>Each daughter helix = 1 old + 1 new strand; Meselson-Stahl proved with ¹⁵N/¹⁴N density gradient</td></tr>
+        <tr><td>Replication Enzymes</td><td>Helicase (unwinds), primase (RNA primer), DNA pol III (synthesizes 5'→3'), DNA pol I (removes primer + fills), ligase (seals nicks)</td></tr>
+        <tr><td>Leading vs. Lagging</td><td>Leading: continuous; Lagging: Okazaki fragments (discontinuous); both 5'→3'; ligase joins fragments</td></tr>
+        <tr><td>Telomeres &amp; Fidelity</td><td>End-replication problem; TTAGGG repeats; telomerase adds repeats; proofreading (3'→5' exonuclease); mismatch repair; ~1 error/10⁹ bases</td></tr>
+        <tr><td>Mutations</td><td>Silent (same AA), missense (different AA), nonsense (stop codon), frameshift (insertion/deletion shifts all downstream codons)</td></tr>
+      </table>
+    </div>
+    <div class="cs"><div class="eyebrow">Review Charts</div>
+      <div class="graph-box"><div class="graph-title">Hershey-Chase Radioactivity Results</div><div class="graph-cap">Reference for Question 3</div><div class="graph-wrap"><canvas id="chartPT1"></canvas></div></div>
+      <div class="graph-box" style="margin-top:16px;"><div class="graph-title">Meselson-Stahl Band Position by Generation</div><div class="graph-cap">Reference for Question 10</div><div class="graph-wrap"><canvas id="chartPT2"></canvas></div></div>
+    </div>
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — DNA Structure &amp; Replication</h3><p>20 questions · Virginia SOL format · auto-submitted to Mr. England</p></div></div>
+    <div id="q7">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Griffith's 1928 experiment mixed heat-killed smooth (S) bacteria with live rough (R) bacteria and injected them into mice. The mice died and live smooth bacteria were recovered. What did this prove?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Proteins from dead bacteria can resurrect dead cells</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Some molecule from the dead S bacteria (the "transforming principle") could transfer genetic information to live R bacteria, converting them to virulent S bacteria</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Heat-killed bacteria are still partially alive and can cause disease</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Rough bacteria spontaneously mutate into smooth bacteria in vivo</li></ul>
+        <div class="qexp">Griffith's transformation showed that a "transforming principle" — some biological molecule — could transfer genetic information between bacterial strains. The identity of this molecule (DNA) was not known until Avery et al. (1944) and confirmed by Hershey-Chase (1952). Griffith's experiment established that hereditary information is chemically transferable — a foundational concept in molecular biology.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Avery, MacLeod, and McCarty found that only DNase treatment abolished transformation. What did this establish?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>RNA is the genetic material in Streptococcus</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Protein is not present in the transforming extract</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Multiple molecules share the role of genetic material</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA is the transforming principle — the hereditary molecule that carries genetic information; destroying DNA and only DNA abolished transformation</li></ul>
+        <div class="qexp">Process of elimination: destroy proteins (protease) → still transforms; destroy RNA (RNase) → still transforms; destroy DNA (DNase) → transformation abolished. Only DNA destruction eliminated the transforming activity → DNA IS the genetic material. This was the first direct biochemical proof, though skeptics noted that DNA might just be needed to deliver the real genetic material (proteins) — Hershey-Chase finally settled the debate in 1952.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">📊 Based on the Hershey-Chase graph, ³²P (DNA tracer) was found primarily in the bacterial pellet after centrifugation. What does this prove?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA entered the bacteria — it was injected by the phage to direct new phage production; DNA is the molecule that carries replication instructions</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Phosphorus is absorbed from the culture medium by bacteria</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The phage coat (protein) entered the bacteria along with the DNA</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA remained outside the bacteria trapped in the pellet by its large size</li></ul>
+        <div class="qexp">³²P in the bacterial pellet = DNA entered bacteria (was injected through the cell membrane). ³⁵S (protein label) in the supernatant = protein coats stayed outside (sheared off by blending). The phage DNA hijacked bacterial machinery to produce hundreds of new phage. This proved DNA — not protein — is the genetic molecule that carries instructions for viral replication. Combined with ³⁵S remaining outside, the Hershey-Chase experiment definitively answered: DNA is the genetic material.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A DNA sample has 30% guanine. What percentage is adenine?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>30% — adenine equals guanine</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>40%</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>20% — G=C=30% (G+C=60%); A+T = 40%; A=T=20%</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>70%</li></ul>
+        <div class="qexp">Chargaff's rules: G=C, so if G=30%, then C=30%. G+C = 60%. A+T = 100% − 60% = 40%. A=T, so A = 20%, T = 20%. Check: 20+20+30+30 = 100%. Formula: A = (100% − 2×G%) / 2. Know this calculation: given any one base %, find all four.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the complementary DNA strand to 5'-ATCGGA-3'?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5'-TAGCCT-3'</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3'-TAGCCT-5' (or written as 5'-TCCGAT-3') — the complement is written antiparallel: 3'→5' direction</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5'-UAGCCU-3' — RNA complement</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3'-ATCGGA-5' — same sequence, antiparallel</li></ul>
+        <div class="qexp">Complement of 5'-ATCGGA-3': A→T, T→A, C→G, G→C, G→C, A→T = TAGCCT. But this must be written antiparallel (3'→5'): 3'-TAGCCT-5'. Or equivalently written 5'→3': 5'-TCCGAT-3'. Remember: complement AND antiparallel. A pairs with T, G pairs with C. The new strand is always antiparallel to the template strand.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">6</span><span class="qt-inner">Why is adenine a purine and thymine a pyrimidine important for maintaining the double helix shape?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Purines are positively charged and pyrimidines are negative — they attract each other</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both are exactly the same size, ensuring equal spacing</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Purines dissolve in water; pyrimidines do not — they maintain opposing chemistry</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A purine (2 rings, large) always pairs with a pyrimidine (1 ring, small) — maintaining a constant 2 nm width throughout the helix; if two purines or two pyrimidines paired, the helix width would be inconsistent</li></ul>
+        <div class="qexp">Purine + pyrimidine = constant width (2 nm). This structural rule enforces base-pairing specificity: A (purine) with T (pyrimidine), G (purine) with C (pyrimidine). Two purines would create a bulge; two pyrimidines would create a narrowing. The constant width is essential for packaging DNA into nucleosomes and chromosomes and for proper protein-DNA interactions. Mnemonic: "Pure As Gold" = Purines = Adenine + Guanine.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">What does "semiconservative replication" mean?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The entire original double helix is conserved; a completely new double helix is synthesized from free nucleotides</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">C</div>The original DNA is broken into fragments and distributed among daughter molecules</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Each daughter DNA molecule consists of one original (parental) strand and one newly synthesized strand — parental strands serve as templates and are conserved in each daughter</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only one strand is replicated; the other parental strand is conserved intact</li></ul>
+        <div class="qexp">Semiconservative: each daughter molecule has ONE parental strand (retained/conserved) + ONE new strand. The parental strands are templates — they are never destroyed, but the original double helix is split between two daughter molecules. Meselson-Stahl proved this: after one replication in light ¹⁴N medium, ALL DNA was intermediate density (one heavy ¹⁵N + one light ¹⁴N strand) — consistent only with semiconservative replication.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">8</span><span class="qt-inner">What is the function of helicase during DNA replication?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Helicase unwinds the double helix at the replication fork by breaking the hydrogen bonds between base pairs — creating the single-stranded templates for DNA polymerase</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Helicase synthesizes the RNA primer needed by DNA polymerase</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Helicase removes RNA primers and replaces them with DNA</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Helicase seals the nicks between Okazaki fragments</li></ul>
+        <div class="qexp">Helicase unwinds the double helix by disrupting the hydrogen bonds between base pairs at the replication fork — it travels along the DNA, using ATP to separate the strands and expose single-stranded templates. Ahead of helicase, positive supercoiling builds up (the DNA gets overwound) — relieved by topoisomerase II (DNA gyrase in bacteria). Behind helicase, single-strand binding proteins (SSBPs) stabilize the exposed single strands and keep them available for polymerase.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">9</span><span class="qt-inner">Why does DNA polymerase require a primer to begin synthesis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA polymerase needs the primer to recognize the correct starting point (origin of replication)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The primer provides the energy source for DNA synthesis (similar to ATP)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA polymerase uses the primer as a template, not a 3'-OH starting point</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>DNA polymerase can only ADD nucleotides to an existing 3'-OH group — it cannot catalyze the formation of the first phosphodiester bond de novo; primase provides the initial 3'-OH by synthesizing a short RNA primer</li></ul>
+        <div class="qexp">DNA pol III's active site specifically requires a 3'-OH group to add the next nucleotide — it cannot start from scratch. Primase (RNA polymerase) can start de novo, synthesizing a short RNA primer (~10 nt) that provides the 3'-OH for DNA pol III to extend. After synthesis, RNA primers are removed by DNA pol I (5'→3' exonuclease) and replaced with DNA, then ligase seals the nick. This is also why PCR requires synthetic primers for each target sequence.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">📊 Based on the Meselson-Stahl graph, what result at the FIRST generation (in ¹⁴N medium) ruled out the conservative replication model?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All DNA was light (¹⁴N/¹⁴N) at generation 1 — conservative model predicts all heavy + all light</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All DNA was INTERMEDIATE density (¹⁵N/¹⁴N hybrid) at generation 1 — conservative replication would have produced one heavy band (intact original) AND one light band (all-new helix); finding only intermediate density ruled out the conservative model</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Equal heavy and light bands appeared at generation 1</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All DNA was heavy even after replication in ¹⁴N medium</li></ul>
+        <div class="qexp">Conservative replication predicts: generation 1 = heavy band (original intact ¹⁵N/¹⁵N helix) + light band (all-new ¹⁴N/¹⁴N helix). Meselson-Stahl found: generation 1 = ONE intermediate band (¹⁵N/¹⁴N hybrid) only, NO heavy or light bands. This rules out conservative replication with certainty. Semiconservative predicts exactly this intermediate-only result (each daughter has one ¹⁵N + one ¹⁴N strand). The experiment is considered one of the most elegant in the history of biology.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">On the lagging strand during DNA replication, what is an Okazaki fragment?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A region of the lagging strand where helicase has created a single-stranded bubble</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The RNA primer that initiates each round of synthesis on the lagging strand</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A short DNA fragment (~100–200 bp in eukaryotes) synthesized in the direction away from the replication fork — the lagging strand is synthesized as many such discontinuous fragments that are later joined by ligase</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A mismatched base pair detected by proofreading on the lagging strand</li></ul>
+        <div class="qexp">Okazaki fragments are the short DNA pieces synthesized on the lagging strand. Because DNA pol III can only work 5'→3', and the lagging strand template runs in the "wrong" direction relative to the fork, synthesis must proceed in short segments moving away from the fork. Each fragment needs its own RNA primer (from primase), is extended by DNA pol III, then the primer is removed by DNA pol I, the gap filled, and ligase seals the fragments into a continuous strand. Named after Reiji Okazaki who discovered them in 1968.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">DNA ligase seals which type of bond during replication?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Hydrogen bonds between complementary base pairs</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Peptide bonds in newly synthesized proteins</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Glycosidic bonds between the nitrogenous base and deoxyribose</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Phosphodiester bonds — specifically sealing the nick (break) in the phosphodiester backbone between adjacent DNA fragments after primers have been removed and gaps filled</li></ul>
+        <div class="qexp">Ligase specifically seals a nick — a break in one strand of the double helix where the 3'-OH of one fragment is adjacent to the 5'-phosphate of the next but the phosphodiester bond is not yet formed. Ligase uses ATP (eukaryotes) or NAD⁺ (bacteria) to form the phosphodiester bond, joining the fragments. Ligase is also used in recombinant DNA technology to join foreign DNA to vectors, in DNA repair, and in PCR-based applications. It only seals nicks (adjacent fragments already positioned correctly) — it cannot join fragments with gaps between them.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">What is the end-replication problem and why does it only affect LINEAR chromosomes?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>When the final RNA primer at the 5' end of the lagging strand is removed, there is no upstream DNA to fill in the gap — the chromosome shortens. Circular chromosomes (bacteria) have no ends, so this problem doesn't arise.</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Linear chromosomes cannot be replicated at all without telomerase — they need a special mechanism for all replication</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The ends of linear chromosomes are too hard for helicase to unwind, causing replication failure</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Circular chromosomes have the same problem but their circular topology conceals the shortening</li></ul>
+        <div class="qexp">End-replication problem: on a linear chromosome, the outermost RNA primer on the lagging strand is at the very 5' end of the chromosome. When it's removed, there is no upstream 3'-OH for DNA pol I to fill in the gap → the chromosome is shorter by one primer length. Circular chromosomes (bacteria, mitochondria) don't have free ends, so the gap left by primer removal can be filled by extending from the adjacent DNA. Eukaryotes solve the end-replication problem with telomeres + telomerase.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">Telomerase contains an RNA template component. What sequence does this RNA template direct telomerase to add to chromosome ends?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Random nucleotides — telomerase adds any sequence to lengthen the chromosome</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>TTAGGG repeats (in humans) — the RNA template sequence AAUCCC directs synthesis of the TTAGGG repeat sequence, which forms the non-coding telomeric region at chromosome ends</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The coding sequence of nearby genes — telomerase copies adjacent gene sequences</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ATATAT repeats — forming the AT-rich telomeric cap</li></ul>
+        <div class="qexp">Human telomere sequence: TTAGGG repeated 100-1,000+ times. Telomerase contains hTR (RNA component) with sequence 5'-AAUCCC-3', which templates the synthesis of TTAGGG repeats on the chromosome 3' end. Telomerase extends the 3' overhang → conventional DNA replication fills in the complementary strand → net: telomere length maintained. TTAGGG repeats are non-coding "buffer zones" that can be lost each division without affecting genes. The telomere repeat sequence is highly conserved across vertebrates.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">15</span><span class="qt-inner">DNA polymerase III has a 3'→5' exonuclease (proofreading) activity. How does this activity work?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It scans ahead of the synthesis site, removing any damaged bases on the template strand</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>After synthesis is complete, it goes back and checks the entire newly-made strand</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It removes the RNA primer after Okazaki fragment synthesis</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>After each nucleotide addition, the polymerase checks the new base pair; if mismatched, the exonuclease domain removes the incorrect nucleotide from the 3' end, and the correct nucleotide is added in its place — reducing the error rate 100-1,000 fold</li></ul>
+        <div class="qexp">Proofreading is immediate and co-replicational: after adding each nucleotide, DNA pol III pauses and checks if the new base pair has the correct geometry (hydrogen bonding and shape). A mismatch creates steric distortion → triggers the 3'→5' exonuclease → removes the last-added (incorrect) nucleotide → polymerase re-tries with the correct nucleotide. This real-time error correction reduces errors from ~1/10⁵ to ~1/10⁷-10⁸. Proofreading defects (POLE/POLD1 mutations) create "ultra-mutator" cancers with thousands of mutations per megabase.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">16</span><span class="qt-inner">The codon AGA (Arginine) is changed to AGA at the DNA level, but the mRNA codon changes. If the resulting mRNA codon still specifies arginine, this is a:</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense mutation</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutation</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Silent (synonymous) mutation — the nucleotide sequence changed but the encoded amino acid is the same, due to the degeneracy of the genetic code</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Frameshift mutation</li></ul>
+        <div class="qexp">A silent (synonymous) mutation changes the nucleotide sequence but not the amino acid. This is possible because most amino acids are encoded by multiple codons (the genetic code is degenerate). Example: all 6 arginine codons (CGU, CGC, CGA, CGG, AGA, AGG) code for the same amino acid — a mutation between any of them is silent. Silent mutations are most common at the third codon position (wobble position) and have no effect on protein function, though they can rarely affect mRNA stability or translation rate.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">A gene contains the sequence ...ATG-GCT-TAC-GAA... One nucleotide is deleted (the T in position 7), producing ...ATG-GCT-ACG-AA... What type of mutation is this?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Frameshift mutation — deleting one nucleotide shifts the reading frame of all downstream codons; the amino acid sequence from that point onward is completely altered</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Silent mutation — the deletion has no effect on the amino acid sequence</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Missense mutation — only one amino acid is changed at the deletion site</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Nonsense mutation — the deletion creates a stop codon</li></ul>
+        <div class="qexp">Deleting one nucleotide (not a multiple of 3) causes a <strong>frameshift</strong>: all codons downstream of the deletion are read in a shifted frame → completely different amino acid sequence. Original: ATG-GCT-TAC-GAA (Met-Ala-Tyr-Glu). After T deletion: ATG-GCT-ACG-AA? (Met-Ala-Thr-?). Every amino acid from position 3 onward changes. Often a premature stop codon appears in the shifted frame. Frameshifts are among the most severe mutations because they affect the entire protein from the mutation site to the C-terminus.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">A mutation changes codon 17 of a protein-coding gene from UGG (Tryptophan) to UGA (stop codon). What is this mutation and what effect does it have?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Missense mutation — a different amino acid is inserted at position 17</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nonsense mutation — a premature stop codon terminates translation at amino acid 17; the resulting truncated protein (only 16 amino acids) is almost certainly non-functional</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Silent mutation — UGA and UGG encode the same amino acid</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Frameshift mutation — the codon change shifts the reading frame</li></ul>
+        <div class="qexp">UGG (Trp) → UGA: UGA is a stop codon — a <strong>nonsense mutation</strong>. Ribosome reaches codon 17, encounters UGA (stop), releases the incomplete polypeptide. A 16-amino-acid protein instead of a full-length protein — almost certainly non-functional. Nonsense-mediated mRNA decay (NMD) often degrades mRNAs with premature stop codons, meaning no protein at all. Nonsense mutations in tumor suppressors (p53, BRCA1, APC) are found frequently in cancer and hereditary cancer syndromes.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Which mutation type would most likely have NO effect on protein function?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Nonsense mutation early in the gene</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>+1 frameshift insertion at the beginning of the gene</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Missense mutation replacing a critical active-site amino acid</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Silent (synonymous) mutation in the third position of a codon — the genetic code degeneracy means the same amino acid is encoded; protein sequence and function are unchanged</li></ul>
+        <div class="qexp">Silent mutations change the DNA/mRNA sequence but not the amino acid → protein structure and function unchanged. All other options have potentially severe effects: nonsense = truncated protein; +1 frameshift = scrambled protein; missense at active site = loss of function. Note: even "silent" mutations can occasionally have effects on mRNA stability, splicing (if at splice site), or codon usage bias affecting translation rate — but these are exceptions rather than the rule. For exam purposes: silent mutation = no protein effect.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which statement BEST summarizes the flow of information from DNA structure to mutation consequences?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA sequence → mRNA codon → amino acid → protein structure → protein function: mutations at any point in this chain can affect function; the impact depends on mutation type (silent, missense, nonsense, frameshift) and location within the gene</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All mutations cause disease — there are no harmless mutations</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Frameshift mutations are always harmless because the genetic code has redundancy built in</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only germline mutations matter — somatic mutations cannot affect an organism's health</li></ul>
+        <div class="qexp">The chain: DNA base change → different mRNA codon → possibly different amino acid → possibly altered protein structure → possibly altered function → possibly disease. Each "possibly" depends on: (1) Where the mutation is (coding vs. non-coding, active site vs. surface); (2) What type (silent = no effect; missense = one AA change; nonsense = truncation; frameshift = all downstream AAs changed). Silent mutations are harmless. Most missense mutations at non-critical positions are tolerated. Nonsense and frameshift mutations are usually deleterious. Context is everything in mutation interpretation.</div></div>
+    </div>
+    <div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 20 correct</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Lesson 6</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Unit</button></div>
+</div>
+</main>
+<script>
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec";
+let studentName="",currentPanel=0,scores={},done=new Set();
+function startModule(){
+  const n=document.getElementById("student-name").value.trim();
+  const parts=n.split(/\s+/);
+  if(parts.length<2||parts.some(p=>p.length<1)){document.getElementById("name-err").style.display="block";return;}
+  studentName=n;
+  document.getElementById("name-modal").style.display="none";
+  document.getElementById("student-badge").textContent=n+" · DNA";
+  initCharts();
+}
+function goTo(n){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sb-link").forEach(l=>l.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  document.querySelectorAll(".sb-link")[n].classList.add("active");
+  currentPanel=n;window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("prog-bar").style.width=Math.round((n/7)*100)+"%";
+}
+function cpCheck(n){
+  const len=document.getElementById("cpt"+n).value.trim().length;
+  document.getElementById("cpn"+n).textContent=len;
+  const btn=document.getElementById("cpb"+n);
+  const ctr=document.getElementById("cpc"+n);
+  if(len>=80){ctr.className="cp-counter met";btn.className="cp-btn ready";}
+  else{ctr.className="cp-counter";btn.className="cp-btn";}
+}
+function cpUnlock(n){
+  if(document.getElementById("cpt"+n).value.trim().length<80)return;
+  document.getElementById("cpb"+n).style.display="none";
+  document.getElementById("cpd"+n).style.display="block";
+  const qw=document.getElementById("quiz-wrap"+n);
+  qw.style.display="block";
+  qw.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function pick(opt){
+  const qq=opt.closest(".qq");
+  if(qq.querySelector(".qo.revealed"))return;
+  const correct=qq.dataset.ans;
+  qq.querySelectorAll(".qo").forEach(o=>{
+    o.classList.add("revealed");
+    if(o.dataset.v===correct)o.classList.add("correct");
+    else if(o===opt&&opt.dataset.v!==correct)o.classList.add("incorrect");
+  });
+  const exp=qq.querySelector(".qexp");
+  if(exp)exp.classList.add("show");
+  const box=opt.closest(".quiz-box");
+  const pNum=parseInt(opt.closest(".panel").id.replace("p",""));
+  const qs=box.querySelectorAll(".qq");
+  if([...qs].filter(q=>q.querySelector(".qo.revealed")).length===qs.length)tallyQuiz(box,pNum);
+}
+function tallyQuiz(box,pNum){
+  const qs=box.querySelectorAll(".qq");
+  let correct=0;
+  qs.forEach(q=>{const c=q.querySelector(".qo.correct");if(c&&c.dataset.v===q.dataset.ans)correct++;});
+  const total=qs.length;
+  box.querySelector(".score-n").textContent=correct+"/"+total;
+  box.querySelector(".qscore").style.display="block";
+  sendProgress("L"+pNum,correct,total);
+}
+function markDone(n,btn){
+  btn.classList.add("done");btn.textContent="✓ Complete";
+  done.add(n);document.querySelectorAll(".sb-link")[n].classList.add("done");
+}
+function sendProgress(label,correct,total){
+  if(!studentName)return;
+  const payload={student:studentName,module:"DNA Structure & Replication",lesson:label,score:correct+"/"+total,timestamp:new Date().toISOString()};
+  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>showToast("Score sent: "+label+" "+correct+"/"+total+" ✓"))
+    .catch(()=>showToast("Score recorded locally"));
+}
+function showToast(msg){
+  const t=document.getElementById("submit-toast");
+  document.getElementById("toast-msg").textContent=msg;
+  t.style.display="flex";setTimeout(()=>{t.style.display="none";},3500);
+}
+function initCharts(){
+  const G="#1a7a4a",N="#0f2240",T="#0b8f8c",A="#e8920e",R="#c0392b",P="#6c3fa0";
+
+  /* L1 — Hershey-Chase */
+  new Chart(document.getElementById("chartL1"),{type:"bar",data:{
+    labels:["³²P (DNA tracer)\nin Bacterial Pellet","³²P (DNA tracer)\nin Supernatant","³⁵S (Protein tracer)\nin Bacterial Pellet","³⁵S (Protein tracer)\nin Supernatant"],
+    datasets:[{label:"% radioactivity",data:[85,15,5,95],backgroundColor:[G,T,R,A]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"% of radioactivity"},max:100}}}});
+
+  /* L2 — Chargaff's data */
+  new Chart(document.getElementById("chartL2"),{type:"bar",data:{
+    labels:["Human","E. coli","Sea Urchin","Wheat"],
+    datasets:[
+      {label:"%A",data:[30.3,24.7,28.4,27.3],backgroundColor:N},
+      {label:"%T",data:[30.3,23.6,28.7,27.1],backgroundColor:G},
+      {label:"%G",data:[19.5,26.0,19.5,22.8],backgroundColor:T},
+      {label:"%C",data:[19.9,25.7,21.3,22.7],backgroundColor:A}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{ticks:{font:{size:10}}},y:{title:{display:true,text:"% of bases"},max:35}}}});
+
+  /* L3 — Meselson-Stahl */
+  new Chart(document.getElementById("chartL3"),{type:"bar",data:{
+    labels:["Start\n(all ¹⁵N)","Generation 1\n(in ¹⁴N)","Generation 2\n(in ¹⁴N)"],
+    datasets:[
+      {label:"Heavy (¹⁵N/¹⁵N)",data:[100,0,0],backgroundColor:R},
+      {label:"Intermediate (¹⁵N/¹⁴N)",data:[0,100,50],backgroundColor:A},
+      {label:"Light (¹⁴N/¹⁴N)",data:[0,0,50],backgroundColor:G}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,title:{display:true,text:"% of DNA"},max:100}}}});
+
+  /* L4 — Replication fork comparison */
+  new Chart(document.getElementById("chartL4"),{type:"bar",data:{
+    labels:["Primers needed","Okazaki fragments","Ligase events","Synthesis direction\nvs. fork (relative)"],
+    datasets:[
+      {label:"Leading strand",data:[1,0,1,1],backgroundColor:G},
+      {label:"Lagging strand",data:[100,100,100,0],backgroundColor:A}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"},tooltip:{callbacks:{label:ctx=>{const v=ctx.raw;if(v===1&&ctx.datasetIndex===0&&ctx.dataIndex===3)return"Same as fork";if(v===0&&ctx.datasetIndex===1&&ctx.dataIndex===3)return"Opposite to fork";return ctx.dataset.label+": "+v+(ctx.dataIndex<3?" (relative)":"");}}}},scales:{x:{ticks:{font:{size:9}}},y:{type:"logarithmic",title:{display:true,text:"Relative count (log)"}}}}});
+
+  /* L5 — Telomere length */
+  const divs=Array.from({length:11},(_, i)=>i*5);
+  new Chart(document.getElementById("chartL5"),{type:"line",data:{
+    labels:divs,
+    datasets:[
+      {label:"Somatic cells (no telomerase)",data:[10,9.5,9,8.5,8,7.5,7,6.5,6,5.5,5],borderColor:N,tension:0.2,pointRadius:3},
+      {label:"Cancer cells (telomerase active)",data:[10,10.1,10,10.2,10,10.1,10,10.2,10,10.1,10],borderColor:R,tension:0.2,pointRadius:3,borderDash:[5,3]}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{title:{display:true,text:"Number of cell divisions"}},y:{title:{display:true,text:"Relative telomere length"},min:0,max:12}}}});
+
+  /* L6 — Mutation frequency */
+  new Chart(document.getElementById("chartL6"),{type:"bar",data:{
+    labels:["Transition\n(most common)","Transversion","Silent\n(synonymous)","Missense","Nonsense","Frameshift\n(indel)"],
+    datasets:[{label:"Relative frequency / severity",data:[60,20,30,25,10,8],backgroundColor:[G,T,N,A,R,P]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"Relative metric"},max:70}}}});
+
+  /* PT1 — Hershey-Chase */
+  new Chart(document.getElementById("chartPT1"),{type:"bar",data:{
+    labels:["³²P DNA\nin Pellet","³²P DNA\nin Supernatant","³⁵S Protein\nin Pellet","³⁵S Protein\nin Supernatant"],
+    datasets:[{label:"% radioactivity",data:[85,15,5,95],backgroundColor:[G,T,R,A]}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{title:{display:true,text:"% radioactivity"},max:100}}}});
+
+  /* PT2 — Meselson-Stahl */
+  new Chart(document.getElementById("chartPT2"),{type:"bar",data:{
+    labels:["Start (¹⁵N)","Generation 1","Generation 2"],
+    datasets:[
+      {label:"Heavy",data:[100,0,0],backgroundColor:R},
+      {label:"Intermediate",data:[0,100,50],backgroundColor:A},
+      {label:"Light",data:[0,0,50],backgroundColor:G}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{x:{stacked:true},y:{stacked:true,title:{display:true,text:"% of DNA"},max:100}}}});
+}
+</script>
+</body>
+</html>
