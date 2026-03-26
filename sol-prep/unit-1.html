@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO SOL Prep · Unit 1: Scientific Investigation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── CHEAT SHEET FEATURE: TODO ─────────────────────────────────────────────
+   Add "Print Cheat Sheet" button at bottom of each unit.
+   Files go in sol-prep/cheat-sheets/unit-N.pdf
+   One page per unit: key vocab + signature charts + SOL tips
+   Build after all 9 units are complete.
+────────────────────────────────────────────────────────────────────────── */
+:root{
+  --navy:#0f2240;--navy-mid:#1a3560;
+  --red:#dc2626;--red-pale:#fef2f2;--red-mid:#991b1b;
+  --amber:#d97706;--amber-pale:#fffbeb;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --yellow:#ca8a04;--yellow-pale:#fefce8;
+  --teal:#0b8f8c;--teal-pale:#f0fdfa;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-600:#4b5563;--gray-900:#111827;
+  --border:#e5e7eb;--muted:#6b7280;
+  --header-h:58px;--steps-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.7;font-size:16px;}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-unit{flex:1;text-align:center;}
+.tb-unit-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.tb-unit-name{font-size:.88rem;font-weight:700;color:#fff;}
+.tb-stats{display:flex;gap:10px;align-items:center;}
+.tb-stat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;}
+.tb-stat-icon{font-size:.9rem;}
+.tb-stat-val{font-size:.78rem;font-weight:700;color:#fff;}
+.tb-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.5);}
+.tb-badge{background:var(--red);color:#fff;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+
+/* STEP BAR */
+.steps-bar{position:fixed;top:var(--header-h);left:0;right:0;z-index:299;height:var(--steps-h);background:#fff;border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0;overflow-x:auto;scrollbar-width:none;}
+.steps-bar::-webkit-scrollbar{display:none;}
+.step{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.step-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;border:none;background:transparent;font-family:"Source Sans 3",sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.step-btn:hover{background:var(--gray-100);color:var(--gray-900);}
+.step-btn.active{background:var(--red);color:#fff;font-weight:700;}
+.step-btn.done{color:var(--green);}
+.step-btn.done .step-num{background:var(--green);color:#fff;}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.step-btn.active .step-num{background:rgba(255,255,255,.25);color:#fff;}
+.step-sep{width:20px;height:1px;background:var(--border);flex-shrink:0;}
+.steps-prog{position:fixed;top:calc(var(--header-h)+var(--steps-h)-2px);left:0;z-index:298;height:3px;background:var(--red);transition:width .4s ease;width:0%;}
+
+/* MAIN */
+.main{padding-top:calc(var(--header-h)+var(--steps-h));min-height:100vh;}
+.panel{display:none;animation:fadeIn .25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* FOCUS CARD (p0) */
+.focus-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);padding:40px 48px;position:relative;overflow:hidden;}
+.focus-hero::after{content:"BIO.1";position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:"Playfair Display",serif;font-size:7rem;font-weight:900;color:rgba(255,255,255,.05);pointer-events:none;}
+.focus-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.focus-title{font-family:"Playfair Display",serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:8px;}
+.focus-sub{font-size:.95rem;color:rgba(255,255,255,.7);max-width:580px;line-height:1.6;}
+.focus-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
+
+/* CONTENT LAYOUT */
+.lc{padding:36px 48px 56px;max-width:860px;}
+.section{margin-bottom:40px;}
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.sh3{font-size:1rem;font-weight:700;color:var(--navy);margin:20px 0 8px;padding-left:10px;border-left:3px solid var(--red);}
+.prose{font-size:.94rem;line-height:1.85;color:#374151;margin-bottom:12px;}
+.prose strong{color:var(--navy);}
+
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:.86rem;margin:14px 0;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:.74rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:9px 14px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top;}
+.dt tr:nth-child(even) td{background:var(--gray-50);}
+.dt tr:last-child td{border-bottom:none;}
+
+/* SOL FOCUS BOXES */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.sol-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.sol-card-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.sol-list{list-style:none;}
+.sol-list li{font-size:.84rem;color:var(--gray-600);padding:4px 0 4px 22px;position:relative;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.sol-list li:last-child{border-bottom:none;}
+.sol-list li::before{content:"→";position:absolute;left:0;color:var(--red);font-weight:700;}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;}
+.ci{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.88rem;margin-bottom:3px;}
+.cx{font-size:.87rem;line-height:1.7;}
+.callout.tip{background:#eff6ff;border-left:4px solid #3b82f6;}
+.callout.tip .ct{color:#1d4ed8;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#92400e;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:#134e4a;}
+.callout.mem{background:#faf5ff;border-left:4px solid #7c3aed;}
+.callout.mem .ct{color:#5b21b6;}
+.callout.sol{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.sol .ct{color:var(--red-mid);}
+
+/* VOCAB CARDS */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px;}
+.vcard{height:130px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.08);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:600;color:#fca5a5;line-height:1.3;}
+.vhint{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:6px;}
+.vback{background:var(--red-pale);border:2px solid var(--red);transform:rotateY(180deg);}
+.vdef{font-size:.77rem;color:var(--navy);line-height:1.5;}
+
+/* VOCAB QUIZ */
+.vquiz-box{background:#fff;border:2px solid var(--navy);border-radius:12px;padding:24px;margin:20px 0;}
+.vquiz-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.vquiz-icon{width:38px;height:38px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.vquiz-title{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--navy);}
+.vquiz-sub{font-size:.78rem;color:var(--muted);}
+.vq{margin-bottom:18px;}
+.vq-text{font-size:.9rem;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.55;}
+.vq-opts{display:flex;flex-direction:column;gap:6px;}
+.vq-opt{display:flex;align-items:center;gap:8px;padding:9px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.86rem;transition:all .18s;line-height:1.4;}
+.vq-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.correct{border-color:var(--green);background:var(--green-pale);}
+.vq-opt.incorrect{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.revealed{pointer-events:none;}
+.vq-ol{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vq-opt.correct .vq-ol{background:var(--green);color:#fff;}
+.vq-opt.incorrect .vq-ol{background:var(--red);color:#fff;}
+.vq-result{display:none;margin-top:10px;padding:10px 14px;background:var(--green-pale);border-radius:7px;font-size:.82rem;color:var(--navy);border-left:3px solid var(--green);}
+.vq-result.show{display:block;}
+.vq-result.wrong{background:var(--red-pale);border-left-color:var(--red);}
+.vquiz-score{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:18px 22px;margin-top:14px;text-align:center;}
+.vq-score-n{font-family:"Playfair Display",serif;font-size:2.4rem;color:#fca5a5;}
+.vquiz-pass-msg{font-size:.88rem;color:rgba(255,255,255,.75);margin-top:4px;}
+.vquiz-retry-btn{margin-top:12px;padding:8px 22px;border-radius:7px;border:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:all .2s;}
+.vquiz-retry-btn:hover{background:rgba(255,255,255,.1);}
+
+/* PRACTICE BANK */
+.practice-locked{background:#fff;border:2px dashed var(--gray-200);border-radius:14px;padding:32px;text-align:center;margin:20px 0;}
+.practice-locked-icon{font-size:2.5rem;margin-bottom:10px;}
+.practice-locked-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--gray-600);margin-bottom:6px;}
+.practice-locked-sub{font-size:.85rem;color:var(--muted);}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.q-icon{width:40px;height:40px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.qh p{font-size:.78rem;color:var(--muted);}
+.qq{margin-bottom:22px;}
+.q-stem{font-size:.92rem;font-weight:600;color:var(--navy);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px;line-height:1.6;}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;flex-shrink:0;}
+.q-tag{display:inline-flex;align-items:center;background:var(--red-pale);border:1px solid var(--red);border-radius:20px;padding:1px 8px;font-size:.64rem;font-weight:700;color:var(--red-mid);letter-spacing:.3px;margin-left:4px;white-space:nowrap;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.qo{display:flex;align-items:flex-start;gap:8px;padding:10px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.87rem;transition:all .18s;line-height:1.5;}
+.qo:hover{border-color:var(--red);background:var(--red-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:9px;padding:10px 13px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);}
+
+/* DANGER ZONE */
+.dz-box{display:none;border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center;}
+.dz-box.green{background:var(--green-pale);border:2px solid var(--green);}
+.dz-box.yellow{background:var(--yellow-pale);border:2px solid var(--yellow);}
+.dz-box.red{background:var(--red-pale);border:2px solid var(--red);}
+.dz-emoji{font-size:2.8rem;margin-bottom:8px;}
+.dz-score{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;}
+.dz-box.green .dz-score{color:var(--green);}
+.dz-box.yellow .dz-score{color:var(--yellow);}
+.dz-box.red .dz-score{color:var(--red);}
+.dz-label{font-size:.95rem;font-weight:700;margin:4px 0;}
+.dz-msg{font-size:.85rem;color:var(--gray-600);margin-top:6px;line-height:1.6;}
+.dz-missed{margin-top:16px;text-align:left;background:#fff;border-radius:10px;padding:16px;}
+.dz-missed-title{font-size:.78rem;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.dz-missed-item{font-size:.82rem;color:var(--gray-600);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.dz-missed-item:last-child{border-bottom:none;}
+.dz-missed-item::before{content:"❌";font-size:.7rem;}
+.dz-submit-btn{margin-top:16px;padding:10px 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:background .2s;}
+.dz-submit-btn:hover{background:#1a3560;}
+
+/* GRAPH BOX */
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.87rem;margin-bottom:3px;}
+.graph-cap{font-size:.74rem;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.graph-wrap{position:relative;height:220px;max-width:500px;margin:0 auto;}
+.graph-q{margin-top:12px;padding:12px 14px;background:var(--gray-50);border-radius:8px;border-left:3px solid var(--navy);}
+.graph-q-stem{font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.graph-q-opts{display:flex;flex-direction:column;gap:5px;}
+.graph-q-opt{padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:.83rem;cursor:pointer;transition:all .15s;}
+.graph-q-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.graph-q-opt.correct-ans{background:var(--green-pale);border-color:var(--green);color:var(--navy);pointer-events:none;}
+.graph-q-opt.wrong-ans{background:var(--red-pale);border-color:var(--red);color:var(--navy);pointer-events:none;}
+.graph-q-opt.neutral{pointer-events:none;}
+
+/* NAV */
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:20px 48px;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0;}
+.nbtn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:7px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--red);color:#fff;}
+.nbtn.next:hover{background:var(--red-mid);}
+.nbtn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;right:20px;background:var(--green);color:#fff;padding:11px 18px;border-radius:8px;font-size:.83rem;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9000;display:none;align-items:center;gap:8px;}
+
+/* MODAL */
+#name-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.nm-box{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,.4);}
+.nm-emoji{font-size:2rem;margin-bottom:8px;}
+.nm-title{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--navy);margin-bottom:5px;}
+.nm-sub{font-size:.87rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.nm-label{font-size:.76rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;margin-bottom:5px;}
+.nm-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:.95rem;font-family:"Source Sans 3",sans-serif;outline:none;transition:border .2s;}
+.nm-input:focus{border-color:var(--red);}
+.nm-err{color:var(--red);font-size:.78rem;margin-top:4px;display:none;}
+.nm-btn{margin-top:16px;width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:background .2s;}
+.nm-btn:hover{background:#1a3560;}
+
+/* STREAK FIRE ANIMATION */
+@keyframes flamePop{0%{transform:scale(1);}50%{transform:scale(1.3);}100%{transform:scale(1);}}
+.streak-fire{display:inline-block;animation:flamePop 0.5s ease;}
+</style>
+</head>
+<body>
+
+<!-- NAME MODAL -->
+<div id="name-modal">
+  <div class="nm-box">
+    <div class="nm-emoji">📋</div>
+    <h2 class="nm-title">Biology SOL Prep</h2>
+    <p class="nm-sub">Unit 1: Scientific Investigation &amp; Data Analysis. Your quiz scores will be recorded for Mr. England. Enter your full name to begin.</p>
+    <label class="nm-label">YOUR FULL NAME</label>
+    <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name">
+    <div class="nm-err" id="name-err">Please enter your first and last name.</div>
+    <button class="nm-btn" onclick="startUnit()">Start Unit 1 →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">📤 <span id="toast-msg">Score sent!</span></div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a class="tb-back" href="index.html">← SOL Prep</a>
+  <div class="tb-unit">
+    <div class="tb-unit-label">Virginia Biology SOL</div>
+    <div class="tb-unit-name">Unit 1 · Scientific Investigation &amp; Data Analysis</div>
+  </div>
+  <div class="tb-stats">
+    <div class="tb-stat">
+      <span class="tb-stat-icon streak-fire" id="streak-fire">🔥</span>
+      <div><div class="tb-stat-val" id="streak-val">–</div><div class="tb-stat-lbl">day streak</div></div>
+    </div>
+    <div class="tb-stat">
+      <span class="tb-stat-icon">📅</span>
+      <div><div class="tb-stat-val" id="sol-countdown">–</div><div class="tb-stat-lbl">days to SOL</div></div>
+    </div>
+    <div class="tb-badge">BIO.1</div>
+  </div>
+</header>
+
+<!-- STEP PROGRESS BAR -->
+<nav class="steps-bar" id="steps-bar">
+  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Exp. Design</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Data &amp; Measurement</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Graph Reading</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Scientific Claims</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Practice Bank</button></div>
+</nav>
+<div class="steps-prog" id="steps-prog"></div>
+
+<main class="main" id="main">
+
+<!-- PANEL 0: SOL FOCUS CARD -->
+<div class="panel active" id="p0">
+  <div class="focus-hero">
+    <div class="focus-tag">🎯 SOL Standard</div>
+    <div class="focus-title">Scientific Investigation &amp; Data Analysis</div>
+    <div class="focus-sub">BIO.1 — The student will demonstrate an understanding of scientific reasoning, logic, and the nature of science by planning and conducting investigations in which data are collected, analyzed, and evaluated.</div>
+    <div class="focus-meta">
+      <div class="f-chip">~8% of SOL Test</div>
+      <div class="f-chip">~4 Questions on Real SOL</div>
+      <div class="f-chip">12 Vocab Terms</div>
+      <div class="f-chip">15 Practice Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="section">
+      <div class="eyebrow">What VDOE Says You Must Know</div>
+      <div class="sh2">BIO.1 Substandards Breakdown</div>
+      <div class="sol-grid">
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.1a — Experimental Design</div>
+          <ul class="sol-list">
+            <li>Identify the independent variable</li>
+            <li>Identify the dependent variable</li>
+            <li>Identify constants and control groups</li>
+            <li>Recognize a valid hypothesis</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.1b — Data &amp; Measurement</div>
+          <ul class="sol-list">
+            <li>Distinguish qualitative vs. quantitative observations</li>
+            <li>Distinguish accuracy vs. precision</li>
+            <li>Evaluate appropriate sample size</li>
+            <li>Recognize sources of experimental error</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.1c — Graphs &amp; Data Analysis</div>
+          <ul class="sol-list">
+            <li>Read and interpret bar, line, and scatter graphs</li>
+            <li>Identify trends and draw conclusions from data</li>
+            <li>Make predictions from graphed data</li>
+            <li>Choose the correct graph type for data</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.1d — Scientific Reasoning</div>
+          <ul class="sol-list">
+            <li>Distinguish correlation from causation</li>
+            <li>Evaluate the reliability of scientific sources</li>
+            <li>Understand the role of peer review</li>
+            <li>Identify inference vs. observation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout sol">
+        <div class="ci">⚠️</div>
+        <div class="cb">
+          <div class="ct">Top Miss Areas on Virginia SOL</div>
+          <div class="cx">Virginia data shows students most commonly miss: (1) <strong>identifying which variable is independent vs. dependent</strong>, (2) <strong>confusing accuracy and precision</strong>, and (3) <strong>graph-based questions where they misread axes or pick a cause-and-effect statement from a correlation graph</strong>. These three things appear on EVERY released SOL. Focus on them.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="eyebrow">Vocabulary Preview</div>
+      <div class="sh2">12 Terms — You Must Know All of These</div>
+      <table class="dt">
+        <tr><th>Term</th><th>One-Line Definition</th></tr>
+        <tr><td><strong>Hypothesis</strong></td><td>A testable, falsifiable prediction in "If…then…" format</td></tr>
+        <tr><td><strong>Independent Variable (IV)</strong></td><td>What the scientist deliberately changes (the cause)</td></tr>
+        <tr><td><strong>Dependent Variable (DV)</strong></td><td>What is measured as a result (the effect)</td></tr>
+        <tr><td><strong>Constants</strong></td><td>Factors kept identical in all groups to ensure a fair test</td></tr>
+        <tr><td><strong>Control Group</strong></td><td>The group receiving no treatment; the baseline for comparison</td></tr>
+        <tr><td><strong>Sample Size</strong></td><td>Number of subjects/trials; larger = more reliable results</td></tr>
+        <tr><td><strong>Replication</strong></td><td>Repeating an experiment multiple times to increase reliability</td></tr>
+        <tr><td><strong>Accuracy</strong></td><td>How close a measurement is to the TRUE or accepted value</td></tr>
+        <tr><td><strong>Precision</strong></td><td>How CONSISTENT/REPEATABLE results are (may or may not be accurate)</td></tr>
+        <tr><td><strong>Qualitative Data</strong></td><td>Descriptive observations using words (color, texture, smell)</td></tr>
+        <tr><td><strong>Quantitative Data</strong></td><td>Numerical observations using measurements and numbers</td></tr>
+        <tr><td><strong>Correlation vs. Causation</strong></td><td>Correlation = two variables change together. Causation = one CAUSES the other.</td></tr>
+      </table>
+    </div>
+    <div class="callout tip"><div class="ci">💡</div><div class="cb"><div class="ct">Study Tip for BIO.1</div><div class="cx">When you see an experiment scenario on the SOL, ask yourself: "What did the scientist CHANGE?" = Independent Variable. "What did the scientist MEASURE?" = Dependent Variable. "What stayed the same in all groups?" = Constants. This 3-question routine solves nearly every BIO.1a question.</div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Back</button><button class="nbtn next" onclick="goTo(1)">Experimental Design →</button></div>
+</div>
+
+<!-- PANEL 1: EXPERIMENTAL DESIGN -->
+<div class="panel" id="p1">
+  <div class="lc">
+    <div class="eyebrow">BIO.1a — Experimental Design</div>
+    <div class="sh2">Variables, Controls &amp; Hypotheses</div>
+    <div class="callout sol"><div class="ci">🎯</div><div class="cb"><div class="ct">This Is Worth ~2 Questions on the SOL</div><div class="cx">Nearly every BIO.1 question starts with a scenario. You must be able to quickly identify the IV, DV, constants, and control group from a short paragraph. Drill the routine below until it's automatic.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">The Experiment Routine: 4 Questions to Ask Every Time</div>
+      <table class="dt">
+        <tr><th>Question to Ask</th><th>What It Identifies</th><th>SOL Example Answer</th></tr>
+        <tr><td><strong>What did the scientist CHANGE?</strong></td><td>Independent Variable (IV)</td><td>"Amount of fertilizer" — the scientist used 5g, 10g, and 15g in different groups</td></tr>
+        <tr><td><strong>What did the scientist MEASURE?</strong></td><td>Dependent Variable (DV)</td><td>"Height of the plants after 2 weeks" — what was observed as a result</td></tr>
+        <tr><td><strong>What STAYED THE SAME in all groups?</strong></td><td>Constants (controlled variables)</td><td>"Type of plant, amount of water, amount of sunlight, type of soil" — all identical</td></tr>
+        <tr><td><strong>Which group received NO treatment?</strong></td><td>Control Group</td><td>"Group receiving 0g fertilizer" — the baseline comparison group</td></tr>
+      </table>
+
+      <div class="sh3">The Hypothesis: If…Then…Because</div>
+      <p class="prose">A valid hypothesis must be <strong>testable</strong> (you can design an experiment) and <strong>falsifiable</strong> (it could be proven wrong). The standard SOL format is:</p>
+      <div style="background:var(--navy);border-radius:10px;padding:18px 22px;margin:14px 0;">
+        <div style="font-family:'JetBrains Mono',monospace;color:#fca5a5;font-size:.88rem;line-height:1.9;">
+          "If [independent variable] is [changed in this way],<br>
+          then [dependent variable] will [predicted result],<br>
+          because [scientific reasoning]."
+        </div>
+      </div>
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">Common Mistake: Confusing IV and DV</div><div class="cx">The IV is the CAUSE — it's what you set up BEFORE the experiment. The DV is the EFFECT — it changes BECAUSE of the IV and is measured at the END. Ask: "Could this variable be set up before I start?" = IV. "Do I have to wait to measure this?" = DV.</div></div></div>
+
+      <div class="sh3">Why the Control Group Matters</div>
+      <p class="prose">Without a control group, you cannot determine whether your treatment caused the results. If plants with fertilizer grow taller than plants <em>without</em> fertilizer, the fertilizer likely caused the growth. Without the unfertilized control group, you'd have no comparison.</p>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory: "Control = Compare"</div><div class="cx">The control group is what you COMPARE the experimental groups against. It typically receives: no treatment (placebo), OR the standard/normal treatment. Everything else stays identical. "If there's no control, there's no comparison — and no valid conclusion."</div></div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← SOL Focus</button><button class="nbtn next" onclick="goTo(2)">Data &amp; Measurement →</button></div>
+</div>
+
+<!-- PANEL 2: DATA & MEASUREMENT -->
+<div class="panel" id="p2">
+  <div class="lc">
+    <div class="eyebrow">BIO.1b — Data &amp; Measurement</div>
+    <div class="sh2">Qualitative vs. Quantitative · Accuracy vs. Precision · Sample Size</div>
+
+    <div class="section">
+      <div class="sh3">Qualitative vs. Quantitative Data</div>
+      <table class="dt">
+        <tr><th>Type</th><th>Definition</th><th>Examples</th><th>SOL Tip</th></tr>
+        <tr><td><strong>Qualitative</strong></td><td>Descriptive observations using words — no numbers</td><td>"The liquid turned blue." "The plant is wilting." "The colony smells sour."</td><td>Any time you see a word like "appears," "looks," "smells," or "feels" = qualitative</td></tr>
+        <tr><td><strong>Quantitative</strong></td><td>Numerical observations using measurements</td><td>"The plant grew 12.5 cm." "3 out of 10 mice survived." "pH = 4.2"</td><td>Any time you see a NUMBER or UNIT = quantitative</td></tr>
+      </table>
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Memory: "Quantity = Number"</div><div class="cx">Quantitative has the word "quantity" in it → numbers. Qualitative has "quality" → descriptions. If it has a unit (cm, g, °C, mL), it is always quantitative.</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Accuracy vs. Precision — The Bull's-Eye Model</div>
+      <table class="dt">
+        <tr><th>Term</th><th>Definition</th><th>Bull's-Eye Analogy</th><th>Example</th></tr>
+        <tr><td><strong>Accuracy</strong></td><td>How close the measurement is to the TRUE (accepted) value</td><td>Shots cluster near the center (bull's-eye)</td><td>Measuring boiling water: 99°C, 100°C, 101°C (accurate — near 100°C)</td></tr>
+        <tr><td><strong>Precision</strong></td><td>How CONSISTENT/REPEATABLE the measurements are</td><td>Shots cluster tightly together (even if far from center)</td><td>Measuring boiling water: 95°C, 95°C, 95°C (precise — consistent, but inaccurate)</td></tr>
+      </table>
+      <div class="callout sol"><div class="ci">🎯</div><div class="cb"><div class="ct">The 4-Case SOL Question — Know All Four</div><div class="cx">
+        <strong>Accurate AND Precise</strong>: Results close to true value AND close together (95°C, 100°C, 99°C → no, these spread too much... 99°C, 100°C, 100°C ✓)<br>
+        <strong>Precise but NOT Accurate</strong>: Results close together but far from true value (e.g., 93°C, 93°C, 93°C — consistent but wrong)<br>
+        <strong>Accurate but NOT Precise</strong>: Results scattered around the true value (95°C, 100°C, 106°C — average near 100°C but spread)<br>
+        <strong>Neither</strong>: Results scattered AND far from true value (75°C, 95°C, 110°C)
+      </div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Sample Size &amp; Replication</div>
+      <table class="dt">
+        <tr><th>Term</th><th>Definition</th><th>Why It Matters</th></tr>
+        <tr><td><strong>Sample Size</strong></td><td>The number of subjects, trials, or observations in an experiment</td><td>Small sample size = unreliable results; a sample of 3 mice could vary wildly by chance. Large samples average out individual variation.</td></tr>
+        <tr><td><strong>Replication</strong></td><td>Repeating the entire experiment (not just multiple subjects)</td><td>If independent researchers get the same result, confidence increases that the finding is real, not a fluke of one lab</td></tr>
+      </table>
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">SOL Trap: "Only 3 subjects were tested"</div><div class="cx">When a question asks WHY a study is unreliable or invalid, "small sample size" is almost always the correct answer. On the SOL, if they tell you an experiment used 3, 4, or 5 subjects, the answer is almost always that the sample size is too small.</div></div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Exp. Design</button><button class="nbtn next" onclick="goTo(3)">Graph Reading →</button></div>
+</div>
+
+<!-- PANEL 3: GRAPH READING -->
+<div class="panel" id="p3">
+  <div class="lc">
+    <div class="eyebrow">BIO.1c — Graph Interpretation</div>
+    <div class="sh2">Reading &amp; Interpreting Scientific Graphs</div>
+    <div class="callout sol"><div class="ci">🎯</div><div class="cb"><div class="ct">Graph Questions Appear on EVERY SOL Test</div><div class="cx">At least 1-2 questions on every Biology SOL involve reading a graph. The question is never just "read the number" — it asks you to draw a conclusion, identify a trend, or predict what happens beyond the graph. The most common miss: students read the right number but pick the wrong conclusion from the options.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Graph Types &amp; When to Use Each</div>
+      <table class="dt">
+        <tr><th>Graph Type</th><th>Best Used For</th><th>What to Look For</th></tr>
+        <tr><td><strong>Bar Graph</strong></td><td>Comparing groups or categories (different soils, different treatments)</td><td>Tallest bar = highest value; compare heights across groups</td></tr>
+        <tr><td><strong>Line Graph</strong></td><td>Showing change over time or a continuous variable (temperature vs. rate)</td><td>Slope direction (rising/falling), peak/trough, where curves cross</td></tr>
+        <tr><td><strong>Scatter Plot</strong></td><td>Showing the relationship between two variables (study time vs. grade)</td><td>Trend direction: positive (both increase), negative (one increases, other decreases), no correlation (scattered)</td></tr>
+        <tr><td><strong>Pie Chart</strong></td><td>Showing parts of a whole (% composition)</td><td>Largest slice = largest proportion</td></tr>
+      </table>
+
+      <div class="sh3">Practice: Enzyme Activity vs. Temperature</div>
+      <div class="graph-box">
+        <div class="graph-title">Enzyme Reaction Rate at Different Temperatures</div>
+        <div class="graph-cap">A typical bell-curve enzyme activity graph — this type appears frequently on the Virginia Biology SOL</div>
+        <div class="graph-wrap"><canvas id="chartEnzyme"></canvas></div>
+        <div class="graph-q">
+          <div class="graph-q-stem">📊 Based on this graph, at which temperature is the enzyme MOST active?</div>
+          <div class="graph-q-opts">
+            <div class="graph-q-opt" onclick="graphPick(this,false)">A) 10°C — enzymes work best in cold conditions</div>
+            <div class="graph-q-opt" onclick="graphPick(this,true)">B) 37°C — this is the peak/optimum temperature on the graph</div>
+            <div class="graph-q-opt" onclick="graphPick(this,false)">C) 50°C — high temperature increases reaction rate</div>
+            <div class="graph-q-opt" onclick="graphPick(this,false)">D) 70°C — the enzyme is completely denatured here</div>
+          </div>
+          <div id="graph-feedback" style="display:none;margin-top:10px;padding:10px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);border-left:3px solid var(--green);">
+            ✅ Correct! The peak of the curve is at 37°C — this is the enzyme's optimal temperature. Above 37°C the enzyme begins to denature (unfold) and activity drops sharply to zero by ~60°C.
+          </div>
+          <div id="graph-feedback-w" style="display:none;margin-top:10px;padding:10px;background:var(--red-pale);border-radius:7px;font-size:.83rem;color:var(--navy);border-left:3px solid var(--red);">
+            ❌ Look at the peak of the line — it is highest at 37°C. That peak is the OPTIMUM temperature. High temperatures (above ~45°C) cause the enzyme to denature, dropping activity to zero.
+          </div>
+        </div>
+      </div>
+
+      <div class="sh3">Practice: Population Growth</div>
+      <div class="graph-box">
+        <div class="graph-title">Population Growth: Species A vs. Species B</div>
+        <div class="graph-cap">Line graphs comparing two populations — another common SOL format</div>
+        <div class="graph-wrap"><canvas id="chartPop"></canvas></div>
+        <div class="graph-q">
+          <div class="graph-q-stem">📊 In what year did Species A's population FIRST exceed Species B's?</div>
+          <div class="graph-q-opts">
+            <div class="graph-q-opt" onclick="graphPick2(this,false)">A) Year 2</div>
+            <div class="graph-q-opt" onclick="graphPick2(this,false)">B) Year 3</div>
+            <div class="graph-q-opt" onclick="graphPick2(this,true)">C) Year 4 — this is where the two lines cross</div>
+            <div class="graph-q-opt" onclick="graphPick2(this,false)">D) Year 6</div>
+          </div>
+          <div id="graph2-feedback" style="display:none;margin-top:10px;padding:10px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);border-left:3px solid var(--green);">
+            ✅ Year 4 is where the lines cross — Species A rises above Species B. Before year 4, Species B had more individuals; after year 4, Species A has more.
+          </div>
+          <div id="graph2-feedback-w" style="display:none;margin-top:10px;padding:10px;background:var(--red-pale);border-radius:7px;font-size:.83rem;color:var(--navy);border-left:3px solid var(--red);">
+            ❌ Find where the two lines intersect (cross) — that's where A first equals then exceeds B. The intersection is at Year 4.
+          </div>
+        </div>
+      </div>
+
+      <div class="sh3">5 Rules for SOL Graph Questions</div>
+      <table class="dt">
+        <tr><th>#</th><th>Rule</th></tr>
+        <tr><td><strong>1</strong></td><td><strong>Read the axes first.</strong> What is on the x-axis? What is on the y-axis? What are the units? Do this before looking at the data.</td></tr>
+        <tr><td><strong>2</strong></td><td><strong>Identify the trend.</strong> Is it increasing? Decreasing? Leveling off? Peaking? Crossing?</td></tr>
+        <tr><td><strong>3</strong></td><td><strong>Only conclude what the graph shows.</strong> Don't add outside knowledge. The correct answer is always directly supported by the graph.</td></tr>
+        <tr><td><strong>4</strong></td><td><strong>Beware of cause-and-effect answer choices.</strong> A graph shows correlation — it cannot prove causation. Wrong choices often say "causes" when the data only shows a relationship.</td></tr>
+        <tr><td><strong>5</strong></td><td><strong>Watch for "best describes" vs. "proves."</strong> A graph can "show" or "suggest" a trend — it rarely "proves" causation.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Data &amp; Measurement</button><button class="nbtn next" onclick="goTo(4)">Scientific Claims →</button></div>
+</div>
+
+<!-- PANEL 4: SCIENTIFIC CLAIMS -->
+<div class="panel" id="p4">
+  <div class="lc">
+    <div class="eyebrow">BIO.1d — Scientific Reasoning</div>
+    <div class="sh2">Correlation vs. Causation · Source Reliability · Experimental Errors</div>
+
+    <div class="section">
+      <div class="sh3">Correlation vs. Causation — The Most Misunderstood Concept in Biology</div>
+      <table class="dt">
+        <tr><th>Term</th><th>Meaning</th><th>SOL Example</th></tr>
+        <tr><td><strong>Correlation</strong></td><td>Two variables change together — but one does NOT necessarily CAUSE the other. A graph, scatter plot, or data table can show a correlation.</td><td>"Cities with more hospitals have more deaths." Both are higher in bigger cities. Hospitals don't cause death — city size causes both.</td></tr>
+        <tr><td><strong>Causation</strong></td><td>One variable DIRECTLY causes the change in another. Requires a controlled experiment to establish.</td><td>"Smoking increases risk of lung cancer" — proven through controlled studies showing the biological mechanism.</td></tr>
+      </table>
+      <div class="callout sol"><div class="ci">🎯</div><div class="cb"><div class="ct">SOL Trap: "A student CONCLUDES that X CAUSES Y from the graph"</div><div class="cx">On the SOL, they will show you data with two correlated variables and one answer choice will say something "causes" the other. That is almost always WRONG — data alone cannot prove causation. The correct answer will say "there is a relationship between" or "as X increases, Y also increases" (correlation language). Watch for the word "causes" in answer choices — it's usually the distractor.</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Source Reliability — Which Sources Can You Trust?</div>
+      <table class="dt">
+        <tr><th>Source Type</th><th>Reliability</th><th>Reason</th></tr>
+        <tr><td>Peer-reviewed journal article</td><td>🟢 <strong>Highest</strong></td><td>Reviewed by expert scientists before publication; most rigorous standard</td></tr>
+        <tr><td>Government agency website (.gov)</td><td>🟢 <strong>High</strong></td><td>CDC, NIH, VDOE — accountable, evidence-based</td></tr>
+        <tr><td>University/research institution (.edu)</td><td>🟡 <strong>Usually good</strong></td><td>Academically accountable but not all content peer-reviewed</td></tr>
+        <tr><td>News article (major outlet)</td><td>🟡 <strong>Medium</strong></td><td>May summarize studies but can oversimplify; check primary source</td></tr>
+        <tr><td>Personal blog, social media</td><td>🔴 <strong>Low</strong></td><td>No review process; anyone can post anything</td></tr>
+        <tr><td>Advertisement / product website</td><td>🔴 <strong>Lowest</strong></td><td>Financial interest in a conclusion; not objective</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Types of Experimental Errors</div>
+      <table class="dt">
+        <tr><th>Error Type</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>Procedural Error</strong></td><td>Mistake in how the experiment was conducted</td><td>Student forgot to add the reagent; timing was off</td></tr>
+        <tr><td><strong>Measurement Error</strong></td><td>Inaccurate reading of an instrument or recording</td><td>Reading a graduated cylinder from the wrong angle</td></tr>
+        <tr><td><strong>Sampling Error</strong></td><td>Sample was too small or not representative</td><td>Tested only 3 patients; tested only male rats</td></tr>
+        <tr><td><strong>Bias</strong></td><td>Experimenter's expectation influences the results</td><td>Unconsciously rounding measurements toward the expected value</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Inference vs. Observation</div><div class="cx"><strong>Observation:</strong> What you directly see, hear, measure — a fact recorded at the time. "The solution turned red." "The mouse ran 14 laps." <strong>Inference:</strong> A conclusion drawn FROM observations based on prior knowledge. "The solution is acidic." (inferred from color change) "The mouse appears stressed." (inferred from behavior). The SOL sometimes asks which statement is an inference vs. an observation — look for statements that go beyond the raw data.</div></div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Graph Reading</button><button class="nbtn next" onclick="goTo(5)">Vocab Lock-In →</button></div>
+</div>
+
+<!-- PANEL 5: VOCAB LOCK-IN -->
+<div class="panel" id="p5">
+  <div class="lc">
+    <div class="eyebrow">Step 6 of 7 — Vocab Lock-In</div>
+    <div class="sh2">Vocabulary Mastery Check</div>
+    <div class="callout sol"><div class="ci">🔒</div><div class="cb"><div class="ct">Pass 75% to Unlock the Practice Bank</div><div class="cx">Review all 12 cards, then take the 8-question vocab check. Score 6 out of 8 or better to unlock your 15-question Practice Bank. If you don't pass, review the missed terms and retry.</div></div></div>
+
+    <div class="section">
+      <div class="eyebrow">Flip Cards — Review All 12</div>
+      <div class="sh2" style="font-size:1.1rem;">Tap each card to reveal the definition</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hypothesis</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">A testable, falsifiable prediction written in "If…then…" format. Must be testable by experiment.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Independent Variable</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">What the scientist deliberately CHANGES (manipulates). The CAUSE. Set up BEFORE the experiment begins.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Dependent Variable</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">What is MEASURED as a result. The EFFECT. Changes because of the IV. Measured at the END.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Constants</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">All factors kept IDENTICAL in every group. Ensures the IV is the only thing that changes — makes the test fair.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Control Group</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">The group receiving NO treatment (or standard treatment). The BASELINE for comparison. Without it, conclusions are invalid.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sample Size</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">The number of subjects/observations in the study. LARGER sample size = MORE reliable results = less impact from chance variation.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Replication</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">Repeating the entire experiment to verify results. Consistent findings across replications = high confidence in the conclusion.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Accuracy</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">How CLOSE a measurement is to the TRUE/accepted value. Example: Boiling point of water = 100°C. Measuring 99°C is accurate.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Precision</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">How CONSISTENT/REPEATABLE measurements are. Getting 95°C, 95°C, 95°C is precise — even if wrong. Getting 94°C, 100°C, 106°C is NOT precise.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Qualitative Data</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">Descriptive data using WORDS. No numbers. "The flower is red." "The liquid smells sweet." "The colony appears fuzzy."</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Quantitative Data</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">Numerical data using MEASUREMENTS. Has numbers and units. "12.5 cm." "3 out of 10." "pH = 4.2." If it has a unit → quantitative.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Correlation vs. Causation</div><div class="vhint">tap to flip</div></div></div><div class="vback"><div class="vdef">Correlation = variables change TOGETHER (does NOT mean one causes the other). Causation = one variable DIRECTLY causes change in another. Graphs show correlation — NOT causation.</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- VOCAB QUIZ -->
+    <div class="vquiz-box" id="vquiz">
+      <div class="vquiz-header">
+        <div class="vquiz-icon">🧪</div>
+        <div><div class="vquiz-title">Vocabulary Check — 8 Questions</div><div class="vquiz-sub">Score 6/8 or better to unlock the Practice Bank</div></div>
+      </div>
+      <div class="vq" id="vq1">
+        <div class="vq-text">1. A scientist tests three fertilizer concentrations (5g, 10g, 15g) on plant growth. The fertilizer concentration is the ___.</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,1)"><div class="vq-ol">A</div>Dependent variable — it is measured at the end</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,1)"><div class="vq-ol">B</div>Independent variable — the scientist deliberately changed this</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,1)"><div class="vq-ol">C</div>Control group — it stays constant</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,1)"><div class="vq-ol">D</div>Constants — unchanged between groups</div>
+        </div>
+        <div class="vq-result" id="vqr1"></div>
+      </div>
+      <div class="vq" id="vq2">
+        <div class="vq-text">2. Which of these is QUANTITATIVE data?</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,2)"><div class="vq-ol">A</div>The liquid smells like vinegar</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,2)"><div class="vq-ol">B</div>The plant appears healthy and green</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,2)"><div class="vq-ol">C</div>The bacterial colony is 4.2 cm in diameter</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,2)"><div class="vq-ol">D</div>The solution turned blue when tested</div>
+        </div>
+        <div class="vq-result" id="vqr2"></div>
+      </div>
+      <div class="vq" id="vq3">
+        <div class="vq-text">3. A student measures boiling water five times and gets 93°C, 93°C, 93°C, 93°C, 93°C. The accepted value is 100°C. These results are:</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,3)"><div class="vq-ol">A</div>Accurate and precise</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,3)"><div class="vq-ol">B</div>Precise but not accurate — consistent results, but 7°C from the true value</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,3)"><div class="vq-ol">C</div>Accurate but not precise</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,3)"><div class="vq-ol">D</div>Neither accurate nor precise</div>
+        </div>
+        <div class="vq-result" id="vqr3"></div>
+      </div>
+      <div class="vq" id="vq4">
+        <div class="vq-text">4. In an experiment, Group B receives NO fertilizer while Group A receives fertilizer. Group B is the ___.</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,4)"><div class="vq-ol">A</div>Experimental group — it shows the effect of no treatment</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,4)"><div class="vq-ol">B</div>Independent variable — it changes between groups</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,4)"><div class="vq-ol">C</div>Control group — it receives no treatment and provides the baseline</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,4)"><div class="vq-ol">D</div>Dependent variable — it is measured after the experiment</div>
+        </div>
+        <div class="vq-result" id="vqr4"></div>
+      </div>
+      <div class="vq" id="vq5">
+        <div class="vq-text">5. A scatter plot shows that cities with more ice cream shops also have higher crime rates. The BEST conclusion is:</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,5)"><div class="vq-ol">A</div>Ice cream shops cause crime to increase</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,5)"><div class="vq-ol">B</div>There is a correlation — both variables increase with city size, but one does not cause the other</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,5)"><div class="vq-ol">C</div>Crime causes more ice cream shops to open</div>
+          <div class="vq-opt" data-ans="b" onclick="vqPick(this,5)"><div class="vq-ol">D</div>The data proves ice cream shops are dangerous</div>
+        </div>
+        <div class="vq-result" id="vqr5"></div>
+      </div>
+      <div class="vq" id="vq6">
+        <div class="vq-text">6. A student wants to know if caffeine improves memory. She tests 5 students with caffeine and 5 without. A classmate says the results are UNRELIABLE. The most likely reason is:</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="a" onclick="vqPick(this,6)"><div class="vq-ol">A</div>The sample size of 10 total students is too small to draw reliable conclusions</div>
+          <div class="vq-opt" data-ans="a" onclick="vqPick(this,6)"><div class="vq-ol">B</div>Caffeine has never been studied before</div>
+          <div class="vq-opt" data-ans="a" onclick="vqPick(this,6)"><div class="vq-ol">C</div>Memory cannot be measured quantitatively</div>
+          <div class="vq-opt" data-ans="a" onclick="vqPick(this,6)"><div class="vq-ol">D</div>There was no independent variable identified</div>
+        </div>
+        <div class="vq-result" id="vqr6"></div>
+      </div>
+      <div class="vq" id="vq7">
+        <div class="vq-text">7. Which statement is an INFERENCE (not an observation)?</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="d" onclick="vqPick(this,7)"><div class="vq-ol">A</div>The solution turned red when litmus paper was added</div>
+          <div class="vq-opt" data-ans="d" onclick="vqPick(this,7)"><div class="vq-ol">B</div>Three out of five seeds germinated within 7 days</div>
+          <div class="vq-opt" data-ans="d" onclick="vqPick(this,7)"><div class="vq-ol">C</div>The leaf measures 8.3 cm in length</div>
+          <div class="vq-opt" data-ans="d" onclick="vqPick(this,7)"><div class="vq-ol">D</div>The solution is acidic — inferred from the red color of the litmus paper</div>
+        </div>
+        <div class="vq-result" id="vqr7"></div>
+      </div>
+      <div class="vq" id="vq8">
+        <div class="vq-text">8. Which source would be MOST reliable for a Biology research report on antibiotic resistance?</div>
+        <div class="vq-opts">
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,8)"><div class="vq-ol">A</div>A personal blog post by a nurse sharing patient stories</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,8)"><div class="vq-ol">B</div>A social media post from a doctor with many followers</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,8)"><div class="vq-ol">C</div>A peer-reviewed article in the Journal of Infectious Diseases</div>
+          <div class="vq-opt" data-ans="c" onclick="vqPick(this,8)"><div class="vq-ol">D</div>A pharmaceutical company's website promoting their antibiotic</div>
+        </div>
+        <div class="vq-result" id="vqr8"></div>
+      </div>
+      <div class="vquiz-score" id="vquiz-score">
+        <div class="vq-score-n" id="vq-score-n">–/8</div>
+        <div class="vquiz-pass-msg" id="vq-pass-msg">–</div>
+        <button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">↺ Review &amp; Retry</button>
+      </div>
+    </div>
+
+    <!-- PRACTICE LOCKED (shown until vocab passed) -->
+    <div class="practice-locked" id="practice-locked">
+      <div class="practice-locked-icon">🔒</div>
+      <div class="practice-locked-title">Practice Bank Locked</div>
+      <div class="practice-locked-sub">Pass the vocabulary check above (6/8 or better) to unlock your 15-question Practice Bank.</div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Scientific Claims</button><button class="nbtn next" onclick="goTo(6)" id="to-practice-btn" disabled>Practice Bank →</button></div>
+</div>
+
+<!-- PANEL 6: PRACTICE BANK -->
+<div class="panel" id="p6">
+  <div class="lc">
+    <div class="eyebrow">Step 7 of 7 — Practice Bank</div>
+    <div class="sh2">15 SOL-Style Questions</div>
+    <div class="callout sol"><div class="ci">📝</div><div class="cb"><div class="ct">Virginia SOL Format · BIO.1 Standards</div><div class="cx">Every question is tagged to a specific BIO.1 substandard. Read carefully — these are written exactly like real SOL questions. After you finish all 15, you will get your Danger Zone score.</div></div></div>
+    <div class="quiz-box">
+      <div class="qh"><div class="q-icon">🎯</div><div><h3>Unit 1 Practice Bank</h3><p>15 questions · BIO.1 standards · score auto-submitted</p></div></div>
+      <div id="q-bank">
+
+        <div class="qq" data-ans="b" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">1</span><span>A student investigates how the amount of fertilizer affects the height of bean plants. Three groups receive 5g, 10g, or 15g of fertilizer. All other conditions are identical. What is the independent variable?<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The height of the plants after 2 weeks</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The amount of fertilizer added to each group</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The type of soil used</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The amount of water given to each plant</li></ul>
+          <div class="qexp">The independent variable is what the scientist deliberately changes — here, the fertilizer amount (5g/10g/15g) is different in each group. Plant height is the DV (measured result). Soil and water are constants (kept the same).</div></div>
+
+        <div class="qq" data-ans="d" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">2</span><span>In the same experiment, what is the dependent variable?<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The amount of fertilizer</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The type of bean plant</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The amount of sunlight</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The height of the plants after 2 weeks</li></ul>
+          <div class="qexp">The dependent variable is what you MEASURE — what depends on the IV. Here, plant height is observed and recorded after 2 weeks as a result of the fertilizer treatment.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">3</span><span>In an experiment testing plant fertilizers, Group A receives fertilizer and Group B receives only water. Group B is described as the:<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Experimental group</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Independent variable</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Control group — it receives no treatment, providing the baseline for comparison</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Dependent variable</li></ul>
+          <div class="qexp">The control group receives no experimental treatment (or the standard treatment). It is the baseline — without it, you cannot know whether the treatment caused the results. Group A (with fertilizer) is the experimental group.</div></div>
+
+        <div class="qq" data-ans="d" data-std="BIO.1b">
+          <div class="q-stem"><span class="q-num">4</span><span>Which of the following is a QUANTITATIVE observation?<span class="q-tag">BIO.1b</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The flower smells sweet</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The solution appears cloudy</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The bacterial colony looks fuzzy and white</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The plant grew 12.5 cm over 14 days</li></ul>
+          <div class="qexp">Quantitative data uses numbers and measurements. "12.5 cm" has both a number and a unit → quantitative. All other choices describe qualities without numbers → qualitative.</div></div>
+
+        <div class="qq" data-ans="b" data-std="BIO.1b">
+          <div class="q-stem"><span class="q-num">5</span><span>A student measures boiling water five times: 95°C, 95°C, 94°C, 95°C, 95°C. The accepted boiling point is 100°C. These results are BEST described as:<span class="q-tag">BIO.1b</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Accurate and precise</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Precise but not accurate — the values are consistent (cluster tightly at 94-95°C) but are 5-6°C below the true value of 100°C</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Accurate but not precise</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Neither accurate nor precise</li></ul>
+          <div class="qexp">Precise = consistent, repeatable results (94-95°C, tightly clustered). Accurate = close to the true value (100°C). These readings are consistent but 5-6°C from the true value → precise but NOT accurate.</div></div>
+
+        <div class="qq" data-ans="b" data-std="BIO.1b">
+          <div class="q-stem"><span class="q-num">6</span><span>A scientist tests a new drug on 4 mice. A peer reviewer says the results are unreliable. What is the MOST likely reason?<span class="q-tag">BIO.1b</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Mice are poor models for human drug testing</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The sample size of 4 is too small — results could be due to individual variation rather than the drug's effect</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The experiment was not replicated in a different lab</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The drug was not tested on humans first</li></ul>
+          <div class="qexp">When a SOL question asks why a study is unreliable and mentions a very small number of subjects, the answer is almost always SAMPLE SIZE. Four mice is far too small — results could happen by chance with that few subjects.</div></div>
+
+        <div class="qq" data-ans="b" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">7</span><span>A student writes: "If the amount of light increases, then the rate of photosynthesis will increase." This statement is a valid hypothesis because it is:<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>A proven scientific fact</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Testable and makes a specific, falsifiable prediction about the relationship between IV (light) and DV (photosynthesis rate)</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Based on a peer-reviewed study</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Written in question format</li></ul>
+          <div class="qexp">A valid hypothesis is testable (you can design an experiment) and falsifiable (it could be proven wrong). This hypothesis clearly states the IV and DV and predicts a relationship. It is NOT a fact — it is a prediction awaiting testing.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1c">
+          <div class="q-stem"><span class="q-num">8</span><span>📊 A bar graph shows plant heights: Sandy soil = 8 cm, Clay = 5 cm, Loam = 14 cm, Silt = 11 cm. Which conclusion is BEST supported by this data?<span class="q-tag">BIO.1c</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>All plants will grow best in loam soil</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Clay soil prevents plant growth</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>In this experiment, plants grown in loam soil reached the greatest height</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Loam soil causes plants to grow 14 cm</li></ul>
+          <div class="qexp">The data shows loam = 14 cm (tallest in this experiment). You cannot say "all plants" (over-generalizing) or "causes" (correlation ≠ causation). The correct answer only says what the data shows in this specific experiment.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1d">
+          <div class="q-stem"><span class="q-num">9</span><span>Data shows that cities with more fire stations also have more fires per year. A student concludes that fire stations CAUSE fires. What is WRONG with this conclusion?<span class="q-tag">BIO.1d</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The data clearly shows fire stations cause fires</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Fire stations should reduce fires, not cause them</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Correlation does not prove causation — both fire stations and fires increase with city size; a third variable (population/city size) explains both</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The sample size of cities is too small</li></ul>
+          <div class="qexp">Classic correlation ≠ causation trap. Larger cities have both more fires AND more fire stations — city size explains both. The data shows a correlation; it does NOT prove fire stations cause fires. A graph or data set alone can NEVER prove causation.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1b">
+          <div class="q-stem"><span class="q-num">10</span><span>A scientist repeats the same experiment 10 times and gets consistent results each time. This demonstrates that the results are:<span class="q-tag">BIO.1b</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Accurate — the results must be close to the true value</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Biased — the scientist expected the same result each time</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Reliable due to replication — consistent results across repeated trials increase confidence in the conclusion</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Based on too large a sample size</li></ul>
+          <div class="qexp">Replication = repeating the experiment multiple times. Consistent results across many replications = high reliability. Note: replication improves reliability, not necessarily accuracy — the consistent result could still be wrong if there was a systematic error in all trials.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1d">
+          <div class="q-stem"><span class="q-num">11</span><span>Which source would be MOST reliable for a report on the effects of climate change on coral reefs?<span class="q-tag">BIO.1d</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>A blog post from a scuba diving enthusiast who visited a reef</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>A news article from a local television station</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>A peer-reviewed article from the journal Nature Climate Change</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>A documentary produced by a resort near the reef</li></ul>
+          <div class="qexp">Peer-reviewed journal articles are the gold standard — reviewed by expert scientists before publication. Blogs, news articles, and documentaries by financially interested parties are all less reliable. The resort has a financial interest (biased source).</div></div>
+
+        <div class="qq" data-ans="b" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">12</span><span>Why is a control group necessary in an experiment?<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The control group receives the highest dose of the experimental treatment</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Without a control group, there is no baseline for comparison — it is impossible to determine whether the experimental treatment caused the observed results</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The control group always produces the best results</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Control groups are only needed in chemistry experiments</li></ul>
+          <div class="qexp">The control group provides the comparison baseline. Example: if treated plants are taller than untreated plants, you can conclude the treatment caused the difference — but ONLY if you had the untreated control to compare against. No control group = no valid conclusion.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1c">
+          <div class="q-stem"><span class="q-num">13</span><span>📊 A scatter plot shows data points trending upward from left to right (as x increases, y increases). What type of relationship does this show?<span class="q-tag">BIO.1c</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>A negative correlation — the variables move in opposite directions</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Causation — the x-variable causes the y-variable to increase</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>A positive correlation — both variables increase together, though one does not necessarily cause the other</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>No relationship — scatter plots cannot show trends</li></ul>
+          <div class="qexp">Upward trend on a scatter plot = positive correlation (both variables increase together). This is a correlation — NOT causation. A scatter plot cannot prove that one variable causes the other; only a controlled experiment can establish causation.</div></div>
+
+        <div class="qq" data-ans="a" data-std="BIO.1a">
+          <div class="q-stem"><span class="q-num">14</span><span>A student tests whether temperature affects seed germination. Seeds are planted at 10°C, 20°C, 30°C, and 40°C. After 7 days, she counts the number of seeds that sprouted. What is the dependent variable?<span class="q-tag">BIO.1a</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The number of seeds that germinated (sprouted) — this is measured as a result of the temperature change</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The temperature of the growing environment</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The type of seeds used</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The number of days before germination was checked</li></ul>
+          <div class="qexp">The DV is what is MEASURED at the end. The scientist counts the sprouted seeds after 7 days — this number depends on the temperature (IV). Temperature is the IV (it was set at different values). Seed type and days are constants.</div></div>
+
+        <div class="qq" data-ans="c" data-std="BIO.1d">
+          <div class="q-stem"><span class="q-num">15</span><span>A student observes that when litmus paper turns red, it indicates an acid is present. Which statement is an INFERENCE based on this observation?<span class="q-tag">BIO.1d</span></span></div>
+          <ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The litmus paper turned red when placed in the solution</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The student dipped the litmus paper into the solution</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The solution is likely acidic — this conclusion is drawn from the observation using prior knowledge</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Three pieces of litmus paper were used in the experiment</li></ul>
+          <div class="qexp">An observation is what you directly see. An inference is a conclusion drawn FROM an observation using prior knowledge. "The paper turned red" = observation. "The solution is acidic" = inference (we know red litmus = acid, so we infer the solution's nature).</div></div>
+
+      </div><!-- end q-bank -->
+
+      <!-- DANGER ZONE RESULT -->
+      <div class="dz-box" id="dz-result">
+        <div class="dz-emoji" id="dz-emoji">–</div>
+        <div class="dz-score" id="dz-score">–</div>
+        <div class="dz-label" id="dz-label">–</div>
+        <div class="dz-msg" id="dz-msg">–</div>
+        <div class="dz-missed" id="dz-missed" style="display:none;">
+          <div class="dz-missed-title">Standards to Review</div>
+          <div id="dz-missed-list"></div>
+        </div>
+        <button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">📤 Submit Score to Mr. England</button>
+      </div>
+    </div><!-- end quiz-box -->
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Vocab Lock-In</button><button class="nbtn next" disabled>Unit Complete 🎉</button></div>
+</div>
+</main>
+<script>
+const APPS_URL="https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec";
+const SOL_DATE=new Date("2026-05-07");
+const UNIT="unit1";
+let studentName="",currentPanel=0,vqAnswers={},vqScore=0,vocabPassed=false,pracAnswered=0,pracCorrect=0,missedStds={};
+
+/* ── STREAK & COUNTDOWN ─────────────────────────── */
+function initMeta(){
+  const today=new Date().toDateString();
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  let streak=parseInt(localStorage.getItem("sol_streak")||"0");
+  const last=localStorage.getItem("sol_streak_last");
+  if(last===today){/* same day — no change */}
+  else if(last===yesterday){streak++;localStorage.setItem("sol_streak",streak);localStorage.setItem("sol_streak_last",today);}
+  else{streak=1;localStorage.setItem("sol_streak",1);localStorage.setItem("sol_streak_last",today);}
+  document.getElementById("streak-val").textContent=streak+"🔥".repeat(Math.min(streak,3)).replace(/🔥/g,"");
+  document.getElementById("streak-val").textContent=streak;
+  if(streak>=3){const f=document.getElementById("streak-fire");f.style.animation="none";setTimeout(()=>f.style.animation="flamePop 0.5s ease",10);}
+  const days=Math.max(0,Math.ceil((SOL_DATE-new Date())/(1000*60*60*24)));
+  document.getElementById("sol-countdown").textContent=days;
+  document.getElementById("sol-countdown").style.color=days<=14?"#fca5a5":days<=21?"#fcd34d":"#fff";
+}
+
+/* ── START ────────────────────────────────────────── */
+function startUnit(){
+  const n=document.getElementById("student-name").value.trim();
+  if(n.split(/\s+/).length<2){document.getElementById("name-err").style.display="block";return;}
+  studentName=n;
+  document.getElementById("name-modal").style.display="none";
+  initMeta();
+  initCharts();
+  // restore progress if returning
+  const saved=localStorage.getItem("sol_"+UNIT+"_panel");
+  if(saved)goTo(parseInt(saved));
+}
+
+/* ── NAVIGATION ───────────────────────────────────── */
+function goTo(n){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  document.querySelectorAll(".step-btn").forEach((b,i)=>{b.classList.remove("active");});
+  const sb=document.getElementById("sb"+n);if(sb)sb.classList.add("active");
+  currentPanel=n;
+  window.scrollTo({top:0,behavior:"smooth"});
+  const pct=Math.round((n/6)*100);
+  document.getElementById("steps-prog").style.width=pct+"%";
+  localStorage.setItem("sol_"+UNIT+"_panel",n);
+}
+
+/* ── INTERACTIVE GRAPH QUESTIONS ─────────────────── */
+function graphPick(opt,correct){
+  if(opt.classList.contains("correct-ans")||opt.classList.contains("wrong-ans"))return;
+  const siblings=opt.parentElement.querySelectorAll(".graph-q-opt");
+  siblings.forEach(s=>s.classList.add("neutral"));
+  if(correct){
+    opt.classList.remove("neutral");opt.classList.add("correct-ans");
+    document.getElementById("graph-feedback").style.display="block";
+  } else {
+    opt.classList.remove("neutral");opt.classList.add("wrong-ans");
+    document.getElementById("graph-feedback-w").style.display="block";
+  }
+}
+function graphPick2(opt,correct){
+  if(opt.classList.contains("correct-ans")||opt.classList.contains("wrong-ans"))return;
+  const siblings=opt.parentElement.querySelectorAll(".graph-q-opt");
+  siblings.forEach(s=>s.classList.add("neutral"));
+  if(correct){
+    opt.classList.remove("neutral");opt.classList.add("correct-ans");
+    document.getElementById("graph2-feedback").style.display="block";
+  } else {
+    opt.classList.remove("neutral");opt.classList.add("wrong-ans");
+    document.getElementById("graph2-feedback-w").style.display="block";
+  }
+}
+
+/* ── VOCAB QUIZ ───────────────────────────────────── */
+const VQ_CORRECT={1:"b",2:"c",3:"b",4:"c",5:"b",6:"a",7:"d",8:"c"};
+const VQ_EXPLAIN={
+  1:"The INDEPENDENT variable is what the scientist changes. The scientist set different fertilizer amounts — this is the IV.",
+  2:"Quantitative data has numbers and units. '4.2 cm' is a measurement — quantitative. All others describe qualities without numbers.",
+  3:"All readings are at 93-95°C (consistent = precise) but all are wrong by 5-7°C (inaccurate). Precise but NOT accurate.",
+  4:"The control group receives NO treatment (or standard treatment). Group B with water = no fertilizer = control group.",
+  5:"Two variables correlating does NOT prove causation. City size explains both (larger city = more of both). Correlation ≠ causation.",
+  6:"Small sample size is the issue. 10 students (5 per group) is far too few to draw reliable conclusions about drug effects.",
+  7:"An observation is what you directly see/measure. An inference is a CONCLUSION drawn from observations using prior knowledge. 'The solution is acidic' is inferred, not directly seen.",
+  8:"Peer-reviewed journal articles are the gold standard. The resort documentary has a financial interest — biased source."
+};
+function vqPick(opt,qNum){
+  const qq=opt.closest(".vq");
+  if(qq.querySelector(".vq-opt.correct"))return;
+  const correct=VQ_CORRECT[qNum];
+  const chosen=opt.dataset.ans||opt.getAttribute("onclick").match(/'([a-d])'/)?.[1]||detectVQAnswer(opt,qNum);
+  const isCorrect=(opt===getVQCorrectOpt(qq,correct));
+  qq.querySelectorAll(".vq-opt").forEach(o=>o.classList.add("revealed"));
+  getVQCorrectOpt(qq,correct).classList.add("correct");
+  if(!isCorrect)opt.classList.add("incorrect");
+  const res=document.getElementById("vqr"+qNum);
+  if(isCorrect){res.textContent="✅ "+VQ_EXPLAIN[qNum];res.className="vq-result show";}
+  else{res.textContent="❌ "+VQ_EXPLAIN[qNum];res.className="vq-result show wrong";}
+  vqAnswers[qNum]=isCorrect;
+  if(Object.keys(vqAnswers).length===8)gradeVocab();
+}
+function getVQCorrectOpt(qq,correct){
+  const opts=qq.querySelectorAll(".vq-opt");
+  const map={a:0,b:1,c:2,d:3};
+  return opts[map[correct]];
+}
+function gradeVocab(){
+  vqScore=Object.values(vqAnswers).filter(Boolean).length;
+  const box=document.getElementById("vquiz-score");
+  const nEl=document.getElementById("vq-score-n");
+  const msgEl=document.getElementById("vq-pass-msg");
+  const retryBtn=document.getElementById("vq-retry-btn");
+  nEl.textContent=vqScore+"/8";
+  box.style.display="block";
+  if(vqScore>=6){
+    msgEl.textContent="✅ Passed! Practice Bank unlocked.";
+    vocabPassed=true;
+    document.getElementById("practice-locked").style.display="none";
+    document.getElementById("to-practice-btn").disabled=false;
+    localStorage.setItem("sol_"+UNIT+"_vocab","passed");
+  } else {
+    msgEl.textContent="❌ Score "+vqScore+"/8. Need 6/8. Review missed terms and retry.";
+    retryBtn.style.display="inline-block";
+  }
+}
+function retryVocab(){
+  vqAnswers={};vqScore=0;
+  document.querySelectorAll(".vq-opt").forEach(o=>{o.classList.remove("revealed","correct","incorrect");});
+  document.querySelectorAll(".vq-result").forEach(r=>{r.className="vq-result";r.textContent="";});
+  document.getElementById("vquiz-score").style.display="none";
+}
+
+/* ── SOL PRACTICE QUESTIONS ─────────────────────── */
+function solPick(opt){
+  const qq=opt.closest(".qq");
+  if(qq.querySelector(".qo.revealed"))return;
+  const correct=qq.dataset.ans;
+  const std=qq.dataset.std||"BIO.1";
+  qq.querySelectorAll(".qo").forEach(o=>{
+    o.classList.add("revealed");
+    if(o.dataset.v===correct)o.classList.add("correct");
+    else if(o===opt&&opt.dataset.v!==correct)o.classList.add("incorrect");
+  });
+  const exp=qq.querySelector(".qexp");
+  if(exp){
+    exp.classList.add("show");
+    if(opt.dataset.v!==correct)exp.classList.add("qexp-wrong");
+  }
+  pracAnswered++;
+  const isCorrect=(opt.dataset.v===correct);
+  if(isCorrect)pracCorrect++;
+  else{if(!missedStds[std])missedStds[std]=0;missedStds[std]++;}
+  if(pracAnswered===15)showDangerZone();
+}
+function showDangerZone(){
+  const pct=Math.round((pracCorrect/15)*100);
+  const box=document.getElementById("dz-result");
+  box.style.display="block";
+  document.getElementById("dz-score").textContent=pracCorrect+"/15";
+  let cls,emoji,label,msg;
+  if(pct>=80){cls="green";emoji="🟢";label="STRONG — You're in good shape on BIO.1";msg="Score: "+pct+"%. You're above the 80% threshold. Keep reviewing other units.";}
+  else if(pct>=60){cls="yellow";emoji="🟡";label="CAUTION — Review needed on BIO.1";msg="Score: "+pct+"%. You're below 80%. Review the missed standards and retake this unit before the SOL.";}
+  else{cls="red";emoji="🔴";label="DANGER ZONE — BIO.1 needs work";msg="Score: "+pct+"%. Re-read ALL content sections for this unit, then retake the Practice Bank.";}
+  box.className="dz-box "+cls;
+  document.getElementById("dz-emoji").textContent=emoji;
+  document.getElementById("dz-label").textContent=label;
+  document.getElementById("dz-msg").textContent=msg;
+  // missed standards
+  if(Object.keys(missedStds).length>0){
+    const missed=document.getElementById("dz-missed");
+    const list=document.getElementById("dz-missed-list");
+    missed.style.display="block";
+    const stdDesc={
+      "BIO.1a":"Experimental Design — Variables &amp; Controls (Step 2)",
+      "BIO.1b":"Data &amp; Measurement — Accuracy, Precision, Sample Size (Step 3)",
+      "BIO.1c":"Graph Interpretation (Step 4)",
+      "BIO.1d":"Scientific Reasoning — Correlation &amp; Causation (Step 5)"
+    };
+    list.innerHTML=Object.keys(missedStds).map(s=>`<div class="dz-missed-item"><strong>${s}</strong>: ${stdDesc[s]||s} — missed ${missedStds[s]} question(s)</div>`).join("");
+  }
+  // save to localStorage
+  localStorage.setItem("sol_"+UNIT+"_score",pracCorrect+"/15");
+  localStorage.setItem("sol_"+UNIT+"_pct",pct);
+  localStorage.setItem("sol_"+UNIT+"_status",pct>=80?"green":pct>=60?"yellow":"red");
+  localStorage.setItem("sol_"+UNIT+"_done","true");
+  // mark step done
+  document.getElementById("sb6").classList.add("done");
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function submitFinalScore(){
+  if(!studentName)return;
+  const payload={student:studentName,module:"SOL Prep - Unit 1",lesson:"Practice Bank",score:pracCorrect+"/15",pct:Math.round((pracCorrect/15)*100),missed:Object.keys(missedStds).join(", ")||"none",timestamp:new Date().toISOString()};
+  fetch(APPS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>showToast("Score sent to Mr. England ✓"))
+    .catch(()=>showToast("Score saved locally"));
+  document.getElementById("dz-submit-btn").textContent="✅ Score Sent!";
+  document.getElementById("dz-submit-btn").disabled=true;
+}
+function showToast(msg){
+  const t=document.getElementById("toast");
+  document.getElementById("toast-msg").textContent=msg;
+  t.style.display="flex";setTimeout(()=>{t.style.display="none";},3500);
+}
+
+/* ── CHARTS ───────────────────────────────────────── */
+function initCharts(){
+  new Chart(document.getElementById("chartEnzyme"),{type:"line",data:{
+    labels:["0","10","20","30","37","45","55","65","70"],
+    datasets:[{label:"Reaction Rate",data:[0,8,20,45,80,55,20,5,0],borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.1)",fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:"#dc2626"}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:"Temperature (°C)"}},y:{title:{display:true,text:"Relative Reaction Rate"},min:0,max:100}}}});
+
+  new Chart(document.getElementById("chartPop"),{type:"line",data:{
+    labels:["Year 1","Year 2","Year 3","Year 4","Year 5","Year 6","Year 7"],
+    datasets:[
+      {label:"Species A",data:[10,20,35,55,80,110,145],borderColor:"#dc2626",tension:0.3,pointRadius:4},
+      {label:"Species B",data:[60,65,60,55,50,40,30],borderColor:"#0f2240",tension:0.3,pointRadius:4}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top"}},scales:{y:{title:{display:true,text:"Population Size"},min:0,max:160}}}});
+}
+
+// init countdown immediately (no name required)
+document.addEventListener("DOMContentLoaded",()=>{
+  initMeta();
+  // restore vocab pass
+  if(localStorage.getItem("sol_unit1_vocab")==="passed"){
+    vocabPassed=true;
+    document.getElementById("practice-locked").style.display="none";
+    document.getElementById("to-practice-btn").disabled=false;
+  }
+});
+</script>
+</body>
+</html>
