@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry of Life · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="../shared/portal-base.css">
+<link rel="stylesheet" href="../shared/portal-sidebar.css">
+<style>
+/* Module-specific hero gradients */
+.hero-chem{background:linear-gradient(135deg,#1a2a00,#4a6a00);}
+.hero-water{background:linear-gradient(135deg,#0a2a4a,#0b6a8a);}
+.hero-carb{background:linear-gradient(135deg,#4a1a00,#8a5000);}
+.hero-prot{background:linear-gradient(135deg,#2a0a5a,#6c3fa0);}
+/* Dark checkpoint override */
+.cp-box{background:linear-gradient(135deg,#1a2a4a,#0a3a3a)!important;color:#fff;border-color:var(--teal)!important;}
+.cp-box .cp-title{color:#fff;}
+.cp-box .cp-sub{color:rgba(255,255,255,.48);}
+.cp-box .cp-q{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:13px;line-height:1.6;padding:11px 15px;background:rgba(255,255,255,.06);border-radius:8px;border-left:3px solid var(--teal-light);}
+.cp-box .cp-ta{background:rgba(255,255,255,.05);color:#fff;border-color:rgba(255,255,255,.13);}
+.cp-box .cp-ta:focus{border-color:var(--teal-light);}
+.cp-box .cp-ta::placeholder{color:rgba(255,255,255,.22);}
+.cp-box .cp-ctr{color:rgba(255,255,255,.32);}
+.cp-box .cp-ctr.ok{color:var(--teal-light);}
+.cp-box .cp-btn{background:var(--teal);}
+.cp-box .cp-btn:hover{background:var(--teal-light);}
+.cp-box .cp-btn:disabled{background:rgba(255,255,255,.13);}
+.cp-box .cp-done{color:var(--teal-light);}
+</style>
+</head>
+<body class="theme-bio">
+
+<!-- TOAST -->
+<div id="submit-toast"><span style="font-size:1.1rem;">🤖</span><span id="toast-msg">Score sent!</span></div>
+
+<!-- NAME MODAL -->
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0f2240;margin-bottom:8px;">Welcome to Chemistry of Life</div>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:20px;line-height:1.6;">Enter your name to begin. Your scores will be sent to Mr. England automatically.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input type="text" id="student-name" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:4px;display:none;">Please enter your name.</div>
+    <button onclick="startModule()" style="margin-top:16px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a href="index.html" class="tb-back">← Biology</a>
+  <div class="tb-logo">⚗️</div>
+  <div><div class="tb-name">Southern Gap High School</div><div class="tb-sub">Biology · Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Chemistry of Life</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Atoms &amp; Bonds</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Atoms &amp; Elements</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Chemical Bonds</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Water &amp; Carbon</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Water &amp; Its Properties</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Carbon &amp; Macromolecules</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Macromolecules</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Carbohydrates &amp; Lipids</div></a>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Lesson 6 · Proteins &amp; Nucleic Acids</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Assessment</div>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+
+<main class="main" id="main">
+<!-- ═══════════════════════════════════════════════════
+     PANEL 0 — UNIT OVERVIEW: CHEMISTRY OF LIFE
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · <span>Unit Overview</span></div>
+    <div class="h-title">Chemistry of Life</div>
+    <div class="h-desc">The elements carbon, hydrogen, nitrogen, oxygen, sulfur, and phosphorus are the key building blocks of the chemicals found in living things. They form the carbohydrates, nucleic acids, proteins, and lipids that are the fundamental molecular components of all organisms.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 2</div>
+      <div class="h-chip">🎯 7 Lessons · 8 Quizzes</div>
+      <div class="h-chip">Virginia SOL BIO.2</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="diagram-wrap">
+      <div class="d-title">Figure 2.1 — Biological Macromolecules in Food</div>
+      <img src="images/ch2/fig2-1-food.png" alt="Foods rich in biological macromolecules" style="width:100%;max-width:600px;border-radius:10px;">
+      <div class="d-caption">Foods such as bread, fruit, and cheese are rich sources of biological macromolecules. (credit: modification of work by Bengt Nyman)</div>
+    </div>
+
+    <p class="prose">Food provides an organism with nutrients — the matter it needs to survive. Many of these critical nutrients come in the form of biological macromolecules, or large molecules necessary for life. These macromolecules are built from different combinations of smaller organic molecules. What specific types of biological macromolecules do living things require? How are these molecules formed? What functions do they serve? In this chapter, we will explore these questions.</p>
+
+    <div class="obj-box">
+      <div class="obj-label">📌 What You Will Learn in This Module</div>
+      <ul class="obj-list">
+        <li>Describe matter and elements</li>
+        <li>Describe the interrelationship between protons, neutrons, and electrons</li>
+        <li>Explain how electrons can be donated or shared between atoms to form bonds</li>
+        <li>Distinguish ionic, covalent, hydrogen, and van der Waals bonds</li>
+        <li>Describe the properties of water that are critical to maintaining life</li>
+        <li>Explain pH, acids, bases, and buffers</li>
+        <li>Describe the role of carbon in biological molecules</li>
+        <li>Describe the structures and functions of carbohydrates, lipids, proteins, and nucleic acids</li>
+        <li>Explain dehydration synthesis and hydrolysis</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Module Map</div>
+      <div class="sh2">Seven Lessons · OpenStax Concepts of Biology Ch. 2</div>
+      <table class="dt">
+        <thead><tr><th>#</th><th>Lesson</th><th>Key Concepts</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Atoms &amp; Elements</td><td>Matter, elements, atoms, protons/neutrons/electrons, atomic number, mass number, isotopes, carbon dating</td><td>CB 2.1</td></tr>
+          <tr><td>2</td><td>Chemical Bonds</td><td>Electron shells, octet rule, ions, ionic bonds, covalent bonds, polar/nonpolar, hydrogen bonds, van der Waals</td><td>CB 2.1</td></tr>
+          <tr><td>3</td><td>Water &amp; Its Properties</td><td>Polarity, cohesion, adhesion, surface tension, heat capacity, solvent, ice density, pH, acids, bases, buffers</td><td>CB 2.2</td></tr>
+          <tr><td>4</td><td>Carbon &amp; Macromolecules</td><td>Carbon chemistry, functional groups, dehydration synthesis, hydrolysis, monomers and polymers</td><td>CB 2.3</td></tr>
+          <tr><td>5</td><td>Carbohydrates &amp; Lipids</td><td>Mono/di/polysaccharides, cellulose, starch, glycogen, triglycerides, phospholipids, steroids, trans fats</td><td>CB 2.3</td></tr>
+          <tr><td>6</td><td>Proteins &amp; Nucleic Acids</td><td>Amino acids, peptide bonds, 4 levels of protein structure, enzymes, denaturation, nucleotides, DNA, RNA</td><td>CB 2.3</td></tr>
+          <tr><td>7</td><td>Unit Review &amp; Practice Test</td><td>All topics — 20-question comprehensive assessment</td><td>All</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Virginia SOL Alignment</div>
+      <div class="sh2">Standards Covered in This Module</div>
+      <table class="dt">
+        <thead><tr><th>Standard</th><th>Description</th><th>Lessons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>BIO.2a</strong></td><td>The chemical and biochemical principles vital to life, including water chemistry and pH</td><td>1, 2, 3</td></tr>
+          <tr><td><strong>BIO.2b</strong></td><td>The structure and function of macromolecules (carbohydrates, lipids, proteins, nucleic acids)</td><td>4, 5, 6</td></tr>
+          <tr><td><strong>BIO.2c</strong></td><td>The role of enzymes as biological catalysts</td><td>6</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 2</div><div class="cx">All content in this module is adapted from OpenStax Concepts of Biology, Chapter 2: Chemistry of Life, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" disabled>← Previous</button>
+    <div class="lnav-info">Overview · Start Here</div>
+    <button class="nbtn next" onclick="goTo(1)">Lesson 1: Atoms &amp; Elements →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 1 — ATOMS & ELEMENTS
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+  <div class="hero hero-chem">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 1</span></div>
+    <div class="h-title">Atoms &amp; Elements</div>
+    <div class="h-desc">At its most fundamental level, life is made up of matter. Matter occupies space and has mass. All matter is composed of elements, substances that cannot be broken down or transformed chemically into other substances.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.1</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe matter and elements</li>
+        <li>Describe the structure of an atom: protons, neutrons, and electrons</li>
+        <li>Define atomic number and mass number</li>
+        <li>Explain what isotopes are and how carbon dating works</li>
+        <li>Distinguish between radioactive and stable isotopes</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Matter and Elements</div>
+      <div class="sh2">The Building Blocks of Everything</div>
+      <p class="prose">At its most fundamental level, life is made up of <strong>matter</strong>. Matter occupies space and has mass. All matter is composed of <strong>elements</strong>, substances that cannot be broken down or transformed chemically into other substances. Each element is made of atoms, each with a constant number of protons and unique properties. A total of 118 elements have been defined; however, only 92 occur naturally, and fewer than 30 are found in living cells. The remaining 26 elements are unstable and, therefore, do not exist for very long or are theoretical and have yet to be detected.</p>
+      <p class="prose">Each element is designated by its <strong>chemical symbol</strong> (such as H, N, O, C, and Na), and possesses unique properties. These unique properties allow elements to combine and to bond with each other in specific ways.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Atomic Structure</div>
+      <div class="sh2">Atoms: The Smallest Unit of an Element</div>
+      <p class="prose">An <strong>atom</strong> is the smallest component of an element that retains all of the chemical properties of that element. For example, one hydrogen atom has all of the properties of the element hydrogen, such as it exists as a gas at room temperature, and it bonds with oxygen to create a water molecule. Hydrogen atoms cannot be broken down into anything smaller while still retaining the properties of hydrogen. If a hydrogen atom were broken down into subatomic particles, it would no longer have the properties of hydrogen.</p>
+      <p class="prose">At the most basic level, all organisms are made of a combination of elements. They contain atoms that combine together to form molecules. In multicellular organisms, such as animals, molecules can interact to form cells that combine to form tissues, which make up organs. These combinations continue until entire multicellular organisms are formed.</p>
+      <p class="prose">All atoms contain <strong>protons</strong>, <strong>electrons</strong>, and <strong>neutrons</strong> (Figure 2.2). The most common isotope of hydrogen (H) is the only exception and is made of one proton and one electron with no neutrons. A <strong>proton</strong> is a positively charged particle that resides in the nucleus (the core of the atom) of an atom and has a mass of 1 and a charge of +1. An <strong>electron</strong> is a negatively charged particle that travels in the space around the nucleus. In other words, it resides outside of the nucleus. It has a negligible mass and has a charge of –1.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.2 — Structure of an Atom</div>
+        <img src="images/ch2/fig2-2-atom.png" alt="Atom showing protons, neutrons, and electrons" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">Atoms are made up of protons and neutrons located within the nucleus, and electrons surrounding the nucleus.</div>
+      </div>
+
+      <p class="prose"><strong>Neutrons</strong>, like protons, reside in the nucleus of an atom. They have a mass of 1 and no charge. The positive (protons) and negative (electrons) charges balance each other in a neutral atom, which has a net zero charge.</p>
+      <p class="prose">Because protons and neutrons each have a mass of 1, the mass of an atom is equal to the number of protons and neutrons of that atom. The number of electrons does not factor into the overall mass, because their mass is so small.</p>
+
+      <div class="sh3">Atomic Number and Mass Number</div>
+      <p class="prose">Each element has its own unique properties. Each contains a different number of protons and neutrons, giving it its own <strong>atomic number</strong> and <strong>mass number</strong>. The atomic number of an element is equal to the number of protons that element contains. The mass number, or atomic mass, is the number of protons plus the number of neutrons of that element. Therefore, it is possible to determine the number of neutrons by subtracting the atomic number from the mass number.</p>
+      <p class="prose">These numbers provide information about the elements and how they will react when combined. Different elements have different melting and boiling points, and are in different states (liquid, solid, or gas) at room temperature. They also combine in different ways. Some form specific types of bonds, whereas others do not. How they combine is based on the number of electrons present. Because of these characteristics, the elements are arranged into the <strong>periodic table of elements</strong>, a chart of the elements that includes the atomic number and relative atomic mass of each element.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.3 — The Periodic Table (Visual Connection)</div>
+        <img src="images/ch2/fig2-3-periodic-table.png" alt="Periodic table of elements" style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Arranged in columns and rows based on the characteristics of the elements, the periodic table provides key information about the elements and how they might interact with each other to form molecules. Most periodic tables provide a key or legend to the information they contain.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Isotopes</div>
+      <div class="sh2">Same Element, Different Mass</div>
+      <p class="prose"><strong>Isotopes</strong> are different forms of the same element that have the same number of protons, but a different number of neutrons. Some elements, such as carbon, potassium, and uranium, have naturally occurring isotopes. Carbon-12, the most common isotope of carbon, contains six protons and six neutrons. Therefore, it has a mass number of 12 (six protons and six neutrons) and an atomic number of 6 (which makes it carbon). Carbon-14 contains six protons and eight neutrons. Therefore, it has a mass number of 14 (six protons and eight neutrons) and an atomic number of 6, meaning it is still the element carbon. These two alternate forms of carbon are isotopes.</p>
+      <p class="prose">Some isotopes are unstable and will lose protons, other subatomic particles, or energy to form more stable elements. These are called <strong>radioactive isotopes</strong> or <strong>radioisotopes</strong>.</p>
+
+      <div class="ec-box">
+        <div class="ec-label">🧬 Evolution Connection</div>
+        <div class="ec-title">Carbon Dating</div>
+        <div class="ec-body">Carbon-14 (<strong>¹⁴C</strong>) is a naturally occurring radioisotope that is created in the atmosphere by cosmic rays. This is a continuous process, so more ¹⁴C is always being created. As a living organism develops, the relative level of ¹⁴C in its body is equal to the concentration of ¹⁴C in the atmosphere. When an organism dies, it is no longer ingesting ¹⁴C, so the ratio will decline. ¹⁴C decays to ¹⁴N by a process called beta decay; it gives off energy in this slow process.
+        <br><br>After approximately <strong>5,730 years</strong>, only one-half of the starting concentration of ¹⁴C will have been converted to ¹⁴N. The time it takes for half of the original concentration of an isotope to decay to its more stable form is called its <strong>half-life</strong>. Because the half-life of ¹⁴C is long, it is used to age formerly living objects, such as fossils. Using the ratio of the ¹⁴C concentration found in an object to the amount of ¹⁴C detected in the atmosphere, the amount of the isotope that has not yet decayed can be determined. Based on this amount, the age of the fossil can be calculated to about 50,000 years. Isotopes with longer half-lives, such as potassium-40, are used to calculate the ages of older fossils.</div>
+      </div>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.4 — Carbon Dating</div>
+        <img src="images/ch2/fig2-4-carbon-dating.png" alt="Pygmy mammoth fossil dated by carbon dating" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">The age of remains that contain carbon and are less than about 50,000 years old, such as this pygmy mammoth, can be determined using carbon dating. (credit: Bill Faulkner/NPS)</div>
+      </div>
+
+      <div class="callout info"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">To learn more about atoms and isotopes, and how you can tell one isotope from another, visit <a href="http://openstax.org/l/isotopes" target="_blank" style="color:#3a86e0">this simulation</a>.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Matter</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Anything that occupies space and has mass. All living and nonliving things are made of matter.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Element</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A substance that cannot be broken down or transformed chemically into other substances. 92 occur naturally; fewer than 30 found in living cells.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Atom</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The smallest component of an element that retains all of its chemical properties. Contains protons, neutrons, and electrons.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Proton</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A positively charged particle in the nucleus. Mass of 1, charge of +1. The number of protons defines the element (atomic number).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Neutron</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A particle in the nucleus with mass of 1 and no charge. Different numbers of neutrons create isotopes of the same element.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Electron</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A negatively charged particle that travels around the nucleus. Negligible mass, charge of –1. Determines bonding behavior.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Atomic Number</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The number of protons in an element's atom. Defines the element. Carbon = 6, Oxygen = 8, Sodium = 11.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mass Number</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The number of protons + neutrons in an atom. Also called atomic mass. Neutrons = mass number − atomic number.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Isotope</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Different forms of the same element with the same number of protons but different numbers of neutrons. Example: Carbon-12 vs Carbon-14.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Half-life</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The time it takes for half of the original concentration of a radioactive isotope to decay. Carbon-14 half-life = 5,730 years.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Atoms, Elements &amp; Chemistry of Life</div>
+      <div class="vs-sub">Watch to reinforce atomic structure and how it connects to biology.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="tZE_fQFK8EY" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/tZE_fQFK8EY/mqdefault.jpg" alt="Crash Course Biology"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Introduction to Biology</div><div class="vc-desc">Covers the chemical foundations of life and why atoms matter for biology.</div><div class="vc-footer"><span class="vc-dur">⏱ ~14 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=tZE_fQFK8EY" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">🖼️ Visual Connection Question · Figure 2.3</div>
+      <div class="vcq-question">How many neutrons do potassium-39 and potassium-40 have, respectively?</div>
+      <textarea class="vcq-textarea" placeholder="Use the periodic table: atomic number of K = 19. Neutrons = mass number − atomic number..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Answer:</strong> Potassium's atomic number is 19, meaning it has 19 protons. For <strong>potassium-39</strong>: 39 − 19 = <strong>20 neutrons</strong>. For <strong>potassium-40</strong>: 40 − 19 = <strong>21 neutrons</strong>. These are isotopes of potassium — same element (same number of protons), different mass (different number of neutrons). This is a direct OpenStax Visual Connection question.</div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Atoms &amp; Chemistry for Biology</div>
+      <div class="vs-sub">Understanding atomic structure is the foundation for all of chemistry and biology.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="QnQe0xW_JY4" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/QnQe0xW_JY4/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Biology #1 — Carbon Is a Tramp</div><div class="vc-desc">Why carbon's bonding properties make it the foundation element for all biological molecules.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=QnQe0xW_JY4" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp1">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Carbon-12 and Carbon-14 are both carbon — they have the same atomic number (6). But Carbon-14 is radioactive and Carbon-12 is stable. Explain what makes them different at the atomic level and why this difference matters for carbon dating.</div>
+      <textarea class="cp-ta" id="cpt1" placeholder="Write your answer in complete sentences..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc1">Characters: <span id="cpn1">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb1" onclick="cpUnlock(1)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd1">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql1"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi1">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — Atoms &amp; Elements</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="a">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Magnesium has an atomic number of 12. Which of the following statements is true of a neutral magnesium atom?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It has 12 protons, 12 electrons, and 12 neutrons</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It has 12 protons, 12 electrons, and six neutrons</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has six protons, six electrons, and no neutrons</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It has six protons, six electrons, and six neutrons</li>
+          </ul>
+          <div class="qexp">Atomic number 12 = 12 protons. A neutral atom has equal protons and electrons, so 12 electrons. The most common isotope of magnesium (Mg-24) has 24 − 12 = 12 neutrons. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">An isotope of sodium (Na) has a mass number of 22. How many neutrons does it have?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>11</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>11 (mass number 22 − atomic number 11 = 11 neutrons)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>44</li>
+          </ul>
+          <div class="qexp">Sodium's atomic number is 11 (11 protons). Neutrons = mass number − atomic number = 22 − 11 = <strong>11 neutrons</strong>. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 2.3 (periodic table): How many neutrons does potassium-40 have?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>19</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>21 (mass number 40 − atomic number 19 = 21 neutrons)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>40</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>20</li>
+          </ul>
+          <div class="qexp">Potassium (K) has atomic number 19. For potassium-40: neutrons = 40 − 19 = <strong>21</strong>. For potassium-39: neutrons = 39 − 19 = 20. These are isotopes — same protons, different neutrons. OpenStax Visual Connection question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">What determines which element an atom is?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The number of neutrons in its nucleus</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The number of electrons orbiting the nucleus</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The number of protons in its nucleus (the atomic number)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The total mass of the atom</li>
+          </ul>
+          <div class="qexp">The <strong>number of protons</strong> (atomic number) defines the element. Carbon always has 6 protons. Change the proton count and you change the element. Neutrons can vary (creating isotopes) and electrons can be gained or lost (creating ions) without changing the element's identity.</div>
+        </div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Carbon-14 is used for carbon dating because ________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>it is the most common isotope of carbon</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>it is found only in fossils</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>it decays instantly, providing immediate results</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>it is a radioactive isotope with a known half-life (5,730 years) that decays at a predictable rate, allowing scientists to calculate the age of organic remains up to ~50,000 years old</li>
+          </ul>
+          <div class="qexp">Carbon-14 is radioactive and decays to nitrogen-14 with a half-life of 5,730 years. Living organisms continuously take in new ¹⁴C. When they die, the ¹⁴C decays without replacement. By measuring the ratio of ¹⁴C to ¹²C remaining, scientists calculate age.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">A scientist finds a fossil with only 25% of its original Carbon-14 remaining. Approximately how old is the fossil?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5,730 years (one half-life)</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2,865 years (half of a half-life)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>11,460 years (two half-lives) — after one half-life: 50% remains; after two half-lives: 25% remains</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50,000 years (beyond carbon dating range)</li>
+          </ul>
+          <div class="qexp">Each half-life reduces the ¹⁴C by half. Start: 100%. After 1 half-life (5,730 years): 50%. After 2 half-lives (11,460 years): 25%. So 25% remaining = approximately <strong>11,460 years old</strong>. After 3 half-lives: 12.5%. After 4: 6.25%. The method works up to about 50,000 years (~9 half-lives).</div>
+        </div>
+
+        <div class="qscore" id="sc1"><div class="score-n" id="scn1">—</div><div class="score-l">out of 6 · <span id="sm1"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.1. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(0)">← Overview</button>
+    <button class="mc-btn" id="mc1" onclick="markDone(1,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(2)">Lesson 2: Chemical Bonds →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 2 — CHEMICAL BONDS
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+  <div class="hero hero-chem">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 2</span></div>
+    <div class="h-title">Chemical Bonds</div>
+    <div class="h-desc">How elements interact with one another depends on how their electrons are arranged. Atoms can donate, accept, or share electrons to fill their outer shells — forming the bonds that hold molecules together and make life possible.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.1</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain electron shells and the octet rule</li>
+        <li>Distinguish between ions, cations, and anions</li>
+        <li>Compare and contrast ionic and covalent bonds</li>
+        <li>Distinguish polar covalent bonds from nonpolar covalent bonds</li>
+        <li>Explain hydrogen bonds and van der Waals interactions</li>
+        <li>Describe why weak bonds are important in biological systems</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Electron Shells &amp; the Octet Rule</div>
+      <div class="sh2">Why Atoms Form Bonds</div>
+      <p class="prose">How elements interact with one another depends on how their electrons are arranged and how many openings for electrons exist at the outermost region where electrons are present in an atom. Electrons exist at energy levels that form <strong>shells</strong> around the nucleus. The closest shell can hold up to two electrons. The closest shell to the nucleus is always filled first, before any other shell can be filled. Hydrogen has one electron; therefore, it has only one spot occupied within the lowest shell. Helium has two electrons; therefore, it can completely fill the lowest shell with its two electrons.</p>
+      <p class="prose">The second and third energy levels can hold up to eight electrons. The eight electrons are arranged in four pairs and one position in each pair is filled with an electron before any pairs are completed.</p>
+      <p class="prose">Not all elements have enough electrons to fill their outermost shells, but an atom is at its most stable when all of the electron positions in the outermost shell are filled. Because of these vacancies in the outermost shells, we see the formation of <strong>chemical bonds</strong>, or interactions between two or more of the same or different elements that result in the formation of molecules. To achieve greater stability, atoms will tend to completely fill their outer shells and will bond with other elements to accomplish this goal by sharing electrons, accepting electrons from another atom, or donating electrons to another atom. Because the outermost shells of the elements with low atomic numbers (up to calcium, with atomic number 20) can hold eight electrons, this is referred to as the <strong>octet rule</strong>.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Ions</div>
+      <div class="sh2">When Atoms Gain or Lose Electrons</div>
+      <p class="prose">When an atom does not contain equal numbers of protons and electrons, it is called an <strong>ion</strong>. Because the number of electrons does not equal the number of protons, each ion has a net charge. Positive ions are formed by losing electrons and are called <strong>cations</strong>. Negative ions are formed by gaining electrons and are called <strong>anions</strong>.</p>
+      <p class="prose">For example, sodium only has one electron in its outermost shell. It takes less energy for sodium to donate that one electron than it does to accept seven more electrons to fill the outer shell. If sodium loses an electron, it now has 11 protons and only 10 electrons, leaving it with an overall charge of +1. It is now called a sodium ion. The chlorine atom has seven electrons in its outer shell. Again, it is more energy-efficient for chlorine to gain one electron than to lose seven. Therefore, it tends to gain an electron to create an ion with 17 protons and 18 electrons, giving it a net negative (–1) charge. It is now called a chloride ion.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.5 — Electron Transfer</div>
+        <img src="images/ch2/fig2-5-electron-transfer.png" alt="Sodium donating electron to chlorine" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Elements tend to fill their outermost shells with electrons. To do this, they can either donate or accept electrons from other elements.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Strong Bonds</div>
+      <div class="sh2">Ionic and Covalent Bonds</div>
+
+      <div class="sh3">Ionic Bonds</div>
+      <p class="prose">There are four types of bonds or interactions: ionic, covalent, hydrogen bonds, and van der Waals interactions. Ionic and covalent bonds are strong interactions that require a larger energy input to break apart. When an element donates an electron from its outer shell, as in the sodium atom example above, a positive ion is formed. The element accepting the electron is now negatively charged. Because positive and negative charges attract, these ions stay together and form an <strong>ionic bond</strong>, or a bond between ions. When Na⁺ and Cl⁻ ions combine to produce NaCl, an electron from a sodium atom stays with the other seven from the chlorine atom, and the sodium and chloride ions attract each other in a lattice of ions with a net zero charge.</p>
+
+      <div class="sh3">Covalent Bonds</div>
+      <p class="prose">Another type of strong chemical bond between two or more atoms is a <strong>covalent bond</strong>. These bonds form when an electron is shared between two elements and are the strongest and most common form of chemical bond in living organisms. Covalent bonds form between the elements that make up the biological molecules in our cells. Unlike ionic bonds, covalent bonds do not dissociate in water.</p>
+      <p class="prose">The hydrogen and oxygen atoms that combine to form water molecules are bound together by covalent bonds. The electron from the hydrogen atom divides its time between the outer shell of the hydrogen atom and the incomplete outer shell of the oxygen atom. To completely fill the outer shell of an oxygen atom, two electrons from two hydrogen atoms are needed, hence the subscript "2" in H₂O.</p>
+      <p class="prose">There are two types of covalent bonds: <strong>polar</strong> and <strong>nonpolar</strong>. <strong>Nonpolar covalent bonds</strong> form between two atoms of the same element or between different elements that share the electrons equally. For example, an oxygen atom can bond with another oxygen atom to fill their outer shells. This association is nonpolar because the electrons will be equally distributed between each oxygen atom.</p>
+      <p class="prose">In a <strong>polar covalent bond</strong>, the electrons shared by the atoms spend more time closer to one nucleus than to the other nucleus. Because of the unequal distribution of electrons between the different nuclei, a slightly positive (δ+) or slightly negative (δ–) charge develops. The covalent bonds between hydrogen and oxygen atoms in water are polar covalent bonds. The shared electrons spend more time near the oxygen nucleus, giving it a small negative charge, than they spend near the hydrogen nuclei, giving these molecules a small positive charge.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.6 — Polar vs. Nonpolar Bonds</div>
+        <img src="images/ch2/fig2-6-polar-bond.png" alt="Water (polar) vs methane (nonpolar)" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The water molecule (left) depicts a polar bond with a slightly positive charge on the hydrogen atoms and a slightly negative charge on the oxygen. Examples of nonpolar bonds include methane (middle) and oxygen (right).</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Weak Bonds</div>
+      <div class="sh2">Hydrogen Bonds and van der Waals Interactions</div>
+      <p class="prose"><strong>Hydrogen bonds</strong> are weak bonds that occur frequently in biological systems. When polar covalent bonds containing a hydrogen atom form, the hydrogen atom in that bond has a slightly positive charge (δ+). This is because the shared electron is pulled more strongly toward the other element and away from the hydrogen nucleus. Because the hydrogen atom is slightly positive, it will be attracted to neighboring negative partial charges (δ–). When this happens, a weak interaction occurs between the δ+ charge of the hydrogen atom of one molecule and the δ– charge of the other molecule. This interaction is called a hydrogen bond.</p>
+      <p class="prose">This type of bond is common; for example, the liquid nature of water is caused by the hydrogen bonds between water molecules. Hydrogen bonds give water the unique properties that sustain life. If it were not for hydrogen bonding, water would be a gas rather than a liquid at room temperature.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.7 — Hydrogen Bonds</div>
+        <img src="images/ch2/fig2-7-hydrogen-bonds.png" alt="Hydrogen bonds between water molecules" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">Hydrogen bonds form between slightly positive (δ+) and slightly negative (δ–) charges of polar covalent molecules, such as water.</div>
+      </div>
+
+      <p class="prose">Hydrogen bonds can form between different molecules and they do not always have to include a water molecule. Hydrogen atoms in polar bonds within any molecule can form bonds with other adjacent molecules. For example, hydrogen bonds hold together two long strands of DNA to give the DNA molecule its characteristic double-stranded structure. Hydrogen bonds are also responsible for some of the three-dimensional structure of proteins.</p>
+
+      <div class="sh3">van der Waals Interactions</div>
+      <p class="prose">Like hydrogen bonds, <strong>van der Waals interactions</strong> are weak attractions or interactions between molecules. They occur between polar, covalently bound atoms in different molecules. Some of these weak attractions are caused by temporary partial charges formed when electrons move around a nucleus. These weak interactions between molecules are important in biological systems.</p>
+
+      <div class="ec-box">
+        <div class="ec-label">💼 Career Connection</div>
+        <div class="ec-title">Radiography Technician</div>
+        <div class="ec-body">Have you or anyone you know ever had a magnetic resonance imaging (MRI) scan, a mammogram, or an X-ray? These tests produce images of your soft tissues and organs (as with an MRI or mammogram) or your bones (as happens in an X-ray) by using either radiowaves or special isotopes that are ingested or injected into the body.
+        <br><br><strong>MRI imaging</strong> works by subjecting hydrogen nuclei, which are abundant in the water in soft tissues, to fluctuating magnetic fields, which cause them to emit their own magnetic field. This signal is then read by sensors in the machine and interpreted by a computer to form a detailed image.
+        <br><br>Radiography technicians can work in hospitals, doctors' offices, or specialized imaging centers. Training requires at least a certificate, associate's degree, or bachelor's degree in radiography, plus courses in nutrition, chemistry, biochemistry, biology, microbiology, and human physiology.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Chemical Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">An interaction between two or more atoms that results in the formation of molecules. Atoms bond to fill their outer electron shells.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Octet Rule</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Atoms tend to bond to fill their outermost shell with 8 electrons. Drives the formation of ionic and covalent bonds.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ion</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">An atom with unequal protons and electrons, giving it a net charge. Cations are positive (lost electrons); anions are negative (gained electrons).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ionic Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A bond formed between oppositely charged ions. One atom donates an electron; the other accepts it. Example: NaCl (table salt).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Covalent Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A bond formed by sharing electrons between atoms. Strongest and most common bond in living organisms. Does not dissociate in water.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Polar Covalent Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A covalent bond where electrons are shared unequally — one atom pulls electrons closer, creating slight charges (δ+ and δ–). Example: water (H₂O).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Hydrogen Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A weak bond between a slightly positive hydrogen (δ+) and a slightly negative atom (δ–) on another molecule. Gives water its unique properties. Holds DNA strands together.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">van der Waals</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Weak attractions between molecules caused by temporary partial charges as electrons move. Important in biological systems despite being individually weak.</div></div></div></div>
+      </div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Chemical Bonds Explained</div>
+      <div class="vs-sub">How atoms bond to form the molecules of life.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="QnQe0xW_JY4" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/QnQe0xW_JY4/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Biology #1 — Carbon Is a Tramp</div><div class="vc-desc">Covers ionic, covalent, and hydrogen bonds — why they matter for life's chemistry.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=QnQe0xW_JY4" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp2">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Hydrogen bonds are individually weak — much weaker than ionic or covalent bonds. Yet they are essential for life. Explain why hydrogen bonds are necessary for cells, using at least two specific examples from the lesson (water properties, DNA structure, or protein folding).</div>
+      <textarea class="cp-ta" id="cpt2" placeholder="Write your answer in complete sentences..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc2">Characters: <span id="cpn2">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb2" onclick="cpUnlock(2)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd2">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql2"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi2">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — Chemical Bonds</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="a">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which type of bond represents a weak chemical bond?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>hydrogen bond</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>ionic bond</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>covalent bond</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>polar covalent bond</li>
+          </ul>
+          <div class="qexp"><strong>Hydrogen bonds</strong> and van der Waals interactions are weak bonds. Ionic and covalent bonds (including polar covalent) are strong bonds that require considerable energy to break. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">When sodium (Na) loses one electron to become Na⁺, it is now called a ________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>anion — because it gained a charge</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>isotope — because its mass changed</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>cation — a positively charged ion formed by losing electrons</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>molecule — because it now bonds with chlorine</li>
+          </ul>
+          <div class="qexp">Losing electrons creates a <strong>cation</strong> (positive ion). Gaining electrons creates an <strong>anion</strong> (negative ion). Na loses 1 electron → 11 protons, 10 electrons → net charge +1 → Na⁺ cation.</div>
+        </div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 2.6, the water molecule shows a polar covalent bond while methane shows a nonpolar covalent bond. What causes this difference?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water has more atoms than methane</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Methane is a gas and water is a liquid</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water uses ionic bonds while methane uses covalent bonds</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In water, oxygen pulls shared electrons closer than hydrogen does (unequal sharing → partial charges); in methane, carbon and hydrogen share electrons more equally (no partial charges)</li>
+          </ul>
+          <div class="qexp">Polarity depends on <strong>electronegativity</strong> — how strongly an atom attracts shared electrons. Oxygen is much more electronegative than hydrogen, so it pulls electrons closer → unequal sharing → partial charges (δ+ on H, δ– on O). Carbon and hydrogen have similar electronegativities → equal sharing → no partial charges → nonpolar.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">Which type of bond is the strongest and most common in living organisms?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ionic bond</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Covalent bond — electrons are shared between atoms; strongest and most common form in biological molecules; does not dissociate in water</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Hydrogen bond</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>van der Waals interaction</li>
+          </ul>
+          <div class="qexp"><strong>Covalent bonds</strong> are the strongest and most common bonds in living organisms. They form by sharing electrons and do not dissociate in water (unlike ionic bonds). The bonds holding together biological molecules like proteins, DNA, and carbohydrates are covalent.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Hydrogen bonds in water are responsible for which of the following?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Making water a gas at room temperature</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Giving water the same properties as oil</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Keeping water in a liquid state at room temperature — without hydrogen bonds, water would be a gas</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Making water nonpolar</li>
+          </ul>
+          <div class="qexp">Hydrogen bonds between water molecules are responsible for water being a liquid at room temperature. Without them, water would be a gas (like H₂S, which has a similar molecular weight but no hydrogen bonding). These bonds also give water its high heat capacity, surface tension, and solvent properties.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Why are hydrogen bonds and van der Waals interactions necessary for cells?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They are not necessary — only covalent bonds matter in biology</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They provide the strongest structural support for cell membranes</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They enable critical biological functions: hydrogen bonds hold DNA strands together, maintain protein 3D shape, and give water its life-sustaining properties; van der Waals interactions help stabilize molecular structures; their weakness is actually an advantage — they can form and break easily, allowing dynamic biological processes</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They only matter in non-biological chemistry</li>
+          </ul>
+          <div class="qexp">This is a direct OpenStax Critical Thinking question. Weak bonds are essential BECAUSE they are weak — they can form and break rapidly, enabling dynamic processes like DNA replication (strands must separate), protein folding/unfolding, and water's ability to absorb heat. If these bonds were as strong as covalent bonds, biological molecules would be too rigid to function.</div>
+        </div>
+
+        <div class="qscore" id="sc2"><div class="score-n" id="scn2">—</div><div class="score-l">out of 6 · <span id="sm2"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.1. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button>
+    <button class="mc-btn" id="mc2" onclick="markDone(2,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(3)">Lesson 3: Water &amp; Its Properties →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 3 — WATER & ITS PROPERTIES
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+  <div class="hero hero-water">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 3</span></div>
+    <div class="h-title">Water &amp; Its Properties</div>
+    <div class="h-desc">Water is one of the most abundant molecules in living cells and the one most critical to life as we know it. Approximately 60–70 percent of your body is made up of water. Without it, life simply would not exist.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.2</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe the properties of water that are critical to maintaining life</li>
+        <li>Explain why water is polar and how polarity affects its behavior</li>
+        <li>Distinguish hydrophilic from hydrophobic substances</li>
+        <li>Explain cohesion, adhesion, and surface tension</li>
+        <li>Describe why water is an excellent solvent</li>
+        <li>Explain pH, acids, bases, and buffers</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Water Is Polar</div>
+      <div class="sh2">The Foundation of Water's Properties</div>
+      <p class="prose">Do you ever wonder why scientists spend time looking for water on other planets? It is because water is essential to life; even minute traces of it on another planet can indicate that life could or did exist on that planet. Water is one of the more abundant molecules in living cells and the one most critical to life as we know it. Approximately 60–70 percent of your body is made up of water. Without it, life simply would not exist.</p>
+      <p class="prose">The hydrogen and oxygen atoms within water molecules form polar covalent bonds. The shared electrons spend more time associated with the oxygen atom than they do with hydrogen atoms. There is no overall charge to a water molecule, but there is a slight positive charge on each hydrogen atom and a slight negative charge on the oxygen atom. Because of these charges, the slightly positive hydrogen atoms repel each other and form the unique shape of water.</p>
+      <p class="prose">Each water molecule attracts other water molecules because of the positive and negative charges in the different parts of the molecule. Water also attracts other polar molecules (such as sugars), forming hydrogen bonds. When a substance readily forms hydrogen bonds with water, it can dissolve in water and is referred to as <strong>hydrophilic</strong> ("water-loving"). Hydrogen bonds are not readily formed with nonpolar substances like oils and fats. These nonpolar compounds are <strong>hydrophobic</strong> ("water-fearing") and will not dissolve in water.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.8 — Oil and Water</div>
+        <img src="images/ch2/fig2-8-oil-water.png" alt="Oil and water don't mix" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">As this macroscopic image of oil and water shows, oil is a nonpolar compound and, hence, will not dissolve in water. Oil and water do not mix. (credit: Gautam Dogra)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Temperature &amp; Density</div>
+      <div class="sh2">Water Stabilizes Temperature</div>
+      <p class="prose">The hydrogen bonds in water allow it to absorb and release heat energy more slowly than many other substances. Temperature is a measure of the motion (kinetic energy) of molecules. As the motion increases, energy is higher and thus temperature is higher. Water absorbs a great deal of energy before its temperature rises. Increased energy disrupts the hydrogen bonds between water molecules. Because these bonds can be created and disrupted rapidly, water absorbs an increase in energy and temperature changes only minimally. This means that water moderates temperature changes within organisms and in their environments.</p>
+      <p class="prose">As energy input continues, the balance between hydrogen-bond formation and destruction swings toward the destruction side. More bonds are broken than are formed. This process results in the release of individual water molecules at the surface of the liquid in a process called <strong>evaporation</strong>. Evaporation of sweat, which is 90 percent water, allows for cooling of an organism, because breaking hydrogen bonds requires an input of energy and takes heat away from the body.</p>
+      <p class="prose">Conversely, as molecular motion decreases and temperatures drop, less energy is present to break the hydrogen bonds between water molecules. These bonds remain intact and begin to form a rigid, lattice-like structure (e.g., ice). When frozen, ice is less dense than liquid water (the molecules are farther apart). This means that ice floats on the surface of a body of water, creating an insulating barrier to protect the animal and plant life beneath from freezing. If this did not happen, plants and animals living in water would freeze in a block of ice and could not move freely, making life in cold temperatures difficult or impossible.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.9 — Ice Lattice Structure</div>
+        <img src="images/ch2/fig2-9-ice-lattice.png" alt="Ice lattice and floating ice" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">(a) The lattice structure of ice makes it less dense than the freely flowing molecules of liquid water. Ice's lower density enables it to (b) float on water. (credit a: modification of work by Jane Whitney; credit b: modification of work by Carlos Ponte)</div>
+      </div>
+
+      <div class="callout info"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">Click <a href="http://openstax.org/l/ice_lattice" target="_blank" style="color:#3a86e0">here</a> to see a 3-D animation of the structure of an ice lattice.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Solvent Properties</div>
+      <div class="sh2">Water Is an Excellent Solvent</div>
+      <p class="prose">Because water is polar, with slight positive and negative charges, ionic compounds and polar molecules can readily dissolve in it. Water is, therefore, what is referred to as a <strong>solvent</strong> — a substance capable of dissolving another substance. The charged particles will form hydrogen bonds with a surrounding layer of water molecules. This is referred to as a <strong>sphere of hydration</strong> and serves to keep the particles separated or dispersed in the water.</p>
+      <p class="prose">In the case of table salt (NaCl) mixed in water (Figure 2.10), the sodium and chloride ions separate, or dissociate, in the water, and spheres of hydration are formed around the ions. A positively charged sodium ion is surrounded by the partially negative charges of oxygen atoms in water molecules. A negatively charged chloride ion is surrounded by the partially positive charges of hydrogen atoms in water molecules.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.10 — Spheres of Hydration</div>
+        <img src="images/ch2/fig2-10-hydration.png" alt="NaCl dissolving in water with hydration spheres" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">When table salt (NaCl) is mixed in water, spheres of hydration form around the ions.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Cohesion &amp; Adhesion</div>
+      <div class="sh2">Water Is Cohesive</div>
+      <p class="prose">Have you ever filled up a glass of water to the very top and then slowly added a few more drops? Before it overflows, the water actually forms a dome-like shape above the rim of the glass. This water can stay above the glass because of the property of <strong>cohesion</strong>. In cohesion, water molecules are attracted to each other (because of hydrogen bonding), keeping the molecules together at the liquid-air interface.</p>
+      <p class="prose">Cohesion gives rise to <strong>surface tension</strong>, the capacity of a substance to withstand rupture when placed under tension or stress. It is even possible to "float" a steel needle on top of a glass of water if you place it gently, without breaking the surface tension (Figure 2.11).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.11 — Surface Tension</div>
+        <img src="images/ch2/fig2-11-surface-tension.png" alt="Needle floating on water due to surface tension" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">The weight of a needle on top of water pulls the surface tension downward; at the same time, the surface tension of the water is pulling it up, suspending the needle on the surface. (credit: Cory Zanker)</div>
+      </div>
+
+      <p class="prose">These cohesive forces are also related to the water's property of <strong>adhesion</strong>, or the attraction between water molecules and other molecules. This is observed when water "climbs" up a straw placed in a glass of water. Cohesive and adhesive forces are important for sustaining life. For example, because of these forces, water can flow up from the roots to the tops of plants to feed the plant.</p>
+
+      <div class="callout info"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">To learn more about water, visit the <a href="http://openstax.org/l/about_water" target="_blank" style="color:#3a86e0">U.S. Geological Survey Water Science for Schools</a> website.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">pH, Acids, &amp; Bases</div>
+      <div class="sh2">Buffers, pH, Acids, and Bases</div>
+      <p class="prose">The <strong>pH</strong> of a solution is a measure of its acidity or basicity. You have probably used litmus paper, paper that has been treated with a natural water-soluble dye so it can be used as a pH indicator, to test how much acid or base exists in a solution. This pH test measures the amount of hydrogen ions that exists in a given solution. High concentrations of hydrogen ions yield a low pH, whereas low levels of hydrogen ions result in a high pH.</p>
+      <p class="prose">The pH scale ranges from 0 to 14. A change of one unit on the pH scale represents a change in the concentration of hydrogen ions by a factor of 10, a change in two units represents a change in the concentration of hydrogen ions by a factor of 100. Thus, small changes in pH represent large changes in the concentrations of hydrogen ions. Pure water is neutral. It is neither acidic nor basic, and has a pH of 7.0. Anything below 7.0 (ranging from 0.0 to 6.9) is acidic, and anything above 7.0 (from 7.1 to 14.0) is alkaline. The blood in your veins is slightly alkaline (pH = 7.4). The environment in your stomach is highly acidic (pH = 1 to 2). Orange juice is mildly acidic (pH ≈ 3.5), whereas baking soda is basic (pH = 9.0).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.12 — The pH Scale</div>
+        <img src="images/ch2/fig2-12-ph-scale.png" alt="pH scale from 0 to 14" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The pH scale measures the amount of hydrogen ions (H⁺) in a substance. (credit: modification of work by Edward Stevens)</div>
+      </div>
+
+      <p class="prose"><strong>Acids</strong> are substances that provide hydrogen ions (H⁺) and lower pH, whereas <strong>bases</strong> provide hydroxide ions (OH⁻) and raise pH. The stronger the acid, the more readily it donates H⁺. For example, hydrochloric acid and lemon juice are very acidic and readily give up H⁺ when added to water. Conversely, bases are those substances that readily donate OH⁻. The OH⁻ ions combine with H⁺ to produce water, which raises a substance's pH.</p>
+
+      <div class="sh3">Buffers</div>
+      <p class="prose">Most cells in our bodies operate within a very narrow window of the pH scale, typically ranging only from 7.2 to 7.6. If the pH of the body is outside of this range, the respiratory system malfunctions, as do other organs in the body. Cells no longer function properly, and proteins will break down. Deviation outside of the pH range can induce coma or even cause death.</p>
+      <p class="prose">So how is it that we can ingest or inhale acidic or basic substances and not die? <strong>Buffers</strong> are the key. Buffers readily absorb excess H⁺ or OH⁻, keeping the pH of the body carefully maintained in the narrow range. Carbon dioxide is part of a prominent buffer system in the human body; it keeps the pH within the proper range. This buffer system involves carbonic acid (H₂CO₃) and bicarbonate (HCO₃⁻) anion. If too much H⁺ enters the body, bicarbonate will combine with the H⁺ to create carbonic acid and limit the decrease in pH. Likewise, if too much OH⁻ is introduced into the system, carbonic acid will rapidly dissociate into bicarbonate and H⁺ ions. Without this buffer system, the pH in our bodies would fluctuate too much and we would fail to survive.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Hydrophilic</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">"Water-loving." Substances that readily form hydrogen bonds with water and dissolve in it. Polar molecules and ions are hydrophilic.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Hydrophobic</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">"Water-fearing." Nonpolar substances that do not dissolve in water. Oils, fats, and waxes are hydrophobic.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cohesion</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The attraction of water molecules to each other via hydrogen bonding. Creates surface tension.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Adhesion</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The attraction of water molecules to other molecules or surfaces. Allows water to climb up plant stems and straws.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Surface Tension</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The capacity of a substance to withstand rupture when placed under tension. Caused by cohesion of water molecules at the surface.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Solvent</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A substance capable of dissolving another substance. Water is called the "universal solvent" because of its polarity.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">pH</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A measure of acidity/basicity. Scale 0-14. Below 7 = acidic, 7 = neutral, above 7 = basic/alkaline. Each unit = 10× change in H⁺.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Buffer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A substance that absorbs excess H⁺ or OH⁻ to maintain a stable pH. The bicarbonate buffer system keeps blood pH at ~7.4.</div></div></div></div>
+      </div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Water: The Molecule of Life</div>
+      <div class="vs-sub">Why water's unique properties make life possible.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="y7raEBOvLwU" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/y7raEBOvLwU/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Carbon &amp; Biological Molecules — Biology #20</div><div class="vc-desc">Covers water chemistry, carbon bonding, and the properties that make these molecules essential for life.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=y7raEBOvLwU" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp3">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Explain why water is an excellent solvent. Then explain what would happen to aquatic life if ice were denser than liquid water (i.e., if ice sank instead of floating).</div>
+      <textarea class="cp-ta" id="cpt3" placeholder="Write your answer in complete sentences..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc3">Characters: <span id="cpn3">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb3" onclick="cpUnlock(3)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd3">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql3"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi3">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Water &amp; Its Properties</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following statements is NOT true?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water is polar</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Water stabilizes temperature</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water is essential for life</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water is the most abundant atom in Earth's atmosphere</li>
+          </ul>
+          <div class="qexp">Water is a <strong>molecule</strong>, not an atom. And nitrogen is the most abundant gas in Earth's atmosphere (~78%), not water. Water is polar, does stabilize temperature, and is essential for life. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">Using a pH meter, you find the pH of an unknown solution to be 8.0. How would you describe this solution?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>weakly acidic</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>strongly acidic</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>weakly basic — pH 8.0 is slightly above neutral (7.0), so it is weakly alkaline/basic</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>strongly basic</li>
+          </ul>
+          <div class="qexp">pH 7.0 = neutral. Above 7.0 = basic/alkaline. pH 8.0 is only one unit above neutral — weakly basic. Blood (pH 7.4) is also weakly basic. Stomach acid (pH 1-2) is strongly acidic. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">The pH of lemon juice is about 2.0, whereas tomato juice's pH is about 4.0. Approximately how much of an increase in hydrogen ion concentration is there between tomato juice and lemon juice?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2 times</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 times</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>100 times — each pH unit = 10× change; 2 units = 10 × 10 = 100× more hydrogen ions</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1000 times</li>
+          </ul>
+          <div class="qexp">The pH scale is logarithmic. Each unit = 10× change in H⁺ concentration. The difference between pH 4.0 and pH 2.0 is 2 units = 10² = <strong>100 times</strong> more hydrogen ions in lemon juice than tomato juice. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">From Figure 2.11, a steel needle can float on water even though steel is denser than water. Which property of water explains this?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water's high heat capacity absorbs the needle's weight</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Surface tension — cohesion between water molecules at the surface creates a "film" strong enough to support the needle's weight</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The needle is hydrophilic and dissolves slightly in water</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water's pH prevents the needle from sinking</li>
+          </ul>
+          <div class="qexp"><strong>Surface tension</strong> — created by cohesion (hydrogen bonds between water molecules at the surface) — creates a "film" that can support light objects placed gently on top. The needle doesn't break through the hydrogen bond network. Some insects (water striders) exploit surface tension to walk on water.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Why can some insects walk on water?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They are lighter than water molecules</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Their feet are hydrophilic and bond with water</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Surface tension from cohesion of water molecules creates a "film" at the surface that can support their weight; their hydrophobic feet don't break through this film</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water's pH level supports small organisms</li>
+          </ul>
+          <div class="qexp">Direct OpenStax Critical Thinking question. Surface tension (from cohesion) creates a strong enough film at the air-water interface to support the insect's weight. Their feet are often hydrophobic (water-repelling), which means they sit ON the surface tension rather than breaking through it.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Explain why water is an excellent solvent.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water dissolves everything, including oils and fats</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Water is neutral (pH 7) so it doesn't react with solutes</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water's polarity allows it to form spheres of hydration around ionic and polar solutes — the slightly positive hydrogen atoms attract negative ions/charges, and the slightly negative oxygen attracts positive ions/charges, pulling solutes apart and keeping them dispersed</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water molecules are very small and can fit between solute molecules</li>
+          </ul>
+          <div class="qexp">Direct OpenStax Critical Thinking question. Water's <strong>polarity</strong> is the key — the partial charges (δ+ on H, δ– on O) interact with charged or polar solutes, forming spheres of hydration that keep ions and polar molecules dispersed. Water does NOT dissolve nonpolar substances like oils (hydrophobic).</div>
+        </div>
+
+        <div class="qscore" id="sc3"><div class="score-n" id="scn3">—</div><div class="score-l">out of 6 · <span id="sm3"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.2. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button>
+    <button class="mc-btn" id="mc3" onclick="markDone(3,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(4)">Lesson 4: Carbon &amp; Macromolecules →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 4 — CARBON & MACROMOLECULES INTRO
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+  <div class="hero hero-carb">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 4</span></div>
+    <div class="h-title">Carbon &amp; Biological Macromolecules</div>
+    <div class="h-desc">It is often said that life is "carbon-based." Carbon atoms, bonded to other carbon atoms or other elements, form the fundamental components of many, if not most, of the molecules found uniquely in living things.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.3</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe the ways in which carbon is critical to life</li>
+        <li>Explain why carbon can form such diverse molecular structures</li>
+        <li>Name the four major classes of biological macromolecules</li>
+        <li>Explain dehydration synthesis and hydrolysis</li>
+        <li>Distinguish monomers from polymers</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Why Carbon?</div>
+      <div class="sh2">The Foundation Element for Life</div>
+      <p class="prose">The large molecules necessary for life that are built from smaller organic molecules are called <strong>biological macromolecules</strong>. There are four major classes of biological macromolecules (<strong>carbohydrates, lipids, proteins, and nucleic acids</strong>), and each is an important component of the cell and performs a wide array of functions. Combined, these molecules make up the majority of a cell's dry mass. Biological macromolecules are organic, meaning they contain carbon and are bound to hydrogen, and may contain oxygen, nitrogen, and additional minor elements.</p>
+      <p class="prose">It is often said that life is "carbon-based." This means that carbon atoms, bonded to other carbon atoms or other elements, form the fundamental components of many, if not most, of the molecules found uniquely in living things. Other elements play important roles in biological molecules, but carbon certainly qualifies as the "foundation" element for molecules in living things. It is the bonding properties of carbon atoms that are responsible for its important role.</p>
+
+      <div class="sh3">Carbon Bonding</div>
+      <p class="prose">Carbon contains four electrons in its outer shell. Therefore, it can form <strong>four covalent bonds</strong> with other atoms or molecules. The simplest organic carbon molecule is methane (CH₄), in which four hydrogen atoms bind to a carbon atom (Figure 2.13).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.13 — Carbon Bonding</div>
+        <img src="images/ch2/fig2-13-carbon-molecule.png" alt="Methane molecule showing carbon's four bonds" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">Carbon can form four covalent bonds to create an organic molecule. The simplest carbon molecule is methane (CH₄), depicted here.</div>
+      </div>
+
+      <p class="prose">However, structures that are more complex are made using carbon. Any of the hydrogen atoms can be replaced with another carbon atom covalently bonded to the first carbon atom. In this way, long and branching chains of carbon compounds can be made (Figure 2.14a). The carbon atoms may bond with atoms of other elements, such as nitrogen, oxygen, and phosphorus (Figure 2.14b). The molecules may also form rings, which themselves can link with other rings (Figure 2.14c). This diversity of molecular forms accounts for the diversity of functions of the biological macromolecules and is based to a large degree on the ability of carbon to form multiple bonds with itself and other atoms.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.14 — Diversity of Carbon Molecules</div>
+        <img src="images/ch2/fig2-14-organic-molecules.png" alt="Stearic acid, glycine, and glucose molecular structures" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">These examples show three molecules (found in living organisms) that contain carbon atoms bonded in various ways to other carbon atoms and the atoms of other elements. (a) Stearic acid has a long chain of carbon atoms. (b) Glycine, a component of proteins, contains carbon, nitrogen, oxygen, and hydrogen atoms. (c) Glucose, a sugar, has a ring of carbon atoms and one oxygen atom.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Building &amp; Breaking Macromolecules</div>
+      <div class="sh2">Dehydration Synthesis and Hydrolysis</div>
+      <p class="prose">Most macromolecules are made from single subunits, or building blocks, called <strong>monomers</strong>. The monomers combine with each other using covalent bonds to form larger molecules known as <strong>polymers</strong>. In doing so, monomers release water molecules as byproducts. This type of reaction is known as <strong>dehydration synthesis</strong> (or condensation reaction), which means "to put together while losing water."</p>
+      <p class="prose">In a dehydration synthesis reaction, the hydrogen of one monomer combines with the hydroxyl group of another monomer, releasing a molecule of water. At the same time, the monomers share electrons and form covalent bonds.</p>
+      <p class="prose">The reverse process — breaking polymers back into monomers — is called <strong>hydrolysis</strong> ("to split water"). During hydrolysis, a water molecule is used to break the covalent bond. One part of the water molecule (H) attaches to one monomer, and the other part (OH) attaches to the other monomer.</p>
+
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Dehydration Synthesis vs. Hydrolysis</div><div class="cx"><strong>Dehydration synthesis</strong>: monomers → polymer + H₂O released (building up).<br><strong>Hydrolysis</strong>: polymer + H₂O → monomers (breaking down).<br>These two reactions are the fundamental processes by which all biological macromolecules are assembled and disassembled.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Organic Molecule</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A molecule containing carbon bonded to hydrogen and possibly other elements. All biological macromolecules are organic.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Macromolecule</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A large molecule necessary for life, built from smaller organic molecules. Four types: carbohydrates, lipids, proteins, nucleic acids.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Monomer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A single subunit or building block that can combine with others to form a polymer. Examples: monosaccharides, amino acids, nucleotides.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Polymer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A large molecule made of many monomers joined by covalent bonds. Examples: polysaccharides, proteins, DNA.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dehydration Synthesis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A reaction that joins monomers into polymers by removing a water molecule. Also called a condensation reaction. Builds macromolecules.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Hydrolysis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">"To split water." A reaction that breaks polymers into monomers by adding a water molecule. Breaks down macromolecules. Occurs during digestion.</div></div></div></div>
+      </div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Water: The Molecule of Life</div>
+      <div class="vs-sub">Why water's unique properties make life possible.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="y7raEBOvLwU" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/y7raEBOvLwU/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Carbon &amp; Biological Molecules — Biology #20</div><div class="vc-desc">Covers water chemistry, carbon bonding, and the properties that make these molecules essential for life.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=y7raEBOvLwU" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp4">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Carbon can form 4 covalent bonds, creating chains, branches, and rings. Explain why this makes carbon uniquely suited to form the diverse molecules needed for life. What would happen if carbon could only form 2 bonds instead of 4?</div>
+      <textarea class="cp-ta" id="cpt4" placeholder="Write your answer in complete sentences..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc4">Characters: <span id="cpn4">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb4" onclick="cpUnlock(4)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd4">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql4"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi4">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — Carbon &amp; Macromolecules</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">How many covalent bonds can carbon form?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>4 — carbon has 4 electrons in its outer shell, allowing it to form chains, branches, and rings</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>6</li>
+          </ul>
+          <div class="qexp">Carbon has 4 electrons in its outer shell and needs 4 more to complete it (octet rule). It forms 4 covalent bonds — this versatility allows it to create the incredibly diverse molecular structures needed for life.</div>
+        </div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">What are the four major classes of biological macromolecules?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Sugars, fats, enzymes, and vitamins</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Carbon, hydrogen, oxygen, and nitrogen</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Atoms, molecules, organelles, and cells</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Carbohydrates, lipids, proteins, and nucleic acids</li>
+          </ul>
+          <div class="qexp">The four classes: <strong>carbohydrates</strong> (sugars/starches), <strong>lipids</strong> (fats/oils/waxes), <strong>proteins</strong> (enzymes/structural), and <strong>nucleic acids</strong> (DNA/RNA). Together they make up the majority of a cell's dry mass.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 2.14, carbon molecules can form (a) long chains, (b) structures with other elements, and (c) rings. Which structural feature most directly explains the diversity of biological macromolecules?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only long chains are important — rings and branches are rare in biology</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>All three are important — carbon's ability to form chains, branches, and rings with itself AND bond with N, O, P, and S creates enormous structural diversity, which enables diverse functions</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Only rings matter — all important biological molecules are ring-shaped</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Carbon's shape doesn't affect function</li>
+          </ul>
+          <div class="qexp">Carbon's versatility — chains (fatty acids), branches (glycogen), rings (glucose, steroids), and bonds with N, O, P, S — creates the structural diversity needed for the functional diversity of biological macromolecules. Different shapes enable different functions.</div>
+        </div>
+
+        <div class="qq" data-ans="a">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">During dehydration synthesis, what happens?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Monomers are joined into a polymer and a water molecule is released as a byproduct</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A polymer is broken into monomers using water</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water is absorbed into the molecule, making it larger</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Carbon atoms are removed from the molecule</li>
+          </ul>
+          <div class="qexp"><strong>Dehydration synthesis</strong> = monomers joined → polymer formed + H₂O released. "Dehydration" = losing water. "Synthesis" = building. The reverse — using water to break bonds — is hydrolysis.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Which reaction occurs during digestion when your body breaks down food?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Dehydration synthesis — building larger molecules from food</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Hydrolysis — water is used to break polymers in food into monomers that cells can absorb</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ionic bonding — food molecules form ionic bonds with stomach acid</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>van der Waals interactions — weak forces break food apart</li>
+          </ul>
+          <div class="qexp">Digestion is <strong>hydrolysis</strong> — enzymes use water to break the covalent bonds in food polymers (starch → glucose, proteins → amino acids). The monomers are then absorbed by cells and may be reassembled into new polymers via dehydration synthesis.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">If you eat a protein (like chicken), your body breaks it into amino acids via hydrolysis, then reassembles those amino acids into human proteins via dehydration synthesis. Why can't your body just use the chicken protein directly?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Chicken proteins are toxic to humans</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Chicken proteins are too small to be useful</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Chicken proteins have a different amino acid sequence/shape than human proteins — since protein function depends on shape (determined by amino acid sequence), the chicken protein won't perform human functions; the body must disassemble it and reassemble the amino acids in the correct human sequence</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The body can use chicken protein directly — digestion is unnecessary for proteins</li>
+          </ul>
+          <div class="qexp">Protein function depends on shape, and shape depends on amino acid sequence. Chicken muscle proteins have different sequences than human muscle proteins. The body must break them down to individual amino acids (monomers) and then build new proteins with the correct human sequence. This is why we eat protein — for the amino acid building blocks, not the protein structures themselves.</div>
+        </div>
+
+        <div class="qscore" id="sc4"><div class="score-n" id="scn4">—</div><div class="score-l">out of 6 · <span id="sm4"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.3. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button>
+    <button class="mc-btn" id="mc4" onclick="markDone(4,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(5)">Lesson 5: Carbohydrates &amp; Lipids →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 5 — CARBOHYDRATES & LIPIDS
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+  <div class="hero hero-carb">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 5</span></div>
+    <div class="h-title">Carbohydrates &amp; Lipids</div>
+    <div class="h-desc">Carbohydrates provide energy and structural support. Lipids store energy, insulate the body, and form cell membranes. Together, these two macromolecule classes are essential to every living cell.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.3</div>
+      <div class="h-chip">⏱ ~50 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Distinguish monosaccharides, disaccharides, and polysaccharides</li>
+        <li>Compare the functions of starch, glycogen, cellulose, and chitin</li>
+        <li>Explain why lipids are hydrophobic</li>
+        <li>Describe the structure and function of triglycerides, phospholipids, and steroids</li>
+        <li>Distinguish saturated from unsaturated fatty acids and explain trans fats</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Carbohydrates</div>
+      <div class="sh2">Sugars, Starches, and Structural Polysaccharides</div>
+      <p class="prose">Carbohydrates are, in fact, an essential part of our diet; grains, fruits, and vegetables are all natural sources of carbohydrates. Carbohydrates provide energy to the body, particularly through glucose, a simple sugar. Carbohydrates also have other important functions in humans, animals, and plants.</p>
+      <p class="prose">Carbohydrates can be represented by the formula <strong>(CH₂O)n</strong>, where n is the number of carbon atoms in the molecule. In other words, the ratio of carbon to hydrogen to oxygen is 1:2:1 in carbohydrate molecules. Carbohydrates are classified into three subtypes: <strong>monosaccharides, disaccharides, and polysaccharides</strong>.</p>
+
+      <div class="sh3">Monosaccharides</div>
+      <p class="prose"><strong>Monosaccharides</strong> (mono- = "one"; sacchar- = "sweet") are simple sugars, the most common of which is glucose. In monosaccharides, the number of carbon atoms usually ranges from three to six. Most monosaccharide names end with the suffix <strong>-ose</strong>. Depending on the number of carbon atoms in the sugar, they may be known as trioses (three carbon atoms), pentoses (five carbon atoms), and hexoses (six carbon atoms).</p>
+      <p class="prose">The chemical formula for glucose is <strong>C₆H₁₂O₆</strong>. In most living species, glucose is an important source of energy. During cellular respiration, energy is released from glucose, and that energy is used to help make adenosine triphosphate (ATP). Plants synthesize glucose using carbon dioxide and water by the process of photosynthesis, and the glucose, in turn, is used for the energy requirements of the plant.</p>
+      <p class="prose">Galactose (part of lactose, or milk sugar) and fructose (found in fruit) are other common monosaccharides. Although glucose, galactose, and fructose all have the same chemical formula (C₆H₁₂O₆), they differ structurally and chemically (and are known as <strong>isomers</strong>) because of differing arrangements of atoms in the carbon chain.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.15 — Isomeric Monosaccharides</div>
+        <img src="images/ch2/fig2-15-monosaccharides.png" alt="Glucose, galactose, and fructose structures" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Glucose, galactose, and fructose are isomeric monosaccharides, meaning that they have the same chemical formula but slightly different structures.</div>
+      </div>
+
+      <div class="sh3">Disaccharides</div>
+      <p class="prose"><strong>Disaccharides</strong> (di- = "two") form when two monosaccharides undergo a dehydration reaction (a reaction in which the removal of a water molecule occurs). During this process, the hydroxyl group (–OH) of one monosaccharide combines with a hydrogen atom of another monosaccharide, releasing a molecule of water (H₂O) and forming a covalent bond between atoms in the two sugar molecules.</p>
+      <p class="prose">Common disaccharides include <strong>lactose</strong> (glucose + galactose, found in milk), <strong>maltose</strong> (glucose + glucose, malt sugar), and <strong>sucrose</strong> (glucose + fructose, table sugar).</p>
+
+      <div class="sh3">Polysaccharides</div>
+      <p class="prose">A long chain of monosaccharides linked by covalent bonds is known as a <strong>polysaccharide</strong> (poly- = "many"). The chain may be branched or unbranched, and it may contain different types of monosaccharides. Polysaccharides may be very large molecules. <strong>Starch, glycogen, cellulose, and chitin</strong> are examples of polysaccharides.</p>
+      <p class="prose"><strong>Starch</strong> is the stored form of sugars in plants and is made up of amylose and amylopectin (both polymers of glucose). Plants are able to synthesize glucose, and the excess glucose is stored as starch in different plant parts, including roots and seeds. The starch that is consumed by animals is broken down into smaller molecules, such as glucose.</p>
+      <p class="prose"><strong>Glycogen</strong> is the storage form of glucose in humans and other vertebrates, and is made up of monomers of glucose. Glycogen is the animal equivalent of starch and is a highly branched molecule usually stored in liver and muscle cells. Whenever glucose levels decrease, glycogen is broken down to release glucose.</p>
+      <p class="prose"><strong>Cellulose</strong> is one of the most abundant natural biopolymers. The cell walls of plants are mostly made of cellulose, which provides structural support to the cell. Cellulose is made up of glucose monomers that are linked by bonds between particular carbon atoms in the glucose molecule. Every other glucose monomer in cellulose is flipped over and packed tightly as extended long chains. This gives cellulose its rigidity and high tensile strength — which is so important to plant cells. Cellulose passing through our digestive system is called <strong>dietary fiber</strong>. While the glucose-glucose bonds in cellulose cannot be broken down by human digestive enzymes, herbivores such as cows, buffalos, and horses are able to digest grass that is rich in cellulose and use it as a food source. In these animals, certain species of bacteria reside in the digestive system and secrete the enzyme <strong>cellulase</strong>.</p>
+      <p class="prose">Carbohydrates serve other functions in different animals. Arthropods, such as insects, spiders, and crabs, have an outer skeleton, called the exoskeleton, which protects their internal body parts. This exoskeleton is made of the biological macromolecule <strong>chitin</strong>, which is a nitrogenous carbohydrate. It is made of repeating units of a modified sugar containing nitrogen.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.16 — Polysaccharides</div>
+        <img src="images/ch2/fig2-16-polysaccharides.png" alt="Starch, glycogen, cellulose, and chitin structures" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Although their structures and functions differ, all polysaccharide carbohydrates are made up of monosaccharides and have the chemical formula (CH₂O)n.</div>
+      </div>
+
+      <div class="ec-box">
+        <div class="ec-label">💼 Career Connection</div>
+        <div class="ec-title">Registered Dietitian</div>
+        <div class="ec-body">Obesity is a worldwide health concern, and many diseases, such as diabetes and heart disease, are becoming more prevalent because of obesity. This is one of the reasons why registered dietitians are increasingly sought after for advice. Registered dietitians help plan food and nutrition programs for individuals in various settings. They often work with patients in health-care facilities, designing nutrition plans to prevent and treat diseases. For example, dietitians may teach a patient with diabetes how to manage blood-sugar levels by eating the correct types and amounts of carbohydrates.
+        <br><br>To become a registered dietitian, one needs to earn at least a bachelor's degree in dietetics, nutrition, food technology, or a related field. Dietitians must become experts in the chemistry and functions of food (proteins, carbohydrates, and fats).</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Lipids</div>
+      <div class="sh2">Fats, Oils, Phospholipids, and Steroids</div>
+      <p class="prose"><strong>Lipids</strong> include a diverse group of compounds that are united by a common feature. Lipids are <strong>hydrophobic</strong> ("water-fearing"), or insoluble in water, because they are nonpolar molecules. This is because they are hydrocarbons that include only nonpolar carbon-carbon or carbon-hydrogen bonds. Lipids perform many different functions in a cell. Cells store energy for long-term use in the form of lipids called fats. Lipids also provide insulation from the environment for plants and animals. For example, they help keep aquatic birds and mammals dry because of their water-repelling nature. Lipids are also the building blocks of many hormones and are an important constituent of the plasma membrane. Lipids include fats, oils, waxes, phospholipids, and steroids.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.17 — Lipids in Nature</div>
+        <img src="images/ch2/fig2-17-otter.png" alt="River otter with water-repelling fur" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">Hydrophobic lipids in the fur of aquatic mammals, such as this river otter, protect them from the elements. (credit: Ken Bosma)</div>
+      </div>
+
+      <div class="sh3">Fats and Fatty Acids</div>
+      <p class="prose">A <strong>fat</strong> molecule, such as a <strong>triglyceride</strong>, consists of two main components — glycerol and fatty acids. Glycerol is an organic compound with three carbon atoms, five hydrogen atoms, and three hydroxyl (–OH) groups. Fatty acids have a long chain of hydrocarbons to which an acidic carboxyl group is attached, hence the name "fatty acid." In a fat molecule, a fatty acid is attached to each of the three oxygen atoms in the –OH groups of the glycerol molecule with a covalent bond.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.18 — Lipid Structures</div>
+        <img src="images/ch2/fig2-18-lipids.png" alt="Triglycerides, phospholipids, and steroids" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Lipids include fats, such as triglycerides, which are made up of fatty acids and glycerol, phospholipids, and steroids.</div>
+      </div>
+
+      <p class="prose">Fatty acids may be <strong>saturated</strong> or <strong>unsaturated</strong>. In a fatty acid chain, if there are only single bonds between neighboring carbons in the hydrocarbon chain, the fatty acid is saturated. Saturated fatty acids are saturated with hydrogen; in other words, the number of hydrogen atoms attached to the carbon skeleton is maximized. Saturated fats tend to get packed tightly and are solid at room temperature. Animal fats with stearic acid and palmitic acid contained in meat, and the fat with butyric acid contained in butter, are examples of saturated fats.</p>
+      <p class="prose">When the hydrocarbon chain contains a double bond, the fatty acid is an <strong>unsaturated fatty acid</strong>. Most unsaturated fats are liquid at room temperature and are called oils. The double bond causes a bend or a "kink" that prevents the fatty acids from packing tightly, keeping them liquid at room temperature. Unsaturated fats help to improve blood cholesterol levels, whereas saturated fats might contribute to plaque formation in the arteries.</p>
+
+      <div class="sh3">Trans Fats</div>
+      <p class="prose">In the food industry, oils are artificially <strong>hydrogenated</strong> to make them semi-solid, leading to less spoilage and increased shelf life. During this hydrogenation process, double bonds of the cis-conformation in the hydrocarbon chain may be converted to double bonds in the trans-conformation. This forms a <strong>trans-fat</strong> from a cis-fat.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.19 — Trans Fats</div>
+        <img src="images/ch2/fig2-19-trans-fat.png" alt="Cis vs trans fat molecular structure" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">During the hydrogenation process, the orientation around the double bonds is changed, making a trans-fat from a cis-fat. This changes the chemical properties of the molecule.</div>
+      </div>
+
+      <p class="prose">Margarine, some types of peanut butter, and shortening are examples of artificially hydrogenated trans-fats. Recent studies have shown that an increase in trans-fats in the human diet may lead to an increase in levels of low-density lipoprotein (LDL), or "bad" cholesterol, which, in turn, may lead to plaque deposition in the arteries, resulting in heart disease.</p>
+
+      <div class="sh3">Phospholipids and Steroids</div>
+      <p class="prose"><strong>Phospholipids</strong> are the major constituent of the plasma membrane. Like fats, they are composed of fatty acid chains attached to a glycerol or similar backbone. Instead of three fatty acids attached, however, there are two fatty acids and the third carbon of the glycerol backbone is bound to a phosphate group. A phospholipid has both hydrophobic and hydrophilic regions. The fatty acid chains are hydrophobic and exclude themselves from water, whereas the phosphate is hydrophilic and interacts with water. Cells are surrounded by a membrane, which has a <strong>bilayer</strong> of phospholipids.</p>
+      <p class="prose"><strong>Steroids</strong> have a ring structure. Although they do not resemble other lipids, they are grouped with them because they are also hydrophobic. <strong>Cholesterol</strong> is a steroid. Cholesterol is mainly synthesized in the liver and is the precursor of many steroid hormones, such as testosterone and estradiol. It is also the precursor of vitamins E and K and bile salts. Although cholesterol is often spoken of in negative terms, it is necessary for the proper functioning of the body. It is a key component of the plasma membranes of animal cells.</p>
+      <p class="prose"><strong>Waxes</strong> are made up of a hydrocarbon chain with an alcohol (–OH) group and a fatty acid. Examples include beeswax and lanolin. Plants also have waxes, such as the coating on their leaves, that helps prevent them from drying out.</p>
+
+      <div class="callout info"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">For an additional perspective on lipids, watch this video about <a href="http://openstax.org/l/lipids" target="_blank" style="color:#3a86e0">types of fat</a>.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Monosaccharide</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A simple sugar — the monomer of carbohydrates. Examples: glucose, fructose, galactose. Formula: C₆H₁₂O₆.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Polysaccharide</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A long chain of monosaccharides linked by covalent bonds. Examples: starch (plants), glycogen (animals), cellulose (plant walls), chitin (exoskeletons).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Triglyceride</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A fat molecule made of glycerol + 3 fatty acids. Main form of energy storage in animals. Can be saturated (solid) or unsaturated (liquid/oil).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Saturated Fat</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A fatty acid with only single bonds between carbons — maximum hydrogen atoms attached. Solid at room temperature. Examples: butter, animal fat.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Unsaturated Fat</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A fatty acid with one or more double bonds — causing "kinks" that prevent tight packing. Liquid at room temperature. Examples: olive oil, canola oil.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phospholipid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A lipid with 2 fatty acids + phosphate group on glycerol backbone. Has hydrophobic tails and hydrophilic head. Forms cell membrane bilayer.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cholesterol</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A steroid lipid. Precursor to steroid hormones (testosterone, estradiol), vitamins E & K, and bile salts. Key component of animal cell membranes.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Trans Fat</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">An artificially hydrogenated fat where double bonds are in the trans configuration. Linked to increased LDL cholesterol and heart disease. Found in margarine and processed foods.</div></div></div></div>
+      </div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Carbohydrates &amp; Lipids</div>
+      <div class="vs-sub">The molecules that fuel and insulate living organisms.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="y7raEBOvLwU" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/y7raEBOvLwU/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Carbon &amp; Biological Molecules — Biology #20</div><div class="vc-desc">Covers carbohydrates, lipids, and how their structures determine their functions.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=y7raEBOvLwU" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp5">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Explain at least three functions that lipids serve in plants and/or animals. For each function, name the specific type of lipid involved (triglyceride, phospholipid, steroid, or wax).</div>
+      <textarea class="cp-ta" id="cpt5" placeholder="Write your answer in complete sentences..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc5">Characters: <span id="cpn5">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb5" onclick="cpUnlock(5)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd5">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql5"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi5">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — Carbohydrates &amp; Lipids</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">An example of a monosaccharide is ________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>fructose</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>glucose</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>galactose</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>all of the above — fructose, glucose, and galactose are all monosaccharides with the formula C₆H₁₂O₆</li>
+          </ul>
+          <div class="qexp">Glucose, fructose, and galactose are all monosaccharides — simple sugars with the same chemical formula (C₆H₁₂O₆) but different structures (isomers). Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">Cellulose and starch are examples of ________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>monosaccharides</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>disaccharides</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>lipids</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>polysaccharides — both are long chains of glucose monomers, but with different bonding that gives them different properties</li>
+          </ul>
+          <div class="qexp">Both cellulose and starch are <strong>polysaccharides</strong> made of glucose monomers. Starch is energy storage in plants; cellulose provides structural support in plant cell walls. The difference is in the bond orientation between glucose units. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="a">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">Phospholipids are important components of __________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>the plasma membrane of cells — they form a bilayer with hydrophobic tails facing inward and hydrophilic heads facing outward</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>the ring structure of steroids</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the waxy covering on leaves</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the double bond in hydrocarbon chains</li>
+          </ul>
+          <div class="qexp"><strong>Phospholipids</strong> are the major constituent of the plasma membrane. Their dual nature (hydrophobic tails + hydrophilic head) allows them to spontaneously form bilayers in aqueous environments — the fundamental structure of all cell membranes. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">From Figure 2.19, what structural change converts a cis-fat to a trans-fat, and why is this medically significant?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Adding more carbon atoms — makes the fat longer and harder to digest</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Removing all double bonds — making it fully saturated</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The orientation around the double bond changes from cis to trans during hydrogenation — trans fats are linked to increased LDL ("bad") cholesterol, plaque formation in arteries, and heart disease</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Adding phosphate groups — turning fats into phospholipids</li>
+          </ul>
+          <div class="qexp">During artificial hydrogenation, the double bond configuration changes from cis (same-side) to trans (opposite-side). This seemingly small structural change has significant health consequences: trans fats increase LDL cholesterol and contribute to cardiovascular disease. This is why U.S. food labels now require trans-fat content to be listed.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are saturated fats solid at room temperature while unsaturated fats are liquid?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Saturated fats are heavier molecules</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Unsaturated fats have more carbon atoms</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Saturated fats have no double bonds, so their straight chains pack tightly together; unsaturated fats have double bonds that cause "kinks," preventing tight packing</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Saturated fats contain more water molecules</li>
+          </ul>
+          <div class="qexp">It's all about molecular shape. Saturated fatty acid chains are straight → pack tightly → solid. Unsaturated chains have double-bond "kinks" → can't pack tightly → liquid (oil). This is a direct consequence of molecular geometry affecting macroscopic properties.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Explain at least three functions that lipids serve in plants and/or animals.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Lipids only serve as energy storage — they have no other functions</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Lipids are only found in animals, not plants</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>(1) Long-term energy storage as triglycerides in adipocytes; (2) Insulation and waterproofing (fur oils, waxes on leaves); (3) Cell membrane structure via phospholipid bilayers; (4) Hormone signaling via steroid hormones (testosterone, estradiol); (5) Cholesterol as precursor for bile salts and vitamins</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Lipids provide structural support like cellulose in plant cell walls</li>
+          </ul>
+          <div class="qexp">Direct OpenStax Critical Thinking question. Lipids serve at least five functions: (1) energy storage (fats/triglycerides), (2) insulation/waterproofing (fur oils, leaf waxes), (3) cell membrane structure (phospholipid bilayer), (4) hormone signaling (steroid hormones), and (5) precursors for vitamins and bile salts (cholesterol). Cellulose is a carbohydrate, not a lipid.</div>
+        </div>
+
+        <div class="qscore" id="sc5"><div class="score-n" id="scn5">—</div><div class="score-l">out of 6 · <span id="sm5"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.3. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button>
+    <button class="mc-btn" id="mc5" onclick="markDone(5,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(6)">Lesson 6: Proteins &amp; Nucleic Acids →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 6 — PROTEINS & NUCLEIC ACIDS
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p6">
+  <div class="hero hero-prot">
+    <div class="h-crumb">Chemistry of Life · <span>Lesson 6</span></div>
+    <div class="h-title">Proteins &amp; Nucleic Acids</div>
+    <div class="h-desc">Proteins are one of the most abundant organic molecules in living systems and have the most diverse range of functions of all macromolecules. Nucleic acids carry the genetic blueprint of a cell and the instructions for its functioning.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 2.3</div>
+      <div class="h-chip">⏱ ~50 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the impact of slight changes in amino acids on organisms</li>
+        <li>Describe the structure of amino acids and peptide bonds</li>
+        <li>Explain the four levels of protein structure</li>
+        <li>Describe the functions of proteins including enzymes</li>
+        <li>Explain protein denaturation</li>
+        <li>Describe the structure and function of nucleic acids (DNA and RNA)</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Proteins</div>
+      <div class="sh2">The Most Diverse Macromolecules</div>
+      <p class="prose"><strong>Proteins</strong> are one of the most abundant organic molecules in living systems and have the most diverse range of functions of all macromolecules. Proteins may be structural, regulatory, contractile, or protective; they may serve in transport, storage, or membranes; or they may be toxins or enzymes. Each cell in a living system may contain thousands of different proteins, each with a unique function. Their structures, like their functions, vary greatly. They are all, however, polymers of <strong>amino acids</strong>, arranged in a linear sequence.</p>
+      <p class="prose">The functions of proteins are very diverse because there are <strong>20 different chemically distinct amino acids</strong> that form long chains, and the amino acids can be in any order. For example, proteins can function as <strong>enzymes</strong> or <strong>hormones</strong>. Enzymes, which are produced by living cells, are catalysts in biochemical reactions (like digestion) and are usually proteins. Each enzyme is specific for the substrate (a reactant that binds to an enzyme) upon which it acts. An example of an enzyme is salivary amylase, which breaks down amylose, a component of starch.</p>
+      <p class="prose"><strong>Hormones</strong> are chemical signaling molecules, usually proteins or steroids, secreted by an endocrine gland or group of endocrine cells that act to control or regulate specific physiological processes, including growth, development, metabolism, and reproduction. For example, insulin is a protein hormone that maintains blood glucose levels.</p>
+
+      <div class="sh3">Amino Acids</div>
+      <p class="prose"><strong>Amino acids</strong> are the monomers that make up proteins. Each amino acid has the same fundamental structure, which consists of a central carbon atom bonded to an amino group (–NH₂), a carboxyl group (–COOH), and a hydrogen atom. Every amino acid also has another variable atom or group of atoms bonded to the central carbon atom known as the <strong>R group</strong>. The R group is the only difference in structure between the 20 amino acids; otherwise, the amino acids are identical (Figure 2.20).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.20 — Amino Acid Structure</div>
+        <img src="images/ch2/fig2-20-amino-acids.png" alt="Amino acid structure showing R groups" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Amino acids are made up of a central carbon bonded to an amino group (–NH₂), a carboxyl group (–COOH), and a hydrogen atom. The central carbon's fourth bond varies among the different amino acids, as seen in these examples of alanine, valine, lysine, and aspartic acid.</div>
+      </div>
+
+      <p class="prose">The sequence and number of amino acids ultimately determine a protein's shape, size, and function. Each amino acid is attached to another amino acid by a covalent bond, known as a <strong>peptide bond</strong>, which is formed by a dehydration reaction. The products formed by such a linkage are called <strong>polypeptides</strong>. While the terms polypeptide and protein are sometimes used interchangeably, a polypeptide is technically a polymer of amino acids, whereas the term protein is used for a polypeptide or polypeptides that have combined together, have a distinct shape, and have a unique function.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Evolution Connection</div>
+      <div class="sh2">The Evolutionary Significance of Cytochrome c</div>
+      <div class="ec-box">
+        <div class="ec-label">🧬 Evolution Connection</div>
+        <div class="ec-title">Cytochrome c — A Window into Evolution</div>
+        <div class="ec-body"><strong>Cytochrome c</strong> is an important component of the molecular machinery that harvests energy from glucose. Because this protein's role in producing cellular energy is crucial, it has changed very little over millions of years. Protein sequencing has shown that there is a considerable amount of sequence similarity among cytochrome c molecules of different species; evolutionary relationships can be assessed by measuring the similarities or differences among various species' protein sequences.
+        <br><br>Scientists have determined that human cytochrome c contains <strong>104 amino acids</strong>. For each cytochrome c molecule that has been sequenced to date from different organisms, <strong>37 of these amino acids appear in the same position</strong> in each cytochrome c. This indicates that all of these organisms are descended from a common ancestor.
+        <br><br>On comparing the human and chimpanzee protein sequences, <strong>no sequence difference was found</strong>. When human and rhesus monkey sequences were compared, <strong>a single difference was found in one amino acid</strong>. In contrast, human-to-yeast comparisons show a <strong>difference in 44 amino acids</strong>, suggesting that humans and chimpanzees have a more recent common ancestor than humans and the rhesus monkey, or humans and yeast.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Protein Structure</div>
+      <div class="sh2">Four Levels of Organization</div>
+      <p class="prose">To understand how the protein gets its final shape or conformation, we need to understand the four levels of protein structure: <strong>primary, secondary, tertiary, and quaternary</strong> (Figure 2.21).</p>
+      <p class="prose">The unique sequence and number of amino acids in a polypeptide chain is its <strong>primary structure</strong>. The unique sequence for every protein is ultimately determined by the gene that encodes the protein. Any change in the gene sequence may lead to a different amino acid being added to the polypeptide chain, causing a change in protein structure and function.</p>
+      <p class="prose">William Warrick Cardozo showed that <strong>sickle-cell anemia</strong> is caused by a change in protein structure as a result of gene encoding, meaning that it is an inherited disorder. In sickle cell anemia, the hemoglobin β chain has a single amino acid substitution, causing a change in both the structure and function of the protein. A hemoglobin molecule is made up of two alpha chains and two beta chains that each consist of about 150 amino acids. The molecule, therefore, has about 600 amino acids. The structural difference between a normal hemoglobin molecule and a sickle cell molecule — that dramatically decreases life expectancy in the affected individuals — is <strong>a single amino acid of the 600</strong>.</p>
+      <p class="prose">Folding patterns resulting from interactions between the non-R group portions of amino acids give rise to the <strong>secondary structure</strong> of the protein. The most common are the <strong>alpha (α)-helix</strong> and <strong>beta (β)-pleated sheet</strong> structures. Both structures are held in shape by hydrogen bonds.</p>
+      <p class="prose">The unique three-dimensional structure of a polypeptide is known as its <strong>tertiary structure</strong>. This structure is caused by chemical interactions between various amino acids and regions of the polypeptide. When protein folding takes place, the hydrophobic R groups of nonpolar amino acids lay in the interior of the protein, whereas the hydrophilic R groups lay on the outside.</p>
+      <p class="prose">In nature, some proteins are formed from several polypeptides, also known as subunits, and the interaction of these subunits forms the <strong>quaternary structure</strong>. For example, hemoglobin is a combination of four polypeptide subunits.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.21 — Four Levels of Protein Structure</div>
+        <img src="images/ch2/fig2-21-protein-structure.png" alt="Primary, secondary, tertiary, and quaternary protein structure" style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The four levels of protein structure can be observed in these illustrations. (credit: modification of work by National Human Genome Research Institute)</div>
+      </div>
+
+      <div class="sh3">Denaturation</div>
+      <p class="prose">Each protein has its own unique sequence and shape held together by chemical interactions. If the protein is subject to changes in temperature, pH, or exposure to chemicals, the protein structure may change, losing its shape in what is known as <strong>denaturation</strong>. Denaturation is often reversible because the primary structure is preserved if the denaturing agent is removed, allowing the protein to resume its function. Sometimes denaturation is irreversible, leading to a loss of function. One example of protein denaturation can be seen when an egg is fried or boiled. The albumin protein in the liquid egg white is denatured when placed in a hot pan, changing from a clear substance to an opaque white substance.</p>
+
+      <div class="callout info"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">For an additional perspective on proteins, explore "<a href="http://openstax.org/l/proteins" target="_blank" style="color:#3a86e0">Biomolecules: The Proteins</a>" through this interactive animation.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Nucleic Acids</div>
+      <div class="sh2">DNA and RNA — The Blueprint of Life</div>
+      <p class="prose"><strong>Nucleic acids</strong> are key macromolecules in the continuity of life. They carry the genetic blueprint of a cell and carry instructions for the functioning of the cell.</p>
+      <p class="prose">The two main types of nucleic acids are <strong>deoxyribonucleic acid (DNA)</strong> and <strong>ribonucleic acid (RNA)</strong>. DNA is the genetic material found in all living organisms, ranging from single-celled bacteria to multicellular mammals. The other type of nucleic acid, RNA, is mostly involved in protein synthesis. The DNA molecules never leave the nucleus, but instead use an RNA intermediary to communicate with the rest of the cell.</p>
+      <p class="prose">DNA and RNA are made up of monomers known as <strong>nucleotides</strong>. The nucleotides combine with each other to form a polynucleotide, DNA or RNA. Each nucleotide is made up of three components: a <strong>nitrogenous base</strong>, a <strong>pentose (five-carbon) sugar</strong>, and a <strong>phosphate group</strong> (Figure 2.22). Each nitrogenous base in a nucleotide is attached to a sugar molecule, which is attached to a phosphate group.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.22 — Nucleotide Structure</div>
+        <img src="images/ch2/fig2-22-nucleotide.png" alt="Structure of a nucleotide" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">A nucleotide is made up of three components: a nitrogenous base, a pentose sugar, and a phosphate group.</div>
+      </div>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 2.23 — DNA Double Helix</div>
+        <img src="images/ch2/fig2-23-dna-helix.png" alt="DNA double helix structure" style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">The double-helix model shows DNA as two parallel strands of intertwining molecules. (credit: Jerome Walker, Dennis Myts)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">🎴 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Amino Acid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The monomer of proteins. 20 different types. Central carbon + amino group + carboxyl group + H + variable R group. Joined by peptide bonds.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Peptide Bond</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The covalent bond between amino acids formed by a dehydration reaction. Links the carboxyl group of one amino acid to the amino group of the next.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Enzyme</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A protein catalyst that speeds up biochemical reactions. Specific to its substrate. Example: salivary amylase breaks down starch.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Denaturation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Loss of protein shape due to changes in temperature, pH, or chemical exposure. May be reversible or irreversible. Example: cooking an egg.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Primary Structure</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The unique sequence and number of amino acids in a polypeptide chain. Determined by the gene encoding the protein.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nucleotide</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The monomer of nucleic acids (DNA and RNA). Made of three parts: nitrogenous base + pentose sugar + phosphate group.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">DNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Deoxyribonucleic acid. The genetic material of all living organisms. Double helix structure. Contains genes that encode proteins.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">RNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Ribonucleic acid. Involved in protein synthesis. Acts as intermediary — carries instructions from DNA in the nucleus to ribosomes in the cytoplasm.</div></div></div></div>
+      </div>
+    </div>
+
+    
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Proteins &amp; Nucleic Acids</div>
+      <div class="vs-sub">The macromolecules that do the work and carry the instructions of life.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="y7raEBOvLwU" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/y7raEBOvLwU/mqdefault.jpg" alt="Crash Course"><div class="vplay-btn"></div></div>
+          <div class="vc-player"></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Carbon &amp; Biological Molecules — Biology #20</div><div class="vc-desc">Also covers proteins, amino acids, nucleic acids, and how molecular structure determines function.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=y7raEBOvLwU" target="_blank" onclick="event.stopPropagation()">YouTube →</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="cp-box" id="cp6">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Explain what happens if even one amino acid is substituted for another in a polypeptide chain. Use the specific example of sickle-cell anemia to illustrate how a single amino acid change in the 600-amino-acid hemoglobin molecule can dramatically affect protein function and human health.</div>
+      <textarea class="cp-ta" id="cpt6" placeholder="Write your answer in complete sentences..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc6">Characters: <span id="cpn6">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb6" onclick="cpUnlock(6)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd6">✓ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql6"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi6">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 6 Quiz — Proteins &amp; Nucleic Acids</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">The monomers that make up proteins are called _________.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>nucleotides</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>disaccharides</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>amino acids — 20 different types linked by peptide bonds</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>chaperones</li>
+          </ul>
+          <div class="qexp"><strong>Amino acids</strong> are the monomers of proteins. There are 20 different amino acids, distinguished by their R groups. They are linked by peptide bonds (formed via dehydration synthesis). Nucleotides are the monomers of nucleic acids, not proteins. Direct OpenStax Review Question.</div>
+        </div>
+
+        <div class="qq" data-ans="d">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">What determines the primary structure of a protein?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The number of hydrogen bonds between amino acids</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The temperature and pH of the cell</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The types of lipids surrounding the protein</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The unique sequence and number of amino acids, ultimately determined by the gene that encodes the protein</li>
+          </ul>
+          <div class="qexp">Primary structure = the <strong>amino acid sequence</strong>. This sequence is encoded in DNA. Any change in the gene can lead to a different amino acid, potentially changing protein structure and function (as in sickle-cell anemia).</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-vi">🖼️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 2.21, which level of protein structure involves multiple polypeptide subunits combining together?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Primary — the amino acid sequence involves multiple chains</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Quaternary — the interaction of multiple polypeptide subunits; example: hemoglobin has 4 subunits (2 alpha + 2 beta chains)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Secondary — alpha helices and beta sheets combine</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Tertiary — the 3D folding always involves multiple chains</li>
+          </ul>
+          <div class="qexp">The four levels: <strong>Primary</strong> = amino acid sequence. <strong>Secondary</strong> = local folding (α-helix, β-sheet) via hydrogen bonds. <strong>Tertiary</strong> = overall 3D shape of ONE polypeptide via R-group interactions. <strong>Quaternary</strong> = multiple polypeptide subunits combining (e.g., hemoglobin = 4 subunits).</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">When you fry an egg, the clear egg white turns opaque and solid. What happened to the protein?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The protein was hydrolyzed into amino acids</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The protein formed new peptide bonds with the pan</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The albumin protein was denatured — heat disrupted its 3D structure, causing it to unfold and aggregate; this is irreversible denaturation</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The protein converted into a carbohydrate</li>
+          </ul>
+          <div class="qexp"><strong>Denaturation</strong> — heat disrupted the hydrogen bonds, ionic bonds, and hydrophobic interactions maintaining albumin's 3D structure. The protein unfolded and aggregated (turned white and solid). This is irreversible — you cannot "unfry" an egg. The primary structure (amino acid sequence) is unchanged, but the functional 3D shape is permanently lost.</div>
+        </div>
+
+        <div class="qq" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">What are the three components of a nucleotide?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Amino group, carboxyl group, R group</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nitrogenous base, pentose (five-carbon) sugar, phosphate group</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Glucose, fatty acid, glycerol</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Proton, neutron, electron</li>
+          </ul>
+          <div class="qexp">A nucleotide = <strong>nitrogenous base + pentose sugar + phosphate group</strong>. Multiple nucleotides link to form polynucleotides (DNA or RNA). Option A describes amino acid structure, not nucleotide structure.</div>
+        </div>
+
+        <div class="qq" data-ans="c">
+          <div class="qbadge qb-ct">🔬 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Explain what happens if even one amino acid is substituted for another in a polypeptide chain. Provide a specific example.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Nothing happens — one amino acid out of hundreds makes no difference</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The protein becomes a different type of macromolecule (like a carbohydrate)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Even a single substitution can change the protein's shape and function. In sickle-cell anemia, one amino acid change out of ~600 in hemoglobin causes red blood cells to become crescent-shaped, clogging arteries and causing serious health problems including breathlessness, dizziness, and abdominal pain</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The protein repairs itself by replacing the wrong amino acid</li>
+          </ul>
+          <div class="qexp">Direct OpenStax Critical Thinking question. In <strong>sickle-cell anemia</strong>, a single amino acid substitution in the β chain of hemoglobin (glutamic acid → valine at position 6) causes the protein to aggregate under low-oxygen conditions, distorting red blood cells into a crescent/"sickle" shape. One change out of ~600 amino acids = dramatic disease. This powerfully demonstrates that protein function depends on precise amino acid sequence.</div>
+        </div>
+
+        <div class="qscore" id="sc6"><div class="score-n" id="scn6">—</div><div class="score-l">out of 6 · <span id="sm6"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 2.3. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button>
+    <button class="mc-btn" id="mc6" onclick="markDone(6,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(7)">Unit Review &amp; Practice Test →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 7 — UNIT REVIEW & PRACTICE TEST
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p7">
+  <div class="hero hero-rev">
+    <div class="h-crumb">Chemistry of Life · <span>Unit Review</span></div>
+    <div class="h-title">Unit Review &amp; Practice Test</div>
+    <div class="h-desc">You've covered atoms, chemical bonds, water properties, carbon chemistry, carbohydrates, lipids, proteins, and nucleic acids. Now put it all together with a 20-question practice test covering every lesson.</div>
+    <div class="h-meta">
+      <div class="h-chip">📝 20 Questions</div>
+      <div class="h-chip">All Lessons Covered</div>
+      <div class="h-chip">Virginia SOL BIO.2</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="cs">
+      <div class="eyebrow">Quick Reference</div>
+      <div class="sh2">Key Concepts at a Glance</div>
+      <table class="dt">
+        <thead><tr><th>Lesson</th><th>Must-Know Concepts</th></tr></thead>
+        <tbody>
+          <tr><td><strong>L1 — Atoms</strong></td><td>Elements, atoms (protons/neutrons/electrons), atomic number, mass number, isotopes, carbon dating, half-life.</td></tr>
+          <tr><td><strong>L2 — Bonds</strong></td><td>Electron shells, octet rule, ions/cations/anions, ionic bonds, covalent bonds (polar/nonpolar), hydrogen bonds, van der Waals.</td></tr>
+          <tr><td><strong>L3 — Water</strong></td><td>Polarity, hydrophilic/hydrophobic, cohesion, adhesion, surface tension, solvent, ice density, pH scale, acids, bases, buffers.</td></tr>
+          <tr><td><strong>L4 — Carbon</strong></td><td>Carbon forms 4 bonds, 4 macromolecule classes, monomers/polymers, dehydration synthesis, hydrolysis.</td></tr>
+          <tr><td><strong>L5 — Carbs/Lipids</strong></td><td>Mono/di/polysaccharides, starch/glycogen/cellulose/chitin, triglycerides, saturated/unsaturated, phospholipids, steroids, trans fats.</td></tr>
+          <tr><td><strong>L6 — Proteins/NA</strong></td><td>20 amino acids, R groups, peptide bonds, 4 levels of structure, denaturation, sickle-cell, enzymes, nucleotides, DNA/RNA.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cp-box" id="cp7">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Pre-Test Reflection</div><div class="cp-sub">100+ characters required · Unlock the practice test</div></div></div>
+      <div class="cp-q">Looking at the quick reference above, which concept do you feel LEAST confident about? Explain what you still find confusing and what specific strategy you plan to use to review it.</div>
+      <textarea class="cp-ta" id="cpt7" placeholder="Write your honest reflection here..." oninput="cpCheck(7)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc7">Characters: <span id="cpn7">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb7" onclick="cpUnlock(7)" disabled>Unlock Practice Test →</button>
+      </div>
+      <div class="cp-done" id="cpd7">✓ Reflection complete — practice test unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql7"><div class="qlock-icon">🔒</div><p>Complete the reflection above to unlock the 20-question practice test.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi7">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — Chemistry of Life</h3><p>20 questions · All lessons · Virginia SOL BIO.2 · Auto-submitted to Mr. England</p></div></div>
+
+        <div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Magnesium has an atomic number of 12. A neutral magnesium atom has ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12 protons and 12 electrons</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12 protons and 6 electrons</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>6 protons and 6 electrons</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>24 protons and 12 electrons</li></ul><div class="qexp">Atomic number = protons. Neutral atom = protons equal electrons. So 12 protons and 12 electrons.</div></div>
+
+        <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which type of bond represents a weak chemical bond?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>hydrogen bond</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>ionic bond</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>covalent bond</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>polar covalent bond</li></ul><div class="qexp">Hydrogen bonds and van der Waals interactions are weak bonds. Ionic and covalent bonds are strong.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">An isotope of sodium (Na) has a mass number of 22. How many neutrons does it have?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>22</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>11 (mass 22 − atomic number 11 = 11 neutrons)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>44</li></ul><div class="qexp">Neutrons = mass number − atomic number = 22 − 11 = 11.</div></div>
+
+        <div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which is NOT true about water?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water is polar</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Water stabilizes temperature</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water is essential for life</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water is the most abundant atom in Earth's atmosphere</li></ul><div class="qexp">Water is a molecule, not an atom. Nitrogen is the most abundant gas in Earth's atmosphere.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A solution with pH 8.0 is ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>weakly acidic</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>strongly acidic</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>weakly basic</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>strongly basic</li></ul><div class="qexp">pH 7 = neutral. pH 8 = one unit above neutral = weakly basic/alkaline.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">6</span><span class="qt-inner">Lemon juice (pH 2) has approximately how many more H⁺ ions than tomato juice (pH 4)?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2 times</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 times</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>100 times (each pH unit = 10×; 2 units = 10² = 100×)</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1000 times</li></ul><div class="qexp">pH scale is logarithmic. 2 units difference = 10² = 100 times more H⁺ ions.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">How many covalent bonds can carbon form, and why?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2 — it has 2 electrons in its outer shell</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6 — it has 6 total electrons</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>4 — it has 4 electrons in its outer shell and needs 4 more to satisfy the octet rule</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>8 — it can fill its outer shell completely</li></ul><div class="qexp">Carbon has 4 outer electrons, needs 4 more → forms 4 covalent bonds. This versatility makes carbon the foundation of biological molecules.</div></div>
+
+        <div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">An example of a monosaccharide is ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>fructose</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>glucose</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>galactose</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>all of the above</li></ul><div class="qexp">Glucose, fructose, and galactose are all monosaccharides with the formula C₆H₁₂O₆ but different structures (isomers).</div></div>
+
+        <div class="qq" data-ans="d"><div class="qt"><span class="qnum">9</span><span class="qt-inner">Cellulose and starch are examples of ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>monosaccharides</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>disaccharides</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>lipids</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>polysaccharides</li></ul><div class="qexp">Both are polysaccharides made of glucose monomers. Starch = energy storage in plants. Cellulose = structural support in plant cell walls.</div></div>
+
+        <div class="qq" data-ans="a"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Phospholipids are important components of __________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>the plasma membrane of cells</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>the ring structure of steroids</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the waxy covering on leaves</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the double bond in hydrocarbon chains</li></ul><div class="qexp">Phospholipids form the bilayer of cell membranes — hydrophobic tails face inward, hydrophilic heads face outward.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">The monomers that make up proteins are called _________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>nucleotides</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>disaccharides</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>amino acids</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>chaperones</li></ul><div class="qexp">Amino acids are the monomers of proteins. 20 types, linked by peptide bonds.</div></div>
+
+        <div class="qq" data-ans="b"><div class="qt"><span class="qnum">12</span><span class="qt-inner">During dehydration synthesis, what is released as a byproduct?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Carbon dioxide</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Water — monomers join into a polymer and a water molecule is released</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Oxygen gas</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ATP</li></ul><div class="qexp">Dehydration synthesis = "building while losing water." Monomers → polymer + H₂O. The reverse (hydrolysis) adds water to break bonds.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Why are saturated fats solid at room temperature?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They contain more water molecules</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They have more double bonds creating rigidity</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Their straight chains (no double bonds) pack tightly together</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are heavier than unsaturated fats</li></ul><div class="qexp">No double bonds = straight chains = tight packing = solid at room temperature. Unsaturated fats have double bond "kinks" preventing tight packing = liquid (oil).</div></div>
+
+        <div class="qq" data-ans="d"><div class="qt"><span class="qnum">14</span><span class="qt-inner">What determines which element an atom is?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Number of neutrons</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Number of electrons</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Total atomic mass</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Number of protons (atomic number)</li></ul><div class="qexp">The number of protons defines the element. Change protons = change element. Neutrons can vary (isotopes). Electrons can vary (ions).</div></div>
+
+        <div class="qq" data-ans="b"><div class="qt"><span class="qnum">15</span><span class="qt-inner">A fossil has 25% of its original Carbon-14. How old is it?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5,730 years</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>11,460 years (2 half-lives: 100% → 50% → 25%)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>17,190 years</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50,000 years</li></ul><div class="qexp">Each half-life = 5,730 years. 100% → 50% (1 half-life) → 25% (2 half-lives) = 2 × 5,730 = 11,460 years.</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">16</span><span class="qt-inner">Surface tension in water is caused by ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>ionic bonds between water molecules</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>covalent bonds at the water's surface</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>cohesion — hydrogen bonds between water molecules at the surface</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>adhesion — water molecules sticking to the container</li></ul><div class="qexp">Surface tension = cohesion at the air-water interface. Water molecules at the surface are pulled inward by hydrogen bonds with molecules below, creating a "film."</div></div>
+
+        <div class="qq" data-ans="c"><div class="qt"><span class="qnum">17</span><span class="qt-inner">In sickle-cell anemia, how many amino acids are different in the ~600-amino-acid hemoglobin molecule?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>About 100 amino acids</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>About 30 amino acids</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Just one single amino acid — demonstrating that protein function depends on precise sequence</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>None — sickle-cell is caused by changes in DNA, not protein</li></ul><div class="qexp">ONE amino acid substitution out of ~600 causes the entire hemoglobin protein to malfunction, distorting red blood cells into sickle shapes. This dramatically shows that protein function depends on precise amino acid sequence.</div></div>
+
+        <div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">Buffers are important because they ________.</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>make all solutions neutral (pH 7)</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>absorb excess H⁺ or OH⁻ to maintain pH within a narrow range critical for cell function</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>convert acids into bases</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>remove all hydrogen ions from the body</li></ul><div class="qexp">Buffers maintain pH within a narrow range (blood: 7.2-7.6). They absorb excess H⁺ OR OH⁻. Without the bicarbonate buffer system, small pH changes would be lethal.</div></div>
+
+        <div class="qq" data-ans="b"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Which level of protein structure involves multiple polypeptide subunits?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Primary</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Quaternary — multiple polypeptide chains combining (e.g., hemoglobin has 4 subunits)</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Secondary</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Tertiary</li></ul><div class="qexp">Primary = sequence. Secondary = local folding (helix/sheet). Tertiary = 3D shape of one chain. Quaternary = multiple chains combining.</div></div>
+
+        <div class="qq" data-ans="b"><div class="qt"><span class="qnum">20</span><span class="qt-inner">What are the three components of a nucleotide?</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Amino group, carboxyl group, R group</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nitrogenous base, pentose sugar, phosphate group</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Glucose, fatty acid, glycerol</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Proton, neutron, electron</li></ul><div class="qexp">Nucleotide = nitrogenous base + pentose sugar + phosphate group. Option A describes amino acids. Option C describes triglycerides. Option D describes atoms.</div></div>
+
+        <div class="qscore" id="sc7"><div class="score-n" id="scn7">—</div><div class="score-l">out of 20 · Virginia SOL BIO.2 Practice<br><span id="sm7"></span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(6)">← Lesson 6</button>
+    <button class="mc-btn" id="mc7" onclick="markDone(7,this)">✓ Complete Module</button>
+    <button class="nbtn next" disabled>Module Complete 🎉</button>
+  </div>
+</div>
+</main>
+
+<!-- MODULE CONFIG + SHARED JS -->
+<script>
+window.MODULE_CONFIG = {
+  name: 'Chemistry of Life',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec',
+  panelCount: 8,
+  lessonCount: 7,
+  cpMin: 100,
+  lessons: ['Overview','L1: Atoms & Elements','L2: Chemical Bonds','L3: Water & Properties','L4: Carbon & Macromolecules','L5: Carbohydrates & Lipids','L6: Proteins & Nucleic Acids','L7: Practice Test']
+};
+</script>
+<script src="../shared/portal-quiz.js"></script>
+</body>
+</html>
