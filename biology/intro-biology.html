@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Biology · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="../shared/portal-base.css">
+<link rel="stylesheet" href="../shared/portal-sidebar.css">
+<style>
+/* Module-specific hero gradients */
+.hero-bio{background:linear-gradient(135deg,#0d4a2a,#1a7a4a);}
+.hero-lvl{background:linear-gradient(135deg,#0a2a4a,#0b6a8a);}
+.hero-cls{background:linear-gradient(135deg,#2a0a5a,#6c3fa0);}
+.hero-sci{background:linear-gradient(135deg,#4a1a00,#8a3a00);}
+.hero-exp{background:linear-gradient(135deg,#0f2240,#1a4070);}
+/* Dark checkpoint override for this module */
+.cp-box{background:linear-gradient(135deg,#1a2a4a,#0a3a3a)!important;color:#fff;border-color:var(--teal)!important;}
+.cp-box .cp-title{color:#fff;}
+.cp-box .cp-sub{color:rgba(255,255,255,.48);}
+.cp-box .cp-q{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:13px;line-height:1.6;padding:11px 15px;background:rgba(255,255,255,.06);border-radius:8px;border-left:3px solid var(--teal-light);}
+.cp-box .cp-ta{background:rgba(255,255,255,.05);color:#fff;border-color:rgba(255,255,255,.13);}
+.cp-box .cp-ta:focus{border-color:var(--teal-light);}
+.cp-box .cp-ta::placeholder{color:rgba(255,255,255,.22);}
+.cp-box .cp-ctr{color:rgba(255,255,255,.32);}
+.cp-box .cp-ctr.ok{color:var(--teal-light);}
+.cp-box .cp-btn{background:var(--teal);}
+.cp-box .cp-btn:hover{background:var(--teal-light);}
+.cp-box .cp-btn:disabled{background:rgba(255,255,255,.13);}
+.cp-box .cp-done{color:var(--teal-light);}
+</style>
+</head>
+<body class="theme-bio">
+
+<!-- TOAST -->
+<div id="submit-toast"><span style="font-size:1.1rem;">🤖</span><span id="toast-msg">Score sent!</span></div>
+
+<!-- NAME MODAL -->
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0f2240;margin-bottom:8px;">Welcome to Introduction to Biology</div>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:20px;line-height:1.6;">Enter your name to begin. Your scores will be sent to Mr. England automatically.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input type="text" id="student-name" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:4px;display:none;">Please enter your name.</div>
+    <button onclick="startModule()" style="margin-top:16px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a href="index.html" class="tb-back">← Biology</a>
+  <div class="tb-logo">🌿</div>
+  <div><div class="tb-name">Southern Gap High School</div><div class="tb-sub">Biology · Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Introduction to Biology</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview &amp; Standards</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Life &amp; Organization</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · What is Life?</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Levels of Organization</div></a>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Domains &amp; Classification</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Scientific Method</div>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · The Scientific Method</div></a>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Experimental Design</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Assessment</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+
+<main class="main" id="main">
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 0 — UNIT OVERVIEW
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · <span>Unit Overview</span></div>
+    <div class="h-title">Introduction to Biology</div>
+    <div class="h-desc">Before you study cells, DNA, or ecosystems, you need to understand what biology actually is and how scientists think. This unit builds the conceptual and methodological foundation for everything that follows.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 1</div>
+      <div class="h-chip">🎯 6 Lessons · 56 Questions</div>
+      <div class="h-chip">Virginia SOL BIO.1</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">📌 What You Will Learn in This Module</div>
+      <ul class="obj-list">
+        <li>Define biology and describe the 8 properties shared by all living things</li>
+        <li>Identify the levels of biological organization from atom to biosphere</li>
+        <li>Distinguish the three domains of life and the major kingdoms of Eukarya</li>
+        <li>Apply the scientific method to real biological questions</li>
+        <li>Design controlled experiments by correctly identifying variables and controls</li>
+        <li>Distinguish correlation from causation and explain why experimental evidence is required</li>
+      </ul>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Module Map</div>
+      <div class="sh2">Six Lessons · OpenStax Concepts of Biology Ch. 1</div>
+      <table class="dt">
+        <thead><tr><th>#</th><th>Lesson</th><th>Key Concepts</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>What is Life?</td><td>8 properties of life, biology defined, autotroph vs. heterotroph</td><td>CB 1.1</td></tr>
+          <tr><td>2</td><td>Levels of Organization</td><td>Atom → biosphere hierarchy, emergent properties</td><td>CB 1.1</td></tr>
+          <tr><td>3</td><td>Domains &amp; Classification</td><td>3 domains, kingdoms, binomial nomenclature, phylogeny</td><td>CB 1.1</td></tr>
+          <tr><td>4</td><td>The Scientific Method</td><td>Observation, hypothesis, experiment, conclusion, peer review</td><td>CB 1.2</td></tr>
+          <tr><td>5</td><td>Experimental Design</td><td>Variables, controls, data types, bias, statistical thinking</td><td>CB 1.2</td></tr>
+          <tr><td>6</td><td>Unit Review &amp; Practice Test</td><td>All topics — 20-question comprehensive assessment</td><td>All</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Virginia SOL Alignment</div>
+      <div class="sh2">Standards Covered in This Module</div>
+      <table class="dt">
+        <thead><tr><th>Standard</th><th>Description</th><th>Lessons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>BIO.1a</strong></td><td>Plan and conduct investigations including forming hypotheses and controlling variables</td><td>4, 5</td></tr>
+          <tr><td><strong>BIO.1b</strong></td><td>Collect, analyze, and interpret data using appropriate tools</td><td>5</td></tr>
+          <tr><td><strong>BIO.1c</strong></td><td>Communicate and defend findings using scientific reasoning</td><td>4, 5</td></tr>
+          <tr><td><strong>BIO.1 (general)</strong></td><td>Characteristics of living things and levels of organization</td><td>1, 2</td></tr>
+          <tr><td><strong>BIO.1 (classification)</strong></td><td>Domains and kingdoms of life; binomial nomenclature</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" disabled>← Previous</button>
+    <div class="lnav-info">Overview · Start Here</div>
+    <button class="nbtn next" onclick="goTo(1)">Lesson 1: What is Life? →</button>
+  </div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-bio">
+    <div class="h-crumb">Introduction to Biology · <span>Lesson 1</span></div>
+    <div class="h-title">What is Life?</div>
+    <div class="h-desc">What separates a living cell from an equal mass of nonliving chemicals? Eight fundamental properties define all living things — from the smallest bacterium to a 2,000-year-old sequoia.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 1.1</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Define biology and explain why it cannot be reduced to a single sentence</li>
+        <li>List and explain the 8 properties shared by all living things</li>
+        <li>Distinguish between living things and nonliving things using all 8 criteria</li>
+        <li>Explain why no single property alone is sufficient to define life</li>
+        <li>Distinguish autotrophs from heterotrophs and give examples of each</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Fundamental Question</div>
+      <div class="sh2">What Makes Something Alive?</div>
+      <p class="prose">A match flame moves, consumes fuel, produces waste, and generates heat. A crystal grows and exhibits order. A virus contains DNA and can reproduce — but only by hijacking a host cell. Rather than seeking one defining feature, biologists have identified <strong>eight properties</strong> that, taken together, characterize all living things.</p>
+      <p class="prose">No single property is sufficient — fire has some of them, viruses have most — but all living things share all eight. Biology, the study of life, is the science dedicated to understanding these properties and everything that emerges from them.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Definition of Biology</div><div class="cx">Biology is the science that studies life. From Greek <em>bios</em> (life) + <em>logos</em> (study). Because life is incredibly diverse, biology encompasses dozens of subdisciplines — molecular biology to ecology — all united by the study of living systems.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Eight Properties</div>
+      <div class="sh2">All Living Things Share These Characteristics</div>
+
+      <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" class="svg-fig">
+        <rect width="700" height="360" fill="#f0f4f8" rx="12"/>
+        <text x="350" y="26" text-anchor="middle" fill="#0f2240" font-size="14" font-weight="700" font-family="serif">The Eight Properties of Life</text>
+        <circle cx="350" cy="190" r="52" fill="#0f2240"/>
+        <text x="350" y="183" text-anchor="middle" fill="#12c4c0" font-size="12" font-weight="700">ALL</text>
+        <text x="350" y="198" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">LIVING</text>
+        <text x="350" y="213" text-anchor="middle" fill="#12c4c0" font-size="12" font-weight="700">THINGS</text>
+        <rect x="270" y="40" width="160" height="34" rx="8" fill="#1a7a4a"/>
+        <text x="350" y="62" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">1. Order</text>
+        <line x1="350" y1="74" x2="350" y2="138" stroke="#1a7a4a" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="524" y="78" width="160" height="34" rx="8" fill="#0b8f8c"/>
+        <text x="604" y="100" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">2. Response to Env.</text>
+        <line x1="524" y1="95" x2="400" y2="155" stroke="#0b8f8c" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="555" y="173" width="135" height="34" rx="8" fill="#6c3fa0"/>
+        <text x="622" y="195" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">3. Reproduction</text>
+        <line x1="555" y1="190" x2="402" y2="190" stroke="#6c3fa0" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="524" y="263" width="160" height="34" rx="8" fill="#e8920e"/>
+        <text x="604" y="285" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">4. Growth &amp; Dev.</text>
+        <line x1="524" y1="280" x2="400" y2="228" stroke="#e8920e" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="270" y="299" width="160" height="34" rx="8" fill="#c0392b"/>
+        <text x="350" y="321" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">5. Homeostasis</text>
+        <line x1="350" y1="299" x2="350" y2="242" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="16" y="263" width="140" height="34" rx="8" fill="#1a3560"/>
+        <text x="86" y="285" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">6. Metabolism</text>
+        <line x1="156" y1="280" x2="300" y2="228" stroke="#1a3560" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="10" y="173" width="148" height="34" rx="8" fill="#0d4a2a"/>
+        <text x="84" y="195" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">7. Heredity</text>
+        <line x1="158" y1="190" x2="298" y2="190" stroke="#0d4a2a" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="16" y="78" width="148" height="34" rx="8" fill="#7a4a00"/>
+        <text x="90" y="100" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">8. Evolution</text>
+        <line x1="164" y1="95" x2="300" y2="155" stroke="#7a4a00" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="350" y="348" text-anchor="middle" fill="#64748b" font-size="10">Figure 1.1 — The eight properties shared by all living organisms (OpenStax CB 1.1)</text>
+      </svg>
+
+      <div class="sh3">1. Order</div>
+      <p class="prose">All living things exhibit a high degree of <strong>order and organization</strong>. Atoms are arranged into molecules, molecules into organelles, organelles into cells. This organization is maintained at a significant energy cost. A dead cell still contains all the same molecules as a living one — but the organization has broken down.</p>
+
+      <div class="sh3">2. Response to the Environment</div>
+      <p class="prose">All living organisms <strong>detect and respond to stimuli</strong>. A plant turns toward light (phototropism). A bacterium swims toward a nutrient source (chemotaxis). Your pupils dilate in dim light. This responsiveness allows organisms to maintain favorable conditions and avoid harm.</p>
+
+      <div class="sh3">3. Reproduction</div>
+      <p class="prose">All living things are capable of <strong>reproduction</strong> — producing new individuals of the same species. Reproduction may be asexual (genetically identical offspring) or sexual (combining genetic material from two parents). Individual organisms don't need to reproduce to be alive — a mule is sterile but fully alive — but the capacity exists at the species level.</p>
+
+      <div class="sh3">4. Growth and Development</div>
+      <p class="prose">All organisms <strong>grow and develop</strong> according to specific instructions encoded in DNA. Growth means an increase in size by incorporating materials from the environment. Development involves a predictable series of changes — a fertilized egg becomes an embryo, then an infant.</p>
+
+      <div class="sh3">5. Homeostasis (Regulation)</div>
+      <p class="prose">Living things <strong>regulate their internal environment</strong> to maintain stable conditions despite external changes. Your body holds a core temperature near 37°C whether you're in a snowstorm or a desert. Blood glucose, pH, and water balance are all tightly regulated via feedback mechanisms.</p>
+
+      <div class="sh3">6. Energy Processing (Metabolism)</div>
+      <p class="prose">All living things <strong>use energy</strong> to perform work. Organisms get energy from sunlight (autotrophs like plants) or by consuming organic molecules (heterotrophs like animals). The sum of all energy-transforming reactions is called <strong>metabolism</strong>. Without a continuous energy supply, life's organization breaks down.</p>
+
+      <div class="sh3">7. Heredity</div>
+      <p class="prose">Living things <strong>pass genetic information to offspring</strong> via <strong>DNA</strong>. When cells divide, DNA is copied and distributed to daughter cells. Sexual reproduction combines DNA from two parents, producing variation — the raw material for evolution.</p>
+
+      <div class="sh3">8. Evolutionary Adaptation</div>
+      <p class="prose">Living things <strong>evolve</strong> — populations change over generations through natural selection. Every species alive today is the product of billions of years of evolutionary change. This shared evolutionary history means all life on Earth is related and uses the same genetic code.</p>
+
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">What About Viruses?</div><div class="cx">Viruses have DNA/RNA, reproduce, and evolve. But they cannot perform metabolism on their own, don't maintain homeostasis, and require a host to reproduce. Most biologists consider viruses <em>acellular</em> — not truly alive. The debate around viruses highlights why we need all eight criteria together, not just a few.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">📖 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biology</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The scientific study of life. From Greek <em>bios</em> (life) + <em>logos</em> (study). Encompasses all living organisms and their interactions.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homeostasis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Maintenance of stable internal conditions despite external changes. Requires continuous energy input and feedback mechanisms. Example: body temperature regulation.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Metabolism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The sum of all chemical reactions in a living organism. Includes catabolism (breaking down) and anabolism (building up). Requires energy input.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Heredity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The passing of genetic information (DNA) from parent to offspring. The molecular basis of inheritance. Carried by DNA in all known living organisms.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Autotroph</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">"Self-feeder." Organism that produces its own food from inorganic sources using light or chemical energy. Examples: plants, algae, cyanobacteria.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Heterotroph</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">"Other-feeder." Organism that must consume other organisms or organic matter to obtain energy. Examples: animals, fungi, most bacteria.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="video-section">
+      <div class="vs-label">🎬 Video Resources</div>
+      <div class="vs-title">Three Ways to See the Same Concepts</div>
+      <div class="vs-sub">Watch one or all three — each covers the 8 properties from a different angle.</div>
+      <div class="video-grid">
+        <div class="video-card" data-id="RZEsJyqQWhA" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/RZEsJyqQWhA/mqdefault.jpg" alt="Amoeba Sisters"><div class="vplay-btn"></div></div>
+          <div class="vc-player"><iframe allowfullscreen allow="autoplay; encrypted-media"></iframe></div>
+          <div class="vc-body"><div class="vc-badge vc-as">🧫 Amoeba Sisters</div><div class="vc-title">Characteristics of Life</div><div class="vc-desc">Clear walkthrough of the 8 properties with memorable examples. Great starting point.</div><div class="vc-footer"><span class="vc-dur">⏱ ~9 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=RZEsJyqQWhA" target="_blank" onclick="event.stopPropagation()">YouTube ↗</a></div></div>
+        </div>
+        <div class="video-card" data-id="QnQe0xW_JY4" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/QnQe0xW_JY4/mqdefault.jpg" alt="Crash Course Biology"><div class="vplay-btn"></div></div>
+          <div class="vc-player"><iframe allowfullscreen allow="autoplay; encrypted-media"></iframe></div>
+          <div class="vc-body"><div class="vc-badge vc-cc">⚡ Crash Course</div><div class="vc-title">Biology #1 — That's Why Carbon is a Tramp</div><div class="vc-desc">Hank Green's fast-paced intro to biology — covers why life is hard to define and what makes it special.</div><div class="vc-footer"><span class="vc-dur">⏱ ~12 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=QnQe0xW_JY4" target="_blank" onclick="event.stopPropagation()">YouTube ↗</a></div></div>
+        </div>
+        <div class="video-card" data-id="eTtL6EZJMEE" onclick="expandVid(this)">
+          <div class="video-thumb"><img src="https://img.youtube.com/vi/eTtL6EZJMEE/mqdefault.jpg" alt="Khan Academy"><div class="vplay-btn"></div></div>
+          <div class="vc-player"><iframe allowfullscreen allow="autoplay; encrypted-media"></iframe></div>
+          <div class="vc-body"><div class="vc-badge vc-kh">📚 Khan Academy</div><div class="vc-title">What is Life?</div><div class="vc-desc">Calm and thorough walkthrough of how biologists define life and why it matters for classification.</div><div class="vc-footer"><span class="vc-dur">⏱ ~10 min</span><a class="vc-ext" href="https://www.youtube.com/watch?v=eTtL6EZJMEE" target="_blank" onclick="event.stopPropagation()">YouTube ↗</a></div></div>
+        </div>
+      </div>
+      <div class="vs-note">💡 If YouTube is blocked on the school network, watch at home or ask Mr. England for an alternative.</div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">👁️ Visual Connection Question · Figure 1.1</div>
+      <div class="vcq-question">Look at the eight properties wheel. Notice that Heredity and Evolution are listed as separate properties. How are they connected? Could evolution occur without heredity? Could heredity occur without evolution? Explain your reasoning.</div>
+      <textarea class="vcq-textarea" placeholder="Write your analysis here..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Model Answer:</strong> Heredity is the mechanism — faithful copying of DNA from parent to offspring. Evolution is the result — change in the frequency of heritable traits across generations. Evolution requires heredity: without inherited variation, natural selection has nothing to act on. However, heredity can theoretically occur without evolution — if all variants survive equally in a stable population, DNA is still inherited but the population's genetic composition doesn't change. In practice, some selection always occurs, so heredity and evolution are inseparable in natural populations.</div>
+    </div>
+
+    <div class="cp-box" id="cp1">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">A student argues: "Viruses must be alive because they have DNA, reproduce, and evolve — three of the eight properties." Write a counter-argument explaining why possessing some properties is insufficient, using at least two specific properties viruses lack.</div>
+      <textarea class="cp-ta" id="cpt1" placeholder="Write your answer in complete sentences..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc1">Characters: <span id="cpn1">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb1" onclick="cpUnlock(1)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql1"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi1">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 1 Quiz — What is Life?</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" id="q1-1" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following correctly lists all eight properties shared by all living things?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cells, DNA, movement, growth, feeding, reproduction, breathing, death</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Order, response to environment, reproduction, growth/development, homeostasis, metabolism, heredity, evolutionary adaptation</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Cells, metabolism, reproduction, photosynthesis, homeostasis, heredity, mobility, evolution</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Order, energy, DNA, cells, reproduction, eating, breathing, death</li>
+          </ul>
+          <div class="qexp">The eight properties: order, sensitivity/response to environment, reproduction, growth and development, regulation (homeostasis), energy processing (metabolism), evolutionary adaptation, and heredity. Photosynthesis and breathing are not universal — not all organisms photosynthesize or breathe using lungs.</div>
+        </div>
+
+        <div class="qq" id="q1-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">Homeostasis refers to which of the following?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The tendency of organisms to grow toward light</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The sum of all chemical reactions occurring in an organism</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The maintenance of stable internal conditions despite changes in the external environment</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The passing of genetic information from parent to offspring</li>
+          </ul>
+          <div class="qexp">Homeostasis = regulation of internal conditions — temperature, pH, blood glucose, water balance — to maintain stability. Metabolism is the sum of chemical reactions; phototropism is growth toward light; heredity is DNA inheritance.</div>
+        </div>
+
+        <div class="qq" id="q1-3" data-ans="b">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 1.1, which two properties are most directly dependent on DNA?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Homeostasis and Metabolism — because enzymes are coded by DNA</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Heredity and Evolution — heredity IS the passing of DNA; evolution is change in heritable (DNA-encoded) traits over generations</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Order and Growth — because DNA organizes cell structure and controls growth</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Reproduction and Response — because both require DNA-encoded proteins</li>
+          </ul>
+          <div class="qexp">Heredity is the direct property — DNA is copied and passed to offspring. Evolution is the downstream consequence — because DNA varies and is heritable, populations can change over generations. All other properties depend on DNA indirectly, but heredity and evolution are explicitly about DNA being copied and changed across generations.</div>
+        </div>
+
+        <div class="qq" id="q1-4" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">A mule (offspring of a horse and donkey) is sterile — it cannot reproduce. Is a mule alive?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>No — reproduction is required for something to be alive</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Yes — reproduction is a property of the species, not every individual; a mule meets all other properties</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>No — a mule lacks heredity because it has no offspring to pass DNA to</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only if it can respond to its environment, which sterile animals cannot do</li>
+          </ul>
+          <div class="qexp">A mule is absolutely alive. Reproduction is considered a property of species, not a requirement for every individual. Humans who don't reproduce are still alive. This example shows why the eight properties must be applied thoughtfully — not as a rigid checklist for every individual.</div>
+        </div>
+
+        <div class="qq" id="q1-5" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the key difference between an autotroph and a heterotroph?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Autotrophs use oxygen; heterotrophs do not require oxygen</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Autotrophs consume other organisms; heterotrophs make their own food</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Autotrophs produce their own organic molecules from inorganic sources; heterotrophs must consume organic molecules made by other organisms</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They use the same energy source but differ only in how they reproduce</li>
+          </ul>
+          <div class="qexp">Autotrophs ("self-feeders") fix inorganic carbon into organic molecules using sunlight (photoautotrophs like plants) or chemicals (chemoautotrophs). Heterotrophs ("other-feeders") must consume pre-made organic molecules. This distinction is foundational to food webs and energy flow in ecosystems.</div>
+        </div>
+
+        <div class="qq" id="q1-6" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">NASA scientists searching for life on other planets use the eight properties as a framework. However, life on another planet might use a different molecule instead of DNA. How does this challenge the definition, and what might be a more universal criterion?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It doesn't challenge it — the eight properties are universal laws of chemistry that apply to any life in the universe</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It completely invalidates the definition — biology has no way to define life without DNA</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It highlights that our eight properties are based on Earth life only; more universal criteria might focus on self-organizing systems that maintain low entropy, use energy, and can undergo Darwinian evolution — without specifying the molecules used</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It only matters for astrobiology; the eight properties remain sufficient for all Earth life</li>
+          </ul>
+          <div class="qexp">The eight properties embed assumptions (DNA, carbon-based chemistry, water) that may not apply universally. More fundamental criteria focus on thermodynamics: life might be defined as a self-maintaining, far-from-equilibrium system that uses energy to maintain low entropy and can undergo Darwinian evolution — without specifying the molecular machinery. This is an active research question in astrobiology.</div>
+        </div>
+
+        <div class="qscore" id="sc1"><div class="score-n" id="scn1">–</div><div class="score-l">out of 6 · <span id="sm1"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 1.1 (Fowler, Roush, Wise). CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(0)">← Overview</button>
+    <button class="mc-btn" id="mc1" onclick="markDone(1,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(2)">Lesson 2: Levels of Organization →</button>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════
+     PANEL 2 — LEVELS OF BIOLOGICAL ORGANIZATION
+══════════════════════════════════════════════════════ -->
+
+<div class="panel" id="p2">
+  <div class="hero hero-lvl">
+    <div class="h-crumb">Introduction to Biology · <span>Lesson 2</span></div>
+    <div class="h-title">Levels of Biological Organization</div>
+    <div class="h-desc">Life is organized in a nested hierarchy — from atoms to the biosphere. Each level has properties that emerge only at that level and cannot be predicted from the parts alone. Understanding scale is one of biology's most powerful conceptual tools.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 1.1</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>List the levels of biological organization from atom to biosphere in correct order</li>
+        <li>Define emergent properties and explain why they are biologically significant</li>
+        <li>Give a specific example of an emergent property at two different levels</li>
+        <li>Distinguish between a population, a community, and an ecosystem</li>
+        <li>Explain why biologists must work at the appropriate level of organization for their question</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Big Picture</div>
+      <div class="sh2">Biology Studies Life at Every Scale</div>
+      <p class="prose">One of the most distinctive features of biology is the enormous range of scales it covers. A molecular biologist studies protein shapes measured in nanometers. An ecologist might study energy flow through an entire forest measured in square kilometers. All of these researchers are doing biology — they are simply asking questions at different levels of a nested hierarchy.</p>
+      <p class="prose">Understanding this hierarchy reveals a profound principle: <strong>emergent properties</strong>. At each level of organization, new properties arise that could not be predicted from the level below. Life itself is the ultimate emergent property — no single atom, molecule, or organelle is alive, yet organize them in the right way and life emerges.</p>
+
+      <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" class="svg-fig">
+        <rect width="700" height="400" fill="#f0f4f8" rx="12"/>
+        <text x="350" y="24" text-anchor="middle" fill="#0f2240" font-size="14" font-weight="700" font-family="serif">Levels of Biological Organization</text>
+        <rect x="40" y="36" width="620" height="30" rx="6" fill="#0d3a1a"/>
+        <text x="350" y="56" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">BIOSPHERE — All ecosystems on Earth combined</text>
+        <rect x="55" y="74" width="590" height="30" rx="6" fill="#0b5c36"/>
+        <text x="350" y="94" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ECOSYSTEM — Community + abiotic environment</text>
+        <rect x="70" y="112" width="560" height="30" rx="6" fill="#0d6e42"/>
+        <text x="350" y="132" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">COMMUNITY — All populations in an area</text>
+        <rect x="85" y="150" width="530" height="30" rx="6" fill="#1a7a4a"/>
+        <text x="350" y="170" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">POPULATION — All individuals of one species in an area</text>
+        <rect x="100" y="188" width="500" height="30" rx="6" fill="#0b8f8c"/>
+        <text x="350" y="208" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ORGANISM — An individual living thing</text>
+        <rect x="115" y="226" width="470" height="30" rx="6" fill="#0d7a7a"/>
+        <text x="350" y="246" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ORGAN SYSTEM — Groups of organs working together</text>
+        <rect x="130" y="264" width="440" height="30" rx="6" fill="#1a4a9a"/>
+        <text x="350" y="284" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ORGAN — Tissues forming a functional unit</text>
+        <rect x="145" y="302" width="410" height="30" rx="6" fill="#2a3aa0"/>
+        <text x="350" y="322" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">TISSUE — Groups of similar cells</text>
+        <rect x="160" y="340" width="380" height="30" rx="6" fill="#6c3fa0"/>
+        <text x="350" y="360" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">CELL → ORGANELLE → MOLECULE → ATOM</text>
+        <text x="350" y="388" text-anchor="middle" fill="#64748b" font-size="10">Figure 2.1 — The hierarchy of biological organization (OpenStax CB 1.1)</text>
+      </svg>
+
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Emergent Properties</div><div class="cx">An emergent property is a characteristic that arises at a particular level of organization and does not exist at lower levels. Water is wet — but individual H₂O molecules are not. The brain produces consciousness — but no single neuron is conscious. Life itself is an emergent property of nonliving chemistry arranged in the right way.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Levels in Detail</div>
+      <div class="sh2">From Smallest to Largest</div>
+
+      <div class="sh3">Atom → Molecule → Macromolecule</div>
+      <p class="prose">The foundation of all biology is chemistry. <strong>Atoms</strong> combine to form <strong>molecules</strong>. Small molecules combine into <strong>macromolecules</strong> — the four classes of biological macromolecules (carbohydrates, lipids, proteins, nucleic acids) are the building blocks of all life.</p>
+
+      <div class="sh3">Organelle → Cell</div>
+      <p class="prose"><strong>Organelles</strong> are specialized structures within eukaryotic cells — the nucleus, mitochondria, chloroplasts. Together they form the <strong>cell</strong> — the fundamental unit of life. The cell is the smallest unit that can independently perform all life functions. Some organisms consist of a single cell; others consist of trillions.</p>
+
+      <div class="sh3">Tissue → Organ → Organ System → Organism</div>
+      <p class="prose">In multicellular organisms, similar cells form <strong>tissues</strong>. Tissues combine to form <strong>organs</strong> (the heart, stomach, brain). Organs working together form <strong>organ systems</strong>. All organ systems together constitute an <strong>organism</strong> — an individual living thing.</p>
+
+      <div class="sh3">Population → Community → Ecosystem → Biosphere</div>
+      <p class="prose">A <strong>population</strong> is all individuals of the same species in a defined area. A <strong>community</strong> is all populations of different species living and interacting in an area. An <strong>ecosystem</strong> includes the community plus all abiotic (nonliving) factors — water, soil, climate, light. The <strong>biosphere</strong> encompasses all ecosystems on Earth.</p>
+
+      <div class="callout info"><div class="ci">💡</div><div class="cb"><div class="ct">Community vs. Ecosystem</div><div class="cx"><strong>Community = biotic only</strong> (all living organisms in an area). <strong>Ecosystem = community + abiotic factors</strong> (temperature, water, soil chemistry, sunlight). A pond community is all the fish, frogs, plants, and bacteria. The pond ecosystem also includes the water chemistry, temperature, and light levels.</div></div></div>
+    </div>
+
+    <div class="ec-box">
+      <div class="ec-label">🔗 Everyday Connection</div>
+      <div class="ec-title">The City as a Biological Analogy</div>
+      <div class="ec-body">A city mirrors biological organization. Individual workers (cells) form departments (tissues) within companies (organs) that make up industries (organ systems) within the city (organism). The city interacts with other cities (community) within a region (ecosystem) within the country (biosphere). And just as emergent properties arise in biology — a single neuron can't think, but organize billions of them and consciousness emerges — a city has properties no individual building possesses: traffic patterns, culture, economic cycles.</div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">📖 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Emergent Property</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A property that arises at a given level of organization and is not present at or predictable from lower levels. Life itself is an emergent property of nonliving chemistry.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Population</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All individuals of the same species living in a defined geographic area at the same time. The fundamental unit of evolution.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Community</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All populations of different species living and interacting in a defined area. Includes only biotic (living) components — no abiotic factors.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ecosystem</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A community plus all abiotic (nonliving) factors — water, soil, sunlight, temperature, nutrients — in a defined area.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biosphere</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The global sum of all ecosystems — every place on Earth where life exists, from ocean depths to mountain peaks. The largest level of biological organization.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Abiotic</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Nonliving components of an environment: temperature, water, soil chemistry, light, pH. Contrasted with biotic (living) components. Both are part of an ecosystem.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">👁️ Visual Connection Question · Figure 2.1</div>
+      <div class="vcq-question">A biologist studies how a drought reduces the number of deer in a forest. At which level(s) of organization is this study occurring? What emergent properties become visible at those levels that would be invisible if you studied only individual deer?</div>
+      <textarea class="vcq-textarea" placeholder="Write your analysis here..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Model Answer:</strong> This study operates at the population level (the deer population) within an ecosystem context (the forest + the abiotic drought factor). Emergent properties visible here include population density, birth and death rates, carrying capacity, and predator-prey dynamics — none of which exist in a single deer. A drought's effect can only be understood with population-scale data. This illustrates why biologists must work at the appropriate organizational level for their question.</div>
+    </div>
+
+    <div class="cp-box" id="cp2">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">A philosopher argues: "Since all living things are just atoms arranged in space, and atoms are not alive, life is an illusion." Use the concept of emergent properties to refute this argument. Give at least two specific biological examples to support your case.</div>
+      <textarea class="cp-ta" id="cpt2" placeholder="Write your answer in complete sentences..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc2">Characters: <span id="cpn2">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb2" onclick="cpUnlock(2)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd2">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql2"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi2">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 2 Quiz — Levels of Organization</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" id="q2-1" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which correctly orders the levels from SMALLEST to LARGEST?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cell → Atom → Organelle → Tissue → Organ → Organism</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Atom → Molecule → Organelle → Cell → Tissue → Organ → Organism → Population → Community → Ecosystem → Biosphere</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Molecule → Cell → Atom → Organ → Tissue → Organism → Biosphere</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Organelle → Cell → Organism → Tissue → Organ → Population → Community</li>
+          </ul>
+          <div class="qexp">Correct order smallest → largest: Atom → Molecule → Organelle → Cell → Tissue → Organ → Organ System → Organism → Population → Community → Ecosystem → Biosphere. Each level contains all levels below it.</div>
+        </div>
+
+        <div class="qq" id="q2-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the difference between a community and an ecosystem?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A community is larger than an ecosystem and includes multiple ecosystems</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A community includes only plant species; an ecosystem includes all species</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A community includes only biotic (living) components; an ecosystem includes the community plus all abiotic (nonliving) factors</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are synonyms — both describe all species in a given area</li>
+          </ul>
+          <div class="qexp">Community = all interacting populations (biotic only). Ecosystem = community + abiotic factors (temperature, water, soil chemistry, sunlight, etc.). A pond community is the fish, frogs, plants, algae, and bacteria. The pond ecosystem also includes water chemistry, temperature, and light penetration.</div>
+        </div>
+
+        <div class="qq" id="q2-3" data-ans="c">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 2.1, at what level does the property of "being able to run a marathon" first emerge? Why can't this property be studied at the cellular level?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>At the tissue level — muscle tissue contracting is sufficient for running</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>At the organ level — the heart alone can sustain marathon running</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>At the organism level — running a marathon requires coordinated integration of multiple organ systems simultaneously; no single lower level can do this</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>At the population level — marathons only make sense in the context of competing individuals</li>
+          </ul>
+          <div class="qexp">Running a marathon is an emergent property of the whole organism requiring: skeletal muscle (muscular system), bones for leverage (skeletal system), heart pumping oxygenated blood (circulatory system), lungs exchanging gases (respiratory system), and brain coordinating everything (nervous system). No individual cell, tissue, or organ can run — the capacity emerges only at the integrated organism level.</div>
+        </div>
+
+        <div class="qq" id="q2-4" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">A scientist studying "all the white-tailed deer living in Shenandoah National Park this year" is working at which level?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Community level — because deer interact with many other species in the park</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Population level — all individuals of one species in a defined geographic area at a given time</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ecosystem level — because the park includes both living and nonliving components</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Organism level — because the study focuses on deer as individual animals</li>
+          </ul>
+          <div class="qexp">A population = all individuals of a single species in a defined area. "All white-tailed deer in Shenandoah" — one species, defined area, defined time — fits exactly. If the study included multiple species, it would be a community study. If it included abiotic factors (drought effects), it would be an ecosystem study.</div>
+        </div>
+
+        <div class="qq" id="q2-5" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">Which best describes an emergent property?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A property that exists at all levels of organization simultaneously</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A property that can only be studied with high-powered microscopes</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A property that arises at a given level of organization and is not present in or predictable from the properties of lower levels</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A property that emerges only in multicellular organisms</li>
+          </ul>
+          <div class="qexp">Emergent properties arise at a particular level and cannot be predicted from examining lower levels in isolation. Wetness is not a property of individual H₂O molecules. Consciousness is not a property of individual neurons. Life is not a property of individual atoms. The key: the whole is more than the sum of its parts.</div>
+        </div>
+
+        <div class="qq" id="q2-6" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">A coral reef study examines how rising ocean temperatures affect fish populations, coral bleaching, and nutrient cycling. Which levels of organization are involved, and identify one emergent property that only exists at the ecosystem level?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only the organism level — because rising temperature affects each coral's physiology</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only the population level — because the study measures how many corals survive</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Organism through ecosystem — temperature affects individual physiology (organism), species abundances change (population), interspecies relationships shift (community), and nutrient cycling changes (ecosystem). Reef resilience is an ecosystem-level emergent property.</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only the biosphere level — because ocean temperatures are global phenomena</li>
+          </ul>
+          <div class="qexp">This is a multilevel study. At organism: corals bleach. At population: coral coverage decreases. At community: fish dependent on coral decline. At ecosystem: productivity and nutrient cycling change. "Reef resilience" — the system's ability to absorb disturbance and recover — is an emergent property that only exists at the ecosystem level; no individual organism, population, or community component possesses it alone.</div>
+        </div>
+
+        <div class="qscore" id="sc2"><div class="score-n" id="scn2">–</div><div class="score-l">out of 6 · <span id="sm2"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 1.1. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(1)">← Lesson 1</button>
+    <button class="mc-btn" id="mc2" onclick="markDone(2,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(3)">Lesson 3: Domains &amp; Classification →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PANEL 3 — DOMAINS OF LIFE & CLASSIFICATION
+══════════════════════════════════════════════════════ -->
+
+<div class="panel" id="p3">
+  <div class="hero hero-cls">
+    <div class="h-crumb">Introduction to Biology · <span>Lesson 3</span></div>
+    <div class="h-title">Domains of Life &amp; Classification</div>
+    <div class="h-desc">With an estimated 8.7 million species on Earth, biologists need a universal system for naming and grouping living things. The modern classification system reveals not just organization, but evolutionary history.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 1.1</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Name and distinguish the three domains of life: Bacteria, Archaea, and Eukarya</li>
+        <li>List the major kingdoms and the domain each belongs to</li>
+        <li>Write a scientific name correctly using binomial nomenclature</li>
+        <li>Recite the taxonomic hierarchy from domain to species</li>
+        <li>Explain why modern classification is based on evolutionary relationships, not physical similarity</li>
+        <li>Distinguish prokaryotes from eukaryotes at the cellular level</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Why Classify?</div>
+      <div class="sh2">The Need for a Universal Naming System</div>
+      <p class="prose">The common name "robin" refers to completely different birds on different continents — the American robin (<em>Turdus migratorius</em>) and the European robin (<em>Erithacus rubecula</em>) are not closely related at all. Without a universal system, scientific communication across languages would be impossible.</p>
+      <p class="prose">The solution — developed by Swedish botanist Carl Linnaeus in the 18th century — is <strong>binomial nomenclature</strong>: a two-part Latin naming system that gives each species a unique name used by scientists worldwide. Modern taxonomy has expanded this into a complete hierarchical system that reflects evolutionary relationships.</p>
+
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Binomial Nomenclature Rules</div><div class="cx">Every species has a two-part scientific name: (1) <strong>Genus</strong> (capitalized) + (2) <strong>species epithet</strong> (lowercase). Both are italicized in print, underlined when handwritten. Example: <em>Homo sapiens</em>. After first use, the genus can be abbreviated: <em>H. sapiens</em>.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Three Domains</div>
+      <div class="sh2">The Deepest Divisions of Life</div>
+      <table class="dt">
+        <thead><tr><th>Domain</th><th>Cell Type</th><th>Key Features</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Bacteria</strong></td><td>Prokaryotic</td><td>No nucleus; peptidoglycan cell walls; most abundant organisms on Earth</td><td><em>E. coli</em>, Streptococcus, cyanobacteria</td></tr>
+          <tr><td><strong>Archaea</strong></td><td>Prokaryotic</td><td>No nucleus; distinct membrane lipids; many are extremophiles; more closely related to Eukarya than to Bacteria</td><td>Methanogens, halophiles, thermophiles</td></tr>
+          <tr><td><strong>Eukarya</strong></td><td>Eukaryotic</td><td>Membrane-bound nucleus; complex organelles; includes all multicellular life</td><td>Plants, animals, fungi, protists</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout info"><div class="ci">💡</div><div class="cb"><div class="ct">Prokaryotes vs. Eukaryotes</div><div class="cx">The most fundamental distinction in cell biology. <strong>Prokaryotes</strong> (Bacteria + Archaea) lack a membrane-bound nucleus — DNA floats freely in the cytoplasm. <strong>Eukaryotes</strong> (Domain Eukarya) have a membrane-bound nucleus and complex organelles (mitochondria, ER, etc.). All multicellular organisms are eukaryotes.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Kingdoms of Eukarya</div>
+      <div class="sh2">Four Kingdoms Within Domain Eukarya</div>
+      <table class="dt">
+        <thead><tr><th>Kingdom</th><th>Nutrition</th><th>Key Features</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Animalia</strong></td><td>Heterotrophic (ingestion)</td><td>No cell walls; motile; nervous system; reproduce sexually</td></tr>
+          <tr><td><strong>Plantae</strong></td><td>Autotrophic (photosynthesis)</td><td>Cellulose cell walls; chloroplasts; sessile</td></tr>
+          <tr><td><strong>Fungi</strong></td><td>Heterotrophic (absorption)</td><td>Chitin cell walls; secrete digestive enzymes; form hyphae; more related to animals than plants</td></tr>
+          <tr><td><strong>Protista</strong></td><td>Autotrophic or Heterotrophic</td><td>Mostly unicellular; catch-all kingdom; includes algae, amoebae, paramecia</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Taxonomic Hierarchy</div>
+      <div class="sh2">Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species</div>
+
+      <div class="callout mem"><div class="ci">🧠</div><div class="cb"><div class="ct">Mnemonic — Taxonomic Ranks</div><div class="cx"><strong>D</strong>ear <strong>K</strong>ing <strong>P</strong>hilip <strong>C</strong>ame <strong>O</strong>ver <strong>F</strong>or <strong>G</strong>ood <strong>S</strong>oup → Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species</div></div></div>
+
+      <svg viewBox="0 0 700 188" xmlns="http://www.w3.org/2000/svg" class="svg-fig">
+        <rect width="700" height="188" fill="#f0f4f8" rx="12"/>
+        <text x="350" y="20" text-anchor="middle" fill="#0f2240" font-size="13" font-weight="700" font-family="serif">Taxonomic Classification: Human vs. Gray Wolf</text>
+        <text x="95"  y="40" text-anchor="middle" fill="#0b8f8c" font-size="10" font-weight="700">Rank</text>
+        <text x="295" y="40" text-anchor="middle" fill="#1a7a4a" font-size="10" font-weight="700">Human</text>
+        <text x="490" y="40" text-anchor="middle" fill="#6c3fa0" font-size="10" font-weight="700">Gray Wolf</text>
+        <text x="630" y="40" text-anchor="middle" fill="#e8920e" font-size="10" font-weight="700">Share?</text>
+        <line x1="20" y1="46" x2="680" y2="46" stroke="#dde3ef" stroke-width="1"/>
+        <text x="95"  y="62" text-anchor="middle" fill="#5e6e8a" font-size="9">Domain</text>   <text x="295" y="62" text-anchor="middle" fill="#1a7a4a" font-size="9">Eukarya</text>    <text x="490" y="62" text-anchor="middle" fill="#6c3fa0" font-size="9">Eukarya</text>    <text x="630" y="62" text-anchor="middle" fill="#1a7a4a" font-size="12">✓</text>
+        <text x="95"  y="78" text-anchor="middle" fill="#5e6e8a" font-size="9">Kingdom</text>  <text x="295" y="78" text-anchor="middle" fill="#1a7a4a" font-size="9">Animalia</text>   <text x="490" y="78" text-anchor="middle" fill="#6c3fa0" font-size="9">Animalia</text>   <text x="630" y="78" text-anchor="middle" fill="#1a7a4a" font-size="12">✓</text>
+        <text x="95"  y="94" text-anchor="middle" fill="#5e6e8a" font-size="9">Phylum</text>   <text x="295" y="94" text-anchor="middle" fill="#1a7a4a" font-size="9">Chordata</text>   <text x="490" y="94" text-anchor="middle" fill="#6c3fa0" font-size="9">Chordata</text>   <text x="630" y="94" text-anchor="middle" fill="#1a7a4a" font-size="12">✓</text>
+        <text x="95"  y="110" text-anchor="middle" fill="#5e6e8a" font-size="9">Class</text>    <text x="295" y="110" text-anchor="middle" fill="#1a7a4a" font-size="9">Mammalia</text>   <text x="490" y="110" text-anchor="middle" fill="#6c3fa0" font-size="9">Mammalia</text>   <text x="630" y="110" text-anchor="middle" fill="#1a7a4a" font-size="12">✓</text>
+        <text x="95"  y="126" text-anchor="middle" fill="#5e6e8a" font-size="9">Order</text>    <text x="295" y="126" text-anchor="middle" fill="#1a7a4a" font-size="9">Primates</text>   <text x="490" y="126" text-anchor="middle" fill="#6c3fa0" font-size="9">Carnivora</text>  <text x="630" y="126" text-anchor="middle" fill="#c0392b" font-size="12">✗</text>
+        <text x="95"  y="142" text-anchor="middle" fill="#5e6e8a" font-size="9">Family</text>   <text x="295" y="142" text-anchor="middle" fill="#1a7a4a" font-size="9">Hominidae</text>  <text x="490" y="142" text-anchor="middle" fill="#6c3fa0" font-size="9">Canidae</text>    <text x="630" y="142" text-anchor="middle" fill="#c0392b" font-size="12">✗</text>
+        <text x="95"  y="158" text-anchor="middle" fill="#5e6e8a" font-size="9">Genus</text>    <text x="295" y="158" text-anchor="middle" fill="#1a7a4a" font-size="9" font-style="italic">Homo</text>       <text x="490" y="158" text-anchor="middle" fill="#6c3fa0" font-size="9" font-style="italic">Canis</text>      <text x="630" y="158" text-anchor="middle" fill="#c0392b" font-size="12">✗</text>
+        <text x="95"  y="174" text-anchor="middle" fill="#5e6e8a" font-size="9">Species</text>  <text x="295" y="174" text-anchor="middle" fill="#1a7a4a" font-size="9" font-style="italic">sapiens</text>    <text x="490" y="174" text-anchor="middle" fill="#6c3fa0" font-size="9" font-style="italic">lupus</text>      <text x="630" y="174" text-anchor="middle" fill="#c0392b" font-size="12">✗</text>
+        <text x="350" y="186" text-anchor="middle" fill="#64748b" font-size="9">Figure 3.1 — Humans and wolves share classification through Class Mammalia, then diverge at Order</text>
+      </svg>
+      <p class="prose">Humans and gray wolves share Domain through Class — meaning we share a common ancestor that was the ancestor of all mammals (~80–100 million years ago). We diverge at Order. The more ranks two organisms share, the more recently they diverged and the more genetic similarity they have.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">📖 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Taxonomy</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The science of naming, describing, and classifying organisms. Modern taxonomy reflects evolutionary relationships (phylogeny), not just physical appearance.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Binomial Nomenclature</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two-part naming system: Genus (capitalized) + species epithet (lowercase), both italicized. Developed by Linnaeus. Universal across all languages.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Prokaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell lacking a membrane-bound nucleus and organelles. DNA floats freely in cytoplasm. Includes all Bacteria and Archaea. More ancient than eukaryotes.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eukaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with a membrane-bound nucleus and complex organelles. Includes all members of Domain Eukarya. Evolved ~2 billion years ago from prokaryotic ancestors.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phylogeny</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The evolutionary history and relationships among organisms. Represented as a phylogenetic tree. Modern classification is based on phylogeny, not appearance.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Domain Archaea</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Prokaryotic domain — distinct from Bacteria in membrane chemistry. Many are extremophiles. Molecularly more related to Eukarya than to Bacteria.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">👁️ Visual Connection Question · Figure 3.1</div>
+      <div class="vcq-question">From Figure 3.1, humans and wolves share four taxonomic ranks but diverge at Order. If you compared humans to chimpanzees instead, at which rank would they diverge, and what does that tell you about their evolutionary relationship compared to humans and wolves?</div>
+      <textarea class="vcq-textarea" placeholder="Write your analysis here..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Model Answer:</strong> Humans and chimpanzees share Domain through Family (both Hominidae), diverging at the Genus level — humans are <em>Homo</em>, chimps are <em>Pan</em>. This much closer relationship (diverging at Genus) vs. humans and wolves (diverging at Order) reflects a much more recent common ancestor — approximately 6–7 million years ago for humans and chimps vs. ~80–100 million years ago for humans and wolves. More shared ranks = more recent common ancestor = greater genetic similarity.</div>
+    </div>
+
+    <div class="cp-box" id="cp3">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Before DNA analysis, biologists classified dolphins with fish because both are streamlined, live in water, and have fins. Modern phylogenetics places dolphins firmly with whales and humans in Class Mammalia. What does this reclassification tell us about the basis of modern taxonomy, and why is physical similarity alone unreliable?</div>
+      <textarea class="cp-ta" id="cpt3" placeholder="Write your answer in complete sentences..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc3">Characters: <span id="cpn3">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb3" onclick="cpUnlock(3)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd3">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql3"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi3">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 3 Quiz — Domains &amp; Classification</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" id="q3-1" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which is the correct format for writing the scientific name of the domestic dog (<em>Canis lupus familiaris</em>)?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>canis lupus familiaris (all lowercase)</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>CANIS LUPUS FAMILIARIS (all uppercase)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div><em>Canis lupus familiaris</em> (genus capitalized, rest lowercase, italicized)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div><em>Familiaris Lupus Canis</em> (species first, genus last)</li>
+          </ul>
+          <div class="qexp">Binomial nomenclature rules: (1) Genus capitalized; (2) species epithet lowercase; (3) italicized in print; (4) genus comes first. So: <em>Canis lupus familiaris</em>. After the full name is established, it may be abbreviated <em>C. lupus familiaris</em>.</div>
+        </div>
+
+        <div class="qq" id="q3-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the key structural difference between prokaryotes and eukaryotes?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Prokaryotes are multicellular; eukaryotes are unicellular</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Prokaryotes perform photosynthesis; eukaryotes perform cellular respiration</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Prokaryotes lack a membrane-bound nucleus and organelles; eukaryotes have both</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Prokaryotes have DNA; eukaryotes use RNA for heredity</li>
+          </ul>
+          <div class="qexp">The defining distinction: prokaryotes (Bacteria + Archaea) have their DNA in the cytoplasm, not enclosed in a nucleus. Eukaryotes have a membrane-bound nucleus and organelles. Both types have ribosomes; both use DNA.</div>
+        </div>
+
+        <div class="qq" id="q3-3" data-ans="b">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 3.1, two organisms share classifications through Class but diverge at Order. Compared to two organisms that diverge at Kingdom, which pair is more closely related and why?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The pair diverging at Order is less related — diverging later means more evolutionary distance</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pair diverging at Order is more closely related — they share a more recent common ancestor and have more genetic similarity</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The level of divergence tells us nothing about evolutionary relationship</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are equally related — taxonomic rank doesn't reflect evolutionary time</li>
+          </ul>
+          <div class="qexp">More shared taxonomic ranks = more recent common ancestor = more closely related. Humans and wolves share through Class Mammalia (common ancestor ~80–100 MYA). Two organisms diverging at Kingdom share ancestry only at the Domain level — hundreds of millions of years more ancient. The hierarchy directly reflects evolutionary history.</div>
+        </div>
+
+        <div class="qq" id="q3-4" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">Which domain contains organisms that are prokaryotic but are more closely related to eukaryotes than to bacteria, based on molecular evidence?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bacteria</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Archaea</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Eukarya</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Protista</li>
+          </ul>
+          <div class="qexp">Archaea are structurally prokaryotic (no nucleus) but their molecular biology — DNA replication and transcription machinery, ribosomal proteins — is more similar to eukaryotes than to bacteria. This is why Archaea and Eukarya are considered sister groups on the tree of life.</div>
+        </div>
+
+        <div class="qq" id="q3-5" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the correct order of taxonomic ranks from BROADEST to MOST SPECIFIC?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Species → Genus → Family → Order → Class → Phylum → Kingdom → Domain</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Kingdom → Domain → Phylum → Order → Class → Family → Species → Genus</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Domain → Phylum → Kingdom → Class → Order → Genus → Family → Species</li>
+          </ul>
+          <div class="qexp">Broadest → most specific: Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species. Mnemonic: "Dear King Philip Came Over For Good Soup." Domain contains the most organisms; Species contains only one interbreeding group.</div>
+        </div>
+
+        <div class="qq" id="q3-6" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Mushrooms and oak trees both have cell walls and are non-motile. A student concludes they must be in the same kingdom. Identify the error and explain which kingdoms they actually belong to and why they are classified separately.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The student is correct — cell walls place both in Kingdom Plantae</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The student is incorrect — mushrooms are prokaryotes and don't have cell walls</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The student is incorrect — having cell walls evolved independently in plants and fungi; mushrooms (Fungi) have chitin walls and absorb food externally, while oaks (Plantae) have cellulose walls and photosynthesize; molecular evidence confirms they are in separate kingdoms</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Neither mushrooms nor oak trees have true cell walls</li>
+          </ul>
+          <div class="qexp">Cell walls evolved independently in plants and fungi — they are analogous traits, not evidence of close relationship. Fungi: chitin cell walls, heterotrophic by absorption, more closely related to animals than to plants by DNA analysis. Plants: cellulose cell walls, chloroplasts, photosynthetic. Modern taxonomy requires molecular evidence, not just one or two visible traits.</div>
+        </div>
+
+        <div class="qscore" id="sc3"><div class="score-n" id="scn3">–</div><div class="score-l">out of 6 · <span id="sm3"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 1.1. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(2)">← Lesson 2</button>
+    <button class="mc-btn" id="mc3" onclick="markDone(3,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(4)">Lesson 4: The Scientific Method →</button>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════
+     PANEL 4 — THE SCIENTIFIC METHOD
+══════════════════════════════════════════════════════ -->
+
+<div class="panel" id="p4">
+  <div class="hero hero-sci">
+    <div class="h-crumb">Introduction to Biology · <span>Lesson 4</span></div>
+    <div class="h-title">The Scientific Method</div>
+    <div class="h-desc">Science is not a collection of facts — it is a way of knowing. The scientific method is the process by which scientists ask questions, test ideas, and build reliable knowledge about the natural world.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 1.2</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe the steps of the scientific method and explain why the order matters</li>
+        <li>Distinguish between an observation, a hypothesis, and a theory</li>
+        <li>Explain what makes a hypothesis scientific (testable and falsifiable)</li>
+        <li>Describe the difference between inductive and deductive reasoning</li>
+        <li>Explain the role of peer review and replication in validating scientific findings</li>
+        <li>Distinguish between a scientific theory and a scientific law</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Science as a Process</div>
+      <div class="sh2">How Scientists Know What They Know</div>
+      <p class="prose">Every scientific discovery — from the structure of DNA to the effectiveness of vaccines — came through observation, questioning, testing, and revision. The <strong>scientific method</strong> is the systematic approach scientists use to investigate questions about the natural world. It is not a rigid five-step recipe; it is a flexible framework that ensures conclusions are grounded in evidence rather than authority, tradition, or wishful thinking.</p>
+      <p class="prose">Three principles separate science from other ways of knowing: <strong>hypotheses must be testable</strong>, <strong>conclusions must follow from evidence</strong>, and <strong>findings must be reproducible</strong>.</p>
+
+      <svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" class="svg-fig">
+        <rect width="700" height="330" fill="#f0f4f8" rx="12"/>
+        <text x="350" y="24" text-anchor="middle" fill="#0f2240" font-size="14" font-weight="700" font-family="serif">The Scientific Method</text>
+        <rect x="250" y="36" width="200" height="36" rx="8" fill="#7a4a00"/>
+        <text x="350" y="59" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1. Observation</text>
+        <line x1="350" y1="72" x2="350" y2="90" stroke="#0b8f8c" stroke-width="2"/>
+        <polygon points="344,90 356,90 350,102" fill="#0b8f8c"/>
+        <rect x="250" y="102" width="200" height="36" rx="8" fill="#0b5c36"/>
+        <text x="350" y="125" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2. Question</text>
+        <line x1="350" y1="138" x2="350" y2="156" stroke="#0b8f8c" stroke-width="2"/>
+        <polygon points="344,156 356,156 350,168" fill="#0b8f8c"/>
+        <rect x="250" y="168" width="200" height="36" rx="8" fill="#1a4a9a"/>
+        <text x="350" y="191" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3. Hypothesis</text>
+        <line x1="350" y1="204" x2="350" y2="222" stroke="#0b8f8c" stroke-width="2"/>
+        <polygon points="344,222 356,222 350,234" fill="#0b8f8c"/>
+        <rect x="250" y="234" width="200" height="36" rx="8" fill="#6c3fa0"/>
+        <text x="350" y="257" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4. Experiment</text>
+        <line x1="450" y1="252" x2="530" y2="252" stroke="#0b8f8c" stroke-width="2"/>
+        <polygon points="528,246 540,252 528,258" fill="#0b8f8c"/>
+        <rect x="540" y="234" width="130" height="36" rx="8" fill="#0b8f8c"/>
+        <text x="605" y="257" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">5. Data/Results</text>
+        <line x1="605" y1="270" x2="605" y2="288" stroke="#0b8f8c" stroke-width="2"/>
+        <polygon points="599,288 611,288 605,300" fill="#0b8f8c"/>
+        <rect x="540" y="288" width="130" height="36" rx="8" fill="#1a7a4a"/>
+        <text x="605" y="311" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">6. Conclusion</text>
+        <text x="178" y="168" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="700">If rejected →</text>
+        <text x="178" y="181" text-anchor="middle" fill="#c0392b" font-size="10">revise &amp; retest</text>
+        <path d="M250,252 Q100,252 100,186 Q100,120 250,186" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <polygon points="246,182 254,189 248,194" fill="#c0392b"/>
+        <text x="350" y="322" text-anchor="middle" fill="#64748b" font-size="10">Figure 4.1 — The scientific method is cyclical; rejected hypotheses lead to new hypotheses (OpenStax CB 1.2)</text>
+      </svg>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Steps in Detail</div>
+      <div class="sh2">From Observation to Conclusion</div>
+
+      <div class="sh3">1 &amp; 2 — Observation and Question</div>
+      <p class="prose">Science begins with careful <strong>observation</strong> of the natural world — a statement of fact about something detected through the senses or instruments. Observations generate <strong>questions</strong>. A good scientific question is specific, focused, and answerable through investigation. Questions about values or the supernatural are outside the scope of science — science only addresses questions about the natural world that can be empirically investigated.</p>
+
+      <div class="sh3">3 — Hypothesis</div>
+      <p class="prose">A <strong>hypothesis</strong> is a testable, falsifiable explanation for an observation. Note the structure: it proposes a specific causal mechanism and must be stated in a way that could be proven wrong. Hypotheses are often expressed as <strong>if–then statements</strong>: "If plants need light to grow, then plants receiving more light will grow taller than plants receiving less." This form makes the prediction explicit and the test obvious.</p>
+
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Falsifiability — The Heart of Science</div><div class="cx">A hypothesis must be <strong>falsifiable</strong> — it must be possible, at least in principle, to prove it wrong. "All swans are white" is falsifiable — find one black swan and it's disproven. "There are invisible forces that cannot be detected" is not falsifiable. Science only deals with falsifiable claims. This was philosopher Karl Popper's crucial insight.</div></div></div>
+
+      <div class="sh3">4 — Experiment</div>
+      <p class="prose">The hypothesis is tested through a controlled <strong>experiment</strong> — a procedure designed to isolate the effect of the variable being tested. A well-designed experiment has a <strong>control group</strong> (the baseline, not exposed to the treatment) and an <strong>experimental group</strong> (exposed to the treatment). All other variables are kept the same.</p>
+
+      <div class="sh3">5 &amp; 6 — Data and Conclusion</div>
+      <p class="prose">The experiment generates <strong>data</strong> that must be analyzed statistically to determine whether results are meaningful. The conclusion states whether the data support or fail to support the hypothesis. Scientists say a hypothesis is <em>supported</em> or <em>not supported</em> — never "proven." If rejected, a new hypothesis is formed and tested — the cycle continues.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Theory vs. Law</div>
+      <div class="sh2">The Most Misunderstood Words in Science</div>
+      <p class="prose">In everyday language, "theory" means a guess. In science, a <strong>theory</strong> is a well-substantiated explanation for a broad range of observations, supported by extensive evidence from multiple independent lines of research, tested and confirmed repeatedly. The cell theory, the theory of evolution, the germ theory of disease — these are not guesses. They are among the most rigorously tested explanations in science.</p>
+      <p class="prose">A <strong>scientific law</strong> describes a pattern in nature — usually mathematically — without explaining why the pattern exists. <strong>Laws describe; theories explain.</strong></p>
+
+      <table class="dt">
+        <thead><tr><th>Term</th><th>Everyday Meaning</th><th>Scientific Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Theory</strong></td><td>A guess or unproven idea</td><td>A comprehensive, well-tested explanation supported by extensive evidence</td></tr>
+          <tr><td><strong>Law</strong></td><td>A rule that must be followed</td><td>A mathematical description of a natural pattern (doesn't explain why)</td></tr>
+          <tr><td><strong>Hypothesis</strong></td><td>An educated guess</td><td>A testable, falsifiable prediction about a specific observation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Reasoning in Science</div>
+      <div class="sh2">Inductive vs. Deductive Reasoning</div>
+      <p class="prose"><strong>Inductive reasoning</strong> moves from specific observations to general conclusions — how hypotheses are generated. You observe 100 crows, all black → you conclude "all crows are black." This can be overturned by a single counterexample.</p>
+      <p class="prose"><strong>Deductive reasoning</strong> moves from general principles to specific predictions — how experiments are designed. "All mammals have hair (hypothesis) → A whale is a mammal → Therefore whales must have hair (testable prediction)." If–then statements are deductive. Good science uses both.</p>
+    </div>
+
+    <div class="ec-box">
+      <div class="ec-label">🩺 Everyday Connection</div>
+      <div class="ec-title">Evidence-Based Medicine</div>
+      <div class="ec-body">When your doctor prescribes a medication, the scientific method is behind that decision. Clinical trials are controlled experiments: a treatment group receives the drug; a control group receives a placebo. Neither patients nor doctors know who gets which (double-blind design). Data are analyzed, peer-reviewed, and published. Only after multiple independent trials confirm safety and effectiveness does a drug get approved. This is the scientific method applied to human health — far more reliable than anecdote or tradition.</div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">📖 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Hypothesis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A testable, falsifiable explanation for a specific observation. Expressed as an if-then statement. The starting point for experimentation.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Falsifiability</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The property of a hypothesis that makes it possible to prove it wrong. The key criterion distinguishing scientific from non-scientific claims (Karl Popper).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Scientific Theory</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A well-substantiated explanation for a broad set of observations, supported by decades of evidence from multiple independent sources. NOT a guess.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Scientific Law</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A mathematical description of a consistent pattern in nature. Describes what happens without explaining why. Laws describe; theories explain.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Inductive Reasoning</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Drawing general conclusions from specific observations. Used to generate hypotheses. Can be overturned by a single counterexample.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Peer Review</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The process in which independent experts evaluate a scientific study before it is published. The primary quality-control mechanism in science.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">👁️ Visual Connection Question · Figure 4.1</div>
+      <div class="vcq-question">Notice the red arrow in Figure 4.1 that loops back from the experiment to the hypothesis step. What does this feedback loop represent, and why is the cyclical nature of science important? What would be wrong with a model that showed the scientific method as a straight line ending at "conclusion"?</div>
+      <textarea class="vcq-textarea" placeholder="Write your analysis here..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Model Answer:</strong> The feedback loop represents hypothesis rejection and revision. When results fail to support a hypothesis, scientists form a new one and design new experiments. This cyclical nature is essential because science is self-correcting — wrong ideas are eliminated through repeated testing. A straight-line model would imply experiments always confirm hypotheses, which is false. Science progresses by eliminating incorrect ideas as much as by confirming correct ones. The most important experiments are often those that disprove prevailing hypotheses.</div>
+    </div>
+
+    <div class="cp-box" id="cp4">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">A politician says: "Evolution is just a theory — so it shouldn't be taught as established science." Write a scientifically accurate response explaining what a scientific theory actually is, why evolution qualifies as one, and how the scientific meaning of "theory" differs from everyday usage.</div>
+      <textarea class="cp-ta" id="cpt4" placeholder="Write your answer in complete sentences..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc4">Characters: <span id="cpn4">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb4" onclick="cpUnlock(4)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd4">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql4"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi4">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 4 Quiz — The Scientific Method</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" id="q4-1" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which is the BEST example of a scientific hypothesis?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Plants are beautiful and we should protect them</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Sunlight affects plant growth in many complex ways</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>If exposure to blue-wavelength light increases, then the rate of photosynthesis will increase, because chlorophyll absorbs blue light most efficiently</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>If a plant receives more water, then it will grow</li>
+          </ul>
+          <div class="qexp">A good hypothesis is specific, testable, falsifiable, and has a mechanistic rationale. Option C identifies an IV (blue light exposure), DV (photosynthesis rate), predicted direction (increase), and mechanism (chlorophyll absorption). Option A is a value judgment. Option D lacks mechanism. Option B is too vague.</div>
+        </div>
+
+        <div class="qq" id="q4-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">What does it mean for a hypothesis to be "falsifiable"?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The hypothesis has already been proven wrong by previous experiments</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The hypothesis was created by a person who could be wrong</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is possible, at least in principle, to design an observation or experiment that could prove the hypothesis wrong</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hypothesis is only valid if it can be proven false under all conditions</li>
+          </ul>
+          <div class="qexp">Falsifiability means it must be possible to conceive of an observation that would prove the hypothesis wrong. "All bacteria reproduce by binary fission" is falsifiable — find one that reproduces sexually and it's disproven. "Invisible spirits influence plant growth but cannot be detected" is not falsifiable. Falsifiability is what separates science from metaphysics.</div>
+        </div>
+
+        <div class="qq" id="q4-3" data-ans="c">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">From Figure 4.1: A biologist hypothesizes a fungus causes a tree disease. She applies the fungus to 50 trees (experimental group) and leaves 50 untreated (control group). Both groups develop the disease equally. What should she conclude, and what is the next step?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The hypothesis is confirmed — the fungus caused disease in both groups</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The experiment was poorly designed and should be abandoned</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The hypothesis is not supported — since untreated trees also got sick, the fungus is not the cause; form a new hypothesis (perhaps a virus or environmental factor) and retest</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hypothesis is confirmed because both groups produced results</li>
+          </ul>
+          <div class="qexp">The control group getting sick is the key data point. If untreated trees develop disease at the same rate as treated ones, the fungus cannot be the cause. The hypothesis is not supported. The feedback loop in Figure 4.1 applies — reformulate the hypothesis. Perhaps a virus, bacterium, or environmental stress is responsible. New hypotheses, new experiments, cycle continues.</div>
+        </div>
+
+        <div class="qq" id="q4-4" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">How does a scientific theory differ from a scientific law?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A theory is less certain than a law; laws are proven facts while theories are still being tested</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are synonyms in science</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A law describes a consistent pattern in nature (often mathematical); a theory explains WHY that pattern exists — laws describe, theories explain</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A law applies to all organisms; a theory only applies to organisms studied in the experiments</li>
+          </ul>
+          <div class="qexp">Laws describe predictable patterns — often mathematically. Theories explain the underlying mechanism. The law of gravity describes how objects attract each other mathematically. General relativity explains why mass curves spacetime. Neither is more "proven" — they answer different types of questions.</div>
+        </div>
+
+        <div class="qq" id="q4-5" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">A scientist observes patients who take aspirin recover from headaches faster. She concludes aspirin cures headaches. What type of reasoning did she use, and what is the potential problem?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Deductive reasoning; the problem is that the conclusion contradicts the observation</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Inductive reasoning; the problem is she may be overgeneralizing — the headaches might have resolved on their own or other factors may be responsible; a controlled experiment is needed</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Deductive reasoning; the problem is that aspirin is not a valid scientific compound</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Inductive reasoning; the problem is that inductive reasoning is invalid in science</li>
+          </ul>
+          <div class="qexp">Inductive reasoning: specific observations → general conclusion ("these patients recovered after aspirin → aspirin cures headaches"). The problem: correlation is not causation. The headaches might have resolved naturally. Without a controlled experiment (aspirin vs. placebo), she cannot establish that aspirin specifically caused the recovery. Inductive reasoning generates hypotheses — it doesn't confirm them.</div>
+        </div>
+
+        <div class="qq" id="q4-6" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">A supplement company claims their product "boosts immune function" based on a study they conducted on 20 customers. Identify at least three specific problems with this as scientific evidence.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study is valid because they measured immune markers, which is a legitimate measurement</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The only problem is the small sample size — if they tested 200 people, the evidence would be acceptable</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Problems include: no control group, conflict of interest (company tested its own product), no peer review or independent replication, tiny sample size (n=20), and selection bias (customers already believed it works)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The study is invalid only because they didn't use a double-blind design</li>
+          </ul>
+          <div class="qexp">Multiple fatal flaws: (1) No control group — without a placebo comparison, there's no baseline. (2) Conflict of interest — companies shouldn't be the sole testers of their own products. (3) No peer review — independent experts haven't evaluated the methodology. (4) No replication — one study is never sufficient. (5) Selection bias — customers who bought the product believed it would work (placebo effect). Real medical evidence requires randomized, double-blind, placebo-controlled trials followed by independent replication.</div>
+        </div>
+
+        <div class="qscore" id="sc4"><div class="score-n" id="scn4">–</div><div class="score-l">out of 6 · <span id="sm4"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 1.2. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(3)">← Lesson 3</button>
+    <button class="mc-btn" id="mc4" onclick="markDone(4,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(5)">Lesson 5: Experimental Design →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PANEL 5 — EXPERIMENTAL DESIGN
+══════════════════════════════════════════════════════ -->
+
+<div class="panel" id="p5">
+  <div class="hero hero-exp">
+    <div class="h-crumb">Introduction to Biology · <span>Lesson 5</span></div>
+    <div class="h-title">Experimental Design: Variables &amp; Controls</div>
+    <div class="h-desc">The difference between a compelling experiment and a meaningless one is entirely in the design. Variables, controls, sample size, and statistical thinking determine whether an experiment actually tests what it claims to test.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 1.2</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Define and distinguish independent variable, dependent variable, and controlled variables</li>
+        <li>Explain the purpose of a control group in an experiment</li>
+        <li>Distinguish between qualitative and quantitative data</li>
+        <li>Explain why sample size matters and what statistical significance means</li>
+        <li>Describe the difference between a blind study and a double-blind study</li>
+        <li>Explain the difference between correlation and causation</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Core Challenge</div>
+      <div class="sh2">Controlling Confounding Variables</div>
+      <p class="prose">Any child can do an experiment. Designing one that actually proves something — that rules out alternative explanations and produces reliable, reproducible results — requires careful planning. The central challenge is <strong>controlling confounding variables</strong>: factors other than the one being tested that could influence results.</p>
+      <p class="prose">Imagine testing whether fertilizer makes tomato plants grow faster. You apply fertilizer to plants in a sunny location and leave unfertilized plants in a shady spot. If fertilized plants grow faster, you can't conclude fertilizer is responsible — the extra sunlight might be the real cause. Good experimental design eliminates confounding variables.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Variables</div>
+      <div class="sh2">The Three Types in Every Experiment</div>
+
+      <table class="dt">
+        <thead><tr><th>Variable Type</th><th>Definition</th><th>Fertilizer Example</th><th>On Graph</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Independent (IV)</strong></td><td>What the scientist deliberately changes</td><td>Amount of fertilizer (0, 1g, 2g, 4g)</td><td>X-axis</td></tr>
+          <tr><td><strong>Dependent (DV)</strong></td><td>What the scientist measures</td><td>Plant growth rate (cm/week)</td><td>Y-axis</td></tr>
+          <tr><td><strong>Controlled (CV)</strong></td><td>What is kept constant in all groups</td><td>Water, light, soil, temperature, species</td><td>Listed in methods</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Memory Trick: IV → DV</div><div class="cx">The <strong>Independent Variable</strong> is what you deliberately <em>change</em> (the INPUT — you're Independent, you decide). The <strong>Dependent Variable</strong> is what you <em>measure</em> (the OUTPUT — it Depends on what you did). IV on x-axis; DV on y-axis.</div></div></div>
+
+      <div class="sh3">Control Groups and Placebos</div>
+      <p class="prose">A <strong>control group</strong> does not receive the experimental treatment. It is the "what happens without intervention" baseline that makes the experimental group's results meaningful. Without a control group, you have no way of knowing whether changes you observe were caused by your treatment or would have happened anyway.</p>
+      <p class="prose">In drug trials, the control group receives a <strong>placebo</strong> — an inactive treatment that looks identical to the real drug. This controls for the <strong>placebo effect</strong>: people often feel better simply because they believe they are being treated, regardless of pharmacological activity.</p>
+
+      <div class="callout info"><div class="ci">💡</div><div class="cb"><div class="ct">Blind and Double-Blind Studies</div><div class="cx">In a <strong>blind study</strong>, participants don't know whether they received treatment or placebo — eliminating the placebo effect. In a <strong>double-blind study</strong>, neither the participants nor the researchers know who received which — also eliminating researcher bias in assessment. Double-blind, placebo-controlled, randomized trials are the gold standard for medical research.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Data and Statistics</div>
+      <div class="sh2">Making Results Meaningful</div>
+      <p class="prose"><strong>Qualitative data</strong> describes characteristics without numbers ("the treated plants were greener"). Useful for observations and generating hypotheses but harder to analyze objectively.</p>
+      <p class="prose"><strong>Quantitative data</strong> uses measurements ("treated plants grew 2.4 cm/week vs. 1.1 cm/week for controls"). Can be analyzed statistically to determine whether differences are real.</p>
+      <p class="prose"><strong>Statistical significance</strong> (p &lt; 0.05) means there's less than a 5% probability the observed difference occurred by chance. <strong>Sample size</strong> matters enormously — larger samples reduce random variation and make true differences detectable.</p>
+
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">Correlation ≠ Causation</div><div class="cx">Just because two things tend to occur together doesn't mean one causes the other. Ice cream sales and drowning rates both increase in summer — ice cream doesn't cause drowning; hot weather causes both. Establishing causation requires controlled experiments, not just correlations.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Tap Each Card to Flip It</div>
+      <div class="vocab-hint">📖 Learn these terms before the checkpoint</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Independent Variable</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">What the scientist deliberately changes. The "cause" being tested. Plotted on the x-axis. Only ONE per experiment.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dependent Variable</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">What the scientist measures — the "effect" that may change in response to the IV. Plotted on the y-axis.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Control Group</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The group that does not receive the experimental treatment. Serves as baseline comparison. May receive a placebo in drug trials.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Placebo</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">An inactive treatment that appears identical to the real treatment. Used in control groups to account for the placebo effect.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Statistical Significance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">A result unlikely to have occurred by chance alone (p &lt; 0.05). Indicates the IV likely caused the observed difference in the DV.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div class="vterm">Correlation vs. Causation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Correlation = two variables occur together. Causation = one directly causes the other. Correlation does NOT prove causation. Controlled experiments required.</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="vc-box">
+      <div class="vcq-label">👁️ Visual Connection Question</div>
+      <div class="vcq-question">A scientist tests a new antibiotic against <em>E. coli</em> using 4 petri dishes: Dish 1 (antibiotic, low dose), Dish 2 (antibiotic, high dose), Dish 3 (sterile water added), Dish 4 (nothing added). Identify the IV, DV, and control groups. Why does she need BOTH Dishes 3 and 4?</div>
+      <textarea class="vcq-textarea" placeholder="Write your analysis here..."></textarea>
+      <button class="vcq-reveal" onclick="this.nextElementSibling.classList.add('show');this.disabled=true;this.textContent='✓ Revealed'">Reveal Answer →</button>
+      <div class="vcq-answer"><strong>Model Answer:</strong> IV: antibiotic dose (none, low, high). DV: bacterial growth. Control groups: Dishes 3 and 4. She needs both because they control for different variables. Dish 4 (nothing added) shows baseline bacterial growth with no intervention. Dish 3 (sterile water added) controls for the effect of adding any liquid — adding fluid could disturb bacteria or change osmotic conditions. By comparing Dishes 3 vs. 4, she confirms that water itself has no effect, so any difference in the antibiotic dishes is due specifically to the antibiotic, not the act of adding liquid.</div>
+    </div>
+
+    <div class="cp-box" id="cp5">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Critical Thinking</div><div class="cp-sub">100+ characters required · Unlock the quiz by writing a genuine answer</div></div></div>
+      <div class="cp-q">Design a controlled experiment to test whether caffeine improves memory in high school students. Identify the hypothesis (if-then), IV, DV, at least three controlled variables, control group, and explain why a double-blind design would be necessary.</div>
+      <textarea class="cp-ta" id="cpt5" placeholder="Write your answer in complete sentences..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc5">Characters: <span id="cpn5">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb5" onclick="cpUnlock(5)" disabled>Unlock Quiz →</button>
+      </div>
+      <div class="cp-done" id="cpd5">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql5"><div class="qlock-icon">🔒</div><p>Complete the written checkpoint above to unlock the quiz.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi5">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Lesson 5 Quiz — Experimental Design</h3><p>6 questions · Review + Visual Connection + Critical Thinking</p></div></div>
+
+        <div class="qq" id="q5-1" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">A biologist tests a pesticide on aphid populations: 25 bushes receive pesticide; 25 bushes are untreated. Which correctly identifies the variables?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>IV = aphid population; DV = pesticide concentration; control = treated bushes</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>IV = pesticide treatment (present or absent); DV = aphid population count; control group = untreated bushes</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>IV = rose bush health; DV = pesticide effectiveness; control = dead aphids</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>IV = number of bushes; DV = pesticide cost; control = all 50 bushes together</li>
+          </ul>
+          <div class="qexp">IV = what the scientist changes — pesticide treatment (present or absent). DV = what is measured — aphid population count. Control group = untreated bushes. This baseline tells us how aphid populations change naturally without any treatment, so any reduction in the treated group can be attributed to the pesticide.</div>
+        </div>
+
+        <div class="qq" id="q5-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">Why is a control group essential in a scientific experiment?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To provide extra data that makes results look more convincing</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To make the experiment longer so more data can be collected</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To provide a baseline comparison that allows researchers to determine whether changes in the experimental group were caused by the treatment or by other factors</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To serve as a backup in case the experimental group gives confusing results</li>
+          </ul>
+          <div class="qexp">Without a control group, there is no baseline — no way of knowing what would have happened without the treatment. If patients in a drug trial improve, did the drug cause it, or would they have improved anyway as their immune system fought the illness? The control group (receiving a placebo) answers this question.</div>
+        </div>
+
+        <div class="qq" id="q5-3" data-ans="b">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">A student graphs: x-axis = fertilizer amount (0, 10, 20, 40g); y-axis = plant height (cm) after 4 weeks. What do the axes represent and what does the graphing convention tell us?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>X-axis = dependent variable (plant height); Y-axis = independent variable (fertilizer)</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-axis = independent variable (fertilizer amount); Y-axis = dependent variable (plant height); the convention reflects the causal direction — fertilizer (IV) may cause changes in plant height (DV)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both axes represent independent variables</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>X-axis = controlled variable; Y-axis = independent variable</li>
+          </ul>
+          <div class="qexp">Convention: IV on x-axis, DV on y-axis. This reflects the direction of the hypothesized causal relationship: fertilizer amount (IV) is manipulated and may cause a change in plant height (DV), which is measured. Reading the graph: as you move along x (increasing fertilizer), you observe how y (plant height) responds.</div>
+        </div>
+
+        <div class="qq" id="q5-4" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">Counties with more hospitals have higher death rates. Should we conclude that hospitals cause death? What concept does this illustrate?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Yes — hospitals clearly cause deaths because the correlation is strong</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>No — hospitals and death rates are completely unrelated variables</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>No — this illustrates correlation ≠ causation; severity of illness (a confounding variable) causes both more hospital use AND more deaths</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Yes — whenever a strong correlation exists, causation is always present</li>
+          </ul>
+          <div class="qexp">Classic confounding variable example. Sick people go to hospitals, and they are more likely to die regardless of treatment. The confounding variable (severity of illness) explains the correlation entirely. Establishing causation requires controlled experiments where the proposed causal variable is the ONLY difference between groups.</div>
+        </div>
+
+        <div class="qq" id="q5-5" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the difference between a blind study and a double-blind study in clinical trials?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A blind study uses no control group; a double-blind study uses two control groups</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A blind study tests two drugs simultaneously; a double-blind study tests only one</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>In a blind study, only participants don't know their treatment; in a double-blind study, neither participants nor researchers know until data are analyzed</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A blind study excludes participants who knew about the hypothesis</li>
+          </ul>
+          <div class="qexp">Single-blind: patients don't know drug vs. placebo — eliminates placebo effect. Double-blind: BOTH patients AND researchers are unaware — also eliminates researcher bias (researchers unconsciously interpreting results favorably for the treatment they think a patient received). Double-blind controls for both simultaneously.</div>
+        </div>
+
+        <div class="qq" id="q5-6" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">A student plays classical music to 3 plants and leaves 3 plants in silence. The music group grows 2 cm taller on average. She concludes classical music makes plants grow faster. Identify at least three flaws preventing this conclusion.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The only flaw is she should have used rock music, not classical</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The only flaw is that she didn't measure the plants' emotions</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Sample size too small (n=3; random variation easily explains 2 cm), no statistical analysis, the speaker produces vibrations that could be a confounding variable (vibrations vs. music), and uncontrolled variables (soil, water, light, starting heights) are unknown</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>There are no flaws — the experiment had a control group and measured growth</li>
+          </ul>
+          <div class="qexp">Multiple design flaws: (1) Tiny sample (n=3) — natural plant variation between individuals could easily account for a 2 cm difference. (2) No statistics — without a significance test, we don't know if the result is real. (3) Confounding variable — the speaker produces physical vibrations and heat, not just sound; are vibrations causing the growth? (4) Unknown if controlled variables (water, soil, light, starting height) were actually held constant. Good experimental design needs large samples, statistical analysis, and control of confounding variables.</div>
+        </div>
+
+        <div class="qscore" id="sc5"><div class="score-n" id="scn5">–</div><div class="score-l">out of 6 · <span id="sm5"></span></div></div>
+      </div>
+    </div>
+    <div class="os-credit">📖 Content adapted from OpenStax Concepts of Biology, Section 1.2. CC BY 4.0. openstax.org</div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(4)">← Lesson 4</button>
+    <button class="mc-btn" id="mc5" onclick="markDone(5,this)">✓ Mark Complete</button>
+    <button class="nbtn next" onclick="goTo(6)">Unit Review &amp; Practice Test →</button>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════
+     PANEL 6 — UNIT REVIEW & PRACTICE TEST
+══════════════════════════════════════════════════════ -->
+
+<div class="panel" id="p6">
+  <div class="hero hero-rev">
+    <div class="h-crumb">Introduction to Biology · <span>Unit Review</span></div>
+    <div class="h-title">Unit Review &amp; Practice Test</div>
+    <div class="h-desc">You've covered the properties of life, levels of organization, classification, the scientific method, and experimental design. Now put it all together with a 20-question practice test covering every lesson in this module.</div>
+    <div class="h-meta">
+      <div class="h-chip">📝 20 Questions</div>
+      <div class="h-chip">All Lessons Covered</div>
+      <div class="h-chip">Virginia SOL BIO.1</div>
+    </div>
+  </div>
+  <div class="lc">
+
+    <div class="cs">
+      <div class="eyebrow">Quick Reference</div>
+      <div class="sh2">Key Concepts at a Glance</div>
+      <table class="dt">
+        <thead><tr><th>Lesson</th><th>Must-Know Concepts</th></tr></thead>
+        <tbody>
+          <tr><td><strong>L1 — What is Life?</strong></td><td>8 properties: order, response, reproduction, growth/dev., homeostasis, metabolism, heredity, evolution. Autotroph vs. heterotroph. Cell Theory.</td></tr>
+          <tr><td><strong>L2 — Levels of Organization</strong></td><td>Atom → biosphere in order. Emergent properties. Population vs. community vs. ecosystem (abiotic/biotic distinction).</td></tr>
+          <tr><td><strong>L3 — Classification</strong></td><td>3 domains. 4 kingdoms of Eukarya. Binomial nomenclature rules. Taxonomic hierarchy: D K P C O F G S. Prokaryote vs. eukaryote.</td></tr>
+          <tr><td><strong>L4 — Scientific Method</strong></td><td>Observation → hypothesis → experiment → conclusion (cyclical). Falsifiability. Theory vs. law. Peer review &amp; replication.</td></tr>
+          <tr><td><strong>L5 — Experimental Design</strong></td><td>IV / DV / controlled variables. Control group &amp; placebo. Double-blind design. Correlation ≠ causation. Statistical significance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cp-box" id="cp6">
+      <div class="cp-hdr"><div class="cp-icon">✍️</div><div><div class="cp-title">Pre-Test Reflection</div><div class="cp-sub">100+ characters required · Unlock the practice test</div></div></div>
+      <div class="cp-q">Looking at the quick reference above, which concept do you feel LEAST confident about? Explain what you still find confusing and what specific strategy you plan to use to review it before your next exam.</div>
+      <textarea class="cp-ta" id="cpt6" placeholder="Write your honest reflection here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-ftr">
+        <div class="cp-ctr" id="cpc6">Characters: <span id="cpn6">0</span> / 100 required</div>
+        <button class="cp-btn" id="cpb6" onclick="cpUnlock(6)" disabled>Unlock Practice Test →</button>
+      </div>
+      <div class="cp-done" id="cpd6">✅ Reflection complete — practice test unlocked!</div>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-locked" id="ql6"><div class="qlock-icon">🔒</div><p>Complete the reflection above to unlock the 20-question practice test.</p></div>
+      <div class="quiz-inner" style="display:none" id="qi6">
+        <div class="qh"><div class="q-icon">📝</div><div><h3>Unit Practice Test — Introduction to Biology</h3><p>20 questions · All lessons · Virginia SOL BIO.1</p></div></div>
+
+        <div class="qq" id="q6-1" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">1</span><span class="qt-inner">Which best defines biology?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study of plants and how they produce food</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The scientific study of life in all its forms, from molecules to ecosystems</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The study of the human body in health and disease</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The branch of chemistry dealing with organic molecules</li>
+          </ul>
+          <div class="qexp">Biology (from Greek <em>bios</em> = life, <em>logos</em> = study) is the scientific study of all living things — from the molecular level through cells, organisms, populations, and ecosystems. It is not limited to plants, humans, or chemistry alone.</div>
+        </div>
+
+        <div class="qq" id="q6-2" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">2</span><span class="qt-inner">Body temperature regulation in humans is an example of which property of life?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Metabolism</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Heredity</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Homeostasis</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Evolutionary adaptation</li>
+          </ul>
+          <div class="qexp">Homeostasis = maintaining stable internal conditions despite external changes. Body temperature regulation (sweating to cool, shivering to warm) is the classic example. Metabolism = all chemical reactions; heredity = DNA inheritance; evolutionary adaptation = population-level change over generations.</div>
+        </div>
+
+        <div class="qq" id="q6-3" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">3</span><span class="qt-inner">A match flame consumes fuel, releases energy, grows, and produces waste. Which property does it most clearly LACK compared to living things?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Metabolism — a flame does not transform chemical energy</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cellular organization and heredity — a flame has no cells, no DNA, and cannot pass heritable information to offspring</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Growth — a flame does not increase in size</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Response to environment — a flame does not react to changes around it</li>
+          </ul>
+          <div class="qexp">A flame does transform chemical energy (metabolism-like) and does grow. But it has no cells, no DNA, no mechanism for heredity, and cannot maintain homeostasis. The absence of cellular organization and heredity are the clearest distinguishing criteria. This is why all eight properties are needed — a flame meets some but not all.</div>
+        </div>
+
+        <div class="qq" id="q6-4" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">4</span><span class="qt-inner">Which correctly orders levels of organization from LARGEST to SMALLEST?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ecosystem → Biosphere → Community → Population → Organism</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Biosphere → Ecosystem → Community → Population → Organism → Organ → Tissue → Cell → Organelle → Atom</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Biosphere → Community → Ecosystem → Population → Organ → Cell</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Organism → Population → Community → Ecosystem → Cell → Atom</li>
+          </ul>
+          <div class="qexp">Largest → smallest: Biosphere → Ecosystem → Community → Population → Organism → Organ System → Organ → Tissue → Cell → Organelle → Molecule → Atom. Note: Ecosystem is larger than Community — an ecosystem includes the community plus abiotic factors.</div>
+        </div>
+
+        <div class="qq" id="q6-5" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">5</span><span class="qt-inner">A researcher studying "all the white-tailed deer in Shenandoah National Park this year" is working at which level?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Community level</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Ecosystem level</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Population level — all individuals of one species in a defined area at a given time</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Organism level</li>
+          </ul>
+          <div class="qexp">Population = all individuals of a single species in a defined area. "All white-tailed deer in Shenandoah" — one species, defined area, defined time — fits exactly. Community would include multiple species. Ecosystem would include abiotic factors.</div>
+        </div>
+
+        <div class="qq" id="q6-6" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">6</span><span class="qt-inner">Which is the correct format for writing the scientific name of a species?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>homo sapiens (both lowercase)</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>HOMO SAPIENS (all uppercase)</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div><em>Homo sapiens</em> (genus capitalized, species lowercase, both italicized)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div><em>Sapiens Homo</em> (species first)</li>
+          </ul>
+          <div class="qexp">Binomial nomenclature: Genus capitalized + species epithet lowercase, both italicized. So: <em>Homo sapiens</em>. Genus always comes first.</div>
+        </div>
+
+        <div class="qq" id="q6-7" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">7</span><span class="qt-inner">Which domain contains organisms with eukaryotic cells?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bacteria</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Eukarya</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Archaea</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both Bacteria and Archaea</li>
+          </ul>
+          <div class="qexp">Only Domain Eukarya contains organisms with eukaryotic cells (membrane-bound nucleus). Bacteria and Archaea are both prokaryotic — DNA floats freely in the cytoplasm. All animals, plants, fungi, and protists are eukaryotes.</div>
+        </div>
+
+        <div class="qq" id="q6-8" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">8</span><span class="qt-inner">What is the correct order of taxonomic ranks from broadest to most specific?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Species → Genus → Family → Order → Class → Phylum → Kingdom → Domain</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Kingdom → Domain → Phylum → Class → Order → Family → Species → Genus</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Domain → Phylum → Kingdom → Class → Order → Genus → Family → Species</li>
+          </ul>
+          <div class="qexp">Broadest → most specific: Domain → Kingdom → Phylum → Class → Order → Family → Genus → Species. Mnemonic: "Dear King Philip Came Over For Good Soup."</div>
+        </div>
+
+        <div class="qq" id="q6-9" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">9</span><span class="qt-inner">Which is the BEST example of a scientific hypothesis?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bacteria are everywhere and people should wash their hands more</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>If handwashing frequency increases from once to three times daily, then the rate of E. coli transfer will decrease by at least 50%, because soap disrupts bacterial cell membranes</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Handwashing probably affects bacterial spread in some way</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>If bacteria cause illness, then people should wash their hands</li>
+          </ul>
+          <div class="qexp">A good hypothesis is specific, testable, falsifiable, and mechanistic. Option B identifies a specific IV (handwashing frequency), DV (E. coli transfer rate), predicted magnitude (50% reduction), and mechanism (soap disrupts membranes). Options A, C, D fail on specificity, mechanism, or testability.</div>
+        </div>
+
+        <div class="qq" id="q6-10" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">10</span><span class="qt-inner">How does a scientific theory differ from a scientific law?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A theory is a guess; a law is a proven fact</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A law is more important than a theory</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A law describes a consistent pattern in nature (often mathematically); a theory explains WHY that pattern exists — laws describe, theories explain</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are synonyms in science</li>
+          </ul>
+          <div class="qexp">Laws describe patterns. Theories explain mechanisms. The law of gravity describes mathematically how objects attract each other. The general theory of relativity explains why mass curves spacetime. Neither is a "guess" — both are well-established in science.</div>
+        </div>
+
+        <div class="qq" id="q6-11" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">11</span><span class="qt-inner">A pesticide experiment has: 25 bushes with pesticide; 25 bushes with sterile water; 25 bushes untreated. What are the IV and the control group(s)?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>IV = bush health; control = treated bushes</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>IV = pesticide treatment (pesticide, water, nothing); control groups = bushes with water AND untreated bushes — both needed to isolate the pesticide effect from the liquid-addition effect</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>IV = number of bushes; control = all 75 bushes together</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>IV = aphid population; control = pesticide group</li>
+          </ul>
+          <div class="qexp">Two control groups are needed: (1) sterile water — controls for any effect of adding liquid; (2) untreated — shows baseline natural aphid levels. Comparing these two controls tells you if water alone affects aphids. Only then can you confidently attribute any difference in the pesticide group to the pesticide itself.</div>
+        </div>
+
+        <div class="qq" id="q6-12" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">12</span><span class="qt-inner">What distinguishes Domain Archaea from Domain Bacteria, given that both are prokaryotic?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Archaea have a membrane-bound nucleus; Bacteria do not</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Archaea perform photosynthesis; Bacteria do not</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Archaea have distinct membrane lipids (ether-linked vs. ester-linked), and their molecular biology is more similar to eukaryotes than to bacteria; many are extremophiles</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Archaea are multicellular; Bacteria are unicellular</li>
+          </ul>
+          <div class="qexp">Archaea differ from Bacteria in: (1) membrane lipid chemistry (ether-linked, not ester-linked); (2) cell wall composition (no peptidoglycan); (3) molecular biology (DNA replication and transcription more similar to eukaryotes); (4) many inhabit extreme environments (hot springs, salt lakes, deep ocean vents).</div>
+        </div>
+
+        <div class="qq" id="q6-13" data-ans="b">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">13</span><span class="qt-inner">Two species share Domain through Class but diverge at Order. Two other species diverge at the Kingdom level. Which pair is more closely related, and what does this tell us about their common ancestor?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The pair diverging at Kingdom — they've had more time to become similar</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pair diverging at Order — they share a more recent common ancestor and greater genetic similarity</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They are equally related — taxonomic level doesn't reflect evolutionary time</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The pair diverging at Kingdom — Kingdom is a more important rank than Order</li>
+          </ul>
+          <div class="qexp">More shared ranks = more recent common ancestor = more genetic similarity. Diverging at Order means they shared a common ancestor up through the Class level (~80–100 MYA for mammals). Diverging at Kingdom means their last common ancestor was hundreds of millions of years more ancient.</div>
+        </div>
+
+        <div class="qq" id="q6-14" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">14</span><span class="qt-inner">In a drug trial, 100 patients take a new medication and 100 take a placebo. Neither group knows which they received. What type of study is this?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Double-blind study</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Single-blind study — only participants are unaware; if researchers also don't know, it would be double-blind</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Single-blind study — participants don't know their treatment, eliminating placebo effect, but researchers are not mentioned as blinded</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Open-label study</li>
+          </ul>
+          <div class="qexp">Single-blind: only participants are unaware of their treatment. Double-blind: BOTH participants AND researchers administering/assessing are unaware. The question only states patients don't know — researchers are not blinded — so this is single-blind. Double-blind controls for both placebo effect and researcher bias.</div>
+        </div>
+
+        <div class="qq" id="q6-15" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">15</span><span class="qt-inner">Ice cream sales and drowning deaths both increase in summer. A student concludes ice cream causes drowning. What is wrong with this reasoning?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Nothing — if two variables consistently correlate, causation is established</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The sample size is too small — more summers would confirm the causal link</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>This is the correlation-causation fallacy — hot weather (confounding variable) causes both; ice cream and drowning are correlated but neither causes the other</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The reasoning is flawed only because ice cream is not consumed near water</li>
+          </ul>
+          <div class="qexp">Classic correlation ≠ causation. Hot weather causes both: people eat more ice cream AND swim more (leading to more drownings). The correlation is real but explained entirely by a confounding variable. Establishing causation requires controlled experiments where the proposed causal variable is the ONLY difference between groups.</div>
+        </div>
+
+        <div class="qq" id="q6-16" data-ans="b">
+          <div class="qbadge qb-vi">👁️ Visual</div>
+          <div class="qt"><span class="qnum">16</span><span class="qt-inner">A graph shows plant growth rate (y-axis) vs. light intensity (x-axis). The line rises steeply from 0–4 hours, then levels off. What does the plateau indicate?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>More light always causes more growth — the relationship is unlimited</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Light was the limiting factor up to 4 hours; beyond that, another factor (CO₂, nutrients, water) becomes limiting, so additional light provides no further benefit</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Light has no effect on plant growth — the leveling off proves the hypothesis false</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>8 hours of light harms plants, reducing growth to zero</li>
+          </ul>
+          <div class="qexp">Classic limiting factor curve. From 0–4 hours, light is limiting — more light = more photosynthesis = more growth. Above 4 hours, another factor becomes limiting (CO₂, water, temperature). Adding more light provides no benefit because something else is now the bottleneck. This is a common pattern in biological dose-response experiments.</div>
+        </div>
+
+        <div class="qq" id="q6-17" data-ans="b">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">17</span><span class="qt-inner">Which domain is prokaryotic but molecularly more related to Eukarya than to Bacteria?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bacteria</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Archaea</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Eukarya</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Protista</li>
+          </ul>
+          <div class="qexp">Archaea: structurally prokaryotic (no nucleus) but their molecular biology — DNA replication, transcription machinery, ribosomal proteins — is more similar to eukaryotes. Archaea and Eukarya are considered sister groups on the tree of life.</div>
+        </div>
+
+        <div class="qq" id="q6-18" data-ans="c">
+          <div class="qbadge qb-rv">📖 Review</div>
+          <div class="qt"><span class="qnum">18</span><span class="qt-inner">Which correctly identifies inductive vs. deductive reasoning in science?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Inductive: general → specific; Deductive: specific → general</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are synonyms</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Inductive: specific observations → general conclusions (generates hypotheses); Deductive: general principles → specific testable predictions (designs experiments)</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Inductive reasoning is valid in science; deductive reasoning is only for mathematics</li>
+          </ul>
+          <div class="qexp">Inductive: specific → general. "These 50 bacteria all reproduce by binary fission → all bacteria probably do." Used to generate hypotheses. Deductive: general → specific. "All bacteria reproduce by binary fission → THEREFORE these new bacteria should too (testable prediction)." Good science uses both.</div>
+        </div>
+
+        <div class="qq" id="q6-19" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">19</span><span class="qt-inner">A biologist inoculates 30 plants with a bacterium (Group A), sprays 30 with sterile water (Group B), and leaves 30 untouched (Group C). All three groups develop the disease. What should she conclude?</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The hypothesis is confirmed — the bacterium spread from Group A to Groups B and C</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The experiment failed — she should repeat it with larger doses</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The hypothesis is not supported — since untouched control plants also got sick, the bacterium is not the cause; something else (a virus, environmental factor) is responsible; form a new hypothesis</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All three groups getting sick confirms bacteria are everywhere</li>
+          </ul>
+          <div class="qexp">Group C — untouched, no bacterial inoculation, no water — also developed the disease. This means the bacterium cannot be the cause (or not the sole cause), because disease occurred without it. The scientist should form a new hypothesis: perhaps a virus, fungus, environmental stressor, or pre-existing genetic condition is the true cause.</div>
+        </div>
+
+        <div class="qq" id="q6-20" data-ans="c">
+          <div class="qbadge qb-ct">💭 Critical Thinking</div>
+          <div class="qt"><span class="qnum">20</span><span class="qt-inner">A student proposes: "Plants grow because they want sunlight." Explain why this is NOT a scientific hypothesis, and rewrite it as a properly formed scientific hypothesis.</span></div>
+          <ul class="qopts">
+            <li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is a valid hypothesis — "want" can be tested by blocking sunlight</li>
+            <li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It's not scientific only because plants can't "want" — replace "want" with "need" and it becomes valid</li>
+            <li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Not scientific: attributes volition to plants (unfalsifiable mechanistic claim) and lacks a testable mechanism. Rewritten: "If plants receive greater light intensity, then their growth rate will increase, because light drives photosynthesis which produces the ATP and glucose needed for cell division and growth."</li>
+            <li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Not scientific because plants are not appropriate subjects for controlled experiments</li>
+          </ul>
+          <div class="qexp">The original fails: (1) attributes volition ("want") — plants have no nervous system; this is not a scientific mechanism. (2) Not falsifiable — no observation could prove a plant "doesn't want" sunlight. A good hypothesis needs: specific IV (light intensity), DV (growth rate), predicted direction (increase), and mechanism (photosynthesis → ATP/glucose → growth).</div>
+        </div>
+
+        <div class="qscore" id="sc6"><div class="score-n" id="scn6">–</div><div class="score-l">out of 20 · Virginia Biology SOL Practice<br><span id="sm6"></span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(5)">← Lesson 5</button>
+    <button class="mc-btn" id="mc6" onclick="markDone(6,this)">✓ Complete Module</button>
+    <button class="nbtn next" disabled>Module Complete 🎉</button>
+  </div>
+</div>
+
+</main>
+
+<!-- MODULE CONFIG + SHARED JS -->
+<script>
+window.MODULE_CONFIG = {
+  name: 'Introduction to Biology',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec',
+  panelCount: 7,
+  lessonCount: 6,
+  cpMin: 100,
+  lessons: ['Overview','L1: What is Life?','L2: Levels of Organization','L3: Domains & Classification','L4: Scientific Method','L5: Experimental Design','L6: Practice Test']
+};
+</script>
+<script src="../shared/portal-quiz.js"></script>
+</body>
+</html>
