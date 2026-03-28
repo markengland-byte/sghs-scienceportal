@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biotechnology · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="../shared/portal-base.css">
+<link rel="stylesheet" href="../shared/portal-sidebar.css">
+<style>
+.hero-clone1{background:linear-gradient(135deg,#1a2a4a,#0b6a8a);}
+.hero-clone2{background:linear-gradient(135deg,#2a0a5a,#6c3fa0);}
+.hero-med{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-gen{background:linear-gradient(135deg,#4a1a00,#8a5000);}
+.hero-test{background:linear-gradient(135deg,#0f2240,#1a4070);}
+</style>
+</head>
+<body class="theme-bio">
+<div id="submit-toast"><span style="font-size:1.1rem;">🤖</span><span id="toast-msg">Score sent!</span></div>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0f2240;margin-bottom:8px;">Welcome to Biotechnology</div>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:20px;line-height:1.6;">Enter your name to begin. Your scores will be sent to Mr. England automatically.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input type="text" id="student-name" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:4px;display:none;">Please enter your name.</div>
+    <button onclick="startModule()" style="margin-top:16px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<header class="top-bar">
+  <a href="index.html" class="tb-back">← Biology</a>
+  <div class="tb-logo">🔬</div>
+  <div><div class="tb-name">Southern Gap High School</div><div class="tb-sub">Biology · Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Biotechnology</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Cloning &amp; Genetic Engineering</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Tools of Biotechnology</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Cloning</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Applications</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Medicine &amp; Agriculture</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Genomics &amp; Proteomics</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Assessment</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+<!-- ═══════════════════════════════════════════════════
+     PANEL 0 — UNIT OVERVIEW (REBUILD - VERBATIM)
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · <span>Unit Overview</span></div>
+    <div class="h-title">Biotechnology</div>
+    <div class="h-desc">The latter half of the twentieth century began with the discovery of the structure of DNA, then progressed to the development of the basic tools used to study and manipulate DNA.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 10</div>
+      <div class="h-chip">🎯 5 Lessons · 30 Questions</div>
+      <div class="h-chip">Virginia SOL BIO.6</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="diagram-wrap">
+      <div class="d-title">Figure 10.1 — PCR Thermal Cycler</div>
+      <img src="images/ch10/fig10-1-pcr-thermal-cycler.png" alt="(a) A thermal cycler, such as the one shown here, is a basic tool used to study DNA in a process called the polymerase chain reaction (PCR). The polymerase enzyme most often used with PCR comes from a strain of bacteria that lives in (b) the hot springs of Yellowstone National Park." style="width:100%;max-width:700px;border-radius:10px;">
+      <div class="d-caption">(a) A thermal cycler, such as the one shown here, is a basic tool used to study DNA in a process called the polymerase chain reaction (PCR). The polymerase enzyme most often used with PCR comes from a strain of bacteria that lives in (b) the hot springs of Yellowstone National Park. (credit a: modification of work by Magnus Manske; credit b: modification of work by Jon Sullivan)</div>
+    </div>
+
+    <p class="prose">The latter half of the twentieth century began with the discovery of the structure of DNA, then progressed to the development of the basic tools used to study and manipulate DNA. These advances, as well as advances in our understanding of and ability to manipulate cells, have led some to refer to the twenty-first century as the biotechnology century. The rate of discovery and of the development of new applications in medicine, agriculture, and energy is expected to accelerate, bringing huge benefits to humankind and perhaps also significant risks. Many of these developments are expected to raise significant ethical and social questions that human societies have not yet had to consider.</p>
+
+    <div class="obj-box">
+      <div class="obj-label">📌 What You Will Learn in This Module</div>
+      <ul class="obj-list">
+        <li>Explain the basic techniques used to manipulate genetic material</li>
+        <li>Explain molecular and reproductive cloning</li>
+        <li>Describe uses of biotechnology in medicine</li>
+        <li>Describe uses of biotechnology in agriculture</li>
+        <li>Define genomics and proteomics</li>
+        <li>Define whole genome sequencing</li>
+        <li>Explain different applications of genomics and proteomics</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Module Map</div>
+      <div class="sh2">Five Lessons · OpenStax Concepts of Biology Ch. 10</div>
+      <table class="dt">
+        <thead><tr><th>#</th><th>Lesson</th><th>Key Concepts</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Cloning &amp; Genetic Engineering — Tools</td><td>Biotechnology definition, nucleic acid structure review, DNA extraction, gel electrophoresis, PCR</td><td>CB 10.1 (first half)</td></tr>
+          <tr><td>2</td><td>Cloning &amp; Genetic Engineering — Cloning</td><td>Restriction enzymes, plasmids, molecular cloning, recombinant DNA, reproductive cloning, Dolly, cellular cloning, genetic engineering, reverse genetics</td><td>CB 10.1 (second half)</td></tr>
+          <tr><td>3</td><td>Biotechnology in Medicine &amp; Agriculture</td><td>Genetic diagnosis, gene therapy, vaccines, antibiotics, hormones, transgenic animals, transgenic plants, Agrobacterium, Bt toxin, FlavrSavr</td><td>CB 10.2</td></tr>
+          <tr><td>4</td><td>Genomics &amp; Proteomics</td><td>Genome mapping, whole genome sequencing, CRISPR, pharmacogenomics, proteomics</td><td>CB 10.3</td></tr>
+          <tr><td>5</td><td>Practice Test</td><td>All topics — comprehensive assessment</td><td>All</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Virginia SOL Alignment</div>
+      <div class="sh2">Standards Covered in This Module</div>
+      <table class="dt">
+        <thead><tr><th>Standard</th><th>Description</th><th>Lessons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>BIO.6a</strong></td><td>Techniques used to manipulate genetic material</td><td>1, 2</td></tr>
+          <tr><td><strong>BIO.6b</strong></td><td>Applications of biotechnology in medicine and agriculture</td><td>3</td></tr>
+          <tr><td><strong>BIO.6c</strong></td><td>Genomics, proteomics, and gene editing</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 10</div><div class="cx">All content in this module is adapted from OpenStax Concepts of Biology, Chapter 10: Biotechnology, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" disabled>← Previous</button>
+    <div class="lnav-info">Overview · Start Here</div>
+    <button class="nbtn next" onclick="goTo(1)">Lesson 1: Cloning &amp; Genetic Engineering — Tools →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 1 — CLONING & GENETIC ENGINEERING PT 1 (REBUILD - VERBATIM)
+     OpenStax CB 10.1 (first half)
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+  <div class="hero hero-clone1">
+    <div class="h-crumb">Biotechnology · <span>Lesson 1</span></div>
+    <div class="h-title">Cloning &amp; Genetic Engineering — Tools</div>
+    <div class="h-desc">Biotechnology is the use of artificial methods to modify the genetic material of living organisms or cells to produce novel compounds or to perform new functions.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 10.1</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the basic techniques used to manipulate genetic material</li>
+        <li>Explain molecular and reproductive cloning</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction</div>
+      <div class="sh2">What Is Biotechnology?</div>
+
+      <p class="prose">Biotechnology is the use of artificial methods to modify the genetic material of living organisms or cells to produce novel compounds or to perform new functions. Biotechnology has been used for improving livestock and crops since the beginning of agriculture through selective breeding. Since the discovery of the structure of DNA in 1953, and particularly since the development of tools and methods to manipulate DNA in the 1970s, biotechnology has become synonymous with the manipulation of organisms' DNA at the molecular level. The primary applications of this technology are in medicine (for the production of vaccines and antibiotics) and in agriculture (for the genetic modification of crops). Biotechnology also has many industrial applications, such as fermentation, the treatment of oil spills, and the production of biofuels, as well as many household applications such as the use of enzymes in laundry detergent.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.1 — PCR Thermal Cycler</div>
+        <img src="images/ch10/fig10-1-pcr-thermal-cycler.png" alt="(a) A thermal cycler, such as the one shown here, is a basic tool used to study DNA in a process called the polymerase chain reaction (PCR). The polymerase enzyme most often used with PCR comes from a strain of bacteria that lives in (b) the hot springs of Yellowstone National Park." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">(a) A thermal cycler, such as the one shown here, is a basic tool used to study DNA in a process called the polymerase chain reaction (PCR). The polymerase enzyme most often used with PCR comes from a strain of bacteria that lives in (b) the hot springs of Yellowstone National Park. (credit a: modification of work by Magnus Manske; credit b: modification of work by Jon Sullivan)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Manipulating Genetic Material</div>
+      <div class="sh2">Review of Nucleic Acid Structure</div>
+
+      <p class="prose">To accomplish the applications described above, biotechnologists must be able to extract, manipulate, and analyze nucleic acids.</p>
+
+      <p class="prose">To understand the basic techniques used to work with nucleic acids, remember that nucleic acids are macromolecules made of nucleotides (a sugar, a phosphate, and a nitrogenous base). The phosphate groups on these molecules each have a net negative charge. An entire set of DNA molecules in the nucleus of eukaryotic organisms is called the genome. DNA has two complementary strands linked by hydrogen bonds between the paired bases.</p>
+
+      <p class="prose">Unlike DNA in eukaryotic cells, RNA molecules leave the nucleus. Messenger RNA (mRNA) is analyzed most frequently because it represents the protein-coding genes that are being expressed in the cell.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Isolation of Nucleic Acids</div>
+      <div class="sh2">DNA Extraction</div>
+
+      <p class="prose">To study or manipulate nucleic acids, the DNA must first be extracted from cells. Various techniques are used to extract different types of DNA (Figure 10.2). Most nucleic acid extraction techniques involve steps to break open the cell, and then the use of enzymatic reactions to destroy all undesired macromolecules. Cells are broken open using a detergent solution containing buffering compounds. To prevent degradation and contamination, macromolecules such as proteins and RNA are inactivated using enzymes. The DNA is then brought out of solution using alcohol. The resulting DNA, because it is made up of long polymers, forms a gelatinous mass.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.2 — DNA Extraction</div>
+        <img src="images/ch10/fig10-2-dna-extraction.png" alt="This diagram shows the basic method used for the extraction of DNA." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">This diagram shows the basic method used for the extraction of DNA.</div>
+      </div>
+
+      <p class="prose">RNA is studied to understand gene expression patterns in cells. RNA is naturally very unstable because enzymes that break down RNA are commonly present in nature. Some are even secreted by our own skin and are very difficult to inactivate. Similar to DNA extraction, RNA extraction involves the use of various buffers and enzymes to inactivate other macromolecules and preserve only the RNA.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Gel Electrophoresis</div>
+      <div class="sh2">Separating DNA Fragments by Size</div>
+
+      <p class="prose">Because nucleic acids are negatively charged ions at neutral or alkaline pH in an aqueous environment, they can be moved by an electric field. Gel electrophoresis is a technique used to separate charged molecules on the basis of size and charge. The nucleic acids can be separated as whole chromosomes or as fragments. The nucleic acids are loaded into a slot at one end of a gel matrix, an electric current is applied, and negatively charged molecules are pulled toward the opposite end of the gel (the end with the positive electrode). Smaller molecules move through the pores in the gel faster than larger molecules; this difference in the rate of migration separates the fragments on the basis of size. The nucleic acids in a gel matrix are invisible until they are stained with a compound that allows them to be seen, such as a dye. Distinct fragments of nucleic acids appear as bands at specific distances from the top of the gel (the negative electrode end) that are based on their size (Figure 10.3). A mixture of many fragments of varying sizes appear as a long smear, whereas uncut genomic DNA is usually too large to run through the gel and forms a single large band at the top of the gel.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.3 — Gel Electrophoresis</div>
+        <img src="images/ch10/fig10-3-gel-electrophoresis.png" alt="Shown are DNA fragments from six samples run on a gel, stained with a fluorescent dye and viewed under UV light." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Shown are DNA fragments from six samples run on a gel, stained with a fluorescent dye and viewed under UV light. (credit: modification of work by James Jacob, Tompkins Cortland Community College)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Polymerase Chain Reaction</div>
+      <div class="sh2">Amplifying DNA</div>
+
+      <p class="prose">DNA analysis often requires focusing on one or more specific regions of the genome. It also frequently involves situations in which only one or a few copies of a DNA molecule are available for further analysis. These amounts are insufficient for most procedures, such as gel electrophoresis. Polymerase chain reaction (PCR) is a technique used to rapidly increase the number of copies of specific regions of DNA for further analyses (Figure 10.4). PCR uses a special form of DNA polymerase, the enzyme that replicates DNA, and other short nucleotide sequences called primers that base pair to a specific portion of the DNA being replicated. PCR is used for many purposes in laboratories. These include: 1) the identification of the owner of a DNA sample left at a crime scene; 2) paternity analysis; 3) the comparison of small amounts of ancient DNA with modern organisms; and 4) determining the sequence of nucleotides in a specific region.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.4 — Polymerase Chain Reaction (PCR)</div>
+        <img src="images/ch10/fig10-4-pcr.png" alt="Polymerase chain reaction, or PCR, is used to produce many copies of a specific sequence of DNA using a special form of DNA polymerase." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Polymerase chain reaction, or PCR, is used to produce many copies of a specific sequence of DNA using a special form of DNA polymerase.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Biotechnology</div><div class="vocab-def">The use of artificial methods to modify the genetic material of living organisms or cells to produce novel compounds or to perform new functions</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genome</div><div class="vocab-def">An entire set of DNA molecules in the nucleus of eukaryotic organisms</div></div>
+        <div class="vocab-card"><div class="vocab-term">Nucleic acid extraction</div><div class="vocab-def">The process of breaking open cells and using enzymatic reactions to isolate DNA or RNA from other macromolecules</div></div>
+        <div class="vocab-card"><div class="vocab-term">Gel electrophoresis</div><div class="vocab-def">A technique used to separate charged molecules on the basis of size and charge using an electric field and a gel matrix</div></div>
+        <div class="vocab-card"><div class="vocab-term">Polymerase chain reaction (PCR)</div><div class="vocab-def">A technique used to rapidly increase the number of copies of specific regions of DNA for further analyses</div></div>
+        <div class="vocab-card"><div class="vocab-term">Primers</div><div class="vocab-def">Short nucleotide sequences that base pair to a specific portion of the DNA being replicated during PCR</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="2KoLnIwoZKU">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/2KoLnIwoZKU/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Gel Electrophoresis — Amoeba Sisters</div><div class="vid-dur">~7 min</div></div>
+        </div>
+        <div class="vid-card" onclick="expandVid(this)" data-yt="iQsu3Kz9NYo">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/iQsu3Kz9NYo/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">PCR (Polymerase Chain Reaction) — Amoeba Sisters</div><div class="vid-dur">~6 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp1">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Biotechnology Tools</span>
+      </div>
+      <p class="cp-prompt">Describe the steps involved in extracting DNA from cells, explain how gel electrophoresis separates DNA fragments, and describe how PCR amplifies specific regions of DNA.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(1)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill1"></div></div>
+      <div class="cp-count" id="cpCount1">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz1">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 1 Quiz</div>
+
+      <div class="qq" id="q1-1">
+        <div class="q-stem">1. What is biotechnology?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,1,this,'b')">A. The study of living organisms in their natural habitats</button>
+          <button class="cbtn" onclick="pick(1,1,this,'a')">B. The use of artificial methods to modify the genetic material of living organisms or cells to produce novel compounds or to perform new functions</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">C. The study of how cells divide during mitosis</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">D. The process of natural selection in populations</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-2">
+        <div class="q-stem">2. During DNA extraction, cells are broken open using:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,2,this,'b')">A. An electric current</button>
+          <button class="cbtn" onclick="pick(1,2,this,'a')">B. A detergent solution containing buffering compounds</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">C. Restriction enzymes</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">D. DNA polymerase</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-3">
+        <div class="q-stem">3. In gel electrophoresis, which molecules move faster through the gel?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,3,this,'b')">A. Larger molecules</button>
+          <button class="cbtn" onclick="pick(1,3,this,'a')">B. Smaller molecules</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">C. Positively charged molecules</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">D. All molecules move at the same rate</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-4">
+        <div class="q-stem">4. Why are nucleic acids able to be moved by an electric field during gel electrophoresis?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,4,this,'b')">A. They are positively charged</button>
+          <button class="cbtn" onclick="pick(1,4,this,'a')">B. They are negatively charged ions at neutral or alkaline pH</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">C. They are neutral molecules attracted to the gel</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">D. They contain magnetic particles</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-5">
+        <div class="q-stem">5. What does PCR stand for, and what is its purpose?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,5,this,'a')">A. Polymerase chain reaction; it rapidly increases the number of copies of specific regions of DNA</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">B. Protein chain replication; it produces copies of proteins</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">C. Plasmid cloning reaction; it inserts DNA into plasmids</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">D. Phosphate coupling reaction; it links nucleotides together</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-6">
+        <div class="q-stem">6. Which of the following is NOT a use of PCR mentioned in the text?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,6,this,'b')">A. Identification of the owner of a DNA sample left at a crime scene</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">B. Paternity analysis</button>
+          <button class="cbtn" onclick="pick(1,6,this,'a')">C. Producing transgenic organisms</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">D. Comparing small amounts of ancient DNA with modern organisms</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score1"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 10.1</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 10.1: Cloning and Genetic Engineering, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(0)">← Unit Overview</button>
+    <div class="lnav-info">Lesson 1 of 5</div>
+    <button class="nbtn next" onclick="goTo(2)">Lesson 2: Cloning &amp; Genetic Engineering — Cloning →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 2 — CLONING & GENETIC ENGINEERING PT 2 (REBUILD - VERBATIM)
+     OpenStax CB 10.1 (second half)
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+  <div class="hero hero-clone2">
+    <div class="h-crumb">Biotechnology · <span>Lesson 2</span></div>
+    <div class="h-title">Cloning &amp; Genetic Engineering — Cloning</div>
+    <div class="h-desc">In general, cloning means the creation of a perfect replica. Typically, the word is used to describe the creation of a genetically identical copy.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 10.1</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the basic techniques used to manipulate genetic material</li>
+        <li>Explain molecular and reproductive cloning</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Cloning</div>
+      <div class="sh2">Introduction to Cloning</div>
+
+      <p class="prose">In general, cloning means the creation of a perfect replica. Typically, the word is used to describe the creation of a genetically identical copy. In biology, the re-creation of a whole organism is referred to as "reproductive cloning." Long before attempts were made to clone an entire organism, researchers learned how to copy short stretches of DNA—a process that is referred to as molecular cloning. The technique offered methods to create new medicines and to overcome difficulties with existing ones. When Lydia Villa-Komaroff, working in the Gilbert Lab at Harvard, published the first paper outlining the technique for producing synthetic insulin, diabetes researchers and patients received new hope in fighting the disease. Insulin at that time was only produced using pig and cow pancreases, and the life-saving substance was often in short supply. Synthetic insulin, once mass produced, would solve that problem for many patients. These early discoveries led to the "BioTech Boom," and spurred continued research and funding for newer and better ways to improve health.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Restriction Enzymes</div>
+      <div class="sh2">Cutting DNA at Specific Sites</div>
+
+      <p class="prose">Plasmids with foreign DNA inserted into them are called recombinant DNA molecules because they contain new combinations of genetic material. Proteins that are produced from recombinant DNA molecules are called recombinant proteins. Not all recombinant plasmids are capable of expressing genes. Plasmids may also be engineered to express proteins only when stimulated by certain environmental factors, so that scientists can control the expression of the recombinant proteins.</p>
+
+      <p class="prose">These plasmid vectors contain many short DNA sequences that can be cut with different commonly available restriction enzymes. Restriction enzymes (also called restriction endonucleases) recognize specific DNA sequences and cut them in a predictable manner; they are naturally produced by bacteria as a defense mechanism against foreign DNA. Many restriction enzymes make staggered cuts in the two strands of DNA, such that the cut ends have a 2- to 4-nucleotide single-stranded overhang. The sequence that is recognized by the restriction enzyme is a four- to eight-nucleotide sequence that is a palindrome. Like with a word palindrome, this means the sequence reads the same forward and backward. In most cases, the sequence reads the same forward on one strand and backward on the complementary strand. When a staggered cut is made in a sequence like this, the overhangs are complementary (Figure 10.5).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.5 — Restriction Enzyme Recognition Site</div>
+        <img src="images/ch10/fig10-5-restriction-enzyme.png" alt="In this (a) six-nucleotide restriction enzyme recognition site, the sequence of six nucleotides reads the same in the 5' to 3' direction on one strand as it does in the 5' to 3' direction on the complementary strand. This is known as a palindrome." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">In this (a) six-nucleotide restriction enzyme recognition site, notice that the sequence of six nucleotides reads the same in the 5' to 3' direction on one strand as it does in the 5' to 3' direction on the complementary strand. This is known as a palindrome. (b) The restriction enzyme makes breaks in the DNA strands, and (c) the cut in the DNA results in "sticky ends". Another piece of DNA cut on either end by the same restriction enzyme could attach to these sticky ends and be inserted into the gap made by this cut.</div>
+      </div>
+
+      <p class="prose">Because these overhangs are capable of coming back together by hydrogen bonding with complementary overhangs on a piece of DNA cut with the same restriction enzyme, these are called "sticky ends." The process of forming hydrogen bonds between complementary sequences on single strands to form double-stranded DNA is called annealing. Addition of an enzyme called DNA ligase, which takes part in DNA replication in cells, permanently joins the DNA fragments when the sticky ends come together. In this way, any DNA fragment can be spliced between the two ends of a plasmid DNA that has been cut with the same restriction enzyme (Figure 10.6).</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Molecular Cloning</div>
+      <div class="sh2">Plasmids and Recombinant DNA</div>
+
+      <p class="prose">Cloning allows for the creation of multiple copies of genes, expression of genes, and study of specific genes. To get the DNA fragment into a bacterial cell in a form that will be copied or expressed, the fragment is first inserted into a plasmid. A plasmid (also called a vector in this context) is a small circular DNA molecule that replicates independently of the chromosomal DNA in bacteria. In cloning, the plasmid molecules can be used to provide a "vehicle" in which to insert a desired DNA fragment. Modified plasmids are usually reintroduced into a bacterial host for replication. As the bacteria divide, they copy their own DNA (including the plasmids). The inserted DNA fragment is copied along with the rest of the bacterial DNA. In a bacterial cell, the fragment of DNA from the human genome (or another organism that is being studied) is referred to as foreign DNA to differentiate it from the DNA of the bacterium (the host DNA).</p>
+
+      <p class="prose">Plasmids occur naturally in bacterial populations (such as Escherichia coli) and have genes that can contribute favorable traits to the organism, such as antibiotic resistance (the ability to be unaffected by antibiotics). Plasmids have been highly engineered as vectors for molecular cloning and for the subsequent large-scale production of important molecules, such as insulin. A valuable characteristic of plasmid vectors is the ease with which a foreign DNA fragment can be introduced.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.6 — Molecular Cloning</div>
+        <img src="images/ch10/fig10-6-molecular-cloning.png" alt="This diagram shows the steps involved in molecular cloning." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">This diagram shows the steps involved in molecular cloning.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Reproductive Cloning</div>
+      <div class="sh2">Cloning Whole Organisms</div>
+
+      <p class="prose">Reproductive cloning is a method used to make a clone or an identical copy of an entire multicellular organism. Most multicellular organisms undergo reproduction by sexual means, which involves the contribution of DNA from two individuals (parents), making it impossible to generate an identical copy or a clone of either parent. Recent advances in biotechnology have made it possible to reproductively clone mammals in the laboratory.</p>
+
+      <p class="prose">Natural sexual reproduction involves the union, during fertilization, of a sperm and an egg. Each of these gametes is haploid, meaning they contain one set of chromosomes in their nuclei. The resulting cell, or zygote, is then diploid and contains two sets of chromosomes. This cell divides mitotically to produce a multicellular organism. However, the union of just any two cells cannot produce a viable zygote; there are components in the cytoplasm of the egg cell that are essential for the early development of the embryo during its first few cell divisions. Without these provisions, there would be no subsequent development. Therefore, to produce a new individual, both a diploid genetic complement and an egg cytoplasm are required. The approach to producing an artificially cloned individual is to take the egg cell of one individual and to remove the haploid nucleus. Then a diploid nucleus from a body cell of a second individual, the donor, is put into the egg cell. The egg is then stimulated to divide so that development proceeds. This sounds simple, but in fact it takes many attempts before each of the steps is completed successfully.</p>
+
+      <p class="prose">The first cloned agricultural animal was Dolly, a sheep who was born in 1996. The success rate of reproductive cloning at the time was very low. Dolly lived for six years and died of a lung tumor (Figure 10.7). There was speculation that because the cell DNA that gave rise to Dolly came from an older individual, the age of the DNA may have affected her life expectancy. Since Dolly, several species of animals (such as horses, bulls, and goats) have been successfully cloned.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.7 — Reproductive Cloning (Dolly the Sheep)</div>
+        <img src="images/ch10/fig10-7-dolly-cloning.png" alt="Dolly the sheep was the first agricultural animal to be cloned. To create Dolly, the nucleus was removed from a donor egg cell. The enucleated egg was placed next to the other cell, then they were shocked to fuse." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Dolly the sheep was the first agricultural animal to be cloned. To create Dolly, the nucleus was removed from a donor egg cell. The enucleated egg was placed next to the other cell, then they were shocked to fuse. They were shocked again to start division. The cells were allowed to divide for several days until an early embryonic stage was reached, before being implanted in a surrogate mother.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Cellular Cloning</div>
+      <div class="sh2">Embryonic Stem Cells</div>
+
+      <p class="prose">There have been attempts at producing cloned human embryos as sources of embryonic stem cells. In the procedure, the DNA from an adult human is introduced into a human egg cell, which is then stimulated to divide. The technology is similar to the technology that was used to produce Dolly, but the embryo is never implanted into a surrogate carrier. The cells produced are called embryonic stem cells because they have the capacity to develop into many different kinds of cells, such as muscle or nerve cells. The stem cells could be used to research and ultimately provide therapeutic applications, such as replacing damaged tissues. The benefit of cloning in this instance is that the cells used to regenerate new tissues would be a perfect match to the donor of the original DNA. For example, a leukemia patient would not require a sibling with a tissue match for a bone-marrow transplant. Freda Miller and Elaine Fuchs, working independently, discovered stem cells in different layers of the skin. These cells help the skin repair itself, and their discovery may have applications in treatments of skin disease and potentially other conditions, such as nerve damage.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Genetic Engineering</div>
+      <div class="sh2">Modifying Organisms with Recombinant DNA</div>
+
+      <p class="prose">Using recombinant DNA technology to modify an organism's DNA to achieve desirable traits is called genetic engineering. Addition of foreign DNA in the form of recombinant DNA vectors that are generated by molecular cloning is the most common method of genetic engineering. An organism that receives the recombinant DNA is called a genetically modified organism (GMO). If the foreign DNA that is introduced comes from a different species, the host organism is called transgenic. Bacteria, plants, and animals have been genetically modified since the early 1970s for academic, medical, agricultural, and industrial purposes. These applications will be examined in more detail in the next module.</p>
+
+      <p class="prose">Although the classic methods of studying the function of genes began with a given phenotype and determined the genetic basis of that phenotype, modern techniques allow researchers to start at the DNA sequence level and ask: "What does this gene or DNA element do?" This technique, called reverse genetics, has resulted in reversing the classical genetic methodology. One example of this method is analogous to damaging a body part to determine its function. An insect that loses a wing cannot fly, which means that the wing's function is flight. The classic genetic method compares insects that cannot fly with insects that can fly, and observes that the non-flying insects have lost wings. Similarly in a reverse genetics approach, mutating or deleting genes provides researchers with clues about gene function. Alternately, reverse genetics can be used to cause a gene to overexpress itself to determine what phenotypic effects may occur.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Molecular cloning</div><div class="vocab-def">The process of copying short stretches of DNA, used to create new medicines and study specific genes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Reproductive cloning</div><div class="vocab-def">A method used to make a clone or an identical copy of an entire multicellular organism</div></div>
+        <div class="vocab-card"><div class="vocab-term">Restriction enzymes</div><div class="vocab-def">Enzymes (also called restriction endonucleases) that recognize specific DNA sequences and cut them in a predictable manner; naturally produced by bacteria as a defense mechanism against foreign DNA</div></div>
+        <div class="vocab-card"><div class="vocab-term">Sticky ends</div><div class="vocab-def">Complementary single-stranded overhangs produced when restriction enzymes make staggered cuts, capable of hydrogen bonding with matching overhangs</div></div>
+        <div class="vocab-card"><div class="vocab-term">Plasmid (vector)</div><div class="vocab-def">A small circular DNA molecule that replicates independently of the chromosomal DNA in bacteria; used as a vehicle to insert a desired DNA fragment</div></div>
+        <div class="vocab-card"><div class="vocab-term">Recombinant DNA</div><div class="vocab-def">Plasmids with foreign DNA inserted into them, containing new combinations of genetic material</div></div>
+        <div class="vocab-card"><div class="vocab-term">DNA ligase</div><div class="vocab-def">An enzyme that permanently joins DNA fragments when sticky ends come together</div></div>
+        <div class="vocab-card"><div class="vocab-term">Annealing</div><div class="vocab-def">The process of forming hydrogen bonds between complementary sequences on single strands to form double-stranded DNA</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genetic engineering</div><div class="vocab-def">Using recombinant DNA technology to modify an organism's DNA to achieve desirable traits</div></div>
+        <div class="vocab-card"><div class="vocab-term">GMO</div><div class="vocab-def">Genetically modified organism; an organism that receives recombinant DNA</div></div>
+        <div class="vocab-card"><div class="vocab-term">Transgenic</div><div class="vocab-def">An organism in which the foreign DNA introduced comes from a different species</div></div>
+        <div class="vocab-card"><div class="vocab-term">Reverse genetics</div><div class="vocab-def">A technique that starts at the DNA sequence level and asks what a gene or DNA element does, reversing the classical genetic methodology</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="sjwNtQYLKeU">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/sjwNtQYLKeU/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Gene Cloning — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+        <div class="vid-card" onclick="expandVid(this)" data-yt="9bVBmxfg1mg">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/9bVBmxfg1mg/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Restriction Enzymes &amp; Cloning — Bozeman Science</div><div class="vid-dur">~10 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp2">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Cloning &amp; Genetic Engineering</span>
+      </div>
+      <p class="cp-prompt">Explain how restriction enzymes and plasmids are used in molecular cloning. Then describe the process of reproductive cloning used to create Dolly the sheep, and explain why stem cells from cellular cloning could be useful in medicine.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(2)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill2"></div></div>
+      <div class="cp-count" id="cpCount2">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz2">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 2 Quiz</div>
+
+      <div class="qq" id="q2-1">
+        <div class="q-stem">1. What are restriction enzymes naturally produced by bacteria to do?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,1,this,'b')">A. Replicate bacterial DNA</button>
+          <button class="cbtn" onclick="pick(2,1,this,'a')">B. Serve as a defense mechanism against foreign DNA</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">C. Produce recombinant proteins</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">D. Stimulate cell division</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-2">
+        <div class="q-stem">2. A plasmid used in molecular cloning is best described as:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,2,this,'a')">A. A small circular DNA molecule that replicates independently of chromosomal DNA in bacteria</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">B. A long linear strand of human DNA</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">C. A type of RNA molecule found in eukaryotes</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">D. A protein that cuts DNA at specific sites</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-3">
+        <div class="q-stem">3. The "sticky ends" produced by restriction enzymes are able to bond with complementary overhangs through:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,3,this,'b')">A. Covalent bonds</button>
+          <button class="cbtn" onclick="pick(2,3,this,'a')">B. Hydrogen bonding</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">C. Ionic bonds</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">D. Van der Waals forces</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-4">
+        <div class="q-stem">4. What was the first cloned agricultural animal?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,4,this,'b')">A. A horse born in 2001</button>
+          <button class="cbtn" onclick="pick(2,4,this,'a')">B. Dolly, a sheep born in 1996</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">C. A goat born in 1999</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">D. A bull born in 1990</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-5">
+        <div class="q-stem">5. Embryonic stem cells produced through cellular cloning are valuable because they:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,5,this,'b')">A. Can only develop into one type of cell</button>
+          <button class="cbtn" onclick="pick(2,5,this,'a')">B. Have the capacity to develop into many different kinds of cells, such as muscle or nerve cells</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">C. Are easier to extract than adult cells</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">D. Do not require a DNA donor</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-6">
+        <div class="q-stem">6. An organism that receives recombinant DNA from a different species is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,6,this,'b')">A. A clone</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">B. A vector</button>
+          <button class="cbtn" onclick="pick(2,6,this,'a')">C. Transgenic</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">D. A plasmid</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score2"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 10.1</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 10.1: Cloning and Genetic Engineering, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(1)">← Lesson 1: Tools</button>
+    <div class="lnav-info">Lesson 2 of 5</div>
+    <button class="nbtn next" onclick="goTo(3)">Lesson 3: Biotech in Medicine &amp; Agriculture →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 3 — BIOTECHNOLOGY IN MEDICINE & AGRICULTURE (REBUILD - VERBATIM)
+     OpenStax CB 10.2
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+  <div class="hero hero-med">
+    <div class="h-crumb">Biotechnology · <span>Lesson 3</span></div>
+    <div class="h-title">Biotechnology in Medicine &amp; Agriculture</div>
+    <div class="h-desc">It is easy to see how biotechnology can be used for medicinal purposes. Knowledge of the genetic makeup of our species, the genetic basis of heritable diseases, and the invention of technology to manipulate and fix mutant genes provides methods to treat diseases.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 10.2</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe uses of biotechnology in medicine</li>
+        <li>Describe uses of biotechnology in agriculture</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">10.2 Biotechnology in Medicine and Agriculture</div>
+      <div class="sh2">Medical and Agricultural Applications</div>
+
+      <p class="prose">It is easy to see how biotechnology can be used for medicinal purposes. Knowledge of the genetic makeup of our species, the genetic basis of heritable diseases, and the invention of technology to manipulate and fix mutant genes provides methods to treat diseases. Biotechnology in agriculture can enhance resistance to disease, pests, and environmental stress to improve both crop yield and quality.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Genetic Diagnosis and Gene Therapy</div>
+      <div class="sh2">Testing and Treating Genetic Disease</div>
+
+      <p class="prose">The process of testing for suspected genetic defects before administering treatment is called genetic diagnosis by genetic testing. In some cases in which a genetic disease is present in an individual's family, family members may be advised to undergo genetic testing. For example, mutations in the BRCA genes may increase the likelihood of developing breast, ovarian, and some other cancers. A person with breast cancer can be screened for these mutations. If one of the high-risk mutations is found, relatives may also wish to be screened for that particular mutation, or simply be more vigilant for the occurrence of cancers. Genetic testing is also offered for fetuses (or embryos with in vitro fertilization) to determine the presence or absence of disease-causing genes in families with specific debilitating diseases.</p>
+
+      <p class="prose">Gene therapy is a genetic engineering technique that may one day be used to cure certain genetic diseases. In its simplest form, it involves the introduction of a non-mutated gene at a random location in the genome to cure a disease by replacing a protein that may be absent in these individuals because of a genetic mutation. The non-mutated gene is usually introduced into diseased cells as part of a vector transmitted by a virus, such as an adenovirus, that can infect the host cell and deliver the foreign DNA into the genome of the targeted cell (Figure 10.8). To date, gene therapies have been primarily experimental procedures in humans. A few of these experimental treatments have been successful, but the methods may be important in the future as the factors limiting its success are resolved.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.8 — Gene Therapy Using an Adenovirus Vector</div>
+        <img src="images/ch10/fig10-8-gene-therapy.png" alt="This diagram shows the steps involved in curing disease with gene therapy using an adenovirus vector." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">This diagram shows the steps involved in curing disease with gene therapy using an adenovirus vector. (credit: modification of work by NIH)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Production of Vaccines, Antibiotics, and Hormones</div>
+      <div class="sh2">Recombinant DNA Products</div>
+
+      <p class="prose">Traditional vaccination strategies use weakened or inactive forms of microorganisms or viruses to stimulate the immune system. Modern techniques use specific genes of microorganisms cloned into vectors and mass-produced in bacteria to make large quantities of specific substances to stimulate the immune system. The substance is then used as a vaccine. In some cases, such as the H1N1 flu vaccine, genes cloned from the virus have been used to combat the constantly changing strains of this virus.</p>
+
+      <p class="prose">Antibiotics kill bacteria and are naturally produced by microorganisms such as fungi; penicillin is perhaps the most well-known example. Antibiotics are produced on a large scale by cultivating and manipulating fungal cells. The fungal cells have typically been genetically modified to improve the yields of the antibiotic compound.</p>
+
+      <p class="prose">Recombinant DNA technology was used to produce large-scale quantities of the human hormone insulin in E. coli as early as 1978. Previously, it was only possible to treat diabetes with pig insulin, which caused allergic reactions in many humans because of differences in the insulin molecule. In addition, human growth hormone (HGH) is used to treat growth disorders in children. The HGH gene was cloned from a cDNA (complementary DNA) library and inserted into E. coli cells by cloning it into a bacterial vector.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Transgenic Animals</div>
+      <div class="sh2">Animals Modified to Express Recombinant DNA</div>
+
+      <p class="prose">Although several recombinant proteins used in medicine are successfully produced in bacteria, some proteins need a eukaryotic animal host for proper processing. For this reason, genes have been cloned and expressed in animals such as sheep, goats, chickens, and mice. Animals that have been modified to express recombinant DNA are called transgenic animals (Figure 10.9).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.9 — Transgenic Mice</div>
+        <img src="images/ch10/fig10-9-transgenic-mice.png" alt="It can be seen that two of these mice are transgenic because they have a gene that causes them to fluoresce under a UV light. The non-transgenic mouse does not have the gene that causes fluorescence." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">It can be seen that two of these mice are transgenic because they have a gene that causes them to fluoresce under a UV light. The non-transgenic mouse does not have the gene that causes fluorescence. (credit: Ingrid Moen et al.)</div>
+      </div>
+
+      <p class="prose">Several human proteins are expressed in the milk of transgenic sheep and goats. In one commercial example, the FDA has approved a blood anticoagulant protein that is produced in the milk of transgenic goats for use in humans. Mice have been used extensively for expressing and studying the effects of recombinant genes and mutations.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Transgenic Plants</div>
+      <div class="sh2">Genetically Modified Crops</div>
+
+      <p class="prose">Manipulating the DNA of plants (creating genetically modified organisms, or GMOs) has helped to create desirable traits such as disease resistance, herbicide, and pest resistance, better nutritional value, and better shelf life (Figure 10.10). Plants are the most important source of food for the human population. Farmers developed ways to select for plant varieties with desirable traits long before modern-day biotechnology practices were established.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.10 — GMO Corn</div>
+        <img src="images/ch10/fig10-10-gmo-corn.png" alt="Corn, a major agricultural crop used to create products for a variety of industries, is often modified through plant biotechnology." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Corn, a major agricultural crop used to create products for a variety of industries, is often modified through plant biotechnology. (credit: Keith Weller, USDA)</div>
+      </div>
+
+      <p class="prose">Transgenic plants have received DNA from other species. Because they contain unique combinations of genes and are not restricted to the laboratory, transgenic plants and other GMOs are closely monitored by government agencies to ensure that they are fit for human consumption and do not endanger other plant and animal life. Because foreign genes can spread to other species in the environment, particularly in the pollen and seeds of plants, extensive testing is required to ensure ecological stability. Staples like corn, potatoes, and tomatoes were the first crop plants to be genetically engineered.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Transformation of Plants Using <em>Agrobacterium tumefaciens</em></div>
+      <div class="sh2">Natural DNA Transfer in Plants</div>
+
+      <p class="prose">In plants, tumors caused by the bacterium Agrobacterium tumefaciens occur by transfer of DNA from the bacterium to the plant. The artificial introduction of DNA into plant cells is more challenging than in animal cells because of the thick plant cell wall. Researchers used the natural transfer of DNA from Agrobacterium to a plant host to introduce DNA fragments of their choice into plant hosts. In nature, the disease-causing A. tumefaciens have a set of plasmids that contain genes that integrate into the infected plant cell's genome. Researchers manipulate the plasmids to carry the desired DNA fragment and insert it into the plant genome.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Organic Insecticide <em>Bacillus thuringiensis</em></div>
+      <div class="sh2">Bt Toxin and Insect Resistance</div>
+
+      <p class="prose">Bacillus thuringiensis (Bt) is a bacterium that produces protein crystals that are toxic to many insect species that feed on plants. Insects that have eaten Bt toxin stop feeding on the plants within a few hours. After the toxin is activated in the intestines of the insects, death occurs within a couple of days. The crystal toxin genes have been cloned from the bacterium and introduced into plants, therefore allowing plants to produce their own crystal Bt toxin that acts against insects. Bt toxin is safe for the environment and non-toxic to mammals (including humans). As a result, it has been approved for use by organic farmers as a natural insecticide. There is some concern, however, that insects may evolve resistance to the Bt toxin in the same way that bacteria evolve resistance to antibiotics.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">FlavrSavr Tomato</div>
+      <div class="sh2">The First GM Crop on the Market</div>
+
+      <p class="prose">The first GM crop to be introduced into the market was the FlavrSavr Tomato produced in 1994. Molecular genetic technology was used to slow down the process of softening and rotting caused by fungal infections, which led to increased shelf life of the GM tomatoes. Additional genetic modification improved the flavor of this tomato. The FlavrSavr tomato did not successfully stay in the market because of problems maintaining and shipping the crop.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Genetic testing</div><div class="vocab-def">Identifying gene variants in an individual that may lead to a genetic disease in that individual</div></div>
+        <div class="vocab-card"><div class="vocab-term">Gene therapy</div><div class="vocab-def">The technique used to cure heritable diseases by replacing mutant genes with good genes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Recombinant protein</div><div class="vocab-def">A protein that is expressed from recombinant DNA molecules</div></div>
+        <div class="vocab-card"><div class="vocab-term">Transgenic</div><div class="vocab-def">Describing an organism that receives DNA from a different species</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genetically modified organism (GMO)</div><div class="vocab-def">An organism whose genome has been artificially changed</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genetic engineering</div><div class="vocab-def">Alteration of the genetic makeup of an organism using the molecular methods of biotechnology</div></div>
+        <div class="vocab-card"><div class="vocab-term"><em>Agrobacterium tumefaciens</em></div><div class="vocab-def">A bacterium used to transfer DNA fragments into plant hosts by manipulating its natural plasmids</div></div>
+        <div class="vocab-card"><div class="vocab-term"><em>Bacillus thuringiensis</em> (Bt)</div><div class="vocab-def">A bacterium that produces protein crystals toxic to many insect species; its genes have been cloned into plants for insect resistance</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="tzW5OTuKLgs">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/tzW5OTuKLgs/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Biotechnology: GMOs, Genetic Engineering, and Gene Therapy — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp3">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Biotechnology in Medicine &amp; Agriculture</span>
+      </div>
+      <p class="cp-prompt">Explain how gene therapy works using a viral vector. Then describe at least two examples of how biotechnology has been applied to agriculture, including the role of Bt toxin and transgenic plants.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(3)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill3"></div></div>
+      <div class="cp-count" id="cpCount3">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz3">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 3 Quiz</div>
+
+      <div class="qq" id="q3-1">
+        <div class="q-stem">1. The process of testing for suspected genetic defects before administering treatment is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,1,this,'b')">A. Gene therapy</button>
+          <button class="cbtn" onclick="pick(3,1,this,'a')">B. Genetic diagnosis by genetic testing</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">C. Recombinant DNA technology</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">D. Reverse genetics</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-2">
+        <div class="q-stem">2. In gene therapy, the non-mutated gene is usually introduced into diseased cells as part of a vector transmitted by:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,2,this,'b')">A. A plasmid</button>
+          <button class="cbtn" onclick="pick(3,2,this,'a')">B. A virus, such as an adenovirus</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">C. A restriction enzyme</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">D. A bacterial cell</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-3">
+        <div class="q-stem">3. Recombinant DNA technology was used to produce large-scale quantities of human insulin in E. coli as early as:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,3,this,'b')">A. 1953</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">B. 1970</button>
+          <button class="cbtn" onclick="pick(3,3,this,'a')">C. 1978</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">D. 1994</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-4">
+        <div class="q-stem">4. What is the role of <em>Agrobacterium tumefaciens</em> in the production of transgenic plants?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,4,this,'b')">A. Genes from A. tumefaciens are inserted into plant DNA to give the plant different traits.</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">B. Transgenic plants have been given resistance to the pest A. tumefaciens.</button>
+          <button class="cbtn" onclick="pick(3,4,this,'a')">C. A. tumefaciens is used as a vector to move genes into plant cells.</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">D. Plant genes are incorporated into the genome of Agrobacterium tumefaciens.</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-5">
+        <div class="q-stem">5. <em>Bacillus thuringiensis</em> (Bt) toxin is safe for the environment and non-toxic to mammals. Its crystal toxin genes have been cloned into plants to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,5,this,'b')">A. Improve nutritional value</button>
+          <button class="cbtn" onclick="pick(3,5,this,'a')">B. Allow plants to produce their own insecticide</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">C. Increase shelf life</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">D. Enhance herbicide resistance</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-6">
+        <div class="q-stem">6. The first GM crop to be introduced into the market was the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,6,this,'b')">A. Bt corn</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">B. Roundup Ready soybean</button>
+          <button class="cbtn" onclick="pick(3,6,this,'a')">C. FlavrSavr Tomato</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">D. Golden Rice</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score3"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 10.2</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 10.2: Biotechnology in Medicine and Agriculture, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(2)">← Lesson 2: Cloning &amp; Genetic Engineering</button>
+    <div class="lnav-info">Lesson 3 of 6</div>
+    <button class="nbtn next" onclick="goTo(4)">Lesson 4: Genomics &amp; Proteomics →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 4 — GENOMICS & PROTEOMICS (REBUILD - VERBATIM)
+     OpenStax CB 10.3
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+  <div class="hero hero-gen">
+    <div class="h-crumb">Biotechnology · <span>Lesson 4</span></div>
+    <div class="h-title">Genomics &amp; Proteomics</div>
+    <div class="h-desc">The study of nucleic acids began with the discovery of DNA, progressed to the study of genes and small fragments, and has now exploded to the field of genomics.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 10.3</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Define genomics and proteomics</li>
+        <li>Define whole genome sequencing</li>
+        <li>Explain different applications of genomics and proteomics</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">10.3 Genomics and Proteomics</div>
+      <div class="sh2">From Genes to Genomes</div>
+
+      <p class="prose">The study of nucleic acids began with the discovery of DNA, progressed to the study of genes and small fragments, and has now exploded to the field of genomics. Genomics is the study of entire genomes, including the complete set of genes, their nucleotide sequence and organization, and their interactions within a species and with other species. The advances in genomics have been made possible by DNA sequencing technology. Just as information technology has led to Google Maps that enable us to get detailed information about locations around the globe, genomic information is used to create similar maps of the DNA of different organisms.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Mapping Genomes</div>
+      <div class="sh2">Genetic Maps and Physical Maps</div>
+
+      <p class="prose">Genome mapping is the process of finding the location of genes on each chromosome. The maps that are created are comparable to the maps that we use to navigate streets. A genetic map is an illustration that lists genes and their location on a chromosome. Genetic maps provide the big picture (similar to a map of interstate highways) and use genetic markers (similar to landmarks). A genetic marker is a gene or sequence on a chromosome that shows genetic linkage with a trait of interest. The genetic marker tends to be inherited with the gene of interest, and one measure of distance between them is the recombination frequency during meiosis. Early geneticists called this linkage analysis.</p>
+
+      <p class="prose">Physical maps get into the intimate details of smaller regions of the chromosomes (similar to a detailed road map) (Figure 10.11). A physical map is a representation of the physical distance, in nucleotides, between genes or genetic markers. Both genetic linkage maps and physical maps are required to build a complete picture of the genome. Having a complete map of the genome makes it easier for researchers to study individual genes. Human genome maps help researchers in their efforts to identify human disease-causing genes related to illnesses such as cancer, heart disease, and cystic fibrosis, to name a few. In addition, genome mapping can be used to help identify organisms with beneficial traits, such as microbes with the ability to clean up pollutants or even prevent pollution. Research involving plant genome mapping may lead to methods that produce higher crop yields or to the development of plants that adapt better to climate change.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.11 — Human X Chromosome Physical Map</div>
+        <img src="images/ch10/fig10-11-x-chromosome-map.png" alt="This is a physical map of the human X chromosome." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">This is a physical map of the human X chromosome. (credit: modification of work by NCBI, NIH)</div>
+      </div>
+
+      <p class="prose">Genetic maps provide the outline, and physical maps provide the details. It is easy to understand why both types of genome-mapping techniques are important to show the big picture. Information obtained from each technique is used in combination to study the genome. Genomic mapping is used with different model organisms that are used for research. Genome mapping is still an ongoing process, and as more advanced techniques are developed, more advances are expected. Genome mapping is similar to completing a complicated puzzle using every piece of available data. Mapping information generated in laboratories all over the world is entered into central databases, such as the National Center for Biotechnology Information (NCBI). Efforts are made to make the information more easily accessible to researchers and the general public. Just as we use global positioning systems instead of paper maps to navigate through roadways, NCBI allows us to use a genome viewer tool to simplify the data mining process.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Whole Genome Sequencing</div>
+      <div class="sh2">Sequencing Entire Genomes</div>
+
+      <p class="prose">Although there have been significant advances in the medical sciences in recent years, doctors are still confounded by many diseases and researchers are using whole genome sequencing to get to the bottom of the problem. Whole genome sequencing is a process that determines the DNA sequence of an entire genome. Whole genome sequencing is a brute-force approach to problem solving when there is a genetic basis at the core of a disease. Several laboratories now provide services to sequence, analyze, and interpret entire genomes.</p>
+
+      <p class="prose">In 2010, whole genome sequencing was used to save a young boy whose intestines had multiple mysterious abscesses. The child had several colon operations with no relief. Finally, a whole genome sequence revealed a defect in a pathway that controls apoptosis (programmed cell death). A bone marrow transplant was used to overcome this genetic disorder, leading to a cure for the boy. He was the first person to be successfully diagnosed using whole genome sequencing.</p>
+
+      <p class="prose">The first genomes to be sequenced, such as those belonging to viruses, bacteria, and yeast, were smaller in terms of the number of nucleotides than the genomes of multicellular organisms. The genomes of other model organisms, such as the mouse (Mus musculus), the fruit fly (Drosophila melanogaster), and the nematode (Caenorhabditis elegans) are now known. A great deal of basic research is performed in model organisms because the information can be applied to other organisms. A model organism is a species that is studied as a model to understand the biological processes in other species that can be represented by the model organism. For example, fruit flies are able to metabolize alcohol like humans, so the genes affecting sensitivity to alcohol have been studied in fruit flies in an effort to understand the variation in sensitivity to alcohol in humans. Having entire genomes sequenced helps with the research efforts in these model organisms (Figure 10.12).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.12 — Model Organisms</div>
+        <img src="images/ch10/fig10-12-model-organisms.png" alt="Much basic research is done with model organisms, such as the mouse, Mus musculus; the fruit fly, Drosophila melanogaster; the nematode Caenorhabditis elegans; the yeast Saccharomyces cerevisiae; and the common weed, Arabidopsis thaliana." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Much basic research is done with model organisms, such as the mouse, Mus musculus; the fruit fly, Drosophila melanogaster; the nematode Caenorhabditis elegans; the yeast Saccharomyces cerevisiae; and the common weed, Arabidopsis thaliana. (credit "mouse": modification of work by Florean Fortescue; credit "nematodes": modification of work by "snickclunk"/Flickr; credit "common weed": modification of work by Peggy Greb, USDA; scale-bar data from Matt Russell)</div>
+      </div>
+
+      <p class="prose">The first human genome sequence was published in 2003. The number of whole genomes that have been sequenced steadily increases and now includes hundreds of species and thousands of individual human genomes.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Applying Genomics</div>
+      <div class="sh2">Genomics in Practice</div>
+
+      <p class="prose">The introduction of DNA sequencing and whole genome sequencing projects, particularly the Human Genome Project, has expanded the applicability of DNA sequence information. Genomics is now being used in a wide variety of fields, such as metagenomics, pharmacogenomics, and mitochondrial genomics. The most commonly known application of genomics is to understand and find cures for diseases.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Predicting Disease Risk at the Individual Level</div>
+      <div class="sh2">Personalized Medicine Through Genomics</div>
+
+      <p class="prose">Predicting the risk of disease involves screening and identifying currently healthy individuals by genome analysis at the individual level. Intervention with lifestyle changes and drugs can be recommended before disease onset. However, this approach is most applicable when the problem arises from a single gene mutation. Such defects only account for about 5 percent of diseases found in developed countries. Most of the common diseases, such as heart disease, are multifactorial or polygenic, which refers to a phenotypic characteristic that is determined by two or more genes, and also environmental factors such as diet. In April 2010, scientists at Stanford University published the genome analysis of a healthy individual (Stephen Quake, a scientist at Stanford University, who had his genome sequenced); the analysis predicted his propensity to acquire various diseases. A risk assessment was done to analyze Quake's percentage of risk for 55 different medical conditions. A rare genetic mutation was found that showed him to be at risk for sudden heart attack. He was also predicted to have a 23 percent risk of developing prostate cancer and a 1.4 percent risk of developing Alzheimer's disease. The scientists used databases and several publications to analyze the genomic data. Even though genomic sequencing is becoming more affordable and analytical tools are becoming more reliable, ethical issues surrounding genomic analysis at a population level remain to be addressed. For example, could such data be legitimately used to charge more or less for insurance or to affect credit ratings?</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Gene Editing</div>
+      <div class="sh2">CRISPR Technology</div>
+
+      <p class="prose">For thousands of years, humans have engaged in some level of control over genes and heredity regarding the plants and animals we rely on. The technology now exists to exert that control more directly by precisely altering the DNA of organisms. The technique is usually referred to as CRISPR, for the portions of DNA it targets: "Clustered Regularly Interspaced Short Palindromic Repeats." In essence, DNA contains repetitive sequences with "spacers" between them. CRISPR-associated nucleases (known as "Cas") are enzymes that can identify, attach to, and cut the strand at precise locations. In 2012, Jennifer Doudna and Emmanuelle Charpentier developed a method to combine the Cas nuclease with a synthetically produced "guide RNA" that leads the nuclease to selected locations on the DNA strand. The discovery revolutionized gene editing. Researchers around the world have used CRISPR to manipulate the actual DNA of plants, animals, laboratory cell lines, and (in trials) human patients. Doudna and Charpentier were awarded the Nobel Prize for their work.</p>
+
+      <p class="prose">Gene editing is so promising because it can be used experimentally to understand disease or organismal limitations, then be applied to overcome those issues. For example, in a human trial, cancerous cells were removed from a person, edited to remove their cancerous properties at the DNA level, and reintroduced into the patient so that those now edited cells could multiply and replace the cancerous ones. Using the person's own cells increases the likelihood of acceptance and success.</p>
+
+      <p class="prose">Like other applications of genomics, the prospect of directly editing genes brings up a number of ethical issues. Both Doudna and Chapentier, as well as many other genetic engineers, support only certain CRISPR applications. And many governments and other entities place strict guidelines on the uses of the powerful technology.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Genome-wide Association Studies</div>
+      <div class="sh2">GWAS and SNPs</div>
+
+      <p class="prose">Since 2005, it has been possible to conduct a type of study called a genome-wide association study, or GWAS. A GWAS is a method that identifies differences between individuals in single nucleotide polymorphisms (SNPs) that may be involved in causing diseases. The method is particularly suited to diseases that may be affected by one or many genetic changes throughout the genome. It is very difficult to identify the genes involved in such a disease using family history information. The GWAS method relies on a genetic database that has been in development since 2002 called the International HapMap Project. The HapMap Project sequenced the genomes of several hundred individuals from around the world and identified groups of SNPs. The groups include SNPs that are located near to each other on chromosomes so they tend to stay together through recombination. The fact that the group stays together means that identifying one marker SNP is all that is needed to identify all the SNPs in the group. There are several million SNPs identified, but identifying them in other individuals who have not had their complete genome sequenced is much easier because only the marker SNPs need to be identified.</p>
+
+      <p class="prose">In a common design for a GWAS, two groups of individuals are chosen; one group has the disease, and the other group does not. The individuals in each group are matched in other characteristics to reduce the effect of confounding variables causing differences between the two groups. For example, the genotypes may differ because the two groups are mostly taken from different parts of the world. Once the individuals are chosen, and typically their numbers are a thousand or more for the study to work, samples of their DNA are obtained. The DNA is analyzed using automated systems to identify large differences in the percentage of particular SNPs between the two groups. Often the study examines a million or more SNPs in the DNA. The results of GWAS can be used in two ways: the genetic differences may be used as markers for susceptibility to the disease in undiagnosed individuals, and the particular genes identified can be targets for research into the molecular pathway of the disease and potential therapies. An offshoot of the discovery of gene associations with disease has been the formation of companies that provide so-called "personal genomics" that will identify risk levels for various diseases based on an individual's SNP complement. The science behind these services is controversial.</p>
+
+      <p class="prose">Because GWAS looks for associations between genes and disease, these studies provide data for other research into causes, rather than answering specific questions themselves. An association between a gene difference and a disease does not necessarily mean there is a cause-and-effect relationship. However, some studies have provided useful information about the genetic causes of diseases. For example, three different studies in 2005 identified a gene for a protein involved in regulating inflammation in the body that is associated with a disease-causing blindness called age-related macular degeneration. This opened up new possibilities for research into the cause of this disease. A large number of genes have been identified to be associated with Crohn's disease using GWAS, and some of these have suggested new hypothetical mechanisms for the cause of the disease.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Pharmacogenomics</div>
+      <div class="sh2">Drug Interactions and the Genome</div>
+
+      <p class="prose">Pharmacogenomics involves evaluating the effectiveness and safety of drugs on the basis of information from an individual's genomic sequence. Personal genome sequence information can be used to prescribe medications that will be most effective and least toxic on the basis of the individual patient's genotype. Studying changes in gene expression could provide information about the gene transcription profile in the presence of the drug, which can be used as an early indicator of the potential for toxic effects. For example, genes involved in cellular growth and controlled cell death, when disturbed, could lead to the growth of cancerous cells. Genome-wide studies can also help to find new genes involved in drug toxicity. The gene signatures may not be completely accurate, but can be tested further before pathologic symptoms arise.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Metagenomics</div>
+      <div class="sh2">Studying Microbial Communities</div>
+
+      <p class="prose">Traditionally, microbiology has been taught with the view that microorganisms are best studied under pure culture conditions, which involves isolating a single type of cell and culturing it in the laboratory. Because microorganisms can go through several generations in a matter of hours, their gene expression profiles adapt to the new laboratory environment very quickly. On the other hand, many species resist being cultured in isolation. Most microorganisms do not live as isolated entities, but in microbial communities known as biofilms. For all of these reasons, pure culture is not always the best way to study microorganisms. Metagenomics is the study of the collective genomes of multiple species that grow and interact in an environmental niche. Metagenomics can be used to identify new species more rapidly and to analyze the effect of pollutants on the environment (Figure 10.13). Metagenomics techniques can now also be applied to communities of higher eukaryotes, such as fish.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.13 — Metagenomics</div>
+        <img src="images/ch10/fig10-13-metagenomics.png" alt="Metagenomics involves isolating DNA from multiple species within an environmental niche. The DNA is cut up and sequenced, allowing entire genome sequences of multiple species to be reconstructed from the sequences of overlapping pieces." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Metagenomics involves isolating DNA from multiple species within an environmental niche. The DNA is cut up and sequenced, allowing entire genome sequences of multiple species to be reconstructed from the sequences of overlapping pieces.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Creation of New Biofuels</div>
+      <div class="sh2">Genomics and Renewable Energy</div>
+
+      <p class="prose">Knowledge of the genomics of microorganisms is being used to find better ways to harness biofuels from algae and cyanobacteria. The primary sources of fuel today are coal, oil, wood, and other plant products such as ethanol. Although plants are renewable resources, there is still a need to find more alternative renewable sources of energy to meet our population's energy demands. The microbial world is one of the largest resources for genes that encode new enzymes and produce new organic compounds, and it remains largely untapped. This vast genetic resource holds the potential to provide new sources of biofuels (Figure 10.14).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.14 — Biofuels</div>
+        <img src="images/ch10/fig10-14-biofuels.png" alt="Renewable fuels were tested in Navy ships and aircraft at the first Naval Energy Forum." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Renewable fuels were tested in Navy ships and aircraft at the first Naval Energy Forum. (credit: modification of work by John F. Williams, US Navy)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Mitochondrial Genomics</div>
+      <div class="sh2">Tracing Genealogy Through Mitochondrial DNA</div>
+
+      <p class="prose">Mitochondria are intracellular organelles that contain their own DNA. Mitochondrial DNA mutates at a rapid rate and is often used to study evolutionary relationships. Another feature that makes studying the mitochondrial genome interesting is that in most multicellular organisms, the mitochondrial DNA is passed on from the mother during the process of fertilization. For this reason, mitochondrial genomics is often used to trace genealogy.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Genomics in Forensic Analysis</div>
+      <div class="sh2">Solving Crimes with Genomics</div>
+
+      <p class="prose">Information and clues obtained from DNA samples found at crime scenes have been used as evidence in court cases, and genetic markers have been used in forensic analysis. Genomic analysis has also become useful in this field. In 2001, the first use of genomics in forensics was published. It was a collaborative effort between academic research institutions and the FBI to solve the mysterious cases of anthrax (Figure 10.15) that was transported by the US Postal Service. Anthrax bacteria were made into an infectious powder and mailed to news media and two U.S. Senators. The powder infected the administrative staff and postal workers who opened or handled the letters. Five people died, and 17 were sickened from the bacteria. Using microbial genomics, researchers determined that a specific strain of anthrax was used in all the mailings; eventually, the source was traced to a scientist at a national biodefense laboratory in Maryland.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.15 — <em>Bacillus anthracis</em></div>
+        <img src="images/ch10/fig10-15-proteomics.png" alt="Bacillus anthracis is the organism that causes anthrax." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Bacillus anthracis is the organism that causes anthrax. (credit: modification of work by CDC; scale-bar data from Matt Russell)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Genomics in Agriculture</div>
+      <div class="sh2">Improving Crop Quality and Quantity</div>
+
+      <p class="prose">Genomics can reduce the trials and failures involved in scientific research to a certain extent, which could improve the quality and quantity of crop yields in agriculture (Figure 10.16). Linking traits to genes or gene signatures helps to improve crop breeding to generate hybrids with the most desirable qualities. Scientists use genomic data to identify desirable traits, and then transfer those traits to a different organism to create a new genetically modified organism, as described in the previous module. Scientists are discovering how genomics can improve the quality and quantity of agricultural production. For example, scientists could use desirable traits to create a useful product or enhance an existing product, such as making a drought-sensitive crop more tolerant of the dry season.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.16 — Transgenic Agricultural Plants</div>
+        <img src="images/ch10/fig10-16-pharmacogenomics.png" alt="Transgenic agricultural plants can be made to resist disease. These transgenic plums are resistant to the plum pox virus." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Transgenic agricultural plants can be made to resist disease. These transgenic plums are resistant to the plum pox virus. (credit: Scott Bauer, USDA ARS)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Proteomics</div>
+      <div class="sh2">Studying the Complete Set of Proteins</div>
+
+      <p class="prose">Proteins are the final products of genes that perform the function encoded by the gene. Proteins are composed of amino acids and play important roles in the cell. All enzymes (except ribozymes) are proteins and act as catalysts that affect the rate of reactions. Proteins are also regulatory molecules, and some are hormones. Transport proteins, such as hemoglobin, help transport oxygen to various organs. Antibodies that defend against foreign particles are also proteins. In the diseased state, protein function can be impaired because of changes at the genetic level or because of direct impact on a specific protein.</p>
+
+      <p class="prose">A proteome is the entire set of proteins produced by a cell type. Proteomes can be studied using the knowledge of genomes because genes code for mRNAs, and the mRNAs encode proteins. The study of the function of proteomes is called proteomics. Proteomics complements genomics and is useful when scientists want to test their hypotheses that were based on genes. Even though all cells in a multicellular organism have the same set of genes, the set of proteins produced in different tissues is different and dependent on gene expression. Thus, the genome is constant, but the proteome varies and is dynamic within an organism. In addition, RNAs can be alternatively spliced (cut and pasted to create novel combinations and novel proteins), and many proteins are modified after translation. Although the genome provides a blueprint, the final architecture depends on several factors that can change the progression of events that generate the proteome.</p>
+
+      <p class="prose">Genomes and proteomes of patients suffering from specific diseases are being studied to understand the genetic basis of the disease. The most prominent disease being studied with proteomic approaches is cancer (Figure 10.17). Proteomic approaches are being used to improve the screening and early detection of cancer; this is achieved by identifying proteins whose expression is affected by the disease process. An individual protein is called a biomarker, whereas a set of proteins with altered expression levels is called a protein signature. For a biomarker or protein signature to be useful as a candidate for early screening and detection of a cancer, it must be secreted in body fluids such as sweat, blood, or urine, so that large-scale screenings can be performed in a noninvasive fashion. The current problem with using biomarkers for the early detection of cancer is the high rate of false-negative results. A false-negative result is a negative test result that should have been positive. In other words, many cases of cancer go undetected, which makes biomarkers unreliable. Some examples of protein biomarkers used in cancer detection are CA-125 for ovarian cancer and PSA for prostate cancer. Protein signatures may be more reliable than biomarkers to detect cancer cells. Proteomics is also being used to develop individualized treatment plans, which involves the prediction of whether or not an individual will respond to specific drugs and the side effects that the individual may have. Proteomics is also being used to predict the possibility of disease recurrence.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 10.17 — Proteomic Pattern Analysis</div>
+        <img src="images/ch10/fig10-17-mitochondrial-phylogeny.png" alt="This machine is preparing to do a proteomic pattern analysis to identify specific cancers so that an accurate cancer prognosis can be made." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">This machine is preparing to do a proteomic pattern analysis to identify specific cancers so that an accurate cancer prognosis can be made. (credit: Dorie Hightower, NCI, NIH)</div>
+      </div>
+
+      <p class="prose">The National Cancer Institute has developed programs to improve the detection and treatment of cancer. The Clinical Proteomic Technologies for Cancer and the Early Detection Research Network are efforts to identify protein signatures specific to different types of cancers. The Biomedical Proteomics Program is designed to identify protein signatures and design effective therapies for cancer patients.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Genomics</div><div class="vocab-def">The study of entire genomes, including the complete set of genes, their nucleotide sequence and organization, and their interactions within a species and with other species</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genetic map</div><div class="vocab-def">An outline of genes and their location on a chromosome that is based on recombination frequencies between markers</div></div>
+        <div class="vocab-card"><div class="vocab-term">Physical map</div><div class="vocab-def">A representation of the physical distance, in nucleotides, between genes or genetic markers</div></div>
+        <div class="vocab-card"><div class="vocab-term">Whole genome sequencing</div><div class="vocab-def">A process that determines the nucleotide sequence of an entire genome</div></div>
+        <div class="vocab-card"><div class="vocab-term">Model organism</div><div class="vocab-def">A species that is studied and used as a model to understand the biological processes in other species represented by the model organism</div></div>
+        <div class="vocab-card"><div class="vocab-term">Pharmacogenomics</div><div class="vocab-def">The study of drug interactions with the genome or proteome; also called toxicogenomics</div></div>
+        <div class="vocab-card"><div class="vocab-term">Metagenomics</div><div class="vocab-def">The study of the collective genomes of multiple species that grow and interact in an environmental niche</div></div>
+        <div class="vocab-card"><div class="vocab-term">Proteomics</div><div class="vocab-def">Study of the function of proteomes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Biomarker</div><div class="vocab-def">An individual protein that is uniquely produced in a diseased state</div></div>
+        <div class="vocab-card"><div class="vocab-term">Protein signature</div><div class="vocab-def">A set of over- or under-expressed proteins characteristic of cells in a particular diseased tissue</div></div>
+        <div class="vocab-card"><div class="vocab-term">CRISPR</div><div class="vocab-def">Clustered Regularly Interspaced Short Palindromic Repeats; a gene editing technique using Cas nucleases and guide RNA to precisely alter DNA</div></div>
+        <div class="vocab-card"><div class="vocab-term">GWAS</div><div class="vocab-def">Genome-wide association study; a method that identifies differences between individuals in single nucleotide polymorphisms (SNPs) that may be involved in causing diseases</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="AhsIF-cmoQQ">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/AhsIF-cmoQQ/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">The Human Genome Project — Amoeba Sisters</div><div class="vid-dur">~7 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp4">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Genomics &amp; Proteomics</span>
+      </div>
+      <p class="cp-prompt">Explain the difference between a genetic map and a physical map. Then describe at least two applications of genomics (such as pharmacogenomics, metagenomics, or forensic analysis) and explain why proteomics complements genomics.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(4)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill4"></div></div>
+      <div class="cp-count" id="cpCount4">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz4">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 4 Quiz</div>
+
+      <div class="qq" id="q4-1">
+        <div class="q-stem">1. What is the most challenging issue facing genome sequencing?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,1,this,'b')">A. The inability to develop fast and accurate sequencing techniques</button>
+          <button class="cbtn" onclick="pick(4,1,this,'a')">B. The ethics of using information from genomes at the individual level</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">C. The availability and stability of DNA</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-2">
+        <div class="q-stem">2. Genomics can be used in agriculture to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,2,this,'b')">A. Generate new hybrid strains</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">B. Improve disease resistance</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">C. Improve yield</button>
+          <button class="cbtn" onclick="pick(4,2,this,'a')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-3">
+        <div class="q-stem">3. What kind of diseases are studied using genome-wide association studies?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,3,this,'b')">A. Viral diseases</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">B. Single-gene inherited diseases</button>
+          <button class="cbtn" onclick="pick(4,3,this,'a')">C. Diseases caused by multiple genes</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">D. Diseases caused by environmental factors</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-4">
+        <div class="q-stem">4. The study of the collective genomes of multiple species that grow and interact in an environmental niche is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,4,this,'b')">A. Pharmacogenomics</button>
+          <button class="cbtn" onclick="pick(4,4,this,'a')">B. Metagenomics</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">C. Proteomics</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">D. Whole genome sequencing</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-5">
+        <div class="q-stem">5. An individual protein that is uniquely produced in a diseased state is called a:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,5,this,'a')">A. Biomarker</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">B. Protein signature</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">C. Genetic marker</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">D. SNP</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-6">
+        <div class="q-stem">6. In most multicellular organisms, mitochondrial DNA is passed on from:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,6,this,'b')">A. The father during fertilization</button>
+          <button class="cbtn" onclick="pick(4,6,this,'a')">B. The mother during fertilization</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">C. Both parents equally</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">D. Neither parent; it is synthesized de novo</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score4"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 10.3</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 10.3: Genomics and Proteomics, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(3)">← Lesson 3: Biotechnology in Medicine &amp; Agriculture</button>
+    <div class="lnav-info">Lesson 4 of 6</div>
+    <button class="nbtn next" onclick="goTo(5)">Lesson 5: Practice Test →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 5 — PRACTICE TEST (20 QUESTIONS)
+     Covering all of Chapter 10
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+  <div class="hero hero-test">
+    <div class="h-crumb">Biotechnology · <span>Practice Test</span></div>
+    <div class="h-title">Unit Review &amp; Practice Test</div>
+    <div class="h-desc">Test your knowledge of biotechnology with this 20-question comprehensive assessment covering all topics from Chapter 10.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 10 Review</div>
+      <div class="h-chip">⏱ ~30 min</div>
+      <div class="h-chip">🎯 20 Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">📋 What This Test Covers</div>
+      <ul class="obj-list">
+        <li>Cloning and genetic engineering (DNA extraction, gel electrophoresis, PCR, restriction enzymes, molecular cloning, reproductive cloning) — CB 10.1</li>
+        <li>Biotechnology in medicine and agriculture (gene therapy, transgenic organisms, GMOs, Bt toxin) — CB 10.2</li>
+        <li>Genomics and proteomics (Human Genome Project, model organisms, pharmacogenomics, metagenomics, proteomics, CRISPR) — CB 10.3</li>
+      </ul>
+    </div>
+
+    <div class="quiz-wrap" id="quiz5">
+      <div class="quiz-header"><span class="qi">📝</span> Chapter 10 Practice Test — 20 Questions</div>
+
+      <!-- Q1 — OpenStax Review Q2 (10.1) -->
+      <div class="qq" id="q5-1">
+        <div class="q-stem">1. In gel electrophoresis of DNA, the different bands in the final gel form because the DNA molecules ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,1,this,'b')">A. Are from different organisms</button>
+          <button class="cbtn" onclick="pick(5,1,this,'a')">B. Have different lengths</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">C. Have different nucleotide compositions</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">D. Have different genes</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q2 — OpenStax Review Q3 (10.1) -->
+      <div class="qq" id="q5-2">
+        <div class="q-stem">2. In the reproductive cloning of an animal, the genome of the cloned individual comes from ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,2,this,'b')">A. A sperm cell</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">B. An egg cell</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">C. Any gamete cell</button>
+          <button class="cbtn" onclick="pick(5,2,this,'a')">D. A body cell</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q3 — OpenStax Review Q4 (10.1) -->
+      <div class="qq" id="q5-3">
+        <div class="q-stem">3. What carries a gene from one organism into a bacteria cell?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,3,this,'a')">A. A plasmid</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">B. An electrophoresis gel</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">C. A restriction enzyme</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">D. Polymerase chain reaction</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q4 — OpenStax Review Q5 (10.2) -->
+      <div class="qq" id="q5-4">
+        <div class="q-stem">4. What is a genetically modified organism (GMO)?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,4,this,'b')">A. A plant with certain genes removed</button>
+          <button class="cbtn" onclick="pick(5,4,this,'a')">B. An organism with an artificially altered genome</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">C. A hybrid organism</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">D. Any agricultural organism produced by breeding or biotechnology</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q5 — OpenStax Review Q6 (10.2) -->
+      <div class="qq" id="q5-5">
+        <div class="q-stem">5. What is the role of <em>Agrobacterium tumefaciens</em> in the production of transgenic plants?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,5,this,'b')">A. Genes from A. tumefaciens are inserted into plant DNA to give the plant different traits.</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">B. Transgenic plants have been given resistance to the pest A. tumefaciens.</button>
+          <button class="cbtn" onclick="pick(5,5,this,'a')">C. A. tumefaciens is used as a vector to move genes into plant cells.</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">D. Plant genes are incorporated into the genome of Agrobacterium tumefaciens.</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q6 — OpenStax Review Q7 (10.3) -->
+      <div class="qq" id="q5-6">
+        <div class="q-stem">6. What is the most challenging issue facing genome sequencing?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,6,this,'b')">A. The inability to develop fast and accurate sequencing techniques</button>
+          <button class="cbtn" onclick="pick(5,6,this,'a')">B. The ethics of using information from genomes at the individual level</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">C. The availability and stability of DNA</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q7 — OpenStax Review Q8 (10.3) -->
+      <div class="qq" id="q5-7">
+        <div class="q-stem">7. Genomics can be used in agriculture to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,7,this,'b')">A. Generate new hybrid strains</button>
+          <button class="cbtn" onclick="pick(5,7,this,'b')">B. Improve disease resistance</button>
+          <button class="cbtn" onclick="pick(5,7,this,'b')">C. Improve yield</button>
+          <button class="cbtn" onclick="pick(5,7,this,'a')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q8 — OpenStax Review Q9 (10.3) -->
+      <div class="qq" id="q5-8">
+        <div class="q-stem">8. What kind of diseases are studied using genome-wide association studies?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,8,this,'b')">A. Viral diseases</button>
+          <button class="cbtn" onclick="pick(5,8,this,'b')">B. Single-gene inherited diseases</button>
+          <button class="cbtn" onclick="pick(5,8,this,'a')">C. Diseases caused by multiple genes</button>
+          <button class="cbtn" onclick="pick(5,8,this,'b')">D. Diseases caused by environmental factors</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q9 — Content-based (10.1) -->
+      <div class="qq" id="q5-9">
+        <div class="q-stem">9. Restriction enzymes recognize specific DNA sequences that are ________ nucleotides long and are palindromes.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,9,this,'b')">A. 2 to 3</button>
+          <button class="cbtn" onclick="pick(5,9,this,'a')">B. 4 to 8</button>
+          <button class="cbtn" onclick="pick(5,9,this,'b')">C. 10 to 15</button>
+          <button class="cbtn" onclick="pick(5,9,this,'b')">D. 20 to 30</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q10 — Content-based (10.1) -->
+      <div class="qq" id="q5-10">
+        <div class="q-stem">10. The technique used to rapidly increase the number of copies of specific regions of DNA is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,10,this,'b')">A. Gel electrophoresis</button>
+          <button class="cbtn" onclick="pick(5,10,this,'b')">B. Molecular cloning</button>
+          <button class="cbtn" onclick="pick(5,10,this,'a')">C. Polymerase chain reaction (PCR)</button>
+          <button class="cbtn" onclick="pick(5,10,this,'b')">D. Restriction digestion</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q11 — Content-based (10.1) -->
+      <div class="qq" id="q5-11">
+        <div class="q-stem">11. The first cloned agricultural animal was:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,11,this,'b')">A. A goat born in 1990</button>
+          <button class="cbtn" onclick="pick(5,11,this,'a')">B. Dolly, a sheep born in 1996</button>
+          <button class="cbtn" onclick="pick(5,11,this,'b')">C. A mouse born in 1985</button>
+          <button class="cbtn" onclick="pick(5,11,this,'b')">D. A bull born in 2000</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q12 — Content-based (10.1) -->
+      <div class="qq" id="q5-12">
+        <div class="q-stem">12. When a staggered cut is made by a restriction enzyme, the complementary overhangs are called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,12,this,'b')">A. Blunt ends</button>
+          <button class="cbtn" onclick="pick(5,12,this,'a')">B. Sticky ends</button>
+          <button class="cbtn" onclick="pick(5,12,this,'b')">C. Palindromic ends</button>
+          <button class="cbtn" onclick="pick(5,12,this,'b')">D. Ligase ends</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q13 — Content-based (10.2) -->
+      <div class="qq" id="q5-13">
+        <div class="q-stem">13. Gene therapy involves the introduction of a non-mutated gene to cure a disease by replacing a protein that may be absent due to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,13,this,'a')">A. A genetic mutation</button>
+          <button class="cbtn" onclick="pick(5,13,this,'b')">B. Environmental exposure</button>
+          <button class="cbtn" onclick="pick(5,13,this,'b')">C. A viral infection</button>
+          <button class="cbtn" onclick="pick(5,13,this,'b')">D. Nutritional deficiency</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q14 — Content-based (10.2) -->
+      <div class="qq" id="q5-14">
+        <div class="q-stem">14. Animals that have been modified to express recombinant DNA are called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,14,this,'b')">A. Cloned animals</button>
+          <button class="cbtn" onclick="pick(5,14,this,'a')">B. Transgenic animals</button>
+          <button class="cbtn" onclick="pick(5,14,this,'b')">C. Hybrid animals</button>
+          <button class="cbtn" onclick="pick(5,14,this,'b')">D. Recombinant animals</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q15 — Content-based (10.2) -->
+      <div class="qq" id="q5-15">
+        <div class="q-stem">15. Previously, diabetes could only be treated with pig insulin, which caused allergic reactions. Recombinant DNA technology solved this by producing human insulin in:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,15,this,'a')">A. E. coli bacteria</button>
+          <button class="cbtn" onclick="pick(5,15,this,'b')">B. Transgenic goats</button>
+          <button class="cbtn" onclick="pick(5,15,this,'b')">C. Yeast cells</button>
+          <button class="cbtn" onclick="pick(5,15,this,'b')">D. Plant cells</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q16 — Content-based (10.3) -->
+      <div class="qq" id="q5-16">
+        <div class="q-stem">16. The first human genome sequence was published in:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,16,this,'b')">A. 1996</button>
+          <button class="cbtn" onclick="pick(5,16,this,'b')">B. 2000</button>
+          <button class="cbtn" onclick="pick(5,16,this,'a')">C. 2003</button>
+          <button class="cbtn" onclick="pick(5,16,this,'b')">D. 2010</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q17 — Content-based (10.3) -->
+      <div class="qq" id="q5-17">
+        <div class="q-stem">17. A species that is studied as a model to understand the biological processes in other species is called a:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,17,this,'b')">A. Transgenic organism</button>
+          <button class="cbtn" onclick="pick(5,17,this,'a')">B. Model organism</button>
+          <button class="cbtn" onclick="pick(5,17,this,'b')">C. Recombinant organism</button>
+          <button class="cbtn" onclick="pick(5,17,this,'b')">D. Clone</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q18 — Content-based (10.3) -->
+      <div class="qq" id="q5-18">
+        <div class="q-stem">18. Pharmacogenomics involves evaluating the effectiveness and safety of drugs on the basis of information from:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,18,this,'b')">A. Clinical trials only</button>
+          <button class="cbtn" onclick="pick(5,18,this,'a')">B. An individual's genomic sequence</button>
+          <button class="cbtn" onclick="pick(5,18,this,'b')">C. Population-level statistics</button>
+          <button class="cbtn" onclick="pick(5,18,this,'b')">D. Protein structure analysis</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q19 — Content-based (10.3) -->
+      <div class="qq" id="q5-19">
+        <div class="q-stem">19. The entire set of proteins produced by a cell type is called a:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,19,this,'b')">A. Genome</button>
+          <button class="cbtn" onclick="pick(5,19,this,'a')">B. Proteome</button>
+          <button class="cbtn" onclick="pick(5,19,this,'b')">C. Transcriptome</button>
+          <button class="cbtn" onclick="pick(5,19,this,'b')">D. Metabolome</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q20 — Content-based (10.3) -->
+      <div class="qq" id="q5-20">
+        <div class="q-stem">20. CRISPR-associated nucleases (known as "Cas") are enzymes that can identify, attach to, and cut DNA strands at precise locations. Jennifer Doudna and Emmanuelle Charpentier developed a method to combine Cas with a synthetically produced:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,20,this,'b')">A. Restriction enzyme</button>
+          <button class="cbtn" onclick="pick(5,20,this,'b')">B. Plasmid vector</button>
+          <button class="cbtn" onclick="pick(5,20,this,'a')">C. Guide RNA</button>
+          <button class="cbtn" onclick="pick(5,20,this,'b')">D. DNA polymerase</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score5"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 10 Review</div><div class="cx">Questions adapted from OpenStax Concepts of Biology, Chapter 10: Biotechnology, Review Questions and Critical Thinking Questions, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(4)">← Lesson 4: Genomics &amp; Proteomics</button>
+    <div class="lnav-info">Practice Test · End of Module</div>
+    <button class="nbtn next" disabled>Module Complete ✓</button>
+  </div>
+</div>
+</main>
+<script>
+window.MODULE_CONFIG = {
+  name: 'Biotechnology',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec',
+  panelCount: 6,
+  lessonCount: 5,
+  cpMin: 100,
+  lessons: ['Overview','L1: Tools of Biotechnology','L2: Cloning','L3: Medicine & Agriculture','L4: Genomics & Proteomics','L5: Practice Test']
+};
+</script>
+<script src="../shared/portal-quiz.js"></script>
+</body>
+</html>
