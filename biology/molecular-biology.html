@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Molecular Biology · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="../shared/portal-base.css">
+<link rel="stylesheet" href="../shared/portal-sidebar.css">
+<style>
+.hero-dna{background:linear-gradient(135deg,#1a2a4a,#0b6a8a);}
+.hero-rep{background:linear-gradient(135deg,#2a0a5a,#6c3fa0);}
+.hero-trans{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-xlat{background:linear-gradient(135deg,#4a1a00,#8a5000);}
+.hero-reg{background:linear-gradient(135deg,#4a0a0a,#8a3030);}
+.hero-test{background:linear-gradient(135deg,#0f2240,#1a4070);}
+</style>
+</head>
+<body class="theme-bio">
+<div id="submit-toast"><span style="font-size:1.1rem;">🤖</span><span id="toast-msg">Score sent!</span></div>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0f2240;margin-bottom:8px;">Welcome to Molecular Biology</div>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:20px;line-height:1.6;">Enter your name to begin. Your scores will be sent to Mr. England automatically.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input type="text" id="student-name" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:4px;display:none;">Please enter your name.</div>
+    <button onclick="startModule()" style="margin-top:16px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<header class="top-bar">
+  <a href="index.html" class="tb-back">← Biology</a>
+  <div class="tb-logo">🧪</div>
+  <div><div class="tb-name">Southern Gap High School</div><div class="tb-sub">Biology · Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Molecular Biology</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">DNA</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · The Structure of DNA</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · DNA Replication</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Gene Expression</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · Transcription</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Translation</div></a>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Lesson 5 · Gene Regulation</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Assessment</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+<!-- ═══════════════════════════════════════════════════
+     PANEL 0 — UNIT OVERVIEW (REBUILD - VERBATIM)
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · <span>Unit Overview</span></div>
+    <div class="h-title">Molecular Biology</div>
+    <div class="h-desc">The three letters "DNA" have now become associated with crime solving, paternity testing, human identification, and genetic testing. DNA can be retrieved from hair, blood, or saliva.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 9</div>
+      <div class="h-chip">🎯 6 Lessons · 36 Questions</div>
+      <div class="h-chip">Virginia SOL BIO.6</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="diagram-wrap">
+      <div class="d-title">Figure 9.1 — Dolly the Sheep</div>
+      <img src="images/ch9/fig9-1-dolly.png" alt="Dolly the sheep was the first cloned mammal" style="width:100%;max-width:700px;border-radius:10px;">
+      <div class="d-caption">Dolly the sheep was the first cloned mammal.</div>
+    </div>
+
+    <p class="prose">The three letters "DNA" have now become associated with crime solving, paternity testing, human identification, and genetic testing. DNA can be retrieved from hair, blood, or saliva. With the exception of identical twins, each person's DNA is unique and it is possible to detect differences between human beings on the basis of their unique DNA sequence.</p>
+
+    <p class="prose">DNA analysis has many practical applications beyond forensics and paternity testing. DNA testing is used for tracing genealogy and identifying pathogens. In the medical field, DNA is used in diagnostics, new vaccine development, and cancer therapy. It is now possible to determine predisposition to many diseases by analyzing genes.</p>
+
+    <p class="prose">DNA is the genetic material passed from parent to offspring for all life on Earth. The technology of molecular genetics developed in the last half century has enabled us to see deep into the history of life to deduce the relationships between living things in ways never thought possible. It also allows us to understand the workings of evolution in populations of organisms. Over a thousand species have had their entire genome sequenced, and there have been thousands of individual human genome sequences completed. These sequences will allow us to understand human disease and the relationship of humans to the rest of the tree of life. Finally, molecular genetics techniques have revolutionized plant and animal breeding for human agricultural needs. All of these advances in biotechnology depended on basic research leading to the discovery of the structure of DNA in 1953, and the research since then that has uncovered the details of DNA replication and the complex process leading to the expression of DNA in the form of proteins in the cell.</p>
+
+    <div class="obj-box">
+      <div class="obj-label">📌 What You Will Learn in This Module</div>
+      <ul class="obj-list">
+        <li>Describe the structure of DNA</li>
+        <li>Describe how eukaryotic and prokaryotic DNA is arranged in the cell</li>
+        <li>Explain the process of DNA replication</li>
+        <li>Explain the importance of telomerase to DNA replication</li>
+        <li>Describe mechanisms of DNA repair</li>
+        <li>Explain the central dogma</li>
+        <li>Explain the main steps of transcription</li>
+        <li>Describe how eukaryotic mRNA is processed</li>
+        <li>Describe the different steps in protein synthesis</li>
+        <li>Discuss the role of ribosomes in protein synthesis</li>
+        <li>Describe the genetic code and how the nucleotide sequence determines the amino acid and the protein sequence</li>
+        <li>Discuss why every cell does not express all of its genes</li>
+        <li>Describe how prokaryotic gene expression occurs at the transcriptional level</li>
+        <li>Understand that eukaryotic gene expression occurs at the epigenetic, transcriptional, post-transcriptional, translational, and post-translational levels</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Module Map</div>
+      <div class="sh2">Six Lessons · OpenStax Concepts of Biology Ch. 9</div>
+      <table class="dt">
+        <thead><tr><th>#</th><th>Lesson</th><th>Key Concepts</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Structure of DNA</td><td>Watson, Crick, Franklin, nucleotides, purines, pyrimidines, double helix, base pairing, Chargaff's rules, antiparallel strands, DNA vs RNA, prokaryotic vs eukaryotic DNA, histones</td><td>CB 9.1</td></tr>
+          <tr><td>2</td><td>DNA Replication</td><td>Semiconservative replication, replication fork, helicase, primase, DNA polymerase, leading/lagging strands, Okazaki fragments, telomeres, telomerase, proofreading, mismatch repair</td><td>CB 9.2</td></tr>
+          <tr><td>3</td><td>Transcription</td><td>Central dogma, RNA polymerase, template strand, mRNA, promoter, initiation, elongation, termination, eukaryotic mRNA processing, 5' cap, poly-A tail, introns, exons, splicing</td><td>CB 9.3</td></tr>
+          <tr><td>4</td><td>Translation</td><td>Ribosomes, tRNA, genetic code, codons, start/stop codons, initiation complex, polypeptide elongation, A/P/E sites</td><td>CB 9.4</td></tr>
+          <tr><td>5</td><td>Gene Regulation</td><td>Gene expression, prokaryotic regulation, lac operon, eukaryotic regulation, epigenetic/transcriptional/post-transcriptional/translational/post-translational levels, alternative RNA splicing</td><td>CB 9.5</td></tr>
+          <tr><td>6</td><td>Practice Test</td><td>All topics — comprehensive assessment</td><td>All</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Virginia SOL Alignment</div>
+      <div class="sh2">Standards Covered in This Module</div>
+      <table class="dt">
+        <thead><tr><th>Standard</th><th>Description</th><th>Lessons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>BIO.6a</strong></td><td>The structure of DNA and its role in genetic inheritance</td><td>1, 2</td></tr>
+          <tr><td><strong>BIO.6b</strong></td><td>The processes of transcription and translation</td><td>3, 4</td></tr>
+          <tr><td><strong>BIO.6c</strong></td><td>Gene regulation and expression</td><td>5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 9</div><div class="cx">All content in this module is adapted from OpenStax Concepts of Biology, Chapter 9: Molecular Biology, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" disabled>← Previous</button>
+    <div class="lnav-info">Overview · Start Here</div>
+    <button class="nbtn next" onclick="goTo(1)">Lesson 1: Structure of DNA →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 1 — THE STRUCTURE OF DNA (REBUILD - VERBATIM)
+     OpenStax CB 9.1
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+  <div class="hero hero-dna">
+    <div class="h-crumb">Molecular Biology · <span>Lesson 1</span></div>
+    <div class="h-title">The Structure of DNA</div>
+    <div class="h-desc">In the 1950s, Francis Crick and James Watson worked together to determine the structure of DNA.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 9.1</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe the structure of DNA</li>
+        <li>Describe how eukaryotic and prokaryotic DNA is arranged in the cell</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Discovery of the Double Helix</div>
+      <div class="sh2">Watson, Crick, and Franklin</div>
+
+      <p class="prose">In the 1950s, Francis Crick and James Watson worked together at the University of Cambridge, England, to determine the structure of DNA. Other scientists, such as Linus Pauling and Maurice Wilkins, were also actively exploring this field. Pauling had discovered the secondary structure of proteins using X-ray crystallography. X-ray crystallography is a method for investigating molecular structure by observing the patterns formed by X-rays shot through a crystal of the substance. The patterns give important information about the structure of the molecule of interest. In Wilkins' lab, researcher Rosalind Franklin was using X-ray crystallography to understand the structure of DNA. Watson and Crick were able to piece together the puzzle of the DNA molecule using Franklin's data (Figure 9.2). Watson and Crick also had key pieces of information available from other researchers such as Chargaff's rules. Chargaff had shown that of the four kinds of monomers (nucleotides) present in a DNA molecule, two types were always present in equal amounts and the remaining two types were also always present in equal amounts. This meant they were always paired in some way. In 1962, James Watson, Francis Crick, and Maurice Wilkins were awarded the Nobel Prize in Medicine for their work in determining the structure of DNA.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.2 — Rosalind Franklin and X-ray Diffraction</div>
+        <img src="images/ch9/fig9-2-rosalind-franklin.png" alt="Scientist Rosalind Franklin discovered the X-ray diffraction pattern of DNA, which helped to elucidate its double helix structure." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Scientist Rosalind Franklin discovered the X-ray diffraction pattern of DNA, which helped to elucidate its double helix structure. (credit: modification of work by NIH)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Nucleotides</div>
+      <div class="sh2">The Building Blocks of DNA</div>
+
+      <p class="prose">Now let's consider the structure of the two types of nucleic acids, deoxyribonucleic acid (DNA) and ribonucleic acid (RNA). The building blocks of DNA are nucleotides, which are made up of three parts: a deoxyribose (5-carbon sugar), a phosphate group, and a nitrogenous base (Figure 9.3). There are four types of nitrogenous bases in DNA. Adenine (A) and guanine (G) are double-ringed purines, and cytosine (C) and thymine (T) are smaller, single-ringed pyrimidines. The nucleotide is named according to the nitrogenous base it contains.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.3a — DNA Nucleotide</div>
+        <img src="images/ch9/fig9-3a-nucleotide.png" alt="Each DNA nucleotide is made up of a sugar, a phosphate group, and a base." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">(a) Each DNA nucleotide is made up of a sugar, a phosphate group, and a base.</div>
+      </div>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.3b — Purines and Pyrimidines</div>
+        <img src="images/ch9/fig9-3b-pyrimidines.png" alt="Cytosine and thymine are pyrimidines. Guanine and adenine are purines." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">(b) Cytosine and thymine are pyrimidines. Guanine and adenine are purines.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Double Helix</div>
+      <div class="sh2">Base Pairing and Antiparallel Strands</div>
+
+      <p class="prose">The phosphate group of one nucleotide bonds covalently with the sugar molecule of the next nucleotide, and so on, forming a long polymer of nucleotide monomers. The sugar–phosphate groups line up in a "backbone" for each single strand of DNA, and the nucleotide bases stick out from this backbone. The carbon atoms of the five-carbon sugar are numbered clockwise from the oxygen as 1', 2', 3', 4', and 5' (1' is read as "one prime"). The phosphate group is attached to the 5' carbon of one nucleotide and the 3' carbon of the next nucleotide. In its natural state, each DNA molecule is actually composed of two single strands held together along their length with hydrogen bonds between the bases.</p>
+
+      <p class="prose">Watson and Crick proposed that the DNA is made up of two strands that are twisted around each other to form a right-handed helix, called a double helix. Base-pairing takes place between a purine and pyrimidine: namely, A pairs with T, and G pairs with C. In other words, adenine and thymine are complementary base pairs, and cytosine and guanine are also complementary base pairs. This is the basis for Chargaff's rule; because of their complementarity, there is as much adenine as thymine in a DNA molecule and as much guanine as cytosine. Adenine and thymine are connected by two hydrogen bonds, and cytosine and guanine are connected by three hydrogen bonds. The two strands are anti-parallel in nature; that is, one strand will have the 3' carbon of the sugar in the "upward" position, whereas the other strand will have the 5' carbon in the upward position. The diameter of the DNA double helix is uniform throughout because a purine (two rings) always pairs with a pyrimidine (one ring) and their combined lengths are always equal. (Figure 9.4).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.4 — The Double Helix</div>
+        <img src="images/ch9/fig9-4-double-helix.png" alt="DNA forms a double stranded helix, and adenine pairs with thymine and cytosine pairs with guanine." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">DNA (a) forms a double stranded helix, and (b) adenine pairs with thymine and cytosine pairs with guanine. (credit a: modification of work by Jerome Walker, Dennis Myts)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Structure of RNA</div>
+      <div class="sh2">DNA vs RNA</div>
+
+      <p class="prose">There is a second nucleic acid in all cells called ribonucleic acid, or RNA. Like DNA, RNA is a polymer of nucleotides. Each of the nucleotides in RNA is made up of a nitrogenous base, a five-carbon sugar, and a phosphate group. In the case of RNA, the five-carbon sugar is ribose, not deoxyribose. Ribose has a hydroxyl group at the 2' carbon, unlike deoxyribose, which has only a hydrogen atom (Figure 9.5).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.5 — Ribose vs Deoxyribose</div>
+        <img src="images/ch9/fig9-5-ribose-deoxyribose.png" alt="The difference between the ribose found in RNA and the deoxyribose found in DNA is that ribose has a hydroxyl group at the 2' carbon." style="width:100%;max-width:500px;border-radius:10px;">
+        <div class="d-caption">The difference between the ribose found in RNA and the deoxyribose found in DNA is that ribose has a hydroxyl group at the 2' carbon.</div>
+      </div>
+
+      <p class="prose">RNA nucleotides contain the nitrogenous bases adenine, cytosine, and guanine. However, they do not contain thymine, which is instead replaced by uracil, symbolized by a "U." RNA exists as a single-stranded molecule rather than a double-stranded helix. Molecular biologists have named several kinds of RNA on the basis of their function. These include messenger RNA (mRNA), transfer RNA (tRNA), and ribosomal RNA (rRNA)—molecules that are involved in the production of proteins from the DNA code.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">How DNA Is Arranged in the Cell</div>
+      <div class="sh2">Prokaryotic vs Eukaryotic DNA Organization</div>
+
+      <p class="prose">DNA is a working molecule; it must be replicated when a cell is ready to divide, and it must be "read" to produce the molecules, such as proteins, to carry out the functions of the cell. For this reason, the DNA is protected and packaged in very specific ways. In addition, DNA molecules can be very long. Stretched end-to-end, the DNA molecules in a single human cell would come to a length of about 2 meters. Thus, the DNA for a cell must be packaged in a very ordered way to fit and function within a structure (the cell) that is not visible to the naked eye.</p>
+
+      <p class="prose">The chromosomes of prokaryotes are much simpler than those of eukaryotes in many of their features (Figure 9.6). Most prokaryotes contain a single, circular chromosome that is found in an area in the cytoplasm called the nucleoid.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.6 — Eukaryotic vs Prokaryotic DNA</div>
+        <img src="images/ch9/fig9-6-euk-prok-dna.png" alt="A eukaryote contains a well-defined nucleus, whereas in prokaryotes, the chromosome lies in the cytoplasm in an area called the nucleoid." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">A eukaryote contains a well-defined nucleus, whereas in prokaryotes, the chromosome lies in the cytoplasm in an area called the nucleoid.</div>
+      </div>
+
+      <p class="prose">The size of the genome in one of the most well-studied prokaryotes, Escherichia coli, is 4.6 million base pairs, which would extend a distance of about 1.6 mm if stretched out. So how does this fit inside a small bacterial cell? The DNA is twisted beyond the double helix in what is known as supercoiling. Some proteins are known to be involved in the supercoiling; other proteins and enzymes help in maintaining the supercoiled structure.</p>
+
+      <p class="prose">Eukaryotes, whose chromosomes each consist of a linear DNA molecule, employ a different type of packing strategy to fit their DNA inside the nucleus (Figure 9.7). Before the structure of DNA was even uncovered, Marie Maynard Daly and Arthur E. Mirsky conducted extensive research in the 1940s and 1950s to understand the molecules and structures in involved. At the most basic level, DNA is wrapped around proteins known as histones to form structures called nucleosomes. The DNA is wrapped tightly around the histone core. This nucleosome is linked to the next one by a short strand of DNA that is free of histones. This is also known as the "beads on a string" structure; the nucleosomes are the "beads" and the short lengths of DNA between them are the "string." The nucleosomes, with their DNA coiled around them, stack compactly onto each other to form a 30-nm–wide fiber. This fiber is further coiled into a thicker and more compact structure. At the metaphase stage of mitosis, when the chromosomes are lined up in the center of the cell, the chromosomes are at their most compacted. They are approximately 700 nm in width, and are found in association with scaffold proteins.</p>
+
+      <p class="prose">In interphase, the phase of the cell cycle between mitoses at which the chromosomes are decondensed, eukaryotic chromosomes have two distinct regions that can be distinguished by staining. There is a tightly packaged region that stains darkly, and a less dense region. The darkly staining regions usually contain genes that are not active, and are found in the regions of the centromere and telomeres. The lightly staining regions usually contain genes that are active, with DNA packaged around nucleosomes but not further compacted.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.7 — Chromosome Compaction</div>
+        <img src="images/ch9/fig9-7-chromosome-compaction.png" alt="These figures illustrate the compaction of the eukaryotic chromosome." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">These figures illustrate the compaction of the eukaryotic chromosome.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">X-ray crystallography</div><div class="vocab-def">A method for investigating molecular structure by observing the patterns formed by X-rays shot through a crystal of the substance</div></div>
+        <div class="vocab-card"><div class="vocab-term">Nucleotide</div><div class="vocab-def">The building block of DNA, made up of three parts: a deoxyribose (5-carbon sugar), a phosphate group, and a nitrogenous base</div></div>
+        <div class="vocab-card"><div class="vocab-term">Purine</div><div class="vocab-def">Double-ringed nitrogenous bases: adenine (A) and guanine (G)</div></div>
+        <div class="vocab-card"><div class="vocab-term">Pyrimidine</div><div class="vocab-def">Smaller, single-ringed nitrogenous bases: cytosine (C) and thymine (T)</div></div>
+        <div class="vocab-card"><div class="vocab-term">Double helix</div><div class="vocab-def">The shape of DNA formed by two strands twisted around each other in a right-handed helix</div></div>
+        <div class="vocab-card"><div class="vocab-term">Chargaff's rules</div><div class="vocab-def">The observation that adenine equals thymine and guanine equals cytosine in a DNA molecule due to complementary base pairing</div></div>
+        <div class="vocab-card"><div class="vocab-term">Anti-parallel</div><div class="vocab-def">The arrangement of two DNA strands running in opposite directions (one 3' to 5', the other 5' to 3')</div></div>
+        <div class="vocab-card"><div class="vocab-term">Deoxyribose</div><div class="vocab-def">A five-carbon sugar molecule with a hydrogen atom rather than a hydroxyl group in the 2' position; the sugar component of DNA nucleotides</div></div>
+        <div class="vocab-card"><div class="vocab-term">Ribose</div><div class="vocab-def">A five-carbon sugar with a hydroxyl group at the 2' carbon; the sugar component of RNA nucleotides</div></div>
+        <div class="vocab-card"><div class="vocab-term">Nucleoid</div><div class="vocab-def">An area in the cytoplasm of prokaryotes where the single, circular chromosome is found</div></div>
+        <div class="vocab-card"><div class="vocab-term">Histone</div><div class="vocab-def">Proteins around which DNA is wrapped to form structures called nucleosomes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Nucleosome</div><div class="vocab-def">A structure formed when DNA is wrapped around histone proteins; the basic unit of DNA packaging in eukaryotes</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="8kK2zwjRV0M">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/8kK2zwjRV0M/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">DNA Structure — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp1">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — The Structure of DNA</span>
+      </div>
+      <p class="cp-prompt">Describe the structure of a DNA nucleotide, explain how Chargaff's rules relate to complementary base pairing, and compare how DNA is organized in prokaryotic versus eukaryotic cells.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(1)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill1"></div></div>
+      <div class="cp-count" id="cpCount1">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz1">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 1 Quiz</div>
+
+      <div class="qq" id="q1-1">
+        <div class="q-stem">1. Whose X-ray crystallography data was critical to Watson and Crick's discovery of the DNA double helix?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,1,this,'b')">A. Linus Pauling</button>
+          <button class="cbtn" onclick="pick(1,1,this,'a')">B. Rosalind Franklin</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">C. Gregor Mendel</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">D. Erwin Chargaff</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-2">
+        <div class="q-stem">2. Which of the following are pyrimidines?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,2,this,'b')">A. Adenine and guanine</button>
+          <button class="cbtn" onclick="pick(1,2,this,'a')">B. Cytosine and thymine</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">C. Adenine and cytosine</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">D. Guanine and thymine</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-3">
+        <div class="q-stem">3. According to Chargaff's rules, if a DNA molecule contains 20% adenine, what percentage of guanine would it contain?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,3,this,'b')">A. 20%</button>
+          <button class="cbtn" onclick="pick(1,3,this,'a')">B. 30%</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">C. 40%</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">D. 10%</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-4">
+        <div class="q-stem">4. How many hydrogen bonds connect cytosine and guanine?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,4,this,'b')">A. One</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">B. Two</button>
+          <button class="cbtn" onclick="pick(1,4,this,'a')">C. Three</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">D. Four</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-5">
+        <div class="q-stem">5. What replaces thymine in RNA?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,5,this,'b')">A. Cytosine</button>
+          <button class="cbtn" onclick="pick(1,5,this,'a')">B. Uracil</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">C. Guanine</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">D. Adenine</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-6">
+        <div class="q-stem">6. In eukaryotes, DNA is wrapped around proteins called _______ to form structures called nucleosomes.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,6,this,'b')">A. Ligases</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">B. Polymerases</button>
+          <button class="cbtn" onclick="pick(1,6,this,'a')">C. Histones</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">D. Helicases</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score1"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 9.1</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 9.1: The Structure of DNA, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(0)">← Unit Overview</button>
+    <div class="lnav-info">Lesson 1 of 6</div>
+    <button class="nbtn next" onclick="goTo(2)">Lesson 2: DNA Replication →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 2 — DNA REPLICATION (REBUILD - VERBATIM)
+     OpenStax CB 9.2
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+  <div class="hero hero-rep">
+    <div class="h-crumb">Molecular Biology · <span>Lesson 2</span></div>
+    <div class="h-title">DNA Replication</div>
+    <div class="h-desc">When a cell divides, it is important that each daughter cell receives an identical copy of the DNA.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 9.2</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the process of DNA replication</li>
+        <li>Explain the importance of telomerase to DNA replication</li>
+        <li>Describe mechanisms of DNA repair</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Complementary Base Pairing</div>
+      <div class="sh2">The Basis for Replication</div>
+
+      <p class="prose">When a cell divides, it is important that each daughter cell receives an identical copy of the DNA. This is accomplished by the process of DNA replication. The replication of DNA occurs during the synthesis phase, or S phase, of the cell cycle, before the cell enters mitosis or meiosis.</p>
+
+      <p class="prose">The elucidation of the structure of the double helix provided a hint as to how DNA is copied. Recall that adenine nucleotides pair with thymine nucleotides, and cytosine with guanine. This means that the two strands are complementary to each other. For example, a strand of DNA with a nucleotide sequence of AGTCATGA will have a complementary strand with the sequence TCAGTACT (Figure 9.8).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.8 — Complementary Strands</div>
+        <img src="images/ch9/fig9-8-complementary-strands.png" alt="The two strands of DNA are complementary, meaning the sequence of bases in one strand can be used to create the correct sequence of bases in the other strand." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The two strands of DNA are complementary, meaning the sequence of bases in one strand can be used to create the correct sequence of bases in the other strand.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Semiconservative Replication</div>
+      <div class="sh2">Each New Double Strand Contains One Old and One New Strand</div>
+
+      <p class="prose">Because of the complementarity of the two strands, having one strand means that it is possible to recreate the other strand. This model for replication suggests that the two strands of the double helix separate during replication, and each strand serves as a template from which the new complementary strand is copied (Figure 9.9).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.9 — Semiconservative Replication</div>
+        <img src="images/ch9/fig9-9-semiconservative.png" alt="The semiconservative model of DNA replication is shown. Gray indicates the original DNA strands, and blue indicates newly synthesized DNA." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The semiconservative model of DNA replication is shown. Gray indicates the original DNA strands, and blue indicates newly synthesized DNA.</div>
+      </div>
+
+      <p class="prose">During DNA replication, each of the two strands that make up the double helix serves as a template from which new strands are copied. The new strand will be complementary to the parental or "old" strand. Each new double strand consists of one parental strand and one new daughter strand. This is known as semiconservative replication. When two DNA copies are formed, they have an identical sequence of nucleotide bases and are divided equally into two daughter cells.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">DNA Replication in Eukaryotes</div>
+      <div class="sh2">The Replication Fork and Key Enzymes</div>
+
+      <p class="prose">Because eukaryotic genomes are very complex, DNA replication is a very complicated process that involves several enzymes and other proteins. It occurs in three main stages: initiation, elongation, and termination.</p>
+
+      <p class="prose">Recall that eukaryotic DNA is bound to proteins known as histones to form structures called nucleosomes. During initiation, the DNA is made accessible to the proteins and enzymes involved in the replication process. How does the replication machinery know where on the DNA double helix to begin? It turns out that there are specific nucleotide sequences called origins of replication at which replication begins. Certain proteins bind to the origin of replication while an enzyme called helicase unwinds and opens up the DNA helix. As the DNA opens up, Y-shaped structures called replication forks are formed (Figure 9.10). Two replication forks are formed at the origin of replication, and these get extended in both directions as replication proceeds. There are multiple origins of replication on the eukaryotic chromosome, such that replication can occur simultaneously from several places in the genome.</p>
+
+      <p class="prose">During elongation, an enzyme called DNA polymerase adds DNA nucleotides to the 3' end of the template. Because DNA polymerase can only add new nucleotides at the end of a backbone, a primer sequence, which provides this starting point, is added with complementary RNA nucleotides. This primer is removed later, and the nucleotides are replaced with DNA nucleotides. One strand, which is complementary to the parental DNA strand, is synthesized continuously toward the replication fork so the polymerase can add nucleotides in this direction. This continuously synthesized strand is known as the leading strand. Because DNA polymerase can only synthesize DNA in a 5' to 3' direction, the other new strand is put together in short pieces called Okazaki fragments. The Okazaki fragments each require a primer made of RNA to start the synthesis. The strand with the Okazaki fragments is known as the lagging strand. As synthesis proceeds, an enzyme removes the RNA primer, which is then replaced with DNA nucleotides, and the gaps between fragments are sealed by an enzyme called DNA ligase.</p>
+
+      <p class="prose">The process of DNA replication can be summarized as follows:</p>
+      <ol class="prose-list">
+        <li>DNA unwinds at the origin of replication.</li>
+        <li>New bases are added to the complementary parental strands. One new strand is made continuously, while the other strand is made in pieces.</li>
+        <li>Primers are removed, new DNA nucleotides are put in place of the primers and the backbone is sealed by DNA ligase.</li>
+      </ol>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.10 — The Replication Fork (Visual Connection)</div>
+        <img src="images/ch9/fig9-10-replication-fork.png" alt="A replication fork is formed by the opening of the origin of replication, and helicase separates the DNA strands." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">A replication fork is formed by the opening of the origin of replication, and helicase separates the DNA strands. An RNA primer is synthesized, and is elongated by the DNA polymerase. On the leading strand, DNA is synthesized continuously, whereas on the lagging strand, DNA is synthesized in short stretches. The DNA fragments are joined by DNA ligase (not shown).</div>
+      </div>
+
+      <div class="callout thinking"><div class="ci">🤔</div><div class="cb"><div class="ct">Visual Connection</div><div class="cx">You isolate a cell strain in which the joining together of Okazaki fragments is impaired and suspect that a mutation has occurred in an enzyme found at the replication fork. Which enzyme is most likely to be mutated?</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Telomere Replication</div>
+      <div class="sh2">Telomerase and Elizabeth Blackburn</div>
+
+      <p class="prose">Because eukaryotic chromosomes are linear, DNA replication comes to the end of a line in eukaryotic chromosomes. As you have learned, the DNA polymerase enzyme can add nucleotides in only one direction. In the leading strand, synthesis continues until the end of the chromosome is reached; however, on the lagging strand there is no place for a primer to be made for the DNA fragment to be copied at the end of the chromosome. This presents a problem for the cell because the ends remain unpaired, and over time these ends get progressively shorter as cells continue to divide. The ends of the linear chromosomes are known as telomeres, which have repetitive sequences that do not code for a particular gene. As a consequence, it is telomeres that are shortened with each round of DNA replication instead of genes. For example, in humans, a six base-pair sequence, TTAGGG, is repeated 100 to 1000 times. The discovery of the enzyme telomerase (Figure 9.11) helped in the understanding of how chromosome ends are maintained. The telomerase attaches to the end of the chromosome, and complementary bases to the RNA template are added on the end of the DNA strand. Once the lagging strand template is sufficiently elongated, DNA polymerase can now add nucleotides that are complementary to the ends of the chromosomes. Thus, the ends of the chromosomes are replicated.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.11 — Telomerase</div>
+        <img src="images/ch9/fig9-11-telomerase.png" alt="The ends of linear chromosomes are maintained by the action of the telomerase enzyme." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The ends of linear chromosomes are maintained by the action of the telomerase enzyme.</div>
+      </div>
+
+      <p class="prose">Telomerase is typically found to be active in germ cells, adult stem cells, and some cancer cells. For her discovery of telomerase and its action, Elizabeth Blackburn (Figure 9.12) received the Nobel Prize for Medicine and Physiology in 2009. Later research using HeLa cells (obtained from Henrietta Lacks) confirmed that telomerase is present in human cells. And in 2001, researchers including Diane L. Wright found that telomerase is necessary for cells in human embryos to rapidly proliferate.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.12 — Elizabeth Blackburn</div>
+        <img src="images/ch9/fig9-12-blackburn.png" alt="Elizabeth Blackburn, 2009 Nobel Laureate, was the scientist who discovered how telomerase works." style="width:100%;max-width:400px;border-radius:10px;">
+        <div class="d-caption">Elizabeth Blackburn, 2009 Nobel Laureate, was the scientist who discovered how telomerase works. (credit: U.S. Embassy, Stockholm, Sweden)</div>
+      </div>
+
+      <p class="prose">Telomerase is not active in adult somatic cells. Adult somatic cells that undergo cell division continue to have their telomeres shortened. This essentially means that telomere shortening is associated with aging. In 2010, scientists found that telomerase can reverse some age-related conditions in mice, and this may have potential in regenerative medicine. Telomerase-deficient mice were used in these studies; these mice have tissue atrophy, stem-cell depletion, organ system failure, and impaired tissue injury responses. Telomerase reactivation in these mice caused extension of telomeres, reduced DNA damage, reversed neurodegeneration, and improved functioning of the testes, spleen, and intestines. Thus, telomere reactivation may have potential for treating age-related diseases in humans.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">DNA Replication in Prokaryotes</div>
+      <div class="sh2">Differences from Eukaryotic Replication</div>
+
+      <p class="prose">Recall that the prokaryotic chromosome is a circular molecule with a less extensive coiling structure than eukaryotic chromosomes. The eukaryotic chromosome is linear and highly coiled around proteins. While there are many similarities in the DNA replication process, these structural differences necessitate some differences in the DNA replication process in these two life forms.</p>
+
+      <p class="prose">DNA replication has been extremely well-studied in prokaryotes, primarily because of the small size of the genome and large number of variants available. Escherichia coli has 4.6 million base pairs in a single circular chromosome, and all of it gets replicated in approximately 42 minutes, starting from a single origin of replication and proceeding around the chromosome in both directions. This means that approximately 1000 nucleotides are added per second. The process is much more rapid than in eukaryotes. Table 9.1 summarizes the differences between prokaryotic and eukaryotic replications.</p>
+
+      <table class="dt">
+        <caption>Table 9.1 — Differences between Prokaryotic and Eukaryotic Replications</caption>
+        <thead><tr><th>Property</th><th>Prokaryotes</th><th>Eukaryotes</th></tr></thead>
+        <tbody>
+          <tr><td>Origin of replication</td><td>Single</td><td>Multiple</td></tr>
+          <tr><td>Rate of replication</td><td>1000 nucleotides/s</td><td>50 to 100 nucleotides/s</td></tr>
+          <tr><td>Chromosome structure</td><td>circular</td><td>linear</td></tr>
+          <tr><td>Telomerase</td><td>Not present</td><td>Present</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">DNA Repair</div>
+      <div class="sh2">Proofreading and Mismatch Repair</div>
+
+      <p class="prose">DNA polymerase can make mistakes while adding nucleotides. It edits the DNA by proofreading every newly added base. Incorrect bases are removed and replaced by the correct base, and then polymerization continues (Figure 9.13a). Most mistakes are corrected during replication, although when this does not happen, the mismatch repair mechanism is employed. Mismatch repair enzymes recognize the wrongly incorporated base and excise it from the DNA, replacing it with the correct base (Figure 9.13b). In yet another type of repair, nucleotide excision repair, the DNA double strand is unwound and separated, the incorrect bases are removed along with a few bases on the 5' and 3' end, and these are replaced by copying the template with the help of DNA polymerase (Figure 9.13c). Nucleotide excision repair is particularly important in correcting thymine dimers, which are primarily caused by ultraviolet light. In a thymine dimer, two thymine nucleotides adjacent to each other on one strand are covalently bonded to each other rather than their complementary bases. If the dimer is not removed and repaired it will lead to a mutation. Individuals with flaws in their nucleotide excision repair genes show extreme sensitivity to sunlight and develop skin cancers early in life.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.13 — Proofreading and Mismatch Repair</div>
+        <img src="images/ch9/fig9-13-proofreading.png" alt="Proofreading by DNA polymerase corrects errors during replication. In mismatch repair, the incorrectly added base is detected after replication." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Proofreading by DNA polymerase (a) corrects errors during replication. In mismatch repair (b), the incorrectly added base is detected after replication. The mismatch repair proteins detect this base and remove it from the newly synthesized strand by nuclease action. The gap is now filled with the correctly paired base. Nucleotide excision (c) repairs thymine dimers. When exposed to UV, thymines lying adjacent to each other can form thymine dimers. In normal cells, they are excised and replaced.</div>
+      </div>
+
+      <p class="prose">Most mistakes are corrected; if they are not, they may result in a mutation—defined as a permanent change in the DNA sequence. Mutations in repair genes may lead to serious consequences like cancer.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Semiconservative replication</div><div class="vocab-def">The model of DNA replication in which each new double strand consists of one parental strand and one new daughter strand</div></div>
+        <div class="vocab-card"><div class="vocab-term">Origin of replication</div><div class="vocab-def">Specific nucleotide sequences at which DNA replication begins</div></div>
+        <div class="vocab-card"><div class="vocab-term">Helicase</div><div class="vocab-def">An enzyme that unwinds and opens up the DNA helix at the replication fork</div></div>
+        <div class="vocab-card"><div class="vocab-term">Replication fork</div><div class="vocab-def">Y-shaped structures formed when the DNA helix is opened at the origin of replication</div></div>
+        <div class="vocab-card"><div class="vocab-term">DNA polymerase</div><div class="vocab-def">An enzyme that adds DNA nucleotides to the 3' end of the template during replication</div></div>
+        <div class="vocab-card"><div class="vocab-term">Leading strand</div><div class="vocab-def">The strand synthesized continuously toward the replication fork</div></div>
+        <div class="vocab-card"><div class="vocab-term">Lagging strand</div><div class="vocab-def">The strand synthesized in short pieces called Okazaki fragments</div></div>
+        <div class="vocab-card"><div class="vocab-term">Okazaki fragments</div><div class="vocab-def">Short pieces of DNA synthesized on the lagging strand, each requiring an RNA primer</div></div>
+        <div class="vocab-card"><div class="vocab-term">DNA ligase</div><div class="vocab-def">An enzyme that seals the gaps between Okazaki fragments on the lagging strand</div></div>
+        <div class="vocab-card"><div class="vocab-term">Telomere</div><div class="vocab-def">The ends of linear chromosomes, which have repetitive sequences that do not code for a particular gene</div></div>
+        <div class="vocab-card"><div class="vocab-term">Telomerase</div><div class="vocab-def">An enzyme that attaches to the end of the chromosome and adds complementary bases to maintain chromosome ends</div></div>
+        <div class="vocab-card"><div class="vocab-term">Mutation</div><div class="vocab-def">A permanent change in the DNA sequence</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="Qqe4thU-os8">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/Qqe4thU-os8/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">DNA Replication — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp2">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — DNA Replication</span>
+      </div>
+      <p class="cp-prompt">Explain the process of semiconservative DNA replication, including the roles of helicase, DNA polymerase, and DNA ligase. Describe the difference between the leading and lagging strands and explain why telomerase is important.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(2)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill2"></div></div>
+      <div class="cp-count" id="cpCount2">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz2">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 2 Quiz</div>
+
+      <div class="qq" id="q2-1">
+        <div class="q-stem">1. DNA replication is described as semiconservative because:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,1,this,'b')">A. Both strands of the new DNA are newly synthesized</button>
+          <button class="cbtn" onclick="pick(2,1,this,'a')">B. Each new double strand consists of one parental strand and one new daughter strand</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">C. Only half of the DNA is replicated</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">D. The original DNA molecule is completely conserved</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-2">
+        <div class="q-stem">2. Which enzyme unwinds and opens up the DNA helix at the replication fork?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,2,this,'b')">A. DNA polymerase</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">B. DNA ligase</button>
+          <button class="cbtn" onclick="pick(2,2,this,'a')">C. Helicase</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">D. Primase</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-3">
+        <div class="q-stem">3. The lagging strand is synthesized in short pieces called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,3,this,'b')">A. Telomeres</button>
+          <button class="cbtn" onclick="pick(2,3,this,'a')">B. Okazaki fragments</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">C. Nucleosomes</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">D. Primers</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-4">
+        <div class="q-stem">4. What is the function of telomerase?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,4,this,'b')">A. It unwinds the DNA double helix</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">B. It seals gaps between Okazaki fragments</button>
+          <button class="cbtn" onclick="pick(2,4,this,'a')">C. It maintains the ends of linear chromosomes by adding repetitive sequences</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">D. It proofreads newly synthesized DNA</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-5">
+        <div class="q-stem">5. In prokaryotes, approximately how many nucleotides are added per second during DNA replication?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,5,this,'b')">A. 50 to 100</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">B. 500</button>
+          <button class="cbtn" onclick="pick(2,5,this,'a')">C. 1000</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">D. 10,000</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-6">
+        <div class="q-stem">6. Nucleotide excision repair is particularly important in correcting:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,6,this,'b')">A. Base pair mismatches</button>
+          <button class="cbtn" onclick="pick(2,6,this,'a')">B. Thymine dimers caused by ultraviolet light</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">C. Telomere shortening</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">D. Okazaki fragment gaps</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score2"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 9.2</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 9.2: DNA Replication, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(1)">← Lesson 1: Structure of DNA</button>
+    <div class="lnav-info">Lesson 2 of 6</div>
+    <button class="nbtn next" onclick="goTo(3)">Lesson 3: Transcription →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 3 — TRANSCRIPTION (REBUILD - VERBATIM)
+     OpenStax CB 9.3
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+  <div class="hero hero-trans">
+    <div class="h-crumb">Molecular Biology · <span>Lesson 3</span></div>
+    <div class="h-title">Transcription</div>
+    <div class="h-desc">The second function of DNA is to provide the information needed to construct the proteins necessary so that the cell can perform all of its functions.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 9.3</div>
+      <div class="h-chip">⏱ ~35 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the central dogma</li>
+        <li>Explain the main steps of transcription</li>
+        <li>Describe how eukaryotic mRNA is processed</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction to Transcription</div>
+      <div class="sh2">From DNA to mRNA</div>
+
+      <p class="prose">In both prokaryotes and eukaryotes, the second function of DNA (the first was replication) is to provide the information needed to construct the proteins necessary so that the cell can perform all of its functions. To do this, the DNA is "read" or transcribed into an mRNA molecule. The mRNA then provides the code to form a protein by a process called translation. Through the processes of transcription and translation, a protein is built with a specific sequence of amino acids that was originally encoded in the DNA. This module discusses the details of transcription.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Central Dogma</div>
+      <div class="sh2">DNA Encodes RNA; RNA Encodes Protein</div>
+
+      <p class="prose">The flow of genetic information in cells from DNA to mRNA to protein is described by the central dogma (Figure 9.14), which states that genes specify the sequences of mRNAs, which in turn specify the sequences of proteins.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.14 — The Central Dogma</div>
+        <img src="images/ch9/fig9-14-central-dogma.png" alt="The central dogma states that DNA encodes RNA, which in turn encodes protein." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The central dogma states that DNA encodes RNA, which in turn encodes protein.</div>
+      </div>
+
+      <p class="prose">The copying of DNA to mRNA is relatively straightforward, with one nucleotide being added to the mRNA strand for every complementary nucleotide read in the DNA strand. The translation to protein is more complex because groups of three mRNA nucleotides correspond to one amino acid of the protein sequence. However, as we shall see in the next module, the translation to protein is still systematic, such that nucleotides 1 to 3 correspond to amino acid 1, nucleotides 4 to 6 correspond to amino acid 2, and so on.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Transcription: from DNA to mRNA</div>
+      <div class="sh2">Prokaryotic vs Eukaryotic Transcription</div>
+
+      <p class="prose">Both prokaryotes and eukaryotes perform fundamentally the same process of transcription, with the important difference of the membrane-bound nucleus in eukaryotes. With the genes bound in the nucleus, transcription occurs in the nucleus of the cell and the mRNA transcript must be transported to the cytoplasm. The prokaryotes, which include bacteria and archaea, lack membrane-bound nuclei and other organelles, and transcription occurs in the cytoplasm of the cell. In both prokaryotes and eukaryotes, transcription occurs in three main stages: initiation, elongation, and termination.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Initiation</div>
+      <div class="sh2">Promoters and the Transcription Bubble</div>
+
+      <p class="prose">Transcription requires the DNA double helix to partially unwind in the region of mRNA synthesis. The region of unwinding is called a transcription bubble. The DNA sequence onto which the proteins and enzymes involved in transcription bind to initiate the process is called a promoter. In most cases, promoters exist upstream of the genes they regulate. The specific sequence of a promoter is very important because it determines whether the corresponding gene is transcribed all of the time, some of the time, or hardly at all (Figure 9.15).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.15 — Transcription Initiation</div>
+        <img src="images/ch9/fig9-15-transcription-initiation.png" alt="The initiation of transcription begins when DNA is unwound, forming a transcription bubble. Enzymes and other proteins involved in transcription bind at the promoter." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">The initiation of transcription begins when DNA is unwound, forming a transcription bubble. Enzymes and other proteins involved in transcription bind at the promoter.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Elongation</div>
+      <div class="sh2">RNA Polymerase and the Template Strand</div>
+
+      <p class="prose">Transcription always proceeds from one of the two DNA strands, which is called the template strand. The mRNA product is complementary to the template strand and is almost identical to the other DNA strand, called the nontemplate strand, with the exception that RNA contains a uracil (U) in place of the thymine (T) found in DNA. During elongation, an enzyme called RNA polymerase proceeds along the DNA template adding nucleotides by base pairing with the DNA template in a manner similar to DNA replication, with the difference that an RNA strand is being synthesized that does not remain bound to the DNA template. As elongation proceeds, the DNA is continuously unwound ahead of the core enzyme and rewound behind it (Figure 9.16).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.16 — Transcription Elongation</div>
+        <img src="images/ch9/fig9-16-elongation.png" alt="During elongation, RNA polymerase tracks along the DNA template, synthesizes mRNA in the 5' to 3' direction, and unwinds then rewinds the DNA as it is read." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">During elongation, RNA polymerase tracks along the DNA template, synthesizes mRNA in the 5' to 3' direction, and unwinds then rewinds the DNA as it is read.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Termination</div>
+      <div class="sh2">Completing Transcription</div>
+
+      <p class="prose">Once a gene is transcribed, the prokaryotic polymerase needs to be instructed to dissociate from the DNA template and liberate the newly made mRNA. Depending on the gene being transcribed, there are two kinds of termination signals, but both involve repeated nucleotide sequences in the DNA template that result in RNA polymerase stalling, leaving the DNA template, and freeing the mRNA transcript.</p>
+
+      <p class="prose">On termination, the process of transcription is complete. In a prokaryotic cell, by the time termination occurs, the transcript would already have been used to partially synthesize numerous copies of the encoded protein because these processes can occur concurrently using multiple ribosomes (polyribosomes) (Figure 9.17). In contrast, the presence of a nucleus in eukaryotic cells precludes simultaneous transcription and translation.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.17 — Polyribosomes</div>
+        <img src="images/ch9/fig9-17-polyribosomes.png" alt="Multiple polymerases can transcribe a single bacterial gene while numerous ribosomes concurrently translate the mRNA transcripts into polypeptides." style="width:100%;max-width:600px;border-radius:10px;">
+        <div class="d-caption">Multiple polymerases can transcribe a single bacterial gene while numerous ribosomes concurrently translate the mRNA transcripts into polypeptides. In this way, a specific protein can rapidly reach a high concentration in the bacterial cell.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Eukaryotic RNA Processing</div>
+      <div class="sh2">5' Cap, Poly-A Tail, and Splicing</div>
+
+      <p class="prose">The newly transcribed eukaryotic mRNAs must undergo several processing steps before they can be transferred from the nucleus to the cytoplasm and translated into a protein. The additional steps involved in eukaryotic mRNA maturation create a molecule that is much more stable than a prokaryotic mRNA. For example, eukaryotic mRNAs last for several hours, whereas the typical prokaryotic mRNA lasts no more than five seconds.</p>
+
+      <p class="prose">The mRNA transcript is first coated in RNA-stabilizing proteins to prevent it from degrading while it is processed and exported out of the nucleus. This occurs while the pre-mRNA still is being synthesized by adding a special nucleotide "cap" to the 5' end of the growing transcript. In addition to preventing degradation, factors involved in protein synthesis recognize the cap to help initiate translation by ribosomes.</p>
+
+      <p class="prose">Once elongation is complete, an enzyme then adds a string of approximately 200 adenine residues to the 3' end, called the poly-A tail. This modification further protects the pre-mRNA from degradation and signals to cellular factors that the transcript needs to be exported to the cytoplasm.</p>
+
+      <p class="prose">Eukaryotic genes are composed of protein-coding sequences called exons (ex-on signifies that they are expressed) and intervening sequences called introns (int-ron denotes their intervening role). Introns are removed from the pre-mRNA during processing. Intron sequences in mRNA do not encode functional proteins. It is essential that all of a pre-mRNA's introns be completely and precisely removed before protein synthesis so that the exons join together to code for the correct amino acids. If the process errs by even a single nucleotide, the sequence of the rejoined exons would be shifted, and the resulting protein would be nonfunctional. The process of removing introns and reconnecting exons is called splicing (Figure 9.18). Introns are removed and degraded while the pre-mRNA is still in the nucleus.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.18 — mRNA Processing</div>
+        <img src="images/ch9/fig9-18-mrna-processing.png" alt="Eukaryotic mRNA contains introns that must be spliced out. A 5' cap and 3' tail are also added." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Eukaryotic mRNA contains introns that must be spliced out. A 5' cap and 3' tail are also added.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Central dogma</div><div class="vocab-def">The flow of genetic information in cells from DNA to mRNA to protein; genes specify the sequences of mRNAs, which in turn specify the sequences of proteins</div></div>
+        <div class="vocab-card"><div class="vocab-term">Transcription</div><div class="vocab-def">The process by which DNA is "read" or copied into an mRNA molecule</div></div>
+        <div class="vocab-card"><div class="vocab-term">Translation</div><div class="vocab-def">The process by which mRNA provides the code to form a protein</div></div>
+        <div class="vocab-card"><div class="vocab-term">Transcription bubble</div><div class="vocab-def">The region of unwinding where the DNA double helix partially unwinds for mRNA synthesis</div></div>
+        <div class="vocab-card"><div class="vocab-term">Promoter</div><div class="vocab-def">The DNA sequence onto which the proteins and enzymes involved in transcription bind to initiate the process</div></div>
+        <div class="vocab-card"><div class="vocab-term">Template strand</div><div class="vocab-def">The DNA strand from which transcription always proceeds; the mRNA product is complementary to it</div></div>
+        <div class="vocab-card"><div class="vocab-term">RNA polymerase</div><div class="vocab-def">An enzyme that proceeds along the DNA template adding nucleotides by base pairing during transcription</div></div>
+        <div class="vocab-card"><div class="vocab-term">Polyribosomes</div><div class="vocab-def">Multiple ribosomes that concurrently translate mRNA transcripts into polypeptides in prokaryotes</div></div>
+        <div class="vocab-card"><div class="vocab-term">5' cap</div><div class="vocab-def">A special nucleotide added to the 5' end of eukaryotic mRNA to prevent degradation and help initiate translation</div></div>
+        <div class="vocab-card"><div class="vocab-term">Poly-A tail</div><div class="vocab-def">A string of approximately 200 adenine residues added to the 3' end of eukaryotic mRNA to protect from degradation</div></div>
+        <div class="vocab-card"><div class="vocab-term">Exon</div><div class="vocab-def">Protein-coding sequences in eukaryotic genes (ex-on signifies that they are expressed)</div></div>
+        <div class="vocab-card"><div class="vocab-term">Intron</div><div class="vocab-def">Intervening sequences in eukaryotic genes that are removed during mRNA processing (int-ron denotes their intervening role)</div></div>
+        <div class="vocab-card"><div class="vocab-term">Splicing</div><div class="vocab-def">The process of removing introns and reconnecting exons in eukaryotic mRNA processing</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="JQByjprj_mA">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/JQByjprj_mA/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Transcription and mRNA Processing — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp3">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Transcription</span>
+      </div>
+      <p class="cp-prompt">Explain the central dogma of molecular biology. Describe the three stages of transcription (initiation, elongation, termination) and explain the processing steps that eukaryotic mRNA must undergo before translation.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(3)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill3"></div></div>
+      <div class="cp-count" id="cpCount3">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz3">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 3 Quiz</div>
+
+      <div class="qq" id="q3-1">
+        <div class="q-stem">1. The central dogma of molecular biology describes the flow of information as:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,1,this,'b')">A. Protein → RNA → DNA</button>
+          <button class="cbtn" onclick="pick(3,1,this,'a')">B. DNA → RNA → Protein</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">C. RNA → DNA → Protein</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">D. DNA → Protein → RNA</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-2">
+        <div class="q-stem">2. The DNA sequence onto which transcription proteins bind to initiate the process is called a:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,2,this,'b')">A. Terminator</button>
+          <button class="cbtn" onclick="pick(3,2,this,'a')">B. Promoter</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">C. Operator</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">D. Enhancer</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-3">
+        <div class="q-stem">3. During transcription, the enzyme that adds nucleotides to the growing mRNA strand is:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,3,this,'b')">A. DNA polymerase</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">B. Helicase</button>
+          <button class="cbtn" onclick="pick(3,3,this,'a')">C. RNA polymerase</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">D. DNA ligase</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-4">
+        <div class="q-stem">4. In prokaryotic cells, transcription and translation can occur simultaneously because:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,4,this,'a')">A. Prokaryotes lack a membrane-bound nucleus</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">B. Prokaryotes have faster RNA polymerase</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">C. Prokaryotic mRNA does not need processing</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">D. Prokaryotes have more ribosomes</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-5">
+        <div class="q-stem">5. The process of removing introns and reconnecting exons in eukaryotic mRNA is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,5,this,'b')">A. Capping</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">B. Polyadenylation</button>
+          <button class="cbtn" onclick="pick(3,5,this,'a')">C. Splicing</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">D. Translation</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-6">
+        <div class="q-stem">6. A string of approximately 200 adenine residues added to the 3' end of eukaryotic mRNA is called the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,6,this,'b')">A. 5' cap</button>
+          <button class="cbtn" onclick="pick(3,6,this,'a')">B. Poly-A tail</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">C. Intron</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">D. Promoter</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score3"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 9.3</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 9.3: Transcription, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(2)">← Lesson 2: DNA Replication</button>
+    <div class="lnav-info">Lesson 3 of 6</div>
+    <button class="nbtn next" onclick="goTo(4)">Lesson 4: Translation →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 4 — TRANSLATION (REBUILD - VERBATIM)
+     OpenStax CB 9.4
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+  <div class="hero hero-xlat">
+    <div class="h-crumb">Molecular Biology · <span>Lesson 4</span></div>
+    <div class="h-title">Translation</div>
+    <div class="h-desc">The synthesis of proteins is one of a cell's most energy-consuming metabolic processes. The process of translation, or protein synthesis, involves decoding an mRNA message into a polypeptide product.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 9.4</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe the different steps in protein synthesis</li>
+        <li>Discuss the role of ribosomes in protein synthesis</li>
+        <li>Describe the genetic code and how the nucleotide sequence determines the amino acid and the protein sequence</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">9.4 Translation</div>
+      <div class="sh2">Protein Synthesis</div>
+      <p class="prose">The synthesis of proteins is one of a cell's most energy-consuming metabolic processes. In turn, proteins account for more mass than any other component of living organisms (with the exception of water), and proteins perform a wide variety of the functions of a cell. The process of translation, or protein synthesis, involves decoding an mRNA message into a polypeptide product. Amino acids are covalently strung together in lengths ranging from approximately 50 amino acids to more than 1,000.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Protein Synthesis Machinery</div>
+      <div class="sh2">Ribosomes, tRNA, and Enzymatic Factors</div>
+      <p class="prose">In addition to the mRNA template, many other molecules contribute to the process of translation. The composition of each component may vary across species; for instance, ribosomes may consist of different numbers of ribosomal RNAs (rRNA) and polypeptides depending on the organism. However, the general structures and functions of the protein synthesis machinery are comparable from bacteria to human cells. Translation requires the input of an mRNA template, ribosomes, tRNAs, and various enzymatic factors (Figure 9.19).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.19 — The Protein Synthesis Machinery</div>
+        <img src="images/ch9/fig9-19-translation-machinery.png" alt="The protein synthesis machinery includes the large and small subunits of the ribosome, mRNA, and tRNA" style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The protein synthesis machinery includes the large and small subunits of the ribosome, mRNA, and tRNA. (credit: modification of work by NIGMS, NIH)</div>
+      </div>
+
+      <p class="prose">In <em>E. coli</em>, there are 200,000 ribosomes present in every cell at any given time. A ribosome is a complex macromolecule composed of structural and catalytic rRNAs, and many distinct polypeptides. In eukaryotes, the nucleolus is completely specialized for the synthesis and assembly of rRNAs.</p>
+
+      <p class="prose">Ribosomes are located in the cytoplasm in prokaryotes and in the cytoplasm and endoplasmic reticulum of eukaryotes. Ribosomes are made up of a large and a small subunit that come together for translation. The small subunit is responsible for binding the mRNA template, whereas the large subunit sequentially binds tRNAs, a type of RNA molecule that brings amino acids to the growing chain of the polypeptide. Each mRNA molecule is simultaneously translated by many ribosomes, all synthesizing protein in the same direction.</p>
+
+      <p class="prose">Depending on the species, 40 to 60 types of tRNA exist in the cytoplasm. Serving as adaptors, specific tRNAs bind to sequences on the mRNA template and add the corresponding amino acid to the polypeptide chain. Therefore, tRNAs are the molecules that actually "translate" the language of RNA into the language of proteins. For each tRNA to function, it must have its specific amino acid bonded to it. In the process of tRNA "charging," each tRNA molecule is bonded to its correct amino acid.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Genetic Code</div>
+      <div class="sh2">Codons, Start Codons, and Stop Codons</div>
+      <p class="prose">To summarize what we know to this point, the cellular process of transcription generates messenger RNA (mRNA), a mobile molecular copy of one or more genes with an alphabet of A, C, G, and uracil (U). Translation of the mRNA template converts nucleotide-based genetic information into a protein product. Protein sequences consist of 20 commonly occurring amino acids; therefore, it can be said that the protein alphabet consists of 20 letters. Each amino acid is defined by a three-nucleotide sequence called the triplet codon. The relationship between a nucleotide codon and its corresponding amino acid is called the genetic code.</p>
+
+      <p class="prose">Given the different numbers of "letters" in the mRNA and protein "alphabets," combinations of nucleotides corresponded to single amino acids. Using a three-nucleotide code means that there are a total of 64 (4 × 4 × 4) possible combinations; therefore, a given amino acid is encoded by more than one nucleotide triplet (Figure 9.20).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.20 — The Genetic Code</div>
+        <img src="images/ch9/fig9-20-genetic-code.png" alt="The genetic code for translating each nucleotide triplet, or codon, in mRNA into an amino acid or a termination signal" style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">This figure shows the genetic code for translating each nucleotide triplet, or codon, in mRNA into an amino acid or a termination signal in a nascent protein. (credit: modification of work by NIH)</div>
+      </div>
+
+      <p class="prose">Three of the 64 codons terminate protein synthesis and release the polypeptide from the translation machinery. These triplets are called stop codons. Another codon, AUG, also has a special function. In addition to specifying the amino acid methionine, it also serves as the start codon to initiate translation. The reading frame for translation is set by the AUG start codon near the 5' end of the mRNA. The genetic code is universal. With a few exceptions, virtually all species use the same genetic code for protein synthesis, which is powerful evidence that all life on Earth shares a common origin.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">The Mechanism of Protein Synthesis</div>
+      <div class="sh2">Initiation, Elongation, and Termination</div>
+      <p class="prose">Just as with mRNA synthesis, protein synthesis can be divided into three phases: initiation, elongation, and termination. The process of translation is similar in prokaryotes and eukaryotes. Here we will explore how translation occurs in <em>E. coli</em>, a representative prokaryote, and specify any differences between prokaryotic and eukaryotic translation.</p>
+
+      <p class="prose">Protein synthesis begins with the formation of an initiation complex. In <em>E. coli</em>, this complex involves the small ribosome subunit, the mRNA template, three initiation factors, and a special initiator tRNA. The initiator tRNA interacts with the AUG start codon, and links to a special form of the amino acid methionine that is typically removed from the polypeptide after translation is complete.</p>
+
+      <p class="prose">In prokaryotes and eukaryotes, the basics of polypeptide elongation are the same, so we will review elongation from the perspective of <em>E. coli</em>. The large ribosomal subunit of <em>E. coli</em> consists of three compartments: the A site binds incoming charged tRNAs (tRNAs with their attached specific amino acids). The P site binds charged tRNAs carrying amino acids that have formed bonds with the growing polypeptide chain but have not yet dissociated from their corresponding tRNA. The E site releases dissociated tRNAs so they can be recharged with free amino acids. The ribosome shifts one codon at a time, catalyzing each process that occurs in the three sites. With each step, a charged tRNA enters the complex, the polypeptide becomes one amino acid longer, and an uncharged tRNA departs. The energy for each bond between amino acids is derived from GTP, a molecule similar to ATP (Figure 9.21). Amazingly, the <em>E. coli</em> translation apparatus takes only 0.05 seconds to add each amino acid, meaning that a 200-amino acid polypeptide could be translated in just 10 seconds.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.21 — Translation Steps</div>
+        <img src="images/ch9/fig9-21-translation-steps.png" alt="Translation begins when a tRNA anticodon recognizes a codon on the mRNA. The large ribosomal subunit joins the small subunit, and a second tRNA is recruited." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Translation begins when a tRNA anticodon recognizes a codon on the mRNA. The large ribosomal subunit joins the small subunit, and a second tRNA is recruited. As the mRNA moves relative to the ribosome, the polypeptide chain is formed. Entry of a release factor into the A site terminates translation and the components dissociate.</div>
+      </div>
+
+      <p class="prose">Termination of translation occurs when a stop codon (UAA, UAG, or UGA) is encountered. When the ribosome encounters the stop codon, the growing polypeptide is released and the ribosome subunits dissociate and leave the mRNA. After many ribosomes have completed translation, the mRNA is degraded so the nucleotides can be reused in another transcription reaction.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Codon</div><div class="vocab-def">Three consecutive nucleotides in mRNA that specify the addition of a specific amino acid or the release of a polypeptide chain during translation</div></div>
+        <div class="vocab-card"><div class="vocab-term">tRNA</div><div class="vocab-def">Transfer RNA; an RNA molecule that contains a specific three-nucleotide anticodon sequence to pair with the mRNA codon and also binds to a specific amino acid</div></div>
+        <div class="vocab-card"><div class="vocab-term">rRNA</div><div class="vocab-def">Ribosomal RNA; molecules of RNA that combine to form part of the ribosome</div></div>
+        <div class="vocab-card"><div class="vocab-term">Genetic code</div><div class="vocab-def">The amino acids that correspond to three-nucleotide codons of mRNA</div></div>
+        <div class="vocab-card"><div class="vocab-term">Start codon</div><div class="vocab-def">The AUG (or, rarely GUG) on an mRNA from which translation begins; always specifies methionine</div></div>
+        <div class="vocab-card"><div class="vocab-term">Stop codon</div><div class="vocab-def">One of the three mRNA codons that specifies termination of translation</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="ocAAkB32bdo">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/ocAAkB32bdo/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Translation (mRNA to Protein) — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp4">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Translation</span>
+      </div>
+      <p class="cp-prompt">Describe the roles of the three ribosomal sites (A, P, and E) during translation. Explain how the genetic code is "read" by the ribosome, starting from the AUG start codon, and what happens when a stop codon is reached.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(4)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill4"></div></div>
+      <div class="cp-count" id="cpCount4">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz4">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 4 Quiz</div>
+
+      <div class="qq" id="q4-1">
+        <div class="q-stem">1. The RNA components of ribosomes are synthesized in the ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,1,this,'b')">A. Cytoplasm</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">B. Nucleus</button>
+          <button class="cbtn" onclick="pick(4,1,this,'a')">C. Nucleolus</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">D. Endoplasmic reticulum</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-2">
+        <div class="q-stem">2. How long would the peptide be that is translated from this mRNA sequence: 5'-AUGGGCUACCGA-3'?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,2,this,'b')">A. 0</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">B. 2</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">C. 3</button>
+          <button class="cbtn" onclick="pick(4,2,this,'a')">D. 4</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-3">
+        <div class="q-stem">3. The small ribosomal subunit is responsible for:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,3,this,'a')">A. Binding the mRNA template</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">B. Sequentially binding tRNAs</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">C. Catalyzing peptide bond formation</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">D. Releasing the completed polypeptide</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-4">
+        <div class="q-stem">4. The start codon AUG codes for which amino acid?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,4,this,'b')">A. Alanine</button>
+          <button class="cbtn" onclick="pick(4,4,this,'a')">B. Methionine</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">C. Leucine</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">D. Glycine</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-5">
+        <div class="q-stem">5. Which of the following is NOT a stop codon?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,5,this,'b')">A. UAA</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">B. UAG</button>
+          <button class="cbtn" onclick="pick(4,5,this,'a')">C. AUG</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">D. UGA</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-6">
+        <div class="q-stem">6. The energy for each bond between amino acids during translation is derived from:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,6,this,'b')">A. ATP</button>
+          <button class="cbtn" onclick="pick(4,6,this,'a')">B. GTP</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">C. NADH</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">D. FADH<sub>2</sub></button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score4"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 9.4</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 9.4: Translation, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(3)">← Lesson 3: Transcription</button>
+    <div class="lnav-info">Lesson 4 of 7</div>
+    <button class="nbtn next" onclick="goTo(5)">Lesson 5: How Genes Are Regulated →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 5 — HOW GENES ARE REGULATED (REBUILD - VERBATIM)
+     OpenStax CB 9.5
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+  <div class="hero hero-reg">
+    <div class="h-crumb">Molecular Biology · <span>Lesson 5</span></div>
+    <div class="h-title">How Genes Are Regulated</div>
+    <div class="h-desc">For a cell to function properly, necessary proteins must be synthesized at the proper time. All organisms and cells control or regulate the transcription and translation of their DNA into protein.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 9.5</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Discuss why every cell does not express all of its genes</li>
+        <li>Describe how prokaryotic gene expression occurs at the transcriptional level</li>
+        <li>Understand that eukaryotic gene expression occurs at the epigenetic, transcriptional, post-transcriptional, translational, and post-translational levels</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">9.5 How Genes Are Regulated</div>
+      <div class="sh2">Why Gene Regulation Matters</div>
+      <p class="prose">For a cell to function properly, necessary proteins must be synthesized at the proper time. All organisms and cells control or regulate the transcription and translation of their DNA into protein. The process of turning on a gene to produce RNA and protein is called gene expression. Whether in a simple unicellular organism or in a complex multicellular organism, each cell controls when and how its genes are expressed. For this to occur, there must be a mechanism to control when a gene is expressed to make RNA and protein, how much of the protein is made, and when it is time to stop making that protein because it is no longer needed.</p>
+
+      <p class="prose">Cells in multicellular organisms are specialized; cells in different tissues look very different and perform different functions. For example, a muscle cell is very different from a liver cell, which is very different from a skin cell. These differences are a consequence of the expression of different sets of genes in each of these cells. All cells have certain basic functions they must perform for themselves, such as converting the energy in sugar molecules into energy in ATP. Each cell also has many genes that are not expressed, and expresses many that are not expressed by other cells, such that it can carry out its specialized functions. In addition, cells will turn on or off certain genes at different times in response to changes in the environment or at different times during the development of the organism. Unicellular organisms, both eukaryotic and prokaryotic, also turn on and off genes in response to the demands of their environment so that they can respond to special conditions.</p>
+
+      <p class="prose">The control of gene expression is extremely complex. Malfunctions in this process are detrimental to the cell and can lead to the development of many diseases, including cancer.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Prokaryotic versus Eukaryotic Gene Expression</div>
+      <div class="sh2">Fundamental Differences in Regulation</div>
+      <p class="prose">To understand how gene expression is regulated, we must first understand how a gene becomes a functional protein in a cell. The process occurs in both prokaryotic and eukaryotic cells, just in slightly different fashions.</p>
+
+      <p class="prose">Because prokaryotic organisms lack a cell nucleus, the processes of transcription and translation occur almost simultaneously. When the protein is no longer needed, transcription stops. As a result, the primary method to control what type and how much protein is expressed in a prokaryotic cell is through the regulation of DNA transcription into RNA. All the subsequent steps happen automatically. When more protein is required, more transcription occurs. Therefore, in prokaryotic cells, the control of gene expression is almost entirely at the transcriptional level.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Prokaryotic Gene Regulation</div>
+      <div class="sh2">The <em>lac</em> Operon</div>
+      <p class="prose">The first example of such control was discovered using <em>E. coli</em> in the 1950s and 1960s by French researchers and is called the <em>lac</em> operon. The <em>lac</em> operon is a stretch of DNA with three adjacent genes that code for proteins that participate in the absorption and metabolism of lactose, a food source for <em>E. coli</em>. When lactose is not present in the bacterium's environment, the <em>lac</em> genes are transcribed in small amounts. When lactose is present, the genes are transcribed and the bacterium is able to use the lactose as a food source. The operon also contains a promoter sequence to which the RNA polymerase binds to begin transcription; between the promoter and the three genes is a region called the operator. When there is no lactose present, a protein known as a repressor binds to the operator and prevents RNA polymerase from binding to the promoter, except in rare cases. Thus very little of the protein products of the three genes is made. When lactose is present, an end product of lactose metabolism binds to the repressor protein and prevents it from binding to the operator. This allows RNA polymerase to bind to the promoter and freely transcribe the three genes, allowing the organism to metabolize the lactose.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Eukaryotic Gene Regulation</div>
+      <div class="sh2">Multiple Levels of Control</div>
+      <p class="prose">Eukaryotic cells, in contrast, have intracellular organelles and are much more complex. Recall that in eukaryotic cells, the DNA is contained inside the cell's nucleus and it is transcribed into mRNA there. The newly synthesized mRNA is then transported out of the nucleus into the cytoplasm, where ribosomes translate the mRNA into protein. The processes of transcription and translation are physically separated by the nuclear membrane; transcription occurs only within the nucleus, and translation only occurs outside the nucleus in the cytoplasm. The regulation of gene expression can occur at all stages of the process (Figure 9.22). Regulation may occur when the DNA is uncoiled and loosened from nucleosomes to bind transcription factors (epigenetic level), when the RNA is transcribed (transcriptional level), when RNA is processed and exported to the cytoplasm after it is transcribed (post-transcriptional level), when the RNA is translated into protein (translational level), or after the protein has been made (post-translational level).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.22 — Eukaryotic Gene Expression Regulation</div>
+        <img src="images/ch9/fig9-22-gene-regulation.png" alt="Eukaryotic gene expression is regulated during transcription and RNA processing, which take place in the nucleus, as well as during protein translation, which takes place in the cytoplasm" style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Eukaryotic gene expression is regulated during transcription and RNA processing, which take place in the nucleus, as well as during protein translation, which takes place in the cytoplasm. Further regulation may occur through post-translational modifications of proteins.</div>
+      </div>
+
+      <p class="prose">The differences in the regulation of gene expression between prokaryotes and eukaryotes are summarized in Table 9.2.</p>
+
+      <div class="table-wrap">
+        <table class="content-table">
+          <caption>Differences in the Regulation of Gene Expression of Prokaryotic and Eukaryotic Organisms</caption>
+          <thead>
+            <tr><th>Prokaryotic organisms</th><th>Eukaryotic organisms</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Lack nucleus</td><td>Contain nucleus</td></tr>
+            <tr><td>RNA transcription and protein translation occur almost simultaneously</td><td>RNA transcription occurs prior to protein translation, and it takes place in the nucleus. RNA translation to protein occurs in the cytoplasm. RNA post-processing includes addition of a 5' cap, poly-A tail, and excision of introns and splicing of exons.</td></tr>
+            <tr><td>Gene expression is regulated primarily at the transcriptional level</td><td>Gene expression is regulated at many levels (epigenetic, transcriptional, post-transcriptional, translational, and post-translational)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Evolution Connection</div>
+      <div class="sh2">Alternative RNA Splicing</div>
+      <p class="prose">In the 1970s, genes were first observed that exhibited alternative RNA splicing. Alternative RNA splicing is a mechanism that allows different protein products to be produced from one gene when different combinations of introns (and sometimes exons) are removed from the transcript (Figure 9.23). This alternative splicing can be haphazard, but more often it is controlled and acts as a mechanism of gene regulation, with the frequency of different splicing alternatives controlled by the cell as a way to control the production of different protein products in different cells, or at different stages of development. Alternative splicing is now understood to be a common mechanism of gene regulation in eukaryotes; according to one estimate, 70% of genes in humans are expressed as multiple proteins through alternative splicing.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 9.23 — Alternative RNA Splicing</div>
+        <img src="images/ch9/fig9-23-epigenetics.png" alt="Five basic modes of alternative splicing showing segments of pre-mRNA with exons that can be spliced to produce a variety of new mature mRNA segments" style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">There are five basic modes of alternative splicing. Segments of pre-mRNA with exons shown in blue, red, orange, and pink can be spliced to produce a variety of new mature mRNA segments.</div>
+      </div>
+
+      <p class="prose">How could alternative splicing evolve? Introns have a beginning and ending recognition sequence, and it is easy to imagine the failure of the splicing mechanism to identify the end of an intron and find the end of the next intron, thus removing two introns and the intervening exon. In fact, there are mechanisms in place to prevent such exon skipping, but mutations are likely to lead to their failure. Such "mistakes" would more than likely produce a nonfunctional protein. Indeed, the cause of many genetic diseases is alternative splicing rather than mutations in a sequence. However, alternative splicing would create a protein variant without the loss of the original protein, opening up possibilities for adaptation of the new variant to new functions. Gene duplication has played an important role in the evolution of new functions in a similar way—by providing genes that may evolve without eliminating the original functional protein.</p>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Gene expression</div><div class="vocab-def">Processes that control whether a gene is expressed</div></div>
+        <div class="vocab-card"><div class="vocab-term">Epigenetic</div><div class="vocab-def">Describing non-genetic regulatory factors, such as changes in modifications to histone proteins and DNA that control accessibility to genes in chromosomes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Post-transcriptional</div><div class="vocab-def">Control of gene expression after the RNA molecule has been created but before it is translated into protein</div></div>
+        <div class="vocab-card"><div class="vocab-term">Post-translational</div><div class="vocab-def">Control of gene expression after a protein has been created</div></div>
+        <div class="vocab-card"><div class="vocab-term">Alternative RNA splicing</div><div class="vocab-def">A post-transcriptional gene regulation mechanism in eukaryotes in which multiple protein products are produced by a single gene through alternative splicing combinations of the RNA transcript</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="guuJM5SHTJY">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/guuJM5SHTJY/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Gene Regulation and the Order of the Operon — Amoeba Sisters</div><div class="vid-dur">~8 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp5">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Gene Regulation</span>
+      </div>
+      <p class="cp-prompt">Explain how the <em>lac</em> operon works in prokaryotes. Then describe at least three different levels at which eukaryotic gene expression can be regulated and why this multi-level control is necessary.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(5)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill5"></div></div>
+      <div class="cp-count" id="cpCount5">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz5">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 5 Quiz</div>
+
+      <div class="qq" id="q5-1">
+        <div class="q-stem">1. Control of gene expression in eukaryotic cells occurs at which level(s)?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,1,this,'b')">A. Only the transcriptional level</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">B. Epigenetic and transcriptional levels</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">C. Epigenetic, transcriptional, and translational levels</button>
+          <button class="cbtn" onclick="pick(5,1,this,'a')">D. Epigenetic, transcriptional, post-transcriptional, translational, and post-translational levels</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q5-2">
+        <div class="q-stem">2. Post-translational control refers to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,2,this,'b')">A. Regulation of gene expression after transcription</button>
+          <button class="cbtn" onclick="pick(5,2,this,'a')">B. Regulation of gene expression after translation</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">C. Control of epigenetic activation</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">D. Period between transcription and translation</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q5-3">
+        <div class="q-stem">3. In prokaryotic cells, the control of gene expression is almost entirely at the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,3,this,'a')">A. Transcriptional level</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">B. Translational level</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">C. Post-translational level</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">D. Epigenetic level</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q5-4">
+        <div class="q-stem">4. In the <em>lac</em> operon, when lactose is NOT present, the repressor protein:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,4,this,'a')">A. Binds to the operator and prevents RNA polymerase from binding to the promoter</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">B. Binds to the promoter and activates transcription</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">C. Is degraded by the cell</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">D. Binds to the mRNA and prevents translation</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q5-5">
+        <div class="q-stem">5. According to one estimate, what percentage of genes in humans are expressed as multiple proteins through alternative splicing?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,5,this,'b')">A. 20%</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">B. 40%</button>
+          <button class="cbtn" onclick="pick(5,5,this,'a')">C. 70%</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">D. 90%</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q5-6">
+        <div class="q-stem">6. Cells in different tissues look very different and perform different functions because:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,6,this,'b')">A. They contain different DNA</button>
+          <button class="cbtn" onclick="pick(5,6,this,'a')">B. They express different sets of genes</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">C. They have different numbers of chromosomes</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">D. They undergo different types of cell division</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score5"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 9.5</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 9.5: How Genes Are Regulated, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(4)">← Lesson 4: Translation</button>
+    <div class="lnav-info">Lesson 5 of 7</div>
+    <button class="nbtn next" onclick="goTo(6)">Lesson 6: Practice Test →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 6 — PRACTICE TEST (20 QUESTIONS)
+     Covering all of Chapter 9
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p6">
+  <div class="hero hero-test">
+    <div class="h-crumb">Molecular Biology · <span>Practice Test</span></div>
+    <div class="h-title">Unit Review &amp; Practice Test</div>
+    <div class="h-desc">Test your knowledge of molecular biology with this 20-question comprehensive assessment covering all topics from Chapter 9.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 9 Review</div>
+      <div class="h-chip">⏱ ~30 min</div>
+      <div class="h-chip">🎯 20 Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">📋 What This Test Covers</div>
+      <ul class="obj-list">
+        <li>The structure of DNA (nucleotides, base pairing, double helix, purines/pyrimidines, antiparallel strands) — CB 9.1</li>
+        <li>DNA replication (semiconservative, replication fork, leading/lagging strand, telomerase, DNA repair) — CB 9.2</li>
+        <li>Transcription (central dogma, RNA polymerase, mRNA processing, introns/exons) — CB 9.3</li>
+        <li>Translation (codons, tRNA, ribosome structure, start/stop codons, genetic code) — CB 9.4</li>
+        <li>How genes are regulated (operons, epigenetics, transcription factors, alternative splicing) — CB 9.5</li>
+      </ul>
+    </div>
+
+    <div class="quiz-wrap" id="quiz6">
+      <div class="quiz-header"><span class="qi">📝</span> Chapter 9 Practice Test — 20 Questions</div>
+
+      <!-- Q1 — OpenStax Review Q2 (9.1) -->
+      <div class="qq" id="q6-1">
+        <div class="q-stem">1. Which of the following does cytosine pair with?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,1,this,'a')">A. Guanine</button>
+          <button class="cbtn" onclick="pick(6,1,this,'b')">B. Thymine</button>
+          <button class="cbtn" onclick="pick(6,1,this,'b')">C. Adenine</button>
+          <button class="cbtn" onclick="pick(6,1,this,'b')">D. A pyrimidine</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q2 — OpenStax Review Q3 (9.1) -->
+      <div class="qq" id="q6-2">
+        <div class="q-stem">2. Prokaryotes contain a ________ chromosome, and eukaryotes contain ________ chromosomes.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,2,this,'b')">A. Single-stranded circular; single-stranded linear</button>
+          <button class="cbtn" onclick="pick(6,2,this,'b')">B. Single-stranded linear; single-stranded circular</button>
+          <button class="cbtn" onclick="pick(6,2,this,'a')">C. Double-stranded circular; double-stranded linear</button>
+          <button class="cbtn" onclick="pick(6,2,this,'b')">D. Double-stranded linear; double-stranded circular</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q3 — OpenStax Review Q4 (9.2) -->
+      <div class="qq" id="q6-3">
+        <div class="q-stem">3. DNA replicates by which of the following models?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,3,this,'b')">A. Conservative</button>
+          <button class="cbtn" onclick="pick(6,3,this,'a')">B. Semiconservative</button>
+          <button class="cbtn" onclick="pick(6,3,this,'b')">C. Dispersive</button>
+          <button class="cbtn" onclick="pick(6,3,this,'b')">D. None of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q4 — OpenStax Review Q5 (9.2) -->
+      <div class="qq" id="q6-4">
+        <div class="q-stem">4. The initial mechanism for repairing nucleotide errors in DNA is ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,4,this,'b')">A. Mismatch repair</button>
+          <button class="cbtn" onclick="pick(6,4,this,'a')">B. DNA polymerase proofreading</button>
+          <button class="cbtn" onclick="pick(6,4,this,'b')">C. Nucleotide excision repair</button>
+          <button class="cbtn" onclick="pick(6,4,this,'b')">D. Thymine dimers</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q5 — OpenStax Review Q6 (9.3) -->
+      <div class="qq" id="q6-5">
+        <div class="q-stem">5. A promoter is ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,5,this,'a')">A. A specific sequence of DNA nucleotides</button>
+          <button class="cbtn" onclick="pick(6,5,this,'b')">B. A specific sequence of RNA nucleotides</button>
+          <button class="cbtn" onclick="pick(6,5,this,'b')">C. A protein that binds to DNA</button>
+          <button class="cbtn" onclick="pick(6,5,this,'b')">D. An enzyme that synthesizes RNA</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q6 — OpenStax Review Q7 (9.3) -->
+      <div class="qq" id="q6-6">
+        <div class="q-stem">6. Portions of eukaryotic mRNA sequence that are removed during RNA processing are ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,6,this,'b')">A. Exons</button>
+          <button class="cbtn" onclick="pick(6,6,this,'b')">B. Caps</button>
+          <button class="cbtn" onclick="pick(6,6,this,'b')">C. Poly-A tails</button>
+          <button class="cbtn" onclick="pick(6,6,this,'a')">D. Introns</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q7 — OpenStax Review Q8 (9.4) -->
+      <div class="qq" id="q6-7">
+        <div class="q-stem">7. The RNA components of ribosomes are synthesized in the ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,7,this,'b')">A. Cytoplasm</button>
+          <button class="cbtn" onclick="pick(6,7,this,'b')">B. Nucleus</button>
+          <button class="cbtn" onclick="pick(6,7,this,'a')">C. Nucleolus</button>
+          <button class="cbtn" onclick="pick(6,7,this,'b')">D. Endoplasmic reticulum</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q8 — OpenStax Review Q10 (9.5) -->
+      <div class="qq" id="q6-8">
+        <div class="q-stem">8. Control of gene expression in eukaryotic cells occurs at which level(s)?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,8,this,'b')">A. Only the transcriptional level</button>
+          <button class="cbtn" onclick="pick(6,8,this,'b')">B. Epigenetic and transcriptional levels</button>
+          <button class="cbtn" onclick="pick(6,8,this,'b')">C. Epigenetic, transcriptional, and translational levels</button>
+          <button class="cbtn" onclick="pick(6,8,this,'a')">D. Epigenetic, transcriptional, post-transcriptional, translational, and post-translational levels</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q9 — Content-based (9.1) -->
+      <div class="qq" id="q6-9">
+        <div class="q-stem">9. Adenine and guanine are double-ringed bases known as:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,9,this,'b')">A. Pyrimidines</button>
+          <button class="cbtn" onclick="pick(6,9,this,'a')">B. Purines</button>
+          <button class="cbtn" onclick="pick(6,9,this,'b')">C. Nucleosides</button>
+          <button class="cbtn" onclick="pick(6,9,this,'b')">D. Histones</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q10 — Content-based (9.1) -->
+      <div class="qq" id="q6-10">
+        <div class="q-stem">10. The two strands of the DNA double helix are described as anti-parallel because:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,10,this,'b')">A. They are made of different nucleotides</button>
+          <button class="cbtn" onclick="pick(6,10,this,'a')">B. One strand has the 3' carbon in the "upward" position while the other has the 5' carbon in the upward position</button>
+          <button class="cbtn" onclick="pick(6,10,this,'b')">C. They run parallel to each other without twisting</button>
+          <button class="cbtn" onclick="pick(6,10,this,'b')">D. They are held together by covalent bonds</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q11 — Content-based (9.1) -->
+      <div class="qq" id="q6-11">
+        <div class="q-stem">11. DNA is wrapped around proteins known as ________ to form structures called nucleosomes.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,11,this,'b')">A. Polymerases</button>
+          <button class="cbtn" onclick="pick(6,11,this,'a')">B. Histones</button>
+          <button class="cbtn" onclick="pick(6,11,this,'b')">C. Ligases</button>
+          <button class="cbtn" onclick="pick(6,11,this,'b')">D. Helicases</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q12 — Content-based (9.2) -->
+      <div class="qq" id="q6-12">
+        <div class="q-stem">12. The strand that is synthesized in short pieces called Okazaki fragments is known as the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,12,this,'b')">A. Leading strand</button>
+          <button class="cbtn" onclick="pick(6,12,this,'a')">B. Lagging strand</button>
+          <button class="cbtn" onclick="pick(6,12,this,'b')">C. Template strand</button>
+          <button class="cbtn" onclick="pick(6,12,this,'b')">D. Nontemplate strand</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q13 — Content-based (9.2) -->
+      <div class="qq" id="q6-13">
+        <div class="q-stem">13. Telomerase is typically found to be active in:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,13,this,'b')">A. All somatic cells</button>
+          <button class="cbtn" onclick="pick(6,13,this,'a')">B. Germ cells, adult stem cells, and some cancer cells</button>
+          <button class="cbtn" onclick="pick(6,13,this,'b')">C. Only prokaryotic cells</button>
+          <button class="cbtn" onclick="pick(6,13,this,'b')">D. Only embryonic cells</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q14 — Content-based (9.3) -->
+      <div class="qq" id="q6-14">
+        <div class="q-stem">14. The central dogma of molecular biology states that:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,14,this,'b')">A. Proteins encode RNA, which encodes DNA</button>
+          <button class="cbtn" onclick="pick(6,14,this,'a')">B. DNA encodes RNA, which in turn encodes protein</button>
+          <button class="cbtn" onclick="pick(6,14,this,'b')">C. RNA encodes DNA, which encodes protein</button>
+          <button class="cbtn" onclick="pick(6,14,this,'b')">D. DNA directly encodes protein without an RNA intermediate</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q15 — Content-based (9.3) -->
+      <div class="qq" id="q6-15">
+        <div class="q-stem">15. The process of removing introns and reconnecting exons in eukaryotic pre-mRNA is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,15,this,'b')">A. Capping</button>
+          <button class="cbtn" onclick="pick(6,15,this,'b')">B. Polyadenylation</button>
+          <button class="cbtn" onclick="pick(6,15,this,'a')">C. Splicing</button>
+          <button class="cbtn" onclick="pick(6,15,this,'b')">D. Translation</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q16 — Content-based (9.4) -->
+      <div class="qq" id="q6-16">
+        <div class="q-stem">16. Using a three-nucleotide code, how many total possible codon combinations exist?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,16,this,'b')">A. 20</button>
+          <button class="cbtn" onclick="pick(6,16,this,'b')">B. 48</button>
+          <button class="cbtn" onclick="pick(6,16,this,'a')">C. 64</button>
+          <button class="cbtn" onclick="pick(6,16,this,'b')">D. 128</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q17 — Content-based (9.4) -->
+      <div class="qq" id="q6-17">
+        <div class="q-stem">17. Which ribosomal site binds incoming charged tRNAs with their attached specific amino acids?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,17,this,'a')">A. A site</button>
+          <button class="cbtn" onclick="pick(6,17,this,'b')">B. P site</button>
+          <button class="cbtn" onclick="pick(6,17,this,'b')">C. E site</button>
+          <button class="cbtn" onclick="pick(6,17,this,'b')">D. S site</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q18 — Content-based (9.4) -->
+      <div class="qq" id="q6-18">
+        <div class="q-stem">18. Which of the following is a stop codon?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,18,this,'b')">A. AUG</button>
+          <button class="cbtn" onclick="pick(6,18,this,'b')">B. GUG</button>
+          <button class="cbtn" onclick="pick(6,18,this,'a')">C. UAA</button>
+          <button class="cbtn" onclick="pick(6,18,this,'b')">D. GCA</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q19 — Content-based (9.5) -->
+      <div class="qq" id="q6-19">
+        <div class="q-stem">19. The <em>lac</em> operon is a stretch of DNA with three adjacent genes that code for proteins that participate in the absorption and metabolism of:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,19,this,'b')">A. Glucose</button>
+          <button class="cbtn" onclick="pick(6,19,this,'a')">B. Lactose</button>
+          <button class="cbtn" onclick="pick(6,19,this,'b')">C. Sucrose</button>
+          <button class="cbtn" onclick="pick(6,19,this,'b')">D. Fructose</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q20 — Content-based (9.5) -->
+      <div class="qq" id="q6-20">
+        <div class="q-stem">20. Alternative RNA splicing allows:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(6,20,this,'a')">A. Different protein products to be produced from one gene</button>
+          <button class="cbtn" onclick="pick(6,20,this,'b')">B. DNA to be replicated faster</button>
+          <button class="cbtn" onclick="pick(6,20,this,'b')">C. Prokaryotes to regulate gene expression</button>
+          <button class="cbtn" onclick="pick(6,20,this,'b')">D. Introns to be translated into protein</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score6"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 9 Review</div><div class="cx">Questions adapted from OpenStax Concepts of Biology, Chapter 9: Molecular Biology, Review Questions and Critical Thinking Questions, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(5)">← Lesson 5: How Genes Are Regulated</button>
+    <div class="lnav-info">Practice Test · End of Module</div>
+    <button class="nbtn next" disabled>Module Complete ✓</button>
+  </div>
+</div>
+</main>
+<script>
+window.MODULE_CONFIG = {
+  name: 'Molecular Biology',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec',
+  panelCount: 7,
+  lessonCount: 6,
+  cpMin: 100,
+  lessons: ['Overview','L1: Structure of DNA','L2: DNA Replication','L3: Transcription','L4: Translation','L5: Gene Regulation','L6: Practice Test']
+};
+</script>
+<script src="../shared/portal-quiz.js"></script>
+</body>
+</html>
