@@ -23,7 +23,7 @@ body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;color:#0f2240;min
 .header{background:#0f2240;color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px}
 .header h1{font-size:1.2rem;font-weight:700}
 .header .subtitle{font-size:.8rem;color:rgba(255,255,255,.6)}
-.header .refresh{margin-left:auto;background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.header .refresh{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem}
 .header .refresh:hover{background:rgba(255,255,255,.25)}
 
 /* Tabs */
@@ -73,6 +73,13 @@ tr:hover td{background:#f8fafc}
 .loading::after{content:'';display:block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#0b8f8c;border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;border-top:1px solid #e2e8f0}
+.page-btn{padding:6px 14px;border:1px solid #dde3ef;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-family:inherit}
+.page-btn:hover{background:#f1f5f9}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-info{font-size:.82rem;color:#64748b}
+
 /* Responsive */
 @media(max-width:768px){.stats{grid-template-columns:1fr 1fr}.tbl-header{flex-direction:column;align-items:stretch}}
 </style>
@@ -96,6 +103,16 @@ tr:hover td{background:#f8fafc}
     <h1>SGHS Biology — Teacher Dashboard</h1>
     <div class="subtitle">Student progress tracking across all modules</div>
   </div>
+  <select class="filter" id="period-filter" onchange="periodFilter=this.value;resetPages();renderAll()" style="margin-left:auto;padding:8px 12px;border-radius:6px;font-size:.85rem;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:#fff">
+    <option value="">All Periods</option>
+    <option value="Period 1">Period 1</option>
+    <option value="Period 2">Period 2</option>
+    <option value="Period 3">Period 3</option>
+    <option value="Period 4">Period 4</option>
+    <option value="Period 5">Period 5</option>
+    <option value="Period 6">Period 6</option>
+    <option value="Period 7">Period 7</option>
+  </select>
   <button class="refresh" onclick="loadAllData()">Refresh Data</button>
 </div>
 
@@ -114,10 +131,10 @@ tr:hover td{background:#f8fafc}
   <!-- OVERVIEW TAB -->
   <div class="panel active" id="tab-overview">
     <div class="stats" id="overview-stats"></div>
-    <div class="tbl-wrap">
+    <div class="tbl-wrap" id="overview-wrap">
       <div class="tbl-header">
         <h3>Student Score Summary</h3>
-        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('overview-table', this.value)">
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.overview=this.value;currentPages.overview=1;renderOverview()">
       </div>
       <table id="overview-table"><thead><tr></tr></thead><tbody></tbody></table>
     </div>
@@ -125,11 +142,11 @@ tr:hover td{background:#f8fafc}
 
   <!-- SCORES TAB -->
   <div class="panel" id="tab-scores">
-    <div class="tbl-wrap">
+    <div class="tbl-wrap" id="scores-wrap">
       <div class="tbl-header">
         <h3>All Quiz Scores</h3>
-        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('scores-table', this.value)">
-        <select class="filter" id="scores-module-filter" onchange="renderScores()"><option value="">All Modules</option></select>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.scores=this.value;currentPages.scores=1;renderScores()">
+        <select class="filter" id="scores-module-filter" onchange="currentPages.scores=1;renderScores()"><option value="">All Modules</option></select>
       </div>
       <table id="scores-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Score</th><th>Pct</th><th>Quiz Time</th></tr></thead><tbody></tbody></table>
     </div>
@@ -137,11 +154,11 @@ tr:hover td{background:#f8fafc}
 
   <!-- QUESTION DETAIL TAB -->
   <div class="panel" id="tab-questions">
-    <div class="tbl-wrap">
+    <div class="tbl-wrap" id="questions-wrap">
       <div class="tbl-header">
         <h3>Individual Question Responses</h3>
-        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('questions-table', this.value)">
-        <select class="filter" id="questions-module-filter" onchange="renderQuestions()"><option value="">All Modules</option></select>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.questions=this.value;currentPages.questions=1;renderQuestions()">
+        <select class="filter" id="questions-module-filter" onchange="currentPages.questions=1;renderQuestions()"><option value="">All Modules</option></select>
       </div>
       <table id="questions-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Q#</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody></tbody></table>
     </div>
@@ -149,10 +166,10 @@ tr:hover td{background:#f8fafc}
 
   <!-- CHECKPOINTS TAB -->
   <div class="panel" id="tab-checkpoints">
-    <div class="tbl-wrap">
+    <div class="tbl-wrap" id="checkpoints-wrap">
       <div class="tbl-header">
         <h3>Checkpoint Written Responses</h3>
-        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('checkpoints-table', this.value)">
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.checkpoints=this.value;currentPages.checkpoints=1;renderCheckpoints()">
       </div>
       <table id="checkpoints-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Response</th><th>Chars</th></tr></thead><tbody></tbody></table>
     </div>
@@ -160,11 +177,11 @@ tr:hover td{background:#f8fafc}
 
   <!-- ACTIVITY TAB -->
   <div class="panel" id="tab-activity">
-    <div class="tbl-wrap">
+    <div class="tbl-wrap" id="activity-wrap">
       <div class="tbl-header">
         <h3>Student Activity &amp; Time Tracking</h3>
-        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('activity-table', this.value)">
-        <select class="filter" id="activity-event-filter" onchange="renderActivity()">
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.activity=this.value;currentPages.activity=1;renderActivity()">
+        <select class="filter" id="activity-event-filter" onchange="currentPages.activity=1;renderActivity()">
           <option value="">All Events</option>
           <option value="page_view">Page Views (with time)</option>
           <option value="session_end">Session Totals</option>
@@ -187,13 +204,65 @@ var API = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpA
 var PW = '';
 var DATA = { scores: [], quizDetail: [], checkpoints: [], activity: [] };
 
+/* ── GLOBAL FILTERS ── */
+var periodFilter = '';
+var PAGE_SIZE = 25;
+var currentPages = { scores: 1, questions: 1, checkpoints: 1, activity: 1, overview: 1 };
+var textFilters = { scores: '', questions: '', checkpoints: '', activity: '', overview: '' };
+
+function resetPages() {
+  for (var key in currentPages) currentPages[key] = 1;
+}
+
+/* ── PAGINATION HELPERS ── */
+function renderPagination(containerId, tabKey, totalRows) {
+  var page = currentPages[tabKey];
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  var start = (page - 1) * PAGE_SIZE + 1;
+  var end = Math.min(page * PAGE_SIZE, totalRows);
+
+  var html = '<div class="pagination">' +
+    '<button class="page-btn" onclick="changePage(\'' + tabKey + '\',-1)" ' + (page <= 1 ? 'disabled' : '') + '>&larr; Prev</button>' +
+    '<span class="page-info">Page ' + page + ' of ' + totalPages + ' &middot; Showing ' + (totalRows ? start + '-' + end : '0') + ' of ' + totalRows + ' rows</span>' +
+    '<button class="page-btn" onclick="changePage(\'' + tabKey + '\',1)" ' + (page >= totalPages ? 'disabled' : '') + '>Next &rarr;</button>' +
+    '</div>';
+
+  var container = document.getElementById(containerId);
+  var oldPag = container.querySelector('.pagination');
+  if (oldPag) oldPag.remove();
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+function changePage(tabKey, delta) {
+  currentPages[tabKey] += delta;
+  if (tabKey === 'scores') renderScores();
+  else if (tabKey === 'questions') renderQuestions();
+  else if (tabKey === 'checkpoints') renderCheckpoints();
+  else if (tabKey === 'activity') renderActivity();
+  else if (tabKey === 'overview') renderOverview();
+}
+
+/* ── PERIOD FILTER HELPER ── */
+function applyPeriodFilter(arr) {
+  if (!periodFilter) return arr;
+  return arr.filter(function(r) { return r.ClassPeriod === periodFilter; });
+}
+
+/* ── TEXT FILTER HELPER ── */
+function applyTextFilter(arr, query) {
+  if (!query) return arr;
+  var q = query.toLowerCase();
+  return arr.filter(function(r) {
+    return (r.Student || '').toLowerCase().indexOf(q) !== -1;
+  });
+}
+
 /* ── PASSWORD ── */
 document.getElementById('pw-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') unlock(); });
 
 function unlock() {
   PW = document.getElementById('pw-input').value;
   document.getElementById('pw-err').style.display = 'none';
-  // Test with a quick fetch
   fetch(API + '?action=summary&pw=' + encodeURIComponent(PW))
     .then(function(r) { return r.json(); })
     .then(function(d) {
@@ -242,9 +311,15 @@ function renderAll() {
 
 /* ── OVERVIEW ── */
 function renderOverview() {
-  var scores = DATA.scores;
-  var students = [...new Set(scores.map(function(r) { return r.Student; }))];
-  var modules = [...new Set(scores.map(function(r) { return r.Module; }))];
+  var scores = applyPeriodFilter(DATA.scores);
+  var filtered = applyTextFilter(scores, textFilters.overview);
+
+  var students = [];
+  var studentSet = {};
+  scores.forEach(function(r) { if (!studentSet[r.Student]) { studentSet[r.Student] = true; students.push(r.Student); } });
+  var modules = [];
+  var moduleSet = {};
+  scores.forEach(function(r) { if (!moduleSet[r.Module]) { moduleSet[r.Module] = true; modules.push(r.Module); } });
   var avgPct = scores.length ? Math.round(scores.reduce(function(a, r) { return a + (Number(r.Pct) || 0); }, 0) / scores.length) : 0;
 
   document.getElementById('overview-stats').innerHTML =
@@ -253,74 +328,133 @@ function renderOverview() {
     statCard('Total Submissions', scores.length, 'quiz scores recorded') +
     statCard('Class Average', avgPct + '%', 'across all quizzes');
 
-  // Build student summary table
+  // Build student summary from filtered data
+  var filteredStudents = [];
+  var filteredSet = {};
+  filtered.forEach(function(r) { if (!filteredSet[r.Student]) { filteredSet[r.Student] = true; filteredStudents.push(r.Student); } });
+  filteredStudents.sort();
+
+  var totalRows = filteredStudents.length;
+  var page = currentPages.overview;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (page > totalPages) { page = totalPages; currentPages.overview = page; }
+  var pageStudents = filteredStudents.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   var thead = '<tr><th>Student</th><th>Quizzes Done</th><th>Avg Score</th><th>Modules Touched</th><th>Last Active</th></tr>';
   var tbody = '';
-  students.sort().forEach(function(s) {
-    var sScores = scores.filter(function(r) { return r.Student === s; });
+  pageStudents.forEach(function(s) {
+    var sScores = filtered.filter(function(r) { return r.Student === s; });
     var avg = Math.round(sScores.reduce(function(a, r) { return a + (Number(r.Pct) || 0); }, 0) / sScores.length);
-    var mods = [...new Set(sScores.map(function(r) { return r.Module; }))].length;
+    var mods = [];
+    var modSet = {};
+    sScores.forEach(function(r) { if (!modSet[r.Module]) { modSet[r.Module] = true; mods.push(r.Module); } });
     var last = sScores[sScores.length - 1].Timestamp || '';
     var badge = avg >= 80 ? 'badge-green' : avg >= 60 ? 'badge-yellow' : 'badge-red';
     tbody += '<tr style="cursor:pointer" onclick="showStudentDetail(\'' + esc(s) + '\')">' +
       '<td><strong>' + esc(s) + '</strong></td>' +
       '<td>' + sScores.length + '</td>' +
       '<td><span class="badge ' + badge + '">' + avg + '%</span></td>' +
-      '<td>' + mods + '</td>' +
+      '<td>' + mods.length + '</td>' +
       '<td>' + esc(last) + '</td></tr>';
   });
   var tbl = document.getElementById('overview-table');
   tbl.querySelector('thead').innerHTML = thead;
   tbl.querySelector('tbody').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:40px">No data yet. Students will appear here after they complete quizzes.</td></tr>';
+
+  renderPagination('overview-wrap', 'overview', totalRows);
 }
 
 /* ── SCORES ── */
 function renderScores() {
   var modFilter = document.getElementById('scores-module-filter').value;
-  var rows = DATA.scores.filter(function(r) { return !modFilter || r.Module === modFilter; });
+  var rows = applyPeriodFilter(DATA.scores);
+  rows = applyTextFilter(rows, textFilters.scores);
+  rows = rows.filter(function(r) { return !modFilter || r.Module === modFilter; });
+
+  var totalRows = rows.length;
+  var page = currentPages.scores;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (page > totalPages) { page = totalPages; currentPages.scores = page; }
+  var pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   var tbody = '';
-  rows.forEach(function(r) {
+  pageRows.forEach(function(r) {
     var pct = Number(r.Pct) || 0;
     var badge = pct >= 80 ? 'badge-green' : pct >= 60 ? 'badge-yellow' : 'badge-red';
     var time = r.TimeOnQuiz ? formatDuration(r.TimeOnQuiz) : '—';
     tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td>' + r.Score + '/' + r.Total + '</td><td><span class="badge ' + badge + '">' + pct + '%</span></td><td>' + time + '</td></tr>';
   });
   document.getElementById('scores-table').querySelector('tbody').innerHTML = tbody || emptyRow(7);
+
+  renderPagination('scores-wrap', 'scores', totalRows);
 }
 
 /* ── QUESTIONS ── */
 function renderQuestions() {
   var modFilter = document.getElementById('questions-module-filter').value;
-  var rows = DATA.quizDetail.filter(function(r) { return !modFilter || r.Module === modFilter; });
+  var rows = applyPeriodFilter(DATA.quizDetail);
+  rows = applyTextFilter(rows, textFilters.questions);
+  rows = rows.filter(function(r) { return !modFilter || r.Module === modFilter; });
+
+  var totalRows = rows.length;
+  var page = currentPages.questions;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (page > totalPages) { page = totalPages; currentPages.questions = page; }
+  var pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   var tbody = '';
-  rows.forEach(function(r) {
+  pageRows.forEach(function(r) {
     var correct = r.IsCorrect === 'YES';
     var badge = correct ? 'badge-green' : 'badge-red';
     tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td>' + r.QNum + '</td><td style="max-width:300px">' + esc(r.QuestionText) + '</td><td>' + esc(r.StudentAnswer) + '</td><td>' + esc(r.CorrectAnswer) + '</td><td><span class="badge ' + badge + '">' + (correct ? 'Correct' : 'Wrong') + '</span></td></tr>';
   });
   document.getElementById('questions-table').querySelector('tbody').innerHTML = tbody || emptyRow(9);
+
+  renderPagination('questions-wrap', 'questions', totalRows);
 }
 
 /* ── CHECKPOINTS ── */
 function renderCheckpoints() {
+  var rows = applyPeriodFilter(DATA.checkpoints);
+  rows = applyTextFilter(rows, textFilters.checkpoints);
+
+  var totalRows = rows.length;
+  var page = currentPages.checkpoints;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (page > totalPages) { page = totalPages; currentPages.checkpoints = page; }
+  var pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   var tbody = '';
-  DATA.checkpoints.forEach(function(r) {
+  pageRows.forEach(function(r) {
     tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td style="max-width:400px;white-space:pre-wrap">' + esc(r.ResponseText) + '</td><td>' + r.CharCount + '</td></tr>';
   });
   document.getElementById('checkpoints-table').querySelector('tbody').innerHTML = tbody || emptyRow(6);
+
+  renderPagination('checkpoints-wrap', 'checkpoints', totalRows);
 }
 
 /* ── ACTIVITY ── */
 function renderActivity() {
   var evFilter = document.getElementById('activity-event-filter').value;
-  var rows = DATA.activity.filter(function(r) { return !evFilter || r.Event === evFilter; });
+  var rows = applyPeriodFilter(DATA.activity);
+  rows = applyTextFilter(rows, textFilters.activity);
+  rows = rows.filter(function(r) { return !evFilter || r.Event === evFilter; });
+
+  var totalRows = rows.length;
+  var page = currentPages.activity;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (page > totalPages) { page = totalPages; currentPages.activity = page; }
+  var pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   var tbody = '';
-  rows.forEach(function(r) {
+  pageRows.forEach(function(r) {
     var dur = r.Duration ? formatDuration(r.Duration) : '—';
     var evBadge = r.Event === 'page_view' ? 'badge-blue' : r.Event === 'session_end' ? 'badge-green' : 'badge-yellow';
     tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td><span class="badge ' + evBadge + '">' + esc(r.Event) + '</span></td><td>' + dur + '</td></tr>';
   });
   document.getElementById('activity-table').querySelector('tbody').innerHTML = tbody || emptyRow(6);
+
+  renderPagination('activity-wrap', 'activity', totalRows);
 }
 
 /* ── STUDENT DETAIL MODAL ── */
@@ -329,6 +463,14 @@ function showStudentDetail(name) {
   var questions = DATA.quizDetail.filter(function(r) { return r.Student === name; });
   var checkpoints = DATA.checkpoints.filter(function(r) { return r.Student === name; });
   var activity = DATA.activity.filter(function(r) { return r.Student === name; });
+
+  // Apply period filter to detail modal too
+  if (periodFilter) {
+    scores = scores.filter(function(r) { return r.ClassPeriod === periodFilter; });
+    questions = questions.filter(function(r) { return r.ClassPeriod === periodFilter; });
+    checkpoints = checkpoints.filter(function(r) { return r.ClassPeriod === periodFilter; });
+    activity = activity.filter(function(r) { return r.ClassPeriod === periodFilter; });
+  }
 
   var html = '<button class="close-btn" onclick="closeDetail()">&times;</button>';
   html += '<h2>' + esc(name) + '</h2>';
@@ -401,16 +543,11 @@ function showTab(id) {
   event.target.classList.add('active');
 }
 
-function filterTable(tableId, query) {
-  var rows = document.getElementById(tableId).querySelectorAll('tbody tr');
-  query = query.toLowerCase();
-  rows.forEach(function(r) {
-    r.style.display = r.textContent.toLowerCase().indexOf(query) !== -1 ? '' : 'none';
-  });
-}
-
 function populateModuleFilters() {
-  var modules = [...new Set(DATA.scores.map(function(r) { return r.Module; }))].sort();
+  var modules = [];
+  var moduleSet = {};
+  DATA.scores.forEach(function(r) { if (!moduleSet[r.Module]) { moduleSet[r.Module] = true; modules.push(r.Module); } });
+  modules.sort();
   ['scores-module-filter', 'questions-module-filter'].forEach(function(id) {
     var sel = document.getElementById(id);
     if (!sel) return;
