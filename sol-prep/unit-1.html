@@ -2026,6 +2026,11 @@ function gradeVocab() {
   } else {
     msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
     retryBtn.style.display = 'inline-block';
+
+    // Immediately reset cards to front-side so they must re-study
+    flippedCards = new Set();
+    var allCards = document.querySelectorAll('.vcard');
+    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
   }
   box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   saveProgress();
