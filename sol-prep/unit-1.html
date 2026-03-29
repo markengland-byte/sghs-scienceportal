@@ -283,6 +283,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="period-err">Please select your class period.</div>
     <button class="nm-btn" onclick="startUnit()">Start Unit 1 →</button>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit1_progress');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
   </div>
 </div>
 
@@ -1490,6 +1491,192 @@ function initMeta() {
   document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
 }
 
+/* ── SAVE / RESTORE PROGRESS ─────────────────────── */
+function saveProgress() {
+  var gateObj = {};
+  for (var key in gateAnswered) {
+    gateObj[key] = Array.from(gateAnswered[key]);
+  }
+  var data = {
+    studentName: studentName,
+    classPeriod: classPeriod,
+    currentPanel: currentPanel,
+    gateAnswered: gateObj,
+    graphAnswered: graphAnswered,
+    pretestAnswers: pretestAnswers,
+    pretestSent: pretestSent,
+    vqAnswers: vqAnswers,
+    vqScore: vqScore,
+    vocabPassed: vocabPassed,
+    pracAnswered: pracAnswered,
+    pracCorrect: pracCorrect,
+    missedStds: missedStds,
+    questionDetail: questionDetail,
+    activityLog: activityLog,
+    sessionStart: sessionStart
+  };
+  localStorage.setItem('sol_unit1_progress', JSON.stringify(data));
+}
+
+function restoreProgress(data) {
+  // Restore state variables
+  studentName = data.studentName;
+  classPeriod = data.classPeriod;
+  pretestAnswers = data.pretestAnswers || [];
+  pretestSent = data.pretestSent || false;
+  vqAnswers = data.vqAnswers || {};
+  vqScore = data.vqScore || 0;
+  vocabPassed = data.vocabPassed || false;
+  pracAnswered = data.pracAnswered || 0;
+  pracCorrect = data.pracCorrect || 0;
+  missedStds = data.missedStds || {};
+  questionDetail = data.questionDetail || [];
+  activityLog = data.activityLog || [];
+  sessionStart = data.sessionStart || Date.now();
+  graphAnswered = data.graphAnswered || { graph1: false, graph2: false };
+
+  // Restore gateAnswered (convert arrays back to Sets)
+  gateAnswered = {};
+  if (data.gateAnswered) {
+    for (var pid in data.gateAnswered) {
+      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
+    }
+  }
+
+  // Hide modal, init charts
+  document.getElementById('name-modal').style.display = 'none';
+  initCharts();
+  panelStartTime = Date.now();
+
+  // Replay gate questions visually
+  for (var panelId in gateAnswered) {
+    var answeredIndices = gateAnswered[panelId];
+    var gateQs = document.querySelectorAll('#p' + panelId + ' .gate-q');
+    answeredIndices.forEach(function(idx) {
+      var qq = gateQs[idx];
+      if (!qq) return;
+      var ans = qq.dataset.ans;
+      qq.querySelectorAll('.qo').forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === ans) o.classList.add('correct');
+      });
+      var exp = qq.querySelector('.qexp');
+      if (exp) { exp.classList.add('show'); exp.style.display = 'block'; }
+    });
+    checkGate(parseInt(panelId));
+  }
+
+  // Replay graph questions
+  if (graphAnswered.graph1) {
+    var gOpts1 = document.querySelectorAll('#graph-q1 .graph-q-opt');
+    gOpts1.forEach(function(o) { o.classList.add('neutral'); });
+    // Find correct one and mark it
+    gOpts1.forEach(function(o) {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').indexOf('true') !== -1) {
+        o.classList.remove('neutral');
+        o.classList.add('correct-ans');
+      }
+    });
+    var gf1 = document.getElementById('graph-feedback');
+    if (gf1) gf1.style.display = 'block';
+    checkGate(3);
+  }
+  if (graphAnswered.graph2) {
+    var gOpts2 = document.querySelectorAll('#graph-q2 .graph-q-opt');
+    gOpts2.forEach(function(o) { o.classList.add('neutral'); });
+    gOpts2.forEach(function(o) {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').indexOf('true') !== -1) {
+        o.classList.remove('neutral');
+        o.classList.add('correct-ans');
+      }
+    });
+    var gf2 = document.getElementById('graph2-feedback');
+    if (gf2) gf2.style.display = 'block';
+    checkGate(3);
+  }
+
+  // Replay vocab quiz answers
+  if (Object.keys(vqAnswers).length > 0) {
+    for (var qNum in vqAnswers) {
+      var qq = document.getElementById('vq' + qNum);
+      if (!qq) continue;
+      var correct = VQ_CORRECT[qNum];
+      qq.querySelectorAll('.vq-opt').forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === correct) o.classList.add('correct');
+      });
+      var res = document.getElementById('vqr' + qNum);
+      if (res) {
+        if (vqAnswers[qNum]) {
+          res.textContent = '\u2705 ' + VQ_EXPLAIN[qNum];
+          res.className = 'vq-result show';
+        } else {
+          res.textContent = '\u274c ' + VQ_EXPLAIN[qNum];
+          res.className = 'vq-result show wrong';
+        }
+      }
+    }
+    // If graded, show score
+    if (vqScore > 0 || Object.keys(vqAnswers).length >= VQ_TOTAL) {
+      var box = document.getElementById('vquiz-score');
+      var nEl = document.getElementById('vq-score-n');
+      var msgEl = document.getElementById('vq-pass-msg');
+      if (box && nEl && msgEl) {
+        nEl.textContent = vqScore + '/' + VQ_TOTAL;
+        box.style.display = 'block';
+        if (vocabPassed) {
+          msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+        } else {
+          msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
+        }
+      }
+    }
+    // Unlock practice if passed
+    if (vocabPassed) {
+      var pl = document.getElementById('practice-locked');
+      if (pl) pl.style.display = 'none';
+      var tl = document.getElementById('practice-test-locked');
+      if (tl) tl.style.display = 'none';
+      var sb = document.getElementById('sol-practice-box');
+      if (sb) sb.style.display = 'block';
+    }
+  }
+
+  // Replay practice test answers
+  if (questionDetail.length > 0) {
+    var solQs = document.querySelectorAll('#p7 .qq');
+    questionDetail.forEach(function(detail, i) {
+      var qq = solQs[i];
+      if (!qq) return;
+      var correctVal = detail.correct;
+      qq.querySelectorAll('.qo').forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === correctVal) o.classList.add('correct');
+        else if (o.dataset.v === detail.chosen && !detail.isCorrect) o.classList.add('incorrect');
+      });
+      var exp = qq.querySelector('.qexp');
+      if (exp) {
+        exp.classList.add('show');
+        if (!detail.isCorrect) exp.classList.add('qexp-wrong');
+      }
+    });
+    var progMsg = document.getElementById('sol-progress-msg');
+    if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+    if (pracAnswered === TOTAL_SOL_Q) {
+      var trBtn = document.getElementById('to-results-btn');
+      if (trBtn) trBtn.disabled = false;
+    }
+  }
+
+  // If all practice answered, show danger zone
+  if (pracAnswered >= TOTAL_SOL_Q) {
+    showDangerZone();
+  }
+
+  // Navigate to saved panel
+  goTo(data.currentPanel || 0);
+}
+
 /* ── START ────────────────────────────────────────── */
 function startUnit() {
   var nameInput = document.getElementById('student-name').value.trim();
@@ -1508,6 +1695,19 @@ function startUnit() {
     }
   }
   studentName = nameInput;
+
+  // Check if resuming saved progress
+  var saved = localStorage.getItem('sol_unit1_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName === studentName) {
+      restoreProgress(data);
+      return;
+    }
+  }
+  // New student or different name — clear old progress
+  localStorage.removeItem('sol_unit1_progress');
+
   document.getElementById('name-modal').style.display = 'none';
   initMeta();
   initCharts();
@@ -1515,9 +1715,6 @@ function startUnit() {
   panelStartTime = Date.now();
   // Send module_start event
   send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });
-  // Restore progress if returning
-  var saved = localStorage.getItem('sol_' + UNIT + '_panel');
-  if (saved) goTo(parseInt(saved));
 }
 
 /* ── NAVIGATION ───────────────────────────────────── */
@@ -1545,6 +1742,7 @@ function goTo(n) {
   var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
   document.getElementById('steps-prog').style.width = pct + '%';
   localStorage.setItem('sol_' + UNIT + '_panel', n);
+  saveProgress();
 }
 
 /* ── GATE SYSTEM — Must answer all questions to unlock Next ── */
@@ -1592,6 +1790,7 @@ function gateAnswer(el) {
       isCorrect: chosen === ans
     });
   }
+  saveProgress();
 }
 
 function checkGate(panelId) {
@@ -1630,6 +1829,7 @@ function checkGate(panelId) {
       send({ action: 'score', lesson: 'Pretest', score: correct, total: pretestAnswers.length, pct: Math.round((correct / pretestAnswers.length) * 100) });
       send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers });
     }
+    saveProgress();
   }
 }
 
@@ -1650,6 +1850,7 @@ function graphPick(opt, correct) {
   }
   graphAnswered.graph1 = true;
   checkGate(3);
+  saveProgress();
 }
 function graphPick2(opt, correct) {
   if (opt.classList.contains('correct-ans') || opt.classList.contains('wrong-ans')) return;
@@ -1664,6 +1865,7 @@ function graphPick2(opt, correct) {
   }
   graphAnswered.graph2 = true;
   checkGate(3);
+  saveProgress();
 }
 
 /* ── VOCAB QUIZ ───────────────────────────────────── */
@@ -1706,6 +1908,7 @@ function vqPick(el) {
     res.className = 'vq-result show wrong';
   }
   vqAnswers[qNum] = isCorrect;
+  saveProgress();
 }
 
 function gradeVocab() {
@@ -1737,6 +1940,7 @@ function gradeVocab() {
     retryBtn.style.display = 'inline-block';
   }
   box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  saveProgress();
 }
 
 function retryVocab() {
@@ -1797,6 +2001,7 @@ function solPick(opt) {
     showDangerZone();
     setTimeout(function(){ goTo(8); }, 800);
   }
+  saveProgress();
 }
 
 /* ── DANGER ZONE ─────────────────────────────────── */
@@ -1853,6 +2058,7 @@ function showDangerZone() {
   // Mark step done
   var sb8 = document.getElementById('sb8');
   if (sb8) sb8.classList.add('done');
+  saveProgress();
 }
 
 /* ── SUBMIT FINAL SCORE ──────────────────────────── */
@@ -1986,6 +2192,7 @@ function initCharts() {
 /* ── PAGE EXIT HANDLER ───────────────────────────── */
 window.addEventListener('beforeunload', function() {
   if (!studentName) return;
+  saveProgress();
   var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
   // Log final panel time
   var duration = Math.round((Date.now() - panelStartTime) / 1000);
@@ -2022,6 +2229,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (tl) tl.style.display = 'none';
     var sb = document.getElementById('sol-practice-box');
     if (sb) sb.style.display = 'block';
+  }
+  // Check for saved progress
+  var saved = localStorage.getItem('sol_unit1_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName) {
+      // Pre-fill name and period
+      var nameInput = document.getElementById('student-name');
+      var periodSelect = document.getElementById('class-period');
+      nameInput.value = data.studentName;
+      if (periodSelect) periodSelect.value = data.classPeriod || '';
+      // Change modal to indicate resume
+      var modalTitle = document.querySelector('.nm-title');
+      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
+      var modalSub = document.querySelector('.nm-sub');
+      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
+      var modalBtn = document.querySelector('.nm-btn');
+      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
+    }
   }
 });
 </script>
