@@ -2027,10 +2027,27 @@ function gradeVocab() {
     msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
     retryBtn.style.display = 'inline-block';
 
-    // Immediately reset cards to front-side so they must re-study
+    // Immediately reset cards and hide quiz — must re-study before retaking
     flippedCards = new Set();
+    vqAnswers = {};
+    vqScore = 0;
     var allCards = document.querySelectorAll('.vcard');
     for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
+    // Reset flip gate
+    var flipGate = document.getElementById('vocab-flip-gate');
+    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+    var flipCount = document.getElementById('vocab-flip-count');
+    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+    // Hide quiz after a short delay so they can see their score
+    setTimeout(function() {
+      document.getElementById('vquiz').style.display = 'none';
+      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+      box.style.display = 'none';
+      retryBtn.style.display = 'none';
+      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Study all cards again before retaking the quiz');
+    }, 3000); // 3 second delay so they can read their score
   }
   box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   saveProgress();
