@@ -295,7 +295,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="period-err">Please select your class period.</div>
     <button class="nm-btn" onclick="startUnit()">Start Unit 1 &rarr;</button>
-    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit1v2_progress');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit1_progress');localStorage.removeItem('sol_unit1_vocab');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
   </div>
 </div>
 
@@ -2484,6 +2484,8 @@ function goTo(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
   document.getElementById('steps-prog').style.width = pct + '%';
+  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
+  if (!(n in gateRequired)) { unlockedPanels.add(n + 1); }
   localStorage.setItem('sol_' + UNIT + '_panel', n);
   saveProgress();
 }
