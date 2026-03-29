@@ -1626,6 +1626,16 @@ function restoreProgress(data) {
       var quiz = document.getElementById('vquiz');
       if (quiz) quiz.style.display = 'block';
     }
+  } else {
+    // Cards NOT flipped — ensure quiz stays hidden and cards show front
+    var allCards = document.querySelectorAll('.vcard');
+    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
+    var quiz = document.getElementById('vquiz');
+    if (quiz) quiz.style.display = 'none';
+    var flipGate = document.getElementById('vocab-flip-gate');
+    if (flipGate) { flipGate.classList.remove('unlocked'); }
+    var flipCount = document.getElementById('vocab-flip-count');
+    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
   }
 
   // Replay vocab quiz answers
