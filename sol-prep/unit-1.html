@@ -2027,10 +2027,15 @@ function gradeVocab() {
     msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
     retryBtn.style.display = 'inline-block';
 
-    // Immediately reset cards and hide quiz — must re-study before retaking
+    // Reset ALL state immediately so a refresh picks up the clean state
     flippedCards = new Set();
     vqAnswers = {};
     vqScore = 0;
+
+    // SAVE RESET STATE NOW — before anything else, so refresh gets clean state
+    saveProgress();
+
+    // Reset cards visually
     var allCards = document.querySelectorAll('.vcard');
     for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
     // Reset flip gate
@@ -2045,9 +2050,11 @@ function gradeVocab() {
       document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
       box.style.display = 'none';
       retryBtn.style.display = 'none';
+      saveProgress(); // save again after visual cleanup
       document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
       showToast('Study all cards again before retaking the quiz');
-    }, 3000); // 3 second delay so they can read their score
+    }, 3000);
+    return; // don't fall through to the saveProgress below
   }
   box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   saveProgress();
