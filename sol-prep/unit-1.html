@@ -1469,6 +1469,14 @@ let pracCorrect = 0;
 let missedStds = {};
 let questionDetail = [];
 
+/* ── ANSWER TEXT HELPER — strips the letter circle from answer text ── */
+function getAnswerText(el) {
+  var clone = el.cloneNode(true);
+  var ol = clone.querySelector('.ol');
+  if (ol) ol.remove();
+  return clone.textContent.trim();
+}
+
 /* ── SEND HELPER ─────────────────────────────────── */
 function send(payload) {
   payload.student = studentName;
@@ -1837,10 +1845,7 @@ function gateAnswer(el) {
   var idx = Array.from(qqs).indexOf(qq);
   gateAnswered[panelId].add(idx);
 
-  // Check gate
-  checkGate(panelId);
-
-  // Track pretest answers for panel 0
+  // Track pretest answers for panel 0 BEFORE checkGate (so all answers are collected before sending)
   if (panelId === 0) {
     var qNum = Array.from(qqs).indexOf(qq) + 1;
     var stemEl = qq.querySelector('.q-stem');
@@ -1848,11 +1853,14 @@ function gateAnswer(el) {
     pretestAnswers.push({
       qNum: qNum,
       questionText: qText,
-      studentAnswer: el.textContent.trim(),
-      correctAnswer: qq.querySelector('.qo.correct') ? qq.querySelector('.qo.correct').textContent.trim() : '',
+      studentAnswer: getAnswerText(el),
+      correctAnswer: qq.querySelector('.qo.correct') ? getAnswerText(qq.querySelector('.qo.correct')) : '',
       isCorrect: chosen === ans
     });
   }
+
+  // Check gate (after pretest tracking so all answers are collected)
+  checkGate(panelId);
   saveProgress();
 }
 
@@ -2146,10 +2154,10 @@ function solPick(opt) {
   var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
   var qNumMatch = stemText.match(/^(\d+)/);
   var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
-  var studentAnswerText = opt.textContent.trim();
+  var studentAnswerText = getAnswerText(opt);
   var correctAnswerText = '';
   qq.querySelectorAll('.qo').forEach(function(o) {
-    if (o.dataset.v === correct) correctAnswerText = o.textContent.trim();
+    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
   });
   questionDetail.push({
     qNum: qNum,
