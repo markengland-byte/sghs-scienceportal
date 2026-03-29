@@ -1612,7 +1612,12 @@ function restoreProgress(data) {
   }
 
   // Restore flipped cards
-  if (data.flippedCards && data.flippedCards.length > 0) {
+  // KEY LOGIC: If vocab quiz was not passed and answers are empty,
+  // the student failed and needs to re-study. Reset everything.
+  var vocabNeedsReset = (!vocabPassed && Object.keys(vqAnswers).length === 0);
+
+  if (!vocabNeedsReset && data.flippedCards && data.flippedCards.length > 0) {
+    // Cards were flipped and student hasn't failed — restore them
     flippedCards = new Set(data.flippedCards);
     var cards = document.querySelectorAll('.vcard');
     data.flippedCards.forEach(function(idx) {
@@ -1627,19 +1632,20 @@ function restoreProgress(data) {
       if (quiz) quiz.style.display = 'block';
     }
   } else {
-    // Cards NOT flipped — ensure quiz stays hidden and cards show front
+    // Cards need reset — either empty flippedCards OR student failed quiz
+    flippedCards = new Set();
     var allCards = document.querySelectorAll('.vcard');
     for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
     var quiz = document.getElementById('vquiz');
     if (quiz) quiz.style.display = 'none';
     var flipGate = document.getElementById('vocab-flip-gate');
-    if (flipGate) { flipGate.classList.remove('unlocked'); }
+    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
     var flipCount = document.getElementById('vocab-flip-count');
     if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
   }
 
-  // Replay vocab quiz answers
-  if (Object.keys(vqAnswers).length > 0) {
+  // Replay vocab quiz answers (only if there are answers to replay)
+  if (!vocabNeedsReset && Object.keys(vqAnswers).length > 0) {
     for (var qNum in vqAnswers) {
       var qq = document.getElementById('vq' + qNum);
       if (!qq) continue;
