@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;color:#0f2240;min-height:100vh}
+
+/* Password Gate */
+#gate{position:fixed;inset:0;background:#0f2240;display:flex;align-items:center;justify-content:center;z-index:9999}
+#gate .box{background:#fff;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center}
+#gate h2{font-size:1.4rem;margin-bottom:8px}
+#gate p{font-size:.85rem;color:#5e6e8a;margin-bottom:16px}
+#gate input{width:100%;padding:12px;border:2px solid #dde3ef;border-radius:8px;font-size:1rem;outline:none;text-align:center}
+#gate input:focus{border-color:#0b8f8c}
+#gate button{margin-top:12px;width:100%;padding:12px;background:#0f2240;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer}
+#gate .err{color:#c0392b;font-size:.8rem;margin-top:8px;display:none}
+
+/* Header */
+.header{background:#0f2240;color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px}
+.header h1{font-size:1.2rem;font-weight:700}
+.header .subtitle{font-size:.8rem;color:rgba(255,255,255,.6)}
+.header .refresh{margin-left:auto;background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.header .refresh:hover{background:rgba(255,255,255,.25)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e2e8f0;padding:0 24px}
+.tab{padding:12px 20px;font-weight:600;font-size:.9rem;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:#0f2240;border-bottom-color:#0b8f8c}
+.tab:hover{color:#0f2240}
+
+/* Content */
+.content{padding:24px;max-width:1400px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+
+/* Stats Row */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat-card .label{font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.stat-card .value{font-size:2rem;font-weight:800;color:#0f2240;margin-top:4px}
+.stat-card .sub{font-size:.8rem;color:#94a3b8;margin-top:2px}
+
+/* Table */
+.tbl-wrap{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow-x:auto}
+.tbl-header{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tbl-header h3{font-size:1rem;font-weight:700}
+.filter{padding:6px 12px;border:1px solid #dde3ef;border-radius:6px;font-size:.85rem;outline:none;font-family:inherit}
+.filter:focus{border-color:#0b8f8c}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;position:sticky;top:0}
+td{padding:10px 14px;font-size:.85rem;border-top:1px solid #f1f5f9}
+tr:hover td{background:#f8fafc}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+
+/* Detail Modal */
+#detail-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;z-index:999;padding:40px 20px;overflow-y:auto}
+#detail-modal.show{display:flex}
+#detail-content{background:#fff;border-radius:16px;padding:32px;max-width:900px;width:100%;max-height:80vh;overflow-y:auto}
+#detail-content h2{font-size:1.2rem;margin-bottom:16px}
+.close-btn{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#64748b}
+.close-btn:hover{color:#0f2240}
+
+/* Loading */
+.loading{text-align:center;padding:60px;color:#94a3b8;font-size:1rem}
+.loading::after{content:'';display:block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#0b8f8c;border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive */
+@media(max-width:768px){.stats{grid-template-columns:1fr 1fr}.tbl-header{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="box">
+    <h2>Teacher Dashboard</h2>
+    <p>Enter the dashboard password to view student progress.</p>
+    <input type="password" id="pw-input" placeholder="Password" autofocus>
+    <button onclick="unlock()">Access Dashboard</button>
+    <div class="err" id="pw-err">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header" id="main-ui" style="display:none">
+  <div>
+    <h1>SGHS Biology — Teacher Dashboard</h1>
+    <div class="subtitle">Student progress tracking across all modules</div>
+  </div>
+  <button class="refresh" onclick="loadAllData()">Refresh Data</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="tab-bar" style="display:none">
+  <div class="tab active" onclick="showTab('overview')">Overview</div>
+  <div class="tab" onclick="showTab('scores')">Scores</div>
+  <div class="tab" onclick="showTab('questions')">Question Detail</div>
+  <div class="tab" onclick="showTab('checkpoints')">Checkpoints</div>
+  <div class="tab" onclick="showTab('activity')">Activity / Time</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content" style="display:none">
+
+  <!-- OVERVIEW TAB -->
+  <div class="panel active" id="tab-overview">
+    <div class="stats" id="overview-stats"></div>
+    <div class="tbl-wrap">
+      <div class="tbl-header">
+        <h3>Student Score Summary</h3>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('overview-table', this.value)">
+      </div>
+      <table id="overview-table"><thead><tr></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- SCORES TAB -->
+  <div class="panel" id="tab-scores">
+    <div class="tbl-wrap">
+      <div class="tbl-header">
+        <h3>All Quiz Scores</h3>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('scores-table', this.value)">
+        <select class="filter" id="scores-module-filter" onchange="renderScores()"><option value="">All Modules</option></select>
+      </div>
+      <table id="scores-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Score</th><th>Pct</th><th>Quiz Time</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- QUESTION DETAIL TAB -->
+  <div class="panel" id="tab-questions">
+    <div class="tbl-wrap">
+      <div class="tbl-header">
+        <h3>Individual Question Responses</h3>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('questions-table', this.value)">
+        <select class="filter" id="questions-module-filter" onchange="renderQuestions()"><option value="">All Modules</option></select>
+      </div>
+      <table id="questions-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Q#</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- CHECKPOINTS TAB -->
+  <div class="panel" id="tab-checkpoints">
+    <div class="tbl-wrap">
+      <div class="tbl-header">
+        <h3>Checkpoint Written Responses</h3>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('checkpoints-table', this.value)">
+      </div>
+      <table id="checkpoints-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Response</th><th>Chars</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- ACTIVITY TAB -->
+  <div class="panel" id="tab-activity">
+    <div class="tbl-wrap">
+      <div class="tbl-header">
+        <h3>Student Activity &amp; Time Tracking</h3>
+        <input class="filter" type="text" placeholder="Filter by student..." oninput="filterTable('activity-table', this.value)">
+        <select class="filter" id="activity-event-filter" onchange="renderActivity()">
+          <option value="">All Events</option>
+          <option value="page_view">Page Views (with time)</option>
+          <option value="session_end">Session Totals</option>
+          <option value="module_start">Module Starts</option>
+        </select>
+      </div>
+      <table id="activity-table"><thead><tr><th>Time</th><th>Student</th><th>Module</th><th>Lesson</th><th>Event</th><th>Duration</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-modal" onclick="if(event.target===this)closeDetail()">
+  <div id="detail-content"></div>
+</div>
+
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+var PW = '';
+var DATA = { scores: [], quizDetail: [], checkpoints: [], activity: [] };
+
+/* ── PASSWORD ── */
+document.getElementById('pw-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') unlock(); });
+
+function unlock() {
+  PW = document.getElementById('pw-input').value;
+  document.getElementById('pw-err').style.display = 'none';
+  // Test with a quick fetch
+  fetch(API + '?action=summary&pw=' + encodeURIComponent(PW))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.status === 'unauthorized') {
+        document.getElementById('pw-err').style.display = 'block';
+      } else {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'flex';
+        document.getElementById('tab-bar').style.display = 'flex';
+        document.getElementById('content').style.display = 'block';
+        DATA.scores = d.data || [];
+        loadAllData();
+      }
+    })
+    .catch(function() { document.getElementById('pw-err').style.display = 'block'; });
+}
+
+/* ── LOAD ALL DATA ── */
+function loadAllData() {
+  var endpoints = [
+    { action: 'summary', key: 'scores' },
+    { action: 'quizDetail', key: 'quizDetail' },
+    { action: 'checkpoints', key: 'checkpoints' },
+    { action: 'activity', key: 'activity' }
+  ];
+  endpoints.forEach(function(ep) {
+    fetch(API + '?action=' + ep.action + '&pw=' + encodeURIComponent(PW))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        DATA[ep.key] = d.data || [];
+        renderAll();
+      })
+      .catch(function() {});
+  });
+}
+
+/* ── RENDER ALL ── */
+function renderAll() {
+  renderOverview();
+  renderScores();
+  renderQuestions();
+  renderCheckpoints();
+  renderActivity();
+  populateModuleFilters();
+}
+
+/* ── OVERVIEW ── */
+function renderOverview() {
+  var scores = DATA.scores;
+  var students = [...new Set(scores.map(function(r) { return r.Student; }))];
+  var modules = [...new Set(scores.map(function(r) { return r.Module; }))];
+  var avgPct = scores.length ? Math.round(scores.reduce(function(a, r) { return a + (Number(r.Pct) || 0); }, 0) / scores.length) : 0;
+
+  document.getElementById('overview-stats').innerHTML =
+    statCard('Total Students', students.length, 'who have submitted at least one quiz') +
+    statCard('Active Modules', modules.length, 'with quiz submissions') +
+    statCard('Total Submissions', scores.length, 'quiz scores recorded') +
+    statCard('Class Average', avgPct + '%', 'across all quizzes');
+
+  // Build student summary table
+  var thead = '<tr><th>Student</th><th>Quizzes Done</th><th>Avg Score</th><th>Modules Touched</th><th>Last Active</th></tr>';
+  var tbody = '';
+  students.sort().forEach(function(s) {
+    var sScores = scores.filter(function(r) { return r.Student === s; });
+    var avg = Math.round(sScores.reduce(function(a, r) { return a + (Number(r.Pct) || 0); }, 0) / sScores.length);
+    var mods = [...new Set(sScores.map(function(r) { return r.Module; }))].length;
+    var last = sScores[sScores.length - 1].Timestamp || '';
+    var badge = avg >= 80 ? 'badge-green' : avg >= 60 ? 'badge-yellow' : 'badge-red';
+    tbody += '<tr style="cursor:pointer" onclick="showStudentDetail(\'' + esc(s) + '\')">' +
+      '<td><strong>' + esc(s) + '</strong></td>' +
+      '<td>' + sScores.length + '</td>' +
+      '<td><span class="badge ' + badge + '">' + avg + '%</span></td>' +
+      '<td>' + mods + '</td>' +
+      '<td>' + esc(last) + '</td></tr>';
+  });
+  var tbl = document.getElementById('overview-table');
+  tbl.querySelector('thead').innerHTML = thead;
+  tbl.querySelector('tbody').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:40px">No data yet. Students will appear here after they complete quizzes.</td></tr>';
+}
+
+/* ── SCORES ── */
+function renderScores() {
+  var modFilter = document.getElementById('scores-module-filter').value;
+  var rows = DATA.scores.filter(function(r) { return !modFilter || r.Module === modFilter; });
+  var tbody = '';
+  rows.forEach(function(r) {
+    var pct = Number(r.Pct) || 0;
+    var badge = pct >= 80 ? 'badge-green' : pct >= 60 ? 'badge-yellow' : 'badge-red';
+    var time = r.TimeOnQuiz ? formatDuration(r.TimeOnQuiz) : '—';
+    tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td>' + r.Score + '/' + r.Total + '</td><td><span class="badge ' + badge + '">' + pct + '%</span></td><td>' + time + '</td></tr>';
+  });
+  document.getElementById('scores-table').querySelector('tbody').innerHTML = tbody || emptyRow(7);
+}
+
+/* ── QUESTIONS ── */
+function renderQuestions() {
+  var modFilter = document.getElementById('questions-module-filter').value;
+  var rows = DATA.quizDetail.filter(function(r) { return !modFilter || r.Module === modFilter; });
+  var tbody = '';
+  rows.forEach(function(r) {
+    var correct = r.IsCorrect === 'YES';
+    var badge = correct ? 'badge-green' : 'badge-red';
+    tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td>' + r.QNum + '</td><td style="max-width:300px">' + esc(r.QuestionText) + '</td><td>' + esc(r.StudentAnswer) + '</td><td>' + esc(r.CorrectAnswer) + '</td><td><span class="badge ' + badge + '">' + (correct ? 'Correct' : 'Wrong') + '</span></td></tr>';
+  });
+  document.getElementById('questions-table').querySelector('tbody').innerHTML = tbody || emptyRow(9);
+}
+
+/* ── CHECKPOINTS ── */
+function renderCheckpoints() {
+  var tbody = '';
+  DATA.checkpoints.forEach(function(r) {
+    tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td style="max-width:400px;white-space:pre-wrap">' + esc(r.ResponseText) + '</td><td>' + r.CharCount + '</td></tr>';
+  });
+  document.getElementById('checkpoints-table').querySelector('tbody').innerHTML = tbody || emptyRow(6);
+}
+
+/* ── ACTIVITY ── */
+function renderActivity() {
+  var evFilter = document.getElementById('activity-event-filter').value;
+  var rows = DATA.activity.filter(function(r) { return !evFilter || r.Event === evFilter; });
+  var tbody = '';
+  rows.forEach(function(r) {
+    var dur = r.Duration ? formatDuration(r.Duration) : '—';
+    var evBadge = r.Event === 'page_view' ? 'badge-blue' : r.Event === 'session_end' ? 'badge-green' : 'badge-yellow';
+    tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td><span class="badge ' + evBadge + '">' + esc(r.Event) + '</span></td><td>' + dur + '</td></tr>';
+  });
+  document.getElementById('activity-table').querySelector('tbody').innerHTML = tbody || emptyRow(6);
+}
+
+/* ── STUDENT DETAIL MODAL ── */
+function showStudentDetail(name) {
+  var scores = DATA.scores.filter(function(r) { return r.Student === name; });
+  var questions = DATA.quizDetail.filter(function(r) { return r.Student === name; });
+  var checkpoints = DATA.checkpoints.filter(function(r) { return r.Student === name; });
+  var activity = DATA.activity.filter(function(r) { return r.Student === name; });
+
+  var html = '<button class="close-btn" onclick="closeDetail()">&times;</button>';
+  html += '<h2>' + esc(name) + '</h2>';
+
+  // Score summary by module
+  html += '<h3 style="margin:16px 0 8px">Quiz Scores</h3>';
+  html += '<table style="width:100%;border-collapse:collapse"><thead><tr><th>Module</th><th>Lesson</th><th>Score</th><th>Pct</th><th>Quiz Time</th><th>When</th></tr></thead><tbody>';
+  scores.forEach(function(r) {
+    var pct = Number(r.Pct) || 0;
+    var badge = pct >= 80 ? 'badge-green' : pct >= 60 ? 'badge-yellow' : 'badge-red';
+    html += '<tr><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td>' + r.Score + '/' + r.Total + '</td><td><span class="badge ' + badge + '">' + pct + '%</span></td><td>' + (r.TimeOnQuiz ? formatDuration(r.TimeOnQuiz) : '—') + '</td><td>' + esc(r.Timestamp) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
+  // Missed questions
+  var missed = questions.filter(function(r) { return r.IsCorrect !== 'YES'; });
+  if (missed.length) {
+    html += '<h3 style="margin:16px 0 8px;color:#ef4444">Missed Questions (' + missed.length + ')</h3>';
+    html += '<table style="width:100%;border-collapse:collapse"><thead><tr><th>Module</th><th>Question</th><th>Their Answer</th><th>Correct Answer</th></tr></thead><tbody>';
+    missed.forEach(function(r) {
+      html += '<tr><td>' + esc(r.Module) + '</td><td>' + esc(r.QuestionText) + '</td><td style="color:#ef4444">' + esc(r.StudentAnswer) + '</td><td style="color:#0d9488">' + esc(r.CorrectAnswer) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+
+  // Time spent
+  var pageViews = activity.filter(function(r) { return r.Event === 'page_view' && r.Duration; });
+  if (pageViews.length) {
+    var totalSec = pageViews.reduce(function(a, r) { return a + (Number(r.Duration) || 0); }, 0);
+    html += '<h3 style="margin:16px 0 8px">Time Spent (total: ' + formatDuration(totalSec) + ')</h3>';
+    html += '<table style="width:100%;border-collapse:collapse"><thead><tr><th>Module</th><th>Lesson</th><th>Duration</th></tr></thead><tbody>';
+    pageViews.forEach(function(r) {
+      var dur = Number(r.Duration) || 0;
+      var flag = dur < 60 ? ' style="color:#ef4444"' : '';
+      html += '<tr><td>' + esc(r.Module) + '</td><td>' + esc(r.Lesson) + '</td><td' + flag + '>' + formatDuration(dur) + (dur < 60 ? ' ⚠' : '') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('detail-modal').classList.add('show');
+}
+
+function closeDetail() { document.getElementById('detail-modal').classList.remove('show'); }
+
+/* ── HELPERS ── */
+function statCard(label, value, sub) {
+  return '<div class="stat-card"><div class="label">' + label + '</div><div class="value">' + value + '</div><div class="sub">' + sub + '</div></div>';
+}
+
+function esc(s) { if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function emptyRow(cols) { return '<tr><td colspan="' + cols + '" style="text-align:center;color:#94a3b8;padding:40px">No data yet.</td></tr>'; }
+
+function formatDuration(sec) {
+  sec = Number(sec) || 0;
+  if (sec < 60) return sec + 's';
+  var m = Math.floor(sec / 60);
+  var s = sec % 60;
+  if (m < 60) return m + 'm ' + s + 's';
+  var h = Math.floor(m / 60);
+  m = m % 60;
+  return h + 'h ' + m + 'm';
+}
+
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function filterTable(tableId, query) {
+  var rows = document.getElementById(tableId).querySelectorAll('tbody tr');
+  query = query.toLowerCase();
+  rows.forEach(function(r) {
+    r.style.display = r.textContent.toLowerCase().indexOf(query) !== -1 ? '' : 'none';
+  });
+}
+
+function populateModuleFilters() {
+  var modules = [...new Set(DATA.scores.map(function(r) { return r.Module; }))].sort();
+  ['scores-module-filter', 'questions-module-filter'].forEach(function(id) {
+    var sel = document.getElementById(id);
+    if (!sel) return;
+    var val = sel.value;
+    sel.innerHTML = '<option value="">All Modules</option>';
+    modules.forEach(function(m) { sel.innerHTML += '<option value="' + esc(m) + '">' + esc(m) + '</option>'; });
+    sel.value = val;
+  });
+}
+</script>
+</body>
+</html>
