@@ -2022,24 +2022,45 @@ function gradeVocab() {
 }
 
 function retryVocab() {
+  // Reset all vocab state
   vqAnswers = {};
   vqScore = 0;
+  flippedCards = new Set();
+
   // Reset quiz UI
   document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
   document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-  document.getElementById('vquiz-score').style.display = 'none';
-  // Reset flip cards — must study them again
-  flippedCards = new Set();
-  document.querySelectorAll('.vcard').forEach(function(c) { c.classList.remove('flipped'); });
+  var scoreBox = document.getElementById('vquiz-score');
+  if (scoreBox) scoreBox.style.display = 'none';
+  var retryBtn = document.getElementById('vq-retry-btn');
+  if (retryBtn) retryBtn.style.display = 'none';
+
+  // Reset ALL flip cards visually — remove flipped class from each card
+  var allCards = document.querySelectorAll('.vcard');
+  for (var i = 0; i < allCards.length; i++) {
+    allCards[i].className = 'vcard'; // reset to base class only
+  }
+
+  // Reset flip gate
   var countEl = document.getElementById('vocab-flip-count');
   if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
   var gate = document.getElementById('vocab-flip-gate');
-  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-  // Hide quiz again
-  document.getElementById('vquiz').style.display = 'none';
-  // Scroll to top of flashcards
-  document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (gate) {
+    gate.classList.remove('unlocked');
+    gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz';
+  }
+
+  // Hide quiz behind flip gate again
+  var quiz = document.getElementById('vquiz');
+  if (quiz) quiz.style.display = 'none';
+
+  // Save immediately so a refresh doesn't restore old state
   saveProgress();
+
+  // Scroll to top of flashcards
+  var grid = document.querySelector('.vocab-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   showToast('Cards reset — study all terms again before retaking the quiz');
 }
 
