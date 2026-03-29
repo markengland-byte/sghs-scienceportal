@@ -2024,10 +2024,23 @@ function gradeVocab() {
 function retryVocab() {
   vqAnswers = {};
   vqScore = 0;
+  // Reset quiz UI
   document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
   document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
   document.getElementById('vquiz-score').style.display = 'none';
-  document.getElementById('vquiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Reset flip cards — must study them again
+  flippedCards = new Set();
+  document.querySelectorAll('.vcard').forEach(function(c) { c.classList.remove('flipped'); });
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+  var gate = document.getElementById('vocab-flip-gate');
+  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+  // Hide quiz again
+  document.getElementById('vquiz').style.display = 'none';
+  // Scroll to top of flashcards
+  document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  saveProgress();
+  showToast('Cards reset — study all terms again before retaking the quiz');
 }
 
 /* ── SOL PRACTICE TEST ───────────────────────────── */
