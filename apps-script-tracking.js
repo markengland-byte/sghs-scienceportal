@@ -29,10 +29,10 @@ function setupSheet() {
 
   // Tab definitions: name and header row
   var tabs = {
-    'Scores': ['Timestamp', 'Student', 'Module', 'Lesson', 'Score', 'Total', 'Pct', 'TimeOnQuiz'],
-    'QuizDetail': ['Timestamp', 'Student', 'Module', 'Lesson', 'QNum', 'QuestionText', 'StudentAnswer', 'CorrectAnswer', 'IsCorrect'],
-    'Checkpoints': ['Timestamp', 'Student', 'Module', 'Lesson', 'ResponseText', 'CharCount'],
-    'Activity': ['Timestamp', 'Student', 'Module', 'Lesson', 'Event', 'Duration']
+    'Scores': ['Timestamp', 'Student', 'ClassPeriod', 'Module', 'Lesson', 'Score', 'Total', 'Pct', 'TimeOnQuiz'],
+    'QuizDetail': ['Timestamp', 'Student', 'ClassPeriod', 'Module', 'Lesson', 'QNum', 'QuestionText', 'StudentAnswer', 'CorrectAnswer', 'IsCorrect'],
+    'Checkpoints': ['Timestamp', 'Student', 'ClassPeriod', 'Module', 'Lesson', 'ResponseText', 'CharCount'],
+    'Activity': ['Timestamp', 'Student', 'ClassPeriod', 'Module', 'Lesson', 'Event', 'Duration']
   };
 
   var tabNames = Object.keys(tabs);
@@ -97,10 +97,13 @@ function doPost(e) {
     var action = data.action || 'score';
     var ts = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
 
+    var cp = data.classPeriod || '';
+
     if (action === 'score') {
       ss.getSheetByName('Scores').appendRow([
         ts,
         data.student,
+        cp,
         data.module,
         data.lesson,
         data.score,
@@ -118,6 +121,7 @@ function doPost(e) {
         sheet.appendRow([
           ts,
           data.student,
+          cp,
           data.module,
           data.lesson,
           q.qNum,
@@ -133,6 +137,7 @@ function doPost(e) {
       ss.getSheetByName('Checkpoints').appendRow([
         ts,
         data.student,
+        cp,
         data.module,
         data.lesson,
         data.responseText,
@@ -144,6 +149,7 @@ function doPost(e) {
       ss.getSheetByName('Activity').appendRow([
         ts,
         data.student,
+        cp,
         data.module,
         data.lesson,
         data.event,
