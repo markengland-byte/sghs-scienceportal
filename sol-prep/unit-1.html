@@ -1513,7 +1513,8 @@ function saveProgress() {
     missedStds: missedStds,
     questionDetail: questionDetail,
     activityLog: activityLog,
-    sessionStart: sessionStart
+    sessionStart: sessionStart,
+    unlockedPanels: Array.from(unlockedPanels)
   };
   localStorage.setItem('sol_unit1_progress', JSON.stringify(data));
 }
@@ -1522,6 +1523,13 @@ function restoreProgress(data) {
   // Restore state variables
   studentName = data.studentName;
   classPeriod = data.classPeriod;
+  // Restore unlocked panels
+  if (data.unlockedPanels) {
+    unlockedPanels = new Set(data.unlockedPanels);
+  } else {
+    // Backward compatibility — unlock all panels up to current
+    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
+  }
   pretestAnswers = data.pretestAnswers || [];
   pretestSent = data.pretestSent || false;
   vqAnswers = data.vqAnswers || {};
@@ -1718,7 +1726,15 @@ function startUnit() {
 }
 
 /* ── NAVIGATION ───────────────────────────────────── */
+// Track which panels have been unlocked
+var unlockedPanels = new Set([0]); // panel 0 always accessible
+
 function goTo(n) {
+  // Block navigation to locked panels (unless going backward)
+  if (n > currentPanel && !unlockedPanels.has(n)) {
+    showToast('Complete the questions on this page first!');
+    return;
+  }
   // Log time on previous panel
   var duration = Math.round((Date.now() - panelStartTime) / 1000);
   if (duration > 2) {
@@ -1811,6 +1827,8 @@ function checkGate(panelId) {
   if (count) count.textContent = answered + ' of ' + required + ' answered';
 
   if (answered >= required) {
+    // Unlock next panel in nav
+    unlockedPanels.add(panelId + 1);
     // Unlock!
     if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered — next step unlocked!'; }
     var btn = document.getElementById('next-' + panelId);
@@ -1927,6 +1945,9 @@ function gradeVocab() {
   if (vqScore >= VQ_PASS) {
     msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
     vocabPassed = true;
+    unlockedPanels.add(6); // Study Guide
+    unlockedPanels.add(7); // Practice Test
+    unlockedPanels.add(8); // Results
     document.getElementById('practice-locked').style.display = 'none';
     // Unlock practice test panel
     var testLocked = document.getElementById('practice-test-locked');
