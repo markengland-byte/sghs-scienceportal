@@ -1776,10 +1776,12 @@ function goTo(n) {
     showToast('Complete the questions on this page first!');
     return;
   }
-  // Log time on previous panel
+  // Log time on previous panel and send to Google Sheet
   var duration = Math.round((Date.now() - panelStartTime) / 1000);
   if (duration > 2) {
     activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+    var stepNames = ['SOL Focus','Exp. Design','Data & Measurement','Graph Reading','Scientific Reasoning','Vocab Lock-In','Study Guide','Practice Test','Results'];
+    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
   }
   panelStartTime = Date.now();
 
@@ -2136,17 +2138,22 @@ function solPick(opt) {
     missedStds[std]++;
   }
 
-  // Track question detail
+  // Track question detail with full text for Apps Script
   var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
   var qNumMatch = stemText.match(/^(\d+)/);
   var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
+  var studentAnswerText = opt.textContent.trim();
+  var correctAnswerText = '';
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    if (o.dataset.v === correct) correctAnswerText = o.textContent.trim();
+  });
   questionDetail.push({
     qNum: qNum,
     std: std,
-    chosen: chosen,
-    correct: correct,
-    isCorrect: isCorrect,
-    stem: stemText.substring(0, 120)
+    questionText: stemText,
+    studentAnswer: studentAnswerText,
+    correctAnswer: correctAnswerText,
+    isCorrect: isCorrect
   });
 
   // Update progress
@@ -2223,37 +2230,37 @@ function submitFinalScore() {
   if (!studentName) return;
   var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
 
-  // 1. Score summary
+  // 1. Score summary — send score and total as separate numbers
   send({
     action: 'score',
     lesson: 'Practice Test',
-    score: pracCorrect + '/' + TOTAL_SOL_Q,
+    score: pracCorrect,
+    total: TOTAL_SOL_Q,
     pct: pct,
-    missed: Object.keys(missedStds).join(', ') || 'none',
-    timestamp: new Date().toISOString()
+    timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000)
   });
 
-  // 2. Individual question detail
-  questionDetail.forEach(function(q) {
-    send({
-      action: 'quizDetail',
-      qNum: q.qNum,
-      std: q.std,
-      chosen: q.chosen,
-      correct: q.correct,
-      isCorrect: q.isCorrect,
-      stem: q.stem,
-      timestamp: new Date().toISOString()
-    });
+  // 2. All question detail in one batch — matching Apps Script format
+  send({
+    action: 'quizDetail',
+    lesson: 'Practice Test',
+    questions: questionDetail.map(function(q) {
+      return {
+        qNum: q.qNum,
+        questionText: q.questionText,
+        studentAnswer: q.studentAnswer,
+        correctAnswer: q.correctAnswer,
+        isCorrect: q.isCorrect
+      };
+    })
   });
 
   // 3. Activity/time data
   send({
     action: 'activity',
+    lesson: 'Practice Test',
     event: 'submit_score',
-    panelLog: JSON.stringify(activityLog),
-    totalSessionSeconds: Math.round((Date.now() - sessionStart) / 1000),
-    timestamp: new Date().toISOString()
+    duration: Math.round((Date.now() - sessionStart) / 1000)
   });
 
   showToast('Score sent to Mr. England \u2713');
