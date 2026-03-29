@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Population and Community Ecology · SGHS Science Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="../shared/portal-base.css">
+<link rel="stylesheet" href="../shared/portal-sidebar.css">
+<style>
+.hero-demog{background:linear-gradient(135deg,#1a2a4a,#0b6a8a);}
+.hero-growth{background:linear-gradient(135deg,#0d3a22,#1a7a4a);}
+.hero-human{background:linear-gradient(135deg,#4a1a00,#8a5000);}
+.hero-community{background:linear-gradient(135deg,#2a0a5a,#6c3fa0);}
+.hero-test{background:linear-gradient(135deg,#0f2240,#1a4070);}
+</style>
+</head>
+<body class="theme-bio">
+<div id="submit-toast"><span style="font-size:1.1rem;">🤖</span><span id="toast-msg">Score sent!</span></div>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#0f2240;margin-bottom:8px;">Welcome to Population and Community Ecology</div>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:20px;line-height:1.6;">Enter your name to begin. Your scores will be sent to Mr. England automatically.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input type="text" id="student-name" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:4px;display:none;">Please enter your name.</div>
+    <button onclick="startModule()" style="margin-top:16px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<header class="top-bar">
+  <a href="index.html" class="tb-back">← Biology</a>
+  <div class="tb-logo">🌍</div>
+  <div><div class="tb-name">Southern Gap High School</div><div class="tb-sub">Biology · Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Population &amp; Community Ecology</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Unit Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Populations</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Lesson 1 · Demographics &amp; Dynamics</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">Lesson 2 · Growth &amp; Regulation</div></a>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">Lesson 3 · The Human Population</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Communities</div>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">Lesson 4 · Community Ecology</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Assessment</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">Unit Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+<!-- ═══════════════════════════════════════════════════
+     PANEL 0 — UNIT OVERVIEW (REBUILD - VERBATIM)
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">Biology · <span>Unit Overview</span></div>
+    <div class="h-title">Population and Community Ecology</div>
+    <div class="h-desc">The effects of invasive species are just one aspect of what ecologists study to understand how populations interact within ecological communities, and what impact natural and human-induced disturbances have on the characteristics of communities.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 19</div>
+      <div class="h-chip">🎯 5 Lessons · 30 Questions</div>
+      <div class="h-chip">Virginia SOL BIO.9</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="diagram-wrap">
+      <div class="d-title">Figure 19.1 — Asian Carp</div>
+      <img src="images/ch19/fig19-1-asian-carp.png" alt="Asian carp jump out of the water in response to electrofishing." style="width:100%;max-width:700px;border-radius:10px;">
+      <div class="d-caption">Asian carp jump out of the water in response to electrofishing. The Asian carp in the inset photograph were harvested from the Little Calumet River in Illinois in May, 2010, using rotenone, a toxin often used as an insecticide, in an effort to learn more about the population of the species. (credit main image: modification of work by USGS; credit inset: modification of work by Lt. David French, USCG)</div>
+    </div>
+
+    <p class="prose">Imagine sailing down a river in a small motorboat on a weekend afternoon; the water is smooth, and you are enjoying the sunshine and cool breeze when suddenly you are hit in the head by a 20-pound silver carp. This is a risk now on many rivers and canal systems in Illinois and Missouri because of the presence of Asian carp.</p>
+
+    <p class="prose">This fish—actually a group of species including the silver, black, grass, and big head carp—has been farmed and eaten in China for over 1,000 years. It is one of the most important aquaculture food resources worldwide. In the United States, however, Asian carp is considered a dangerous invasive species that disrupts ecological community structure to the point of threatening native species.</p>
+
+    <p class="prose">The effects of invasive species (such as the Asian carp, kudzu vine, predatory snakehead fish, and zebra mussel) are just one aspect of what ecologists study to understand how populations interact within ecological communities, and what impact natural and human-induced disturbances have on the characteristics of communities.</p>
+
+    <div class="obj-box">
+      <div class="obj-label">📌 What You Will Learn in This Module</div>
+      <ul class="obj-list">
+        <li><strong>19.1 Population Demographics and Dynamics</strong></li>
+        <li>Describe how ecologists measure population size and density</li>
+        <li>Describe three different patterns of population distribution</li>
+        <li>Use life tables to calculate mortality rates</li>
+        <li>Describe the three types of survivorship curves and relate them to specific populations</li>
+        <li><strong>19.2 Population Growth and Regulation</strong></li>
+        <li>Explain the characteristics of and differences between exponential and logistic growth patterns</li>
+        <li>Give examples of exponential and logistic growth in natural populations</li>
+        <li>Give examples of how the carrying capacity of a habitat may change</li>
+        <li>Compare and contrast density-dependent growth regulation and density-independent growth regulation giving examples</li>
+        <li><strong>19.3 The Human Population</strong></li>
+        <li>Discuss how human population growth can be exponential</li>
+        <li>Explain how humans have expanded the carrying capacity of their habitat</li>
+        <li>Relate population growth and age structure to the level of economic development in different countries</li>
+        <li>Discuss the long-term implications of unchecked human population growth</li>
+        <li><strong>19.4 Community Ecology</strong></li>
+        <li>Discuss the predator-prey cycle</li>
+        <li>Give examples of defenses against predation and herbivory</li>
+        <li>Describe the competitive exclusion principle</li>
+        <li>Give examples of symbiotic relationships between species</li>
+        <li>Describe community structure and succession</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Module Map</div>
+      <div class="sh2">Five Lessons · OpenStax Concepts of Biology Ch. 19</div>
+      <table class="dt">
+        <thead><tr><th>#</th><th>Lesson</th><th>Key Concepts</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Population Demographics &amp; Dynamics</td><td>Population size, population density, quadrats, mark and recapture, species distribution (random, clumped, uniform), demography, life tables, mortality rates, survivorship curves (Type I, II, III)</td><td>CB 19.1</td></tr>
+          <tr><td>2</td><td>Population Growth &amp; Regulation</td><td>Exponential growth, logistic growth, carrying capacity (K), J-shaped curve, S-shaped curve, intraspecific competition, density-dependent regulation, density-independent regulation, K-selected and r-selected species</td><td>CB 19.2</td></tr>
+          <tr><td>3</td><td>The Human Population</td><td>Human population growth, overcoming density-dependent regulation, age structure diagrams, economic development, population explosion, long-term consequences</td><td>CB 19.3</td></tr>
+          <tr><td>4</td><td>Community Ecology</td><td>Predator-prey dynamics, defense mechanisms, mimicry, competitive exclusion principle, symbiosis (commensalism, mutualism, parasitism), community structure, succession</td><td>CB 19.4</td></tr>
+          <tr><td>5</td><td>Practice Test</td><td>All topics — comprehensive assessment</td><td>All</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Virginia SOL Alignment</div>
+      <div class="sh2">Standards Covered in This Module</div>
+      <table class="dt">
+        <thead><tr><th>Standard</th><th>Description</th><th>Lessons</th></tr></thead>
+        <tbody>
+          <tr><td><strong>BIO.9a</strong></td><td>Investigating and understanding dynamic equilibria within populations, communities, and ecosystems</td><td>1, 2, 3, 4</td></tr>
+          <tr><td><strong>BIO.9b</strong></td><td>Understanding interactions within and among populations including carrying capacities, limiting factors, and growth curves</td><td>1, 2, 3</td></tr>
+          <tr><td><strong>BIO.9c</strong></td><td>Understanding the role of natural selection in populations and communities</td><td>2, 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 19</div><div class="cx">All content in this module is adapted from OpenStax Concepts of Biology, Chapter 19: Population and Community Ecology, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" disabled>← Previous</button>
+    <div class="lnav-info">Overview · Start Here</div>
+    <button class="nbtn next" onclick="goTo(1)">Lesson 1: Population Demographics &amp; Dynamics →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 1 — POPULATION DEMOGRAPHICS & DYNAMICS (REBUILD - VERBATIM)
+     OpenStax CB 19.1
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+  <div class="hero hero-demog">
+    <div class="h-crumb">Population and Community Ecology · <span>Lesson 1</span></div>
+    <div class="h-title">Population Demographics &amp; Dynamics</div>
+    <div class="h-desc">Populations are dynamic entities. Their size and composition fluctuate in response to numerous factors, including seasonal and yearly changes in the environment, natural disasters such as forest fires and volcanic eruptions, and competition for resources between and within species.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 19.1</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Describe how ecologists measure population size and density</li>
+        <li>Describe three different patterns of population distribution</li>
+        <li>Use life tables to calculate mortality rates</li>
+        <li>Describe the three types of survivorship curves and relate them to specific populations</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction</div>
+      <div class="sh2">Population Demographics and Dynamics</div>
+
+      <p class="prose">Populations are dynamic entities. Their size and composition fluctuate in response to numerous factors, including seasonal and yearly changes in the environment, natural disasters such as forest fires and volcanic eruptions, and competition for resources between and within species. The statistical study of populations is called demography: a set of mathematical tools designed to describe populations and investigate how they change. Many of these tools were actually designed to study human populations. For example, life tables, which detail the life expectancy of individuals within a population, were initially developed by life insurance companies to set insurance rates. In fact, while the term "demographics" is sometimes assumed to mean a study of human populations, all living populations can be studied using this approach.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Population Size and Density</div>
+      <div class="sh2">Measuring Populations</div>
+
+      <p class="prose">Populations are characterized by their population size (total number of individuals) and their population density (number of individuals per unit area). A population may have a large number of individuals that are distributed densely, or sparsely. There are also populations with small numbers of individuals that may be dense or very sparsely distributed in a local area. Population size can affect potential for adaptation because it affects the amount of genetic variation present in the population. Density can have effects on interactions within a population such as competition for food and the ability of individuals to find a mate. Smaller organisms tend to be more densely distributed than larger organisms (Figure 19.2).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.2 — Population Density</div>
+        <img src="images/ch19/fig19-2-population-density.png" alt="Australian mammals show a typical inverse relationship between population density and body size." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Australian mammals show a typical inverse relationship between population density and body size. As this graph shows, population density typically decreases with increasing body size. Why do you think this is the case?</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Estimating Population Size</div>
+      <div class="sh2">Quadrats and Mark-Recapture</div>
+
+      <p class="prose">The most accurate way to determine population size is to count all of the individuals within the area. However, this method is usually not logistically or economically feasible, especially when studying large areas. Thus, scientists usually study populations by sampling a representative portion of each habitat and use this sample to make inferences about the population as a whole. The methods used to sample populations to determine their size and density are typically tailored to the characteristics of the organism being studied. For immobile organisms such as plants, or for very small and slow-moving organisms, a quadrat may be used. A quadrat is a wood, plastic, or metal square that is randomly located on the ground and used to count the number of individuals that lie within its boundaries. To obtain an accurate count using this method, the square must be placed at random locations within the habitat enough times to produce an accurate estimate. This counting method will provide an estimate of both population size and density. The number and size of quadrat samples depends on the type of organisms and the nature of their distribution.</p>
+
+      <p class="prose">For smaller mobile organisms, such as mammals, a technique called mark and recapture is often used. This method involves marking a sample of captured animals in some way and releasing them back into the environment to mix with the rest of the population; then, a new sample is captured and scientists determine how many of the marked animals are in the new sample. This method assumes that the larger the population, the lower the percentage of marked organisms that will be recaptured since they will have mixed with more unmarked individuals. For example, if 80 field mice are captured, marked, and released into the forest, then a second trapping 100 field mice are captured and 20 of them are marked, the population size (N) can be determined using the following equation:</p>
+
+      <p class="prose">Using our example, the population size would be 400.</p>
+
+      <p class="prose">These results give us an estimate of 400 total individuals in the original population. The true number usually will be a bit different from this because of chance errors and possible bias caused by the sampling methods.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Species Distribution</div>
+      <div class="sh2">Distribution Patterns</div>
+
+      <p class="prose">In addition to measuring density, further information about a population can be obtained by looking at the distribution of the individuals throughout their range. A species distribution pattern is the distribution of individuals within a habitat at a particular point in time—broad categories of patterns are used to describe them.</p>
+
+      <p class="prose">Individuals within a population can be distributed at random, in groups, or equally spaced apart (more or less). These are known as random, clumped, and uniform distribution patterns, respectively (Figure 19.3). Different distributions reflect important aspects of the biology of the species; they also affect the mathematical methods required to estimate population sizes. An example of random distribution occurs with dandelion and other plants that have wind-dispersed seeds that germinate wherever they happen to fall in favorable environments. A clumped distribution, may be seen in plants that drop their seeds straight to the ground, such as oak trees; it can also be seen in animals that live in social groups (schools of fish or herds of elephants). Uniform distribution is observed in plants that secrete substances inhibiting the growth of nearby individuals (such as the release of toxic chemicals by sage plants). It is also seen in territorial animal species, such as penguins that maintain a defined territory for nesting. The territorial defensive behaviors of each individual create a regular pattern of distribution of similar-sized territories and individuals within those territories. Thus, the distribution of the individuals within a population provides more information about how they interact with each other than does a simple density measurement. Just as lower density species might have more difficulty finding a mate, solitary species with a random distribution might have a similar difficulty when compared to social species clumped together in groups.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.3 — Species Distribution Patterns</div>
+        <img src="images/ch19/fig19-3-survivorship.png" alt="Species may have a random, clumped, or uniform distribution." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Species may have a random, clumped, or uniform distribution. Plants such as (a) dandelions with wind-dispersed seeds tend to be randomly distributed. Animals such as (b) elephants that travel in groups exhibit a clumped distribution. Territorial birds such as (c) penguins tend to have a uniform distribution. (credit a: modification of work by Rosendahl; credit b: modification of work by Rebecca Wood; credit c: modification of work by Ben Tubby)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Demography</div>
+      <div class="sh2">Life Tables and Survivorship</div>
+
+      <p class="prose">While population size and density describe a population at one particular point in time, scientists must use demography to study the dynamics of a population. Demography is the statistical study of population changes over time: birth rates, death rates, and life expectancies. These population characteristics are often displayed in a life table.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Life Tables</div>
+      <div class="sh2">Dall Mountain Sheep Example</div>
+
+      <p class="prose">Life tables provide important information about the life history of an organism and the life expectancy of individuals at each age. They are modeled after actuarial tables used by the insurance industry for estimating human life expectancy. Life tables may include the probability of each age group dying before their next birthday, the percentage of surviving individuals dying at a particular age interval (their mortality rate, and their life expectancy at each interval. An example of a life table is shown in Table 19.1 from a study of Dall mountain sheep, a species native to northwestern North America. Notice that the population is divided into age intervals (column A). The mortality rate (per 1000) shown in column D is based on the number of individuals dying during the age interval (column B), divided by the number of individuals surviving at the beginning of the interval (Column C) multiplied by 1000.</p>
+
+      <p class="prose">For example, between ages three and four, 12 individuals die out of the 776 that were remaining from the original 1000 sheep. This number is then multiplied by 1000 to give the mortality rate per thousand.</p>
+
+      <p class="prose">As can be seen from the mortality rate data (column D), a high death rate occurred when the sheep were between six months and a year old, and then increased even more from 8 to 12 years old, after which there were few survivors. The data indicate that if a sheep in this population were to survive to age one, it could be expected to live another 7.7 years on average, as shown by the life-expectancy numbers in column E.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.4 — Life Table of Dall Mountain Sheep</div>
+        <img src="images/ch19/fig19-4-life-table.png" alt="Life table of Dall Mountain Sheep showing number of deaths, survivors, mortality rate, and life expectancy at each age interval." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">This life table of Ovis dalli shows the number of deaths, number of survivors, mortality rate, and life expectancy at each age interval for Dall mountain sheep. (Data Adapted from Edward S. Deevey, Jr., "Life Tables for Natural Populations of Animals," The Quarterly Review of Biology 22, no. 4 (December 1947): 283-314.)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Survivorship Curves</div>
+      <div class="sh2">Type I, II, and III</div>
+
+      <p class="prose">Another tool used by population ecologists is a survivorship curve, which is a graph of the number of individuals surviving at each age interval versus time. These curves allow us to compare the life histories of different populations (Figure 19.4). There are three types of survivorship curves. In a type I curve, mortality is low in the early and middle years and occurs mostly in older individuals. Organisms exhibiting a type I survivorship typically produce few offspring and provide good care to the offspring increasing the likelihood of their survival. Humans and most mammals exhibit a type I survivorship curve. In type II curves, mortality is relatively constant throughout the entire life span, and mortality is equally likely to occur at any point in the life span. Many bird populations provide examples of an intermediate or type II survivorship curve. In type III survivorship curves, early ages experience the highest mortality with much lower mortality rates for organisms that make it to advanced years. Type III organisms typically produce large numbers of offspring, but provide very little or no care for them. Trees and marine invertebrates exhibit a type III survivorship curve because very few of these organisms survive their younger years, but those that do make it to an old age are more likely to survive for a relatively long period of time.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.5 — Survivorship Curves</div>
+        <img src="images/ch19/fig19-5-age-structure.png" alt="Survivorship curves show the distribution of individuals in a population according to age." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Survivorship curves show the distribution of individuals in a population according to age. Humans and most mammals have a Type I survivorship curve, because death primarily occurs in the older years. Birds have a Type II survivorship curve, as death at any age is equally probable. Trees have a Type III survivorship curve because very few survive the younger years, but after a certain age, individuals are much more likely to survive.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Demography</div><div class="vocab-def">The statistical study of populations, including mathematical tools designed to describe populations and investigate how they change</div></div>
+        <div class="vocab-card"><div class="vocab-term">Population size</div><div class="vocab-def">The total number of individuals in a population</div></div>
+        <div class="vocab-card"><div class="vocab-term">Population density</div><div class="vocab-def">The number of individuals per unit area</div></div>
+        <div class="vocab-card"><div class="vocab-term">Quadrat</div><div class="vocab-def">A wood, plastic, or metal square randomly located on the ground and used to count the number of individuals within its boundaries</div></div>
+        <div class="vocab-card"><div class="vocab-term">Mark and recapture</div><div class="vocab-def">A technique for estimating population size of mobile organisms by marking captured animals, releasing them, and recapturing a new sample</div></div>
+        <div class="vocab-card"><div class="vocab-term">Random distribution</div><div class="vocab-def">A pattern where individuals are distributed without a predictable pattern, as seen in dandelions with wind-dispersed seeds</div></div>
+        <div class="vocab-card"><div class="vocab-term">Clumped distribution</div><div class="vocab-def">A pattern where individuals are grouped together, as seen in herds of elephants or trees that drop seeds nearby</div></div>
+        <div class="vocab-card"><div class="vocab-term">Uniform distribution</div><div class="vocab-def">A pattern where individuals are equally spaced apart, as seen in territorial penguins or plants that secrete growth-inhibiting substances</div></div>
+        <div class="vocab-card"><div class="vocab-term">Life table</div><div class="vocab-def">A table that provides information about the life history of an organism, including life expectancy and mortality rates at each age interval</div></div>
+        <div class="vocab-card"><div class="vocab-term">Survivorship curve</div><div class="vocab-def">A graph of the number of individuals surviving at each age interval versus time, used to compare life histories of different populations</div></div>
+        <div class="vocab-card"><div class="vocab-term">Type I survivorship</div><div class="vocab-def">A curve where mortality is low in the early and middle years and occurs mostly in older individuals; seen in humans and most mammals</div></div>
+        <div class="vocab-card"><div class="vocab-term">Type II survivorship</div><div class="vocab-def">A curve where mortality is relatively constant throughout the entire life span; seen in many bird populations</div></div>
+        <div class="vocab-card"><div class="vocab-term">Type III survivorship</div><div class="vocab-def">A curve where early ages experience the highest mortality with much lower rates for organisms that reach advanced years; seen in trees and marine invertebrates</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="RBOsqmBQBQk">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/RBOsqmBQBQk/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Population Ecology — Crash Course Ecology #2</div><div class="vid-dur">~10 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp1">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Population Demographics &amp; Dynamics</span>
+      </div>
+      <p class="cp-prompt">Explain the difference between population size and population density. Describe the three types of species distribution patterns (random, clumped, uniform) with an example of each. Then compare and contrast the three types of survivorship curves (Type I, II, III) and identify which organisms exhibit each type.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(1)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill1"></div></div>
+      <div class="cp-count" id="cpCount1">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz1">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 1 Quiz</div>
+
+      <div class="qq" id="q1-1">
+        <div class="q-stem">1. Population density is defined as the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,1,this,'b')">A. Total number of individuals in a population</button>
+          <button class="cbtn" onclick="pick(1,1,this,'a')">B. Number of individuals per unit area</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">C. Number of species in a given habitat</button>
+          <button class="cbtn" onclick="pick(1,1,this,'b')">D. Rate at which a population grows over time</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-2">
+        <div class="q-stem">2. In the mark and recapture method, if 80 mice are captured, marked, and released, then a second trapping of 100 mice finds 20 are marked, the estimated population size is:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,2,this,'b')">A. 200</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">B. 320</button>
+          <button class="cbtn" onclick="pick(1,2,this,'a')">C. 400</button>
+          <button class="cbtn" onclick="pick(1,2,this,'b')">D. 800</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-3">
+        <div class="q-stem">3. Penguins that maintain defined territories for nesting exhibit which type of distribution pattern?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,3,this,'b')">A. Random distribution</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">B. Clumped distribution</button>
+          <button class="cbtn" onclick="pick(1,3,this,'a')">C. Uniform distribution</button>
+          <button class="cbtn" onclick="pick(1,3,this,'b')">D. Stratified distribution</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-4">
+        <div class="q-stem">4. Animals that live in social groups, such as schools of fish or herds of elephants, exhibit which distribution pattern?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,4,this,'b')">A. Random distribution</button>
+          <button class="cbtn" onclick="pick(1,4,this,'a')">B. Clumped distribution</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">C. Uniform distribution</button>
+          <button class="cbtn" onclick="pick(1,4,this,'b')">D. Linear distribution</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-5">
+        <div class="q-stem">5. A Type I survivorship curve, in which mortality is low in the early and middle years and occurs mostly in older individuals, is exhibited by:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,5,this,'b')">A. Trees and marine invertebrates</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">B. Many bird populations</button>
+          <button class="cbtn" onclick="pick(1,5,this,'a')">C. Humans and most mammals</button>
+          <button class="cbtn" onclick="pick(1,5,this,'b')">D. Bacteria and protists</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q1-6">
+        <div class="q-stem">6. Type III organisms typically produce large numbers of offspring but provide very little or no care for them. Which of the following is an example?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(1,6,this,'b')">A. Elephants</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">B. Humans</button>
+          <button class="cbtn" onclick="pick(1,6,this,'a')">C. Trees and marine invertebrates</button>
+          <button class="cbtn" onclick="pick(1,6,this,'b')">D. Most bird species</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score1"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 19.1</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 19.1: Population Demographics and Dynamics, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(0)">← Unit Overview</button>
+    <div class="lnav-info">Lesson 1 of 5</div>
+    <button class="nbtn next" onclick="goTo(2)">Lesson 2: Population Growth &amp; Regulation →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 2 — POPULATION GROWTH & REGULATION (REBUILD - VERBATIM)
+     OpenStax CB 19.2
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+  <div class="hero hero-growth">
+    <div class="h-crumb">Population and Community Ecology · <span>Lesson 2</span></div>
+    <div class="h-title">Population Growth &amp; Regulation</div>
+    <div class="h-desc">Population ecologists make use of a variety of methods to model population dynamics. An accurate model should be able to describe the changes occurring in a population and predict future changes.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 19.2</div>
+      <div class="h-chip">⏱ ~45 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Explain the characteristics of and differences between exponential and logistic growth patterns</li>
+        <li>Give examples of exponential and logistic growth in natural populations</li>
+        <li>Give examples of how the carrying capacity of a habitat may change</li>
+        <li>Compare and contrast density-dependent growth regulation and density-independent growth regulation giving examples</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction</div>
+      <div class="sh2">Population Growth</div>
+
+      <p class="prose">Population ecologists make use of a variety of methods to model population dynamics. An accurate model should be able to describe the changes occurring in a population and predict future changes.</p>
+
+      <p class="prose">The two simplest models of population growth use deterministic equations (equations that do not account for random events) to describe the rate of change in the size of a population over time. The first of these models, exponential growth, describes theoretical populations that increase in numbers without any limits to their growth. The second model, logistic growth, introduces limits to reproductive growth that become more intense as the population size increases. Neither model adequately describes natural populations, but they provide points of comparison.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Exponential Growth</div>
+      <div class="sh2">J-Shaped Growth Curves</div>
+
+      <p class="prose">Charles Darwin, in his theory of natural selection, was greatly influenced by the English clergyman Thomas Malthus. Malthus published a book in 1798 stating that populations with unlimited natural resources grow very rapidly, which represents an exponential growth, and then population growth decreases as resources become depleted, indicating a logistic growth.</p>
+
+      <p class="prose">The best example of exponential growth in organisms is seen in bacteria. Bacteria are prokaryotes that reproduce largely by binary fission. This division takes about an hour for many bacterial species. If 1000 bacteria are placed in a large flask with an abundant supply of nutrients (so the nutrients will not become quickly depleted), the number of bacteria will have doubled from 1000 to 2000 after just an hour. In another hour, each of the 2000 bacteria will divide, producing 4000 bacteria. After the third hour, there should be 8000 bacteria in the flask. The important concept of exponential growth is that the growth rate—the number of organisms added in each reproductive generation—is itself increasing; that is, the population size is increasing at a greater and greater rate. After 24 of these cycles, the population would have increased from 1000 to more than 16 billion bacteria. When the population size, N, is plotted over time, a J-shaped growth curve is produced (Figure 19.5a).</p>
+
+      <p class="prose">The bacteria-in-a-flask example is not truly representative of the real world where resources are usually limited. However, when a species is introduced into a new habitat that it finds suitable, it may show exponential growth for a while. In the case of the bacteria in the flask, some bacteria will die during the experiment and thus not reproduce; therefore, the growth rate is lowered from a maximal rate in which there is no mortality. The growth rate of a population is largely determined by subtracting the death rate, D, (number organisms that die during an interval) from the birth rate, B, (number organisms that are born during an interval). The growth rate can be expressed in a simple equation that combines the birth and death rates into a single factor: r. This is shown in the following formula:</p>
+
+      <p class="prose">The value of r can be positive, meaning the population is increasing in size (the rate of change is positive); or negative, meaning the population is decreasing in size; or zero, in which case the population size is unchanging, a condition known as zero population growth.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.6 — Exponential and Logistic Growth</div>
+        <img src="images/ch19/fig19-6-exponential-growth.png" alt="When resources are unlimited, populations exhibit exponential growth, shown in a J-shaped curve." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">When resources are unlimited, populations exhibit (a) exponential growth, shown in a J-shaped curve. When resources are limited, populations exhibit (b) logistic growth. In logistic growth, population expansion decreases as resources become scarce, and it levels off when the carrying capacity of the environment is reached. The logistic growth curve is S-shaped.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Logistic Growth</div>
+      <div class="sh2">S-Shaped Growth Curves</div>
+
+      <p class="prose">Extended exponential growth is possible only when infinite natural resources are available; this is not the case in the real world. Charles Darwin recognized this fact in his description of the "struggle for existence," which states that individuals will compete (with members of their own or other species) for limited resources. The successful ones are more likely to survive and pass on the traits that made them successful to the next generation at a greater rate (natural selection). To model the reality of limited resources, population ecologists developed the logistic growth model.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Carrying Capacity and the Logistic Model</div>
+      <div class="sh2">The Concept of K</div>
+
+      <p class="prose">In the real world, with its limited resources, exponential growth cannot continue indefinitely. Exponential growth may occur in environments where there are few individuals and plentiful resources, but when the number of individuals gets large enough, resources will be depleted and the growth rate will slow down. Eventually, the growth rate will plateau or level off (Figure 19.5b). This population size, which is determined by the maximum population size that a particular environment can sustain, is called the carrying capacity, or K. In real populations, a growing population often overshoots its carrying capacity, and the death rate increases beyond the birth rate causing the population size to decline back to the carrying capacity or below it. Most populations usually fluctuate around the carrying capacity in an undulating fashion rather than existing right at it.</p>
+
+      <p class="prose">The formula used to calculate logistic growth adds the carrying capacity as a moderating force in the growth rate. The expression "K – N" is equal to the number of individuals that may be added to a population at a given time, and "K – N" divided by "K" is the fraction of the carrying capacity available for further growth. Thus, the exponential growth model is restricted by this factor to generate the logistic growth equation:</p>
+
+      <p class="prose">Notice that when N is almost zero the quantity in brackets is almost equal to 1 (or K/K) and growth is close to exponential. When the population size is equal to the carrying capacity, or N = K, the quantity in brackets is equal to zero and growth is equal to zero. A graph of this equation (logistic growth) yields the S-shaped curve (Figure 19.5b). It is a more realistic model of population growth than exponential growth. There are three different sections to an S-shaped curve. Initially, growth is exponential because there are few individuals and ample resources available. Then, as resources begin to become limited, the growth rate decreases. Finally, the growth rate levels off at the carrying capacity of the environment, with little change in population number over time.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Role of Intraspecific Competition</div>
+      <div class="sh2">Competition Within Species</div>
+
+      <p class="prose">The logistic model assumes that every individual within a population will have equal access to resources and, thus, an equal chance for survival. For plants, the amount of water, sunlight, nutrients, and space to grow are the important resources, whereas in animals, important resources include food, water, shelter, nesting space, and mates.</p>
+
+      <p class="prose">In the real world, phenotypic variation among individuals within a population means that some individuals will be better adapted to their environment than others. The resulting competition for resources among population members of the same species is termed intraspecific competition. Intraspecific competition may not affect populations that are well below their carrying capacity, as resources are plentiful and all individuals can obtain what they need. However, as population size increases, this competition intensifies. In addition, the accumulation of waste products can reduce carrying capacity in an environment.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Examples of Logistic Growth</div>
+      <div class="sh2">Yeast and Harbor Seals</div>
+
+      <p class="prose">Yeast, a microscopic fungus used to make bread and alcoholic beverages, exhibits the classical S-shaped curve when grown in a test tube (Figure 19.6a). Its growth levels off as the population depletes the nutrients that are necessary for its growth. In the real world, however, there are variations to this idealized curve. Examples in wild populations include sheep and harbor seals (Figure 19.6b). In both examples, the population size exceeds the carrying capacity for short periods of time and then falls below the carrying capacity afterwards. This fluctuation in population size continues to occur as the population oscillates around its carrying capacity. Still, even with this oscillation, the logistic model is confirmed.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.7 — Logistic Growth Examples</div>
+        <img src="images/ch19/fig19-7-logistic-growth.png" alt="Yeast grown in ideal conditions shows a classical S-shaped logistic growth curve." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">(a) Yeast grown in ideal conditions in a test tube shows a classical S-shaped logistic growth curve, whereas (b) a natural population of seals shows real-world fluctuation. The yeast is visualized using differential interference contrast light micrography. (credit a: scale-bar data from Matt Russell)</div>
+      </div>
+
+      <div class="callout visual-connection"><div class="ci">🔬</div><div class="cb"><div class="ct">Visual Connection</div><div class="cx">If the major food source of seals declines due to pollution or overfishing, which of the following would likely occur?<br>a. The carrying capacity of seals would decrease, as would the seal population.<br>b. The carrying capacity of seals would decrease, but the seal population would remain the same.<br>c. The number of seal deaths would increase, but the number of births would also increase, so the population size would remain the same.<br>d. The carrying capacity of seals would remain the same, but the population of seals would decrease.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Population Dynamics and Regulation</div>
+      <div class="sh2">Factors Affecting Carrying Capacity</div>
+
+      <p class="prose">The logistic model of population growth, while valid in many natural populations and a useful model, is a simplification of real-world population dynamics. Implicit in the model is that the carrying capacity of the environment does not change, which is not the case. The carrying capacity varies annually. For example, some summers are hot and dry whereas others are cold and wet; in many areas, the carrying capacity during the winter is much lower than it is during the summer. Also, natural events such as earthquakes, volcanoes, and fires can alter an environment and hence its carrying capacity. Additionally, populations do not usually exist in isolation. They share the environment with other species, competing with them for the same resources (interspecific competition). These factors are also important to understanding how a specific population will grow.</p>
+
+      <p class="prose">Population growth is regulated in a variety of ways. These are grouped into density-dependent factors, in which the density of the population affects growth rate and mortality, and density-independent factors, which cause mortality in a population regardless of population density. Wildlife biologists, in particular, want to understand both types because this helps them manage populations and prevent extinction or overpopulation.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Density-dependent Regulation</div>
+      <div class="sh2">Biological Factors</div>
+
+      <p class="prose">Most density-dependent factors are biological in nature and include predation, inter- and intraspecific competition, and parasites. Usually, the denser a population is, the greater its mortality rate. For example, during intra- and interspecific competition, the reproductive rates of the species will usually be lower, reducing their populations' rate of growth. In addition, low prey density increases the mortality of its predator because it has more difficulty locating its food source. Also, when the population is denser, diseases spread more rapidly among the members of the population, which affect the mortality rate.</p>
+
+      <p class="prose">Density dependent regulation was studied in a natural experiment with wild donkey populations on two sites in Australia. On one site the population was reduced by a population control program; the population on the other site received no interference. The high-density plot was twice as dense as the low-density plot. From 1986 to 1987 the high-density plot saw no change in donkey density, while the low-density plot saw an increase in donkey density. The difference in the growth rates of the two populations was caused by mortality, not by a difference in birth rates. The researchers found that numbers of offspring birthed by each mother was unaffected by density. Growth rates in the two populations were different mostly because of juvenile mortality caused by the mother's malnutrition due to scarce high-quality food in the dense population. Figure 19.7 shows the difference in age-specific mortalities in the two populations.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.8 — Density-Dependent Mortality</div>
+        <img src="images/ch19/fig19-8-carrying-capacity.png" alt="Age-specific mortality rates for wild donkeys from high- and low-density populations." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">This graph shows the age-specific mortality rates for wild donkeys from high- and low-density populations. The juvenile mortality is much higher in the high-density population because of maternal malnutrition caused by a shortage of high-quality food.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Density-independent Regulation</div>
+      <div class="sh2">Physical Factors and Interactions</div>
+
+      <p class="prose">Many factors that are typically physical in nature cause mortality of a population regardless of its density. These factors include weather, natural disasters, and pollution. An individual deer will be killed in a forest fire regardless of how many deer happen to be in that area. Its chances of survival are the same whether the population density is high or low. The same holds true for cold winter weather.</p>
+
+      <p class="prose">In real-life situations, population regulation is very complicated and density-dependent and independent factors can interact. A dense population that suffers mortality from a density-independent cause will be able to recover differently than a sparse population. For example, a population of deer affected by a harsh winter will recover faster if there are more deer remaining to reproduce.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Evolution Connection</div>
+      <div class="sh2">Why Did the Woolly Mammoth Go Extinct?</div>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.9 — Woolly Mammoth</div>
+        <img src="images/ch19/fig19-9-population-regulation.png" alt="Images of woolly mammoth including a 1916 mural, a stuffed mammoth, and a baby mammoth named Lyuba." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The three images include: (a) 1916 mural of a mammoth herd from the American Museum of Natural History, (b) the only stuffed mammoth in the world is in the Museum of Zoology located in St. Petersburg, Russia, and (c) a one-month-old baby mammoth, named Lyuba, discovered in Siberia in 2007. (credit a: modification of work by Charles R. Knight; credit b: modification of work by "Tanapon"/Flickr; credit c: modification of work by Matt Howry)</div>
+      </div>
+
+      <p class="prose">Woolly mammoths began to go extinct about 10,000 years ago, soon after paleontologists believe humans able to hunt them began to colonize North America and northern Eurasia (Figure 19.8). A mammoth population survived on Wrangel Island, in the East Siberian Sea, and was isolated from human contact until as recently as 1700 BC. We know a lot about these animals from carcasses found frozen in the ice of Siberia and other northern regions.</p>
+
+      <p class="prose">It is commonly thought that climate change and human hunting led to their extinction. A 2008 study estimated that climate change reduced the mammoth's range from 3,000,000 square miles 42,000 years ago to 310,000 square miles 6,000 years ago. Through archaeological evidence of kill sites, it is also well documented that humans hunted these animals. A 2012 study concluded that no single factor was exclusively responsible for the extinction of these magnificent creatures. In addition to climate change and reduction of habitat, scientists demonstrated another important factor in the mammoth's extinction was the migration of human hunters across the Bering Strait to North America during the last ice age 20,000 years ago.</p>
+
+      <p class="prose">The maintenance of stable populations was and is very complex, with many interacting factors determining the outcome. It is important to remember that humans are also part of nature. Once we contributed to a species' decline using primitive hunting technology only.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Demographic-Based Population Models</div>
+      <div class="sh2">K-Selected and r-Selected Species</div>
+
+      <p class="prose">Population ecologists have hypothesized that suites of characteristics may evolve in species that lead to particular adaptations to their environments. These adaptations impact the kind of population growth their species experience. Life history characteristics such as birth rates, age at first reproduction, the numbers of offspring, and even death rates evolve just like anatomy or behavior, leading to adaptations that affect population growth. Population ecologists have described a continuum of life-history "strategies" with K-selected species on one end and r-selected species on the other. K-selected species are adapted to stable, predictable environments. Populations of K-selected species tend to exist close to their carrying capacity. These species tend to have larger, but fewer, offspring and contribute large amounts of resources to each offspring. Elephants would be an example of a K-selected species. r-selected species are adapted to unstable and unpredictable environments. They have large numbers of small offspring. Animals that are r-selected do not provide a lot of resources or parental care to offspring, and the offspring are relatively self-sufficient at birth. Examples of r-selected species are marine invertebrates such as jellyfish and plants such as the dandelion. The two extreme strategies are at two ends of a continuum on which real species life histories will exist. In addition, life history strategies do not need to evolve as suites, but can evolve independently of each other, so each species may have some characteristics that trend toward one extreme or the other.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.10 — K-Selected and r-Selected Species</div>
+        <img src="images/ch19/fig19-10-k-r-selection.png" alt="K-selected and r-selected species represent two ends of a continuum of life-history strategies." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">K-selected species are adapted to stable, predictable environments with populations near carrying capacity. r-selected species are adapted to unstable environments, producing large numbers of small offspring.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Exponential growth</div><div class="vocab-def">A model describing theoretical populations that increase in numbers without any limits to their growth, producing a J-shaped curve</div></div>
+        <div class="vocab-card"><div class="vocab-term">Logistic growth</div><div class="vocab-def">A model that introduces limits to reproductive growth that become more intense as the population size increases, producing an S-shaped curve</div></div>
+        <div class="vocab-card"><div class="vocab-term">Carrying capacity (K)</div><div class="vocab-def">The maximum population size that a particular environment can sustain</div></div>
+        <div class="vocab-card"><div class="vocab-term">Zero population growth</div><div class="vocab-def">A condition in which the population size is unchanging because the birth rate equals the death rate (r = 0)</div></div>
+        <div class="vocab-card"><div class="vocab-term">Intraspecific competition</div><div class="vocab-def">Competition for resources among population members of the same species</div></div>
+        <div class="vocab-card"><div class="vocab-term">Interspecific competition</div><div class="vocab-def">Competition between populations of different species for the same resources</div></div>
+        <div class="vocab-card"><div class="vocab-term">Density-dependent factors</div><div class="vocab-def">Factors in which the density of the population affects growth rate and mortality, including predation, competition, and parasites</div></div>
+        <div class="vocab-card"><div class="vocab-term">Density-independent factors</div><div class="vocab-def">Factors that cause mortality in a population regardless of population density, including weather, natural disasters, and pollution</div></div>
+        <div class="vocab-card"><div class="vocab-term">K-selected species</div><div class="vocab-def">Species adapted to stable, predictable environments that tend to exist close to carrying capacity, with larger but fewer offspring (e.g., elephants)</div></div>
+        <div class="vocab-card"><div class="vocab-term">r-selected species</div><div class="vocab-def">Species adapted to unstable and unpredictable environments that have large numbers of small offspring with little parental care (e.g., jellyfish, dandelions)</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="rNjPI84sApQ">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/rNjPI84sApQ/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Population Growth — Crash Course Ecology #3</div><div class="vid-dur">~10 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp2">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Population Growth &amp; Regulation</span>
+      </div>
+      <p class="cp-prompt">Compare and contrast exponential growth and logistic growth, including the shape of their growth curves. Explain what carrying capacity (K) means and why populations often fluctuate around it. Then describe the difference between density-dependent and density-independent regulation factors, giving at least one example of each.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(2)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill2"></div></div>
+      <div class="cp-count" id="cpCount2">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz2">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 2 Quiz</div>
+
+      <div class="qq" id="q2-1">
+        <div class="q-stem">1. The important concept of exponential growth is that the growth rate—the number of organisms added in each reproductive generation—is itself:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,1,this,'b')">A. Decreasing</button>
+          <button class="cbtn" onclick="pick(2,1,this,'a')">B. Increasing</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">C. Remaining constant</button>
+          <button class="cbtn" onclick="pick(2,1,this,'b')">D. Oscillating around zero</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-2">
+        <div class="q-stem">2. The maximum population size that a particular environment can sustain is called the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,2,this,'b')">A. Growth rate (r)</button>
+          <button class="cbtn" onclick="pick(2,2,this,'a')">B. Carrying capacity (K)</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">C. Population density</button>
+          <button class="cbtn" onclick="pick(2,2,this,'b')">D. Zero population growth</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-3">
+        <div class="q-stem">3. When the population size (N) equals the carrying capacity (K) in the logistic growth equation, the growth rate is:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,3,this,'b')">A. At its maximum</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">B. Exponential</button>
+          <button class="cbtn" onclick="pick(2,3,this,'a')">C. Equal to zero</button>
+          <button class="cbtn" onclick="pick(2,3,this,'b')">D. Negative</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-4">
+        <div class="q-stem">4. Which of the following is an example of a density-dependent regulation factor?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,4,this,'b')">A. A forest fire</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">B. A volcanic eruption</button>
+          <button class="cbtn" onclick="pick(2,4,this,'a')">C. Disease spreading more rapidly in denser populations</button>
+          <button class="cbtn" onclick="pick(2,4,this,'b')">D. A harsh winter killing individuals regardless of population size</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-5">
+        <div class="q-stem">5. K-selected species are adapted to stable, predictable environments and tend to:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,5,this,'b')">A. Produce large numbers of small offspring with little parental care</button>
+          <button class="cbtn" onclick="pick(2,5,this,'a')">B. Have larger, but fewer, offspring and contribute large amounts of resources to each offspring</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">C. Have offspring that are self-sufficient at birth</button>
+          <button class="cbtn" onclick="pick(2,5,this,'b')">D. Exist well below their carrying capacity</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q2-6">
+        <div class="q-stem">6. Competition for resources among population members of the same species is termed:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(2,6,this,'b')">A. Interspecific competition</button>
+          <button class="cbtn" onclick="pick(2,6,this,'a')">B. Intraspecific competition</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">C. Density-independent regulation</button>
+          <button class="cbtn" onclick="pick(2,6,this,'b')">D. Carrying capacity</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score2"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 19.2</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 19.2: Population Growth and Regulation, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(1)">← Lesson 1: Population Demographics &amp; Dynamics</button>
+    <div class="lnav-info">Lesson 2 of 5</div>
+    <button class="nbtn next" onclick="goTo(3)">Lesson 3: The Human Population →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 3 — THE HUMAN POPULATION (REBUILD - VERBATIM)
+     OpenStax CB 19.3
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+  <div class="hero hero-human">
+    <div class="h-crumb">Population and Community Ecology · <span>Lesson 3</span></div>
+    <div class="h-title">The Human Population</div>
+    <div class="h-desc">Concepts of animal population dynamics can be applied to human population growth. Humans are not unique in their ability to alter their environment.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 19.3</div>
+      <div class="h-chip">⏱ ~40 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Discuss how human population growth can be exponential</li>
+        <li>Explain how humans have expanded the carrying capacity of their habitat</li>
+        <li>Relate population growth and age structure to the level of economic development in different countries</li>
+        <li>Discuss the long-term implications of unchecked human population growth</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction</div>
+      <div class="sh2">The Human Population</div>
+
+      <p class="prose">Concepts of animal population dynamics can be applied to human population growth. Humans are not unique in their ability to alter their environment. For example, beaver dams alter the stream environment where they are built. Humans, however, have the ability to alter their environment to increase its carrying capacity, sometimes to the detriment of other species. Earth's human population and their use of resources are growing rapidly, to the extent that some worry about the ability of Earth's environment to sustain its human population. Long-term exponential growth carries with it the potential risks of famine, disease, and large-scale death, as well as social consequences of crowding such as increased crime.</p>
+
+      <p class="prose">Human technology and particularly our harnessing of the energy contained in fossil fuels have caused unprecedented changes to Earth's environment, altering ecosystems to the point where some may be in danger of collapse. Changes on a global scale including depletion of the ozone layer, desertification and topsoil loss, and global climate change are caused by human activities.</p>
+
+      <p class="prose">The world's human population is presently growing exponentially (Figure 19.9).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.11 — Human Population Growth</div>
+        <img src="images/ch19/fig19-11-human-population.png" alt="Human population growth since 1000 AD is exponential." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Human population growth since 1000 AD is exponential.</div>
+      </div>
+
+      <p class="prose">A consequence of exponential growth rate is that the time that it takes to add a particular number of humans to the population is becoming shorter. Figure 19.10 shows that 123 years were necessary to add 1 billion humans between 1804 and 1930, but it only took 24 years to add the two billion people between 1975 and 1999. This acceleration in growth rate will likely begin to decrease in the coming decades. Despite this, the population will continue to increase and the threat of overpopulation remains, particularly because the damage caused to ecosystems and biodiversity is lowering the human carrying capacity of the planet.</p>
+
+      <div class="callout link-to-learning"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">Click through this video (http://openstax.org/l/human_growth2) of how human populations have changed over time.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Overcoming Density-Dependent Regulation</div>
+      <div class="sh2">How Humans Expand Carrying Capacity</div>
+
+      <p class="prose">Humans are unique in their ability to alter their environment in myriad ways. This ability is responsible for human population growth because it resets the carrying capacity and overcomes density-dependent growth regulation. Much of this ability is related to human intelligence, society, and communication. Humans construct shelters to protect themselves from the elements and have developed agriculture and domesticated animals to increase their food supplies. In addition, humans use language to communicate this technology to new generations, allowing them to improve upon previous accomplishments.</p>
+
+      <p class="prose">Other factors in human population growth are migration and public health. Humans originated in Africa, but we have since migrated to nearly all inhabitable land on Earth, thus, increasing the area that we have colonized. Public health, sanitation, and the use of antibiotics and vaccines have decreased the ability of infectious disease to limit human population growth in developed countries. In the past, diseases such as the bubonic plaque of the fourteenth century killed between 30 and 60 percent of Europe's population and reduced the overall world population by as many as one hundred million people. Infectious disease continues to have an impact on human population growth. For example, life expectancy in sub-Saharan Africa, which was increasing from 1950 to 1990, began to decline after 1985 largely as a result of HIV/AIDS mortality. The reduction in life expectancy caused by HIV/AIDS was estimated to be 7 years for 2005.</p>
+
+      <p class="prose">Declining life expectancy is an indicator of higher mortality rates and leads to lower birth rates.</p>
+
+      <p class="prose">The fundamental cause of the acceleration of growth rate for humans in the past 200 years has been the reduced death rate due to a development of the technological advances of the industrial age, urbanization that supported those technologies, and especially the exploitation of the energy in fossil fuels. Fossil fuels are responsible for dramatically increasing the resources available for human population growth through agriculture (mechanization, pesticides, and fertilizers) and harvesting wild populations.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Age Structure, Population Growth, and Economic Development</div>
+      <div class="sh2">Demographic Patterns Around the World</div>
+
+      <p class="prose">The age structure of a population is an important factor in population dynamics. Age structure is the proportion of a population in different age classes. Models that incorporate age structure allow better prediction of population growth, plus the ability to associate this growth with the level of economic development in a region. Countries with rapid growth have a pyramidal shape in their age structure diagrams, showing a preponderance of younger individuals, many of whom are of reproductive age (Figure 19.11). This pattern is most often observed in underdeveloped countries where individuals do not live to old age because of less-than-optimal living conditions, and there is a high birth rate. Age structures of areas with slow growth, including developed countries such as the United States, still have a pyramidal structure, but with many fewer young and reproductive-aged individuals and a greater proportion of older individuals. Other developed countries, such as Italy, have zero population growth. The age structure of these populations is more conical, with an even greater percentage of middle-aged and older individuals. The actual growth rates in different countries are shown in Figure 19.12, with the highest rates tending to be in the less economically developed countries of Africa and Asia.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.12 — Demographic Transition</div>
+        <img src="images/ch19/fig19-12-demographic-transition.png" alt="The percent growth rate of population in different countries is shown." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The percent growth rate of population in different countries is shown. Notice that the highest growth is occurring in less economically developed countries in Africa and Asia.</div>
+      </div>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.13 — Age Structure Diagrams</div>
+        <img src="images/ch19/fig19-13-age-pyramids.png" alt="Typical age structure diagrams are shown for rapid growth, slow growth, and stable populations." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Typical age structure diagrams are shown. The rapid growth diagram narrows to a point, indicating that the number of individuals decreases rapidly with age. In the slow growth model, the number of individuals decreases steadily with age. Stable population diagrams are rounded on the top, showing that the number of individuals per age group decreases gradually, and then increases for the older part of the population.</div>
+      </div>
+
+      <div class="callout info"><div class="ci">🔬</div><div class="cb"><div class="ct">Visual Connection</div><div class="cx">Age structure diagrams for rapidly growing, slow growing, and stable populations are shown in stages 1 through 3. What type of population change do you think stage 4 represents?</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Long-Term Consequences of Exponential Human Population Growth</div>
+      <div class="sh2">Population Explosion and Its Impact</div>
+
+      <p class="prose">Many dire predictions have been made about the world's population leading to a major crisis called the "population explosion." In the 1968 book The Population Bomb, biologist Dr. Paul R. Ehrlich wrote, "The battle to feed all of humanity is over. In the 1970s hundreds of millions of people will starve to death in spite of any crash programs embarked upon now. At this late date nothing can prevent a substantial increase in the world death rate." While many critics view this statement as an exaggeration, the laws of exponential population growth are still in effect, and unchecked human population growth cannot continue indefinitely.</p>
+
+      <p class="prose">Efforts to moderate population control led to the one-child policy in China, which imposes fines on urban couples who have more than one child. Due to the fact that some couples wish to have a male heir, many Chinese couples continue to have more than one child. The effectiveness of the policy in limiting overall population growth is controversial, as is the policy itself. Moreover, there are stories of female infanticide having occurred in some of the more rural areas of the country. Family planning education programs in other countries have had highly positive effects on limiting population growth rates and increasing standards of living. In spite of population control policies, the human population continues to grow. Because of the subsequent need to produce more and more food to feed our population, inequalities in access to food and other resources will continue to widen. The United Nations estimates the future world population size could vary from 6 billion (a decrease) to 16 billion people by the year 2100. There is no way to know whether human population growth will moderate to the point where the crisis described by Dr. Ehrlich will be averted.</p>
+
+      <p class="prose">Another consequence of population growth is the change and degradation of the natural environment. Many countries have attempted to reduce the human impact on climate change by limiting their emission of greenhouse gases. However, a global climate change treaty remains elusive, and many underdeveloped countries trying to improve their economic condition may be less likely to agree with such provisions without compensation if it means slowing their economic development. Furthermore, the role of human activity in causing climate change has become a hotly debated socio-political issue in some developed countries, including the United States. Thus, we enter the future with considerable uncertainty about our ability to curb human population growth and protect our environment to maintain the carrying capacity for the human species.</p>
+
+      <div class="callout link-to-learning"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">Visit this website (http://openstax.org/l/populations2) and select "Launch the movie" for an animation discussing the global impacts of human population growth.</div></div></div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Age structure</div><div class="vocab-def">The proportion of a population in different age classes</div></div>
+        <div class="vocab-card"><div class="vocab-term">Carrying capacity</div><div class="vocab-def">The maximum number of individuals of a population that can be supported by the limited resources of a habitat</div></div>
+        <div class="vocab-card"><div class="vocab-term">Zero population growth</div><div class="vocab-def">The steady population size where birth rates and death rates are equal</div></div>
+        <div class="vocab-card"><div class="vocab-term">One-child policy</div><div class="vocab-def">A policy in China to limit population growth by limiting urban couples to have only one child or face a penalty of a fine</div></div>
+        <div class="vocab-card"><div class="vocab-term">Density-dependent regulation</div><div class="vocab-def">The regulation of population in which birth and death rates are dependent on population size</div></div>
+        <div class="vocab-card"><div class="vocab-term">Exponential growth</div><div class="vocab-def">An accelerating growth pattern seen in populations where resources are not limiting</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="QsBT5EQt348">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/QsBT5EQt348/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Human Population Growth — Crash Course Ecology #3</div><div class="vid-dur">~10 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp3">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — The Human Population</span>
+      </div>
+      <p class="cp-prompt">Explain how humans have expanded the carrying capacity of their environment. Describe the relationship between age structure and economic development, referencing the differences between rapidly growing, slowly growing, and stable populations. Discuss the long-term consequences of unchecked human population growth on ecosystems and biodiversity.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(3)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill3"></div></div>
+      <div class="cp-count" id="cpCount3">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz3">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 3 Quiz</div>
+
+      <div class="qq" id="q3-1">
+        <div class="q-stem">1. The world's human population is currently growing in what pattern?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,1,this,'a')">A. Exponentially</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">B. Logistically</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">C. At a steady linear rate</button>
+          <button class="cbtn" onclick="pick(3,1,this,'b')">D. In decline</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-2">
+        <div class="q-stem">2. The fundamental cause of the acceleration of human population growth rate in the past 200 years has been:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,2,this,'b')">A. Increased birth rates worldwide</button>
+          <button class="cbtn" onclick="pick(3,2,this,'a')">B. The reduced death rate due to technological advances of the industrial age and the exploitation of fossil fuels</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">C. Migration to new continents</button>
+          <button class="cbtn" onclick="pick(3,2,this,'b')">D. Elimination of all infectious diseases</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-3">
+        <div class="q-stem">3. A country with zero population growth is likely to be:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,3,this,'b')">A. In Africa</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">B. In Asia</button>
+          <button class="cbtn" onclick="pick(3,3,this,'a')">C. Economically developed</button>
+          <button class="cbtn" onclick="pick(3,3,this,'b')">D. Economically underdeveloped</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-4">
+        <div class="q-stem">4. Which type of country has the greatest proportion of young individuals?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,4,this,'b')">A. Economically developed</button>
+          <button class="cbtn" onclick="pick(3,4,this,'a')">B. Economically underdeveloped</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">C. Countries with zero population growth</button>
+          <button class="cbtn" onclick="pick(3,4,this,'b')">D. Countries in Europe</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-5">
+        <div class="q-stem">5. Which of the following is NOT a way that humans have increased the carrying capacity of the environment?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,5,this,'b')">A. Agriculture</button>
+          <button class="cbtn" onclick="pick(3,5,this,'a')">B. Using large amounts of natural resources</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">C. Domestication of animals</button>
+          <button class="cbtn" onclick="pick(3,5,this,'b')">D. Use of language</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q3-6">
+        <div class="q-stem">6. Countries with rapid population growth have age structure diagrams that are characterized by:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(3,6,this,'a')">A. A pyramidal shape showing a preponderance of younger individuals</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">B. A conical shape with an even distribution across age groups</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">C. A rounded top showing a greater percentage of older individuals</button>
+          <button class="cbtn" onclick="pick(3,6,this,'b')">D. An inverted pyramid with more older individuals than younger ones</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score3"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 19.3</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 19.3: The Human Population, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(2)">← Lesson 2: Population Growth and Regulation</button>
+    <div class="lnav-info">Lesson 3 of 6</div>
+    <button class="nbtn next" onclick="goTo(4)">Lesson 4: Community Ecology →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 4 — COMMUNITY ECOLOGY (REBUILD - VERBATIM)
+     OpenStax CB 19.4
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+  <div class="hero hero-community">
+    <div class="h-crumb">Population and Community Ecology · <span>Lesson 4</span></div>
+    <div class="h-title">Community Ecology</div>
+    <div class="h-desc">In general, populations of one species never live in isolation from populations of other species. The interacting populations occupying a given habitat form an ecological community.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — 19.4</div>
+      <div class="h-chip">⏱ ~55 min</div>
+      <div class="h-chip">🎯 6 Quiz Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">🎯 Learning Objectives</div>
+      <ul class="obj-list">
+        <li>Discuss the predator-prey cycle</li>
+        <li>Give examples of defenses against predation and herbivory</li>
+        <li>Describe the competitive exclusion principle</li>
+        <li>Give examples of symbiotic relationships between species</li>
+        <li>Describe community structure and succession</li>
+      </ul>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Introduction</div>
+      <div class="sh2">Community Ecology</div>
+
+      <p class="prose">In general, populations of one species never live in isolation from populations of other species. The interacting populations occupying a given habitat form an ecological community. The number of species occupying the same habitat and their relative abundance is known as the diversity of the community. Areas with low species diversity, such as the glaciers of Antarctica, still contain a wide variety of living organisms, whereas the diversity of tropical rainforests is so great that it cannot be accurately assessed. Scientists study ecology at the community level to understand how species interact with each other and compete for the same resources.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Predation and Herbivory</div>
+      <div class="sh2">The Predator-Prey Relationship</div>
+
+      <p class="prose">Perhaps the classical example of species interaction is the predator-prey relationship. The narrowest definition of the predator-prey interaction describes individuals of one population that kill and then consume the individuals of another population. Population sizes of predators and prey in a community are not constant over time, and they may vary in cycles that appear to be related. The most often cited example of predator-prey population dynamics is seen in the cycling of the lynx (predator) and the snowshoe hare (prey), using 100 years of trapping data from North America (Figure 19.13). This cycling of predator and prey population sizes has a period of approximately ten years, with the predator population lagging one to two years behind the prey population. An apparent explanation for this pattern is that as the hare numbers increase, there is more food available for the lynx, allowing the lynx population to increase as well. When the lynx population grows to a threshold level, however, they kill so many hares that hare numbers begin to decline, followed by a decline in the lynx population because of scarcity of food. When the lynx population is low, the hare population size begins to increase due, in part, to low predation pressure, starting the cycle anew.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.14 — Predator-Prey Dynamics</div>
+        <img src="images/ch19/fig19-14-community-interactions.png" alt="The cycling of snowshoe hare and lynx populations in Northern Ontario is an example of predator-prey dynamics." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The cycling of snowshoe hare and lynx populations in Northern Ontario is an example of predator-prey dynamics.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Defense Mechanisms against Predation and Herbivory</div>
+      <div class="sh2">Mechanical, Chemical, Physical, and Behavioral Defenses</div>
+
+      <p class="prose">Predation and predator avoidance are strong selective agents. Any heritable character that allows an individual of a prey population to better evade its predators will be represented in greater numbers in later generations. Likewise, traits that allow a predator to more efficiently locate and capture its prey will lead to a greater number of offspring and an increase in the commonness of the trait within the population. Such ecological relationships between specific populations lead to adaptations that are driven by reciprocal evolutionary responses in those populations. Species have evolved numerous mechanisms to escape predation and herbivory (the consumption of plants for food). Defenses may be mechanical, chemical, physical, or behavioral.</p>
+
+      <p class="prose">Mechanical defenses, such as the presence of armor in animals or thorns in plants, discourage predation and herbivory by discouraging physical contact (Figure 19.14a). Many animals produce or obtain chemical defenses from plants and store them to prevent predation. Many plant species produce secondary plant compounds that serve no function for the plant except that they are toxic to animals and discourage consumption. For example, the foxglove produces several compounds, including digitalis, that are extremely toxic when eaten (Figure 19.14b). (Biomedical scientists have purposed the chemical produced by foxglove as a heart medication, which has saved lives for many decades.)</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.15 — Mechanical and Chemical Defenses</div>
+        <img src="images/ch19/fig19-15-defense-mechanisms.png" alt="The honey locust tree uses thorns, a mechanical defense, while the foxglove uses a chemical defense." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The (a) honey locust tree uses thorns, a mechanical defense, against herbivores, while the (b) foxglove uses a chemical defense: toxins produces by the plant can cause nausea, vomiting, hallucinations, convulsions, or death when consumed. (credit a: modification of work by Huw Williams; credit b: modification of work by Philip Jägenstedt)</div>
+      </div>
+
+      <p class="prose">Many species use physical appearance, such as body shape and coloration, to avoid being detected by predators. The tropical walking stick is an insect with the coloration and body shape of a twig, which makes it very hard to see when it is stationary against a background of real twigs (Figure 19.15a). In another example, the chameleon can, within limitations, change its color to match its surroundings (Figure 19.15b). There are many behavioral adaptations to avoid or confuse predators. Playing dead and traveling in large groups, like schools of fish or flocks of birds, are both behaviors that reduce the risk of being eaten.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.16 — Camouflage</div>
+        <img src="images/ch19/fig19-16-camouflage.png" alt="The tropical walking stick and the chameleon use their body shape and/or coloration to prevent detection by predators." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">(a) The tropical walking stick and (b) the chameleon use their body shape and/or coloration to prevent detection by predators. (credit a: modification of work by Linda Tanner; credit b: modification of work by Frank Vassen)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Warning Coloration and Mimicry</div>
+      <div class="sh2">Aposematism and Mimicry Strategies</div>
+
+      <p class="prose">Some species use coloration as a way of warning predators that they are distasteful or poisonous. For example, the monarch butterfly caterpillar sequesters poisons from its food (plants and milkweeds) to make itself poisonous or distasteful to potential predators. The caterpillar is bright yellow and black to advertise its toxicity. The caterpillar is also able to pass the sequestered toxins on to the adult monarch, which is also dramatically colored black and red as a warning to potential predators. Fire-bellied toads produce toxins that make them distasteful to their potential predators. They have bright red or orange coloration on their bellies, which they display to a potential predator to advertise their poisonous nature and discourage an attack. These are only two examples of warning coloration, which is a relatively common adaptation. Warning coloration only works if a predator uses eyesight to locate prey and can learn—a naïve predator must experience the negative consequences of eating one before it will avoid other similarly colored individuals (Figure 19.16).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.17 — Warning Coloration</div>
+        <img src="images/ch19/fig19-17-warning-coloration.png" alt="The fire-bellied toad has bright coloration on its belly that serves to warn potential predators that it is toxic." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The fire-bellied toad has bright coloration on its belly that serves to warn potential predators that it is toxic. (credit: modification of work by Roberto Verzo)</div>
+      </div>
+
+      <p class="prose">While some predators learn to avoid eating certain potential prey because of their coloration, other species have evolved mechanisms to mimic this coloration to avoid being eaten, even though they themselves may not be unpleasant to eat or contain toxic chemicals. In some cases of mimicry, a harmless species imitates the warning coloration of a harmful species. Assuming they share the same predators, this coloration then protects the harmless ones. Many insect species mimic the coloration of wasps, which are stinging, venomous insects, thereby discouraging predation (Figure 19.17).</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.18 — Batesian Mimicry</div>
+        <img src="images/ch19/fig19-18-batesian-mimicry.png" alt="One form of mimicry is when a harmless species mimics the coloration of a harmful species." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">One form of mimicry is when a harmless species mimics the coloration of a harmful species, as is seen with the (a) wasp (Polistes sp.) and the (b) hoverfly (Syrphus sp.). (credit: modification of work by Tom Ings)</div>
+      </div>
+
+      <p class="prose">In other cases of mimicry, multiple species share the same warning coloration, but all of them actually have defenses. The commonness of the signal improves the compliance of all the potential predators. Figure 19.18 shows a variety of foul-tasting butterflies with similar coloration.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.19 — Müllerian Mimicry</div>
+        <img src="images/ch19/fig19-19-mullerian-mimicry.png" alt="Several unpleasant-tasting Heliconius butterfly species share a similar color pattern." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Several unpleasant-tasting Heliconius butterfly species share a similar color pattern with better-tasting varieties, an example of mimicry. (credit: Joron M, Papa R, Beltrán M, Chamberlain N, Mavárez J, et al.)</div>
+      </div>
+
+      <div class="callout link-to-learning"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">Go to this website (http://openstax.org/l/find_the_mimic2) to view stunning examples of mimicry.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Competitive Exclusion Principle</div>
+      <div class="sh2">Niches and Interspecific Competition</div>
+
+      <p class="prose">Resources are often limited within a habitat and multiple species may compete to obtain them. Ecologists have come to understand that all species have an ecological niche. A niche is the unique set of resources used by a species, which includes its interactions with other species. The competitive exclusion principle states that two species cannot occupy the same niche in a habitat: in other words, different species cannot coexist in a community if they are competing for all the same resources. This principle works because if there is an overlap in resource use and therefore competition between two species, then traits that lessen reliance on the shared resource will be selected for leading to evolution that reduces the overlap. If either species is unable to evolve to reduce competition, then the species that most efficiently exploits the resource will drive the other species to extinction. An experimental example of this principle is shown in Figure 19.19 with two protozoan species: Paramecium aurelia and Paramecium caudatum. When grown individually in the laboratory, they both thrive. But when they are placed together in the same test tube (habitat), P. aurelia outcompetes P. caudatum for food, leading to the latter's eventual extinction.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.20 — Competitive Exclusion</div>
+        <img src="images/ch19/fig19-20-competitive-exclusion.png" alt="Paramecium aurelia and Paramecium caudatum grow well individually, but when they compete for the same resources, the P. aurelia outcompetes the P. caudatum." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Paramecium aurelia and Paramecium caudatum grow well individually, but when they compete for the same resources, the P. aurelia outcompetes the P. caudatum.</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Symbiosis</div>
+      <div class="sh2">Commensalism, Mutualism, and Parasitism</div>
+
+      <p class="prose">Symbiotic relationships are close, long-term interactions between individuals of different species. Symbioses may be commensal, in which one species benefits while the other is neither harmed nor benefited; mutualistic, in which both species benefit; or parasitic, in which the interaction harms one species and benefits the other.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Commensalism</div>
+      <div class="sh2">One Benefits, the Other Is Unaffected</div>
+
+      <p class="prose">A commensal relationship occurs when one species benefits from a close prolonged interaction, while the other neither benefits nor is harmed. Birds nesting in trees provide an example of a commensal relationship (Figure 19.20). The tree is not harmed by the presence of the nest among its branches. The nests are light and produce little strain on the structural integrity of the branch, and most of the leaves, which the tree uses to get energy by photosynthesis, are above the nest so they are unaffected. The bird, on the other hand, benefits greatly. If the bird had to nest in the open, its eggs and young would be vulnerable to predators. Many potential commensal relationships are difficult to identify because it is difficult to prove that one partner does not derive some benefit from the presence of the other.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.21 — Commensalism</div>
+        <img src="images/ch19/fig19-21-commensalism.png" alt="The southern masked-weaver is starting to make a nest in a tree, an example of a commensal relationship." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The southern masked-weaver is starting to make a nest in a tree in Zambezi Valley, Zambia. This is an example of a commensal relationship, in which one species (the bird) benefits, while the other (the tree) neither benefits nor is harmed. (credit: "Hanay"/Wikimedia Commons)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Mutualism</div>
+      <div class="sh2">Both Species Benefit</div>
+
+      <p class="prose">A second type of symbiotic relationship is called mutualism, in which two species benefit from their interaction. For example, termites have a mutualistic relationship with protists that live in the insect's gut (Figure 19.21a). The termite benefits from the ability of the protists to digest cellulose. However, the protists are able to digest cellulose only because of the presence of symbiotic bacteria within their cells that produce the cellulase enzyme. The termite itself cannot do this: without the protozoa, it would not be able to obtain energy from its food (cellulose from the wood it chews and eats). The protozoa benefit by having a protective environment and a constant supply of food from the wood chewing actions of the termite. In turn, the protists benefit from the enzymes provided by their bacterial endosymbionts, while the bacteria benefit from a doubly protective environment and a constant source of nutrients from two hosts. Lichen are a mutualistic relationship between a fungus and photosynthetic algae or cyanobacteria (Figure 19.21b). The glucose produced by the algae provides nourishment for both organisms, whereas the physical structure of the lichen protects the algae from the elements and makes certain nutrients in the atmosphere more available to the algae. The algae of lichens can live independently given the right environment, but many of the fungal partners are unable to live on their own.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.22 — Mutualism</div>
+        <img src="images/ch19/fig19-22-mutualism.png" alt="Termites form a mutualistic relationship with symbiotic protozoa in their guts. Lichen is a fungus that has symbiotic photosynthetic algae living in close association." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">(a) Termites form a mutualistic relationship with symbiotic protozoa in their guts, which allow both organisms to obtain energy from the cellulose the termite consumes. (b) Lichen is a fungus that has symbiotic photosynthetic algae living in close association. (credit a: modification of work by Scott Bauer, USDA; credit b: modification of work by Cory Zanker)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Parasitism</div>
+      <div class="sh2">One Benefits, the Other Is Harmed</div>
+
+      <p class="prose">A parasite is an organism that feeds off another without immediately killing the organism it is feeding on. In this relationship, the parasite benefits, but the organism being fed upon, the host, is harmed. The host is usually weakened by the parasite as it siphons resources the host would normally use to maintain itself. Parasites may kill their hosts, but there is usually selection to slow down this process to allow the parasite time to complete its reproductive cycle before it or its offspring are able to spread to another host.</p>
+
+      <p class="prose">The reproductive cycles of parasites are often very complex, sometimes requiring more than one host species. A tapeworm causes disease in humans when contaminated, undercooked meat such as pork, fish, or beef is consumed (Figure 19.22). The tapeworm can live inside the intestine of the host for several years, benefiting from the host's food, and it may grow to be over 50 feet long by adding segments. The parasite moves from one host species to a second host species in order to complete its life cycle. Plasmodium falciparum is another parasite: the protists that cause malaria, a significant disease in many parts of the world. Living inside human liver and red blood cells, the organism reproduces asexually in the human host and then sexually in the gut of blood-feeding mosquitoes to complete its life cycle. Thus malaria is spread from human to mosquito and back to human, one of many arthropod-borne infectious diseases of humans.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.23 — Parasitism</div>
+        <img src="images/ch19/fig19-23-parasitism.png" alt="This diagram shows the life cycle of the tapeworm, a human worm parasite." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">This diagram shows the life cycle of the tapeworm, a human worm parasite. (credit: modification of work by CDC)</div>
+      </div>
+
+      <div class="callout link-to-learning"><div class="ci">🔗</div><div class="cb"><div class="ct">Link to Learning</div><div class="cx">To learn more about "Symbiosis in the Sea," watch this webisode (http://openstax.org/l/symbiosis) of Jonathan Bird's Blue World.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Characteristics of Communities</div>
+      <div class="sh2">Biodiversity and Community Structure</div>
+
+      <p class="prose">Communities are complex systems that can be characterized by their structure (the number and size of populations and their interactions) and dynamics (how the members and their interactions change over time). Understanding community structure and dynamics allows us to minimize impacts on ecosystems and manage ecological communities we benefit from.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Biodiversity</div>
+      <div class="sh2">Species Richness and Abundance</div>
+
+      <p class="prose">Ecologists have extensively studied one of the fundamental characteristics of communities: biodiversity. One measure of biodiversity used by ecologists is the number of different species in a particular area and their relative abundance. The area in question could be a habitat, a biome, or the entire biosphere. Species richness is the term used to describe the number of species living in a habitat or other unit. Species richness varies across the globe (Figure 19.23). Ecologists have struggled to understand the determinants of biodiversity. Species richness is related to latitude: the greatest species richness occurs near the equator and the lowest richness occurs near the poles. Other factors influence species richness as well. Island biogeography attempts to explain the great species richness found in isolated islands, and has found relationships between species richness, island size, and distance from the mainland.</p>
+
+      <p class="prose">Relative species abundance is the number individuals in a species relative to the total number of individuals in all species within a system. Foundation species, described below, often have the highest relative abundance of species.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.24 — Species Richness</div>
+        <img src="images/ch19/fig19-24-biodiversity.png" alt="The greatest species richness for mammals in North America is associated in the equatorial latitudes." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The greatest species richness for mammals in North America is associated in the equatorial latitudes. (credit: modification of work by NASA, CIESIN, Columbia University)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Foundation Species</div>
+      <div class="sh2">The Bedrock of Community Structure</div>
+
+      <p class="prose">Foundation species are considered the "base" or "bedrock" of a community, having the greatest influence on its overall structure. They are often primary producers, and they are typically an abundant organism. For example, kelp, a species of brown algae, is a foundation species that forms the basis of the kelp forests off the coast of California. Foundation species may physically modify the environment to produce and maintain habitats that benefit the other organisms that use them. Examples include the kelp described above or tree species found in a forest. The photosynthetic corals of the coral reef also provide structure by physically modifying the environment (Figure 19.24). The exoskeletons of living and dead coral make up most of the reef structure, which protects many other species from waves and ocean currents.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.25 — Foundation Species</div>
+        <img src="images/ch19/fig19-25-foundation-species.png" alt="Coral is the foundation species of coral reef ecosystems." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Coral is the foundation species of coral reef ecosystems. (credit: Jim E. Maragos, USFWS)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Keystone Species</div>
+      <div class="sh2">Disproportionate Influence on Community Structure</div>
+
+      <p class="prose">A keystone species is one whose presence has inordinate influence in maintaining the prevalence of various species in an ecosystem, the ecological community's structure, and sometimes its biodiversity. Pisaster ochraceus, the intertidal sea star, is a keystone species in the northwestern portion of the United States (Figure 19.25). Studies have shown that when this organism is removed from communities, mussel populations (their natural prey) increase, which completely alters the species composition and reduces biodiversity. Another keystone species is the banded tetra, a fish in tropical streams, which supplies nearly all of the phosphorus, a necessary inorganic nutrient, to the rest of the community. The banded tetra feeds largely on insects from the terrestrial ecosystem and then excretes phosphorus into the aquatic ecosystem. The relationships between populations in the community, and possibly the biodiversity, would change dramatically if these fish were to become extinct.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.26 — Keystone Species</div>
+        <img src="images/ch19/fig19-26-keystone-species.png" alt="The Pisaster ochraceus sea star is a keystone species." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">The Pisaster ochraceus sea star is a keystone species. (credit: Jerry Kirkhart)</div>
+      </div>
+
+      <div class="callout info"><div class="ci">🌍</div><div class="cb"><div class="ct">Everyday Connection — Invasive Species</div><div class="cx">Invasive species are non-native organisms that, when introduced to an area out of its native range, alter the community they invade. In the United States, invasive species like the purple loosestrife (Lythrum salicaria) and the zebra mussel (Dreissena polymorpha) have altered aquatic ecosystems, and some forests are threatened by the spread of common buckthorn (Rhamnus cathartica) and garlic mustard (Alliaria petiolata). Some well-known invasive animals include the emerald ash borer (Agrilus planipennis) and the European starling (Sturnus vulgaris). One of the many recent proliferations of an invasive species concerns the Asian carp in the United States. Asian carp were introduced to the United States in the 1970s by fisheries and by sewage treatment facilities that used the fish's excellent filter feeding abilities to clean their ponds of excess plankton. Voracious feeders and rapid reproducers, Asian carp may outcompete native species for food and could lead to their extinction.</div></div></div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Community Dynamics</div>
+      <div class="sh2">Succession and Ecological Change</div>
+
+      <p class="prose">Community dynamics are the changes in community structure and composition over time, often following environmental disturbances such as volcanoes, earthquakes, storms, fires, and climate change. Communities with a relatively constant number of species are said to be at equilibrium. The equilibrium is dynamic with species identities and relationships changing over time, but maintaining relatively constant numbers. Following a disturbance, the community may or may not return to the equilibrium state.</p>
+
+      <p class="prose">Succession describes the sequential appearance and disappearance of species in a community over time after a severe disturbance. In primary succession, newly exposed or newly formed rock is colonized by living organisms; in secondary succession, a part of an ecosystem is disturbed and remnants of the previous community remain. In both cases, there is a sequential change in species until a more or less permanent community develops.</p>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Primary Succession and Pioneer Species</div>
+      <div class="sh2">Colonizing New Land</div>
+
+      <p class="prose">Primary succession occurs when new land is formed, for example, following the eruption of volcanoes, such as those on the Big Island of Hawaii. As lava flows into the ocean, new land is continually being formed. On the Big Island, approximately 32 acres of land is added to it its size each year. Weathering and other natural forces break down the rock enough for the establishment of hearty species such as lichens and some plants, known as pioneer species (Figure 19.26). These species help to further break down the mineral-rich lava into soil where other, less hardy but more competitive species, such as grasses, shrubs, and trees, will grow and eventually replace the pioneer species. Over time the area will reach an equilibrium state, with a set of organisms quite different from the pioneer species.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.27 — Primary Succession</div>
+        <img src="images/ch19/fig19-27-primary-succession.png" alt="During primary succession in lava on Maui, Hawaii, succulent plants are the pioneer species." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">During primary succession in lava on Maui, Hawaii, succulent plants are the pioneer species. (credit: Forest and Kim Starr)</div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="eyebrow">Secondary Succession</div>
+      <div class="sh2">Recovery After Disturbance</div>
+
+      <p class="prose">A classic example of secondary succession occurs in oak and hickory forests cleared by wildfire (Figure 19.27). Wildfires will burn most vegetation, and unless the animals can flee the area, they are killed. Their nutrients, however, are returned to the ground in the form of ash. Thus, although the community has been dramatically altered, there is a soil ecosystem present that provides a foundation for rapid recolonization.</p>
+
+      <p class="prose">Before the fire, the vegetation was dominated by tall trees with access to the major plant energy resource: sunlight. Their height gave them access to sunlight while also shading the ground and other low-lying species. After the fire, though, these trees are no longer dominant. Thus, the first plants to grow back are usually annual plants followed within a few years by quickly growing and spreading grasses and other pioneer species. Due, at least in part, to changes in the environment brought on by the growth of grasses and forbs, over many years, shrubs emerge along with small pine, oak, and hickory trees. These organisms are called intermediate species. Eventually, over 150 years, the forest will reach its equilibrium point and resemble the community before the fire. This equilibrium state is referred to as the climax community, which will remain until the next disturbance. The climax community is typically characteristic of a given climate and geology. Although the community in equilibrium looks the same once it is attained, the equilibrium is a dynamic one with constant changes in abundance and sometimes species identities. The return of a natural ecosystem after agricultural activities is also a well-documented secondary succession process.</p>
+
+      <div class="diagram-wrap">
+        <div class="d-title">Figure 19.28 — Secondary Succession</div>
+        <img src="images/ch19/fig19-28-secondary-succession.png" alt="Secondary succession is seen in an oak and hickory forest after a forest fire." style="width:100%;max-width:700px;border-radius:10px;">
+        <div class="d-caption">Secondary succession is seen in an oak and hickory forest after a forest fire. A sequence of the community present at three successive times at the same location is depicted.</div>
+      </div>
+    </div>
+
+    <!-- KEY VOCABULARY -->
+    <div class="cs">
+      <div class="eyebrow">Key Vocabulary</div>
+      <div class="sh2">Terms from This Lesson</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><div class="vocab-term">Ecological niche</div><div class="vocab-def">The unique set of resources used by a species, which includes its interactions with other species</div></div>
+        <div class="vocab-card"><div class="vocab-term">Competitive exclusion principle</div><div class="vocab-def">No two species within a habitat can coexist indefinitely when they compete for the same resources at the same time and place</div></div>
+        <div class="vocab-card"><div class="vocab-term">Mimicry</div><div class="vocab-def">An adaptation in which an organism looks like another organism that is dangerous, toxic, or distasteful to its predators</div></div>
+        <div class="vocab-card"><div class="vocab-term">Mutualism</div><div class="vocab-def">A symbiotic relationship between two species where both species benefit</div></div>
+        <div class="vocab-card"><div class="vocab-term">Parasite</div><div class="vocab-def">An organism that uses resources from another species: the host</div></div>
+        <div class="vocab-card"><div class="vocab-term">Keystone species</div><div class="vocab-def">A species whose presence is key to maintaining biodiversity in an ecosystem and to upholding an ecological community's structure</div></div>
+        <div class="vocab-card"><div class="vocab-term">Foundation species</div><div class="vocab-def">A species which often forms the major structural portion of the habitat</div></div>
+        <div class="vocab-card"><div class="vocab-term">Species richness</div><div class="vocab-def">The number of different species in a community</div></div>
+        <div class="vocab-card"><div class="vocab-term">Primary succession</div><div class="vocab-def">The succession on land that previously has had no life</div></div>
+        <div class="vocab-card"><div class="vocab-term">Secondary succession</div><div class="vocab-def">The succession in response to environmental disturbances that move a community away from its equilibrium</div></div>
+        <div class="vocab-card"><div class="vocab-term">Pioneer species</div><div class="vocab-def">The first species to appear in primary and secondary succession</div></div>
+        <div class="vocab-card"><div class="vocab-term">Climax community</div><div class="vocab-def">The final stage of succession, where a stable community is formed by a characteristic assortment of plant and animal species</div></div>
+      </div>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="cs">
+      <div class="eyebrow">Video Resources</div>
+      <div class="sh2">Watch &amp; Learn</div>
+      <div class="vid-row">
+        <div class="vid-card" onclick="expandVid(this)" data-yt="GxE1SSqbSn4">
+          <div class="vid-thumb" style="background-image:url('https://img.youtube.com/vi/GxE1SSqbSn4/hqdefault.jpg')"><div class="play-btn">▶</div></div>
+          <div class="vid-info"><div class="vid-title">Community Ecology — Crash Course Ecology #4</div><div class="vid-dur">~10 min</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKPOINT -->
+    <div class="checkpoint" id="cp4">
+      <div class="cp-header">
+        <span class="cp-icon">✍️</span>
+        <span class="cp-title">Checkpoint — Community Ecology</span>
+      </div>
+      <p class="cp-prompt">Describe the predator-prey cycle using the lynx and snowshoe hare example. Explain at least two types of defense mechanisms against predation. Define the competitive exclusion principle and give an example. Compare and contrast the three types of symbiotic relationships. Describe the difference between primary and secondary succession.</p>
+      <textarea class="cp-textarea" placeholder="Type at least 100 characters to unlock the quiz…" oninput="cpCheck(4)"></textarea>
+      <div class="cp-bar"><div class="cp-fill" id="cpFill4"></div></div>
+      <div class="cp-count" id="cpCount4">0 / 100 characters</div>
+    </div>
+
+    <!-- QUIZ — 6 QUESTIONS -->
+    <div class="quiz-wrap locked" id="quiz4">
+      <div class="quiz-lock-msg">✍️ Complete the checkpoint above to unlock the quiz.</div>
+      <div class="quiz-header"><span class="qi">📝</span> Lesson 4 Quiz</div>
+
+      <div class="qq" id="q4-1">
+        <div class="q-stem">1. In the predator-prey cycle of the lynx and snowshoe hare, the predator population typically lags behind the prey population by:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,1,this,'a')">A. One to two years</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">B. Five to six years</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">C. Ten years</button>
+          <button class="cbtn" onclick="pick(4,1,this,'b')">D. The populations change simultaneously</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-2">
+        <div class="q-stem">2. The first species to live on new land, such as that formed from volcanic lava, are called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,2,this,'b')">A. Climax community</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">B. Keystone species</button>
+          <button class="cbtn" onclick="pick(4,2,this,'b')">C. Foundation species</button>
+          <button class="cbtn" onclick="pick(4,2,this,'a')">D. Pioneer species</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-3">
+        <div class="q-stem">3. A symbiotic relationship where both of the co-existing species benefit from the interaction is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,3,this,'b')">A. Commensalism</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">B. Parasitism</button>
+          <button class="cbtn" onclick="pick(4,3,this,'a')">C. Mutualism</button>
+          <button class="cbtn" onclick="pick(4,3,this,'b')">D. Competition</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-4">
+        <div class="q-stem">4. The competitive exclusion principle states that:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,4,this,'a')">A. Two species cannot occupy the same niche in a habitat if they are competing for all the same resources</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">B. Two species will always evolve to share resources equally</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">C. Predators will always exclude prey from the best habitats</button>
+          <button class="cbtn" onclick="pick(4,4,this,'b')">D. Only one species can exist in any given habitat</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-5">
+        <div class="q-stem">5. When an invasive species alters the community structure it is introduced to, what can the consequence be?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,5,this,'b')">A. Extinction of economically important species</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">B. Reduced predation on some native species</button>
+          <button class="cbtn" onclick="pick(4,5,this,'b')">C. Increased predation on some native species</button>
+          <button class="cbtn" onclick="pick(4,5,this,'a')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="qq" id="q4-6">
+        <div class="q-stem">6. In Batesian mimicry, a harmless species:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(4,6,this,'a')">A. Imitates the warning coloration of a harmful species to avoid predation</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">B. Develops its own toxins to match the coloration of another species</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">C. Shares warning coloration with other toxic species to reinforce the signal</button>
+          <button class="cbtn" onclick="pick(4,6,this,'b')">D. Uses camouflage to blend in with its surroundings</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score4"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Section 19.4</div><div class="cx">Content adapted from OpenStax Concepts of Biology, Section 19.4: Community Ecology, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(3)">← Lesson 3: The Human Population</button>
+    <div class="lnav-info">Lesson 4 of 6</div>
+    <button class="nbtn next" onclick="goTo(5)">Lesson 5: Practice Test →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 5 — PRACTICE TEST (20 QUESTIONS)
+     Covering all of Chapter 19
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+  <div class="hero hero-test">
+    <div class="h-crumb">Population and Community Ecology · <span>Practice Test</span></div>
+    <div class="h-title">Unit Review &amp; Practice Test</div>
+    <div class="h-desc">Test your knowledge of population and community ecology with this 20-question comprehensive assessment covering all topics from Chapter 19.</div>
+    <div class="h-meta">
+      <div class="h-chip">📖 OpenStax Concepts of Biology — Ch. 19 Review</div>
+      <div class="h-chip">⏱ ~30 min</div>
+      <div class="h-chip">🎯 20 Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="obj-box">
+      <div class="obj-label">📋 What This Test Covers</div>
+      <ul class="obj-list">
+        <li>Population Demographics and Dynamics (density, distribution, survivorship curves, demography) — CB 19.1</li>
+        <li>Population Growth and Regulation (exponential/logistic growth, carrying capacity, r/K selection) — CB 19.2</li>
+        <li>The Human Population (exponential growth, age structure, demographic transition, carrying capacity) — CB 19.3</li>
+        <li>Community Ecology (predation, mimicry, symbiosis, competition, keystone species, succession) — CB 19.4</li>
+      </ul>
+    </div>
+
+    <div class="quiz-wrap" id="quiz5">
+      <div class="quiz-header"><span class="qi">📝</span> Chapter 19 Practice Test — 20 Questions</div>
+
+      <!-- Q1 — 19.1: Quadrat method (OpenStax Review Q4) -->
+      <div class="qq" id="q5-1">
+        <div class="q-stem">1. Which of the following methods will provide information to an ecologist about both the size and density of a population?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,1,this,'b')">A. Mark and recapture</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">B. Mark and release</button>
+          <button class="cbtn" onclick="pick(5,1,this,'a')">C. Quadrat</button>
+          <button class="cbtn" onclick="pick(5,1,this,'b')">D. Life table</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q2 — 19.1: Life expectancy (OpenStax Review Q5) -->
+      <div class="qq" id="q5-2">
+        <div class="q-stem">2. Which of the following is best at showing the life expectancy of an individual within a population?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,2,this,'b')">A. Quadrat</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">B. Mark and recapture</button>
+          <button class="cbtn" onclick="pick(5,2,this,'b')">C. Survivorship curve</button>
+          <button class="cbtn" onclick="pick(5,2,this,'a')">D. Life table</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q3 — 19.1: Survivorship curves (OpenStax Review Q6) -->
+      <div class="qq" id="q5-3">
+        <div class="q-stem">3. Human populations have which type of survivorship curve?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,3,this,'a')">A. Type I</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">B. Type II</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">C. Type III</button>
+          <button class="cbtn" onclick="pick(5,3,this,'b')">D. Type IV</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q4 — 19.1: Population density and demography -->
+      <div class="qq" id="q5-4">
+        <div class="q-stem">4. The statistical study of populations, including mathematical tools designed to describe populations and investigate how they change, is called:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,4,this,'b')">A. Ecology</button>
+          <button class="cbtn" onclick="pick(5,4,this,'a')">B. Demography</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">C. Biogeography</button>
+          <button class="cbtn" onclick="pick(5,4,this,'b')">D. Epidemiology</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q5 — 19.1: Age structure -->
+      <div class="qq" id="q5-5">
+        <div class="q-stem">5. The distribution of the proportion of population members in each age class is known as the:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,5,this,'b')">A. Survivorship curve</button>
+          <button class="cbtn" onclick="pick(5,5,this,'a')">B. Age structure</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">C. Life table</button>
+          <button class="cbtn" onclick="pick(5,5,this,'b')">D. Species distribution pattern</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q6 — 19.2: Logistic growth (OpenStax Review Q7) -->
+      <div class="qq" id="q5-6">
+        <div class="q-stem">6. Species with limited resources usually exhibit a(n) ________ growth curve.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,6,this,'a')">A. Logistic</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">B. Logical</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">C. Experimental</button>
+          <button class="cbtn" onclick="pick(5,6,this,'b')">D. Exponential</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q7 — 19.2: Biotic potential (OpenStax Review Q8) -->
+      <div class="qq" id="q5-7">
+        <div class="q-stem">7. The maximum growth rate characteristic of a species is called its ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,7,this,'b')">A. Limit</button>
+          <button class="cbtn" onclick="pick(5,7,this,'b')">B. Carrying capacity</button>
+          <button class="cbtn" onclick="pick(5,7,this,'a')">C. Biotic potential</button>
+          <button class="cbtn" onclick="pick(5,7,this,'b')">D. Exponential growth pattern</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q8 — 19.2: Carrying capacity (OpenStax Review Q9) -->
+      <div class="qq" id="q5-8">
+        <div class="q-stem">8. The population size of a species capable of being supported by the environment is called its ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,8,this,'b')">A. Limit</button>
+          <button class="cbtn" onclick="pick(5,8,this,'a')">B. Carrying capacity</button>
+          <button class="cbtn" onclick="pick(5,8,this,'b')">C. Biotic potential</button>
+          <button class="cbtn" onclick="pick(5,8,this,'b')">D. Logistic growth pattern</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q9 — 19.2: r-selection (OpenStax Review Q10) -->
+      <div class="qq" id="q5-9">
+        <div class="q-stem">9. Species that have many offspring at one time are usually:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,9,this,'a')">A. r-selected</button>
+          <button class="cbtn" onclick="pick(5,9,this,'b')">B. K-selected</button>
+          <button class="cbtn" onclick="pick(5,9,this,'b')">C. Both r- and K-selected</button>
+          <button class="cbtn" onclick="pick(5,9,this,'b')">D. Not selected</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q10 — 19.2: Density-independent regulation (OpenStax Review Q11) -->
+      <div class="qq" id="q5-10">
+        <div class="q-stem">10. A forest fire is an example of ________ regulation.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,10,this,'b')">A. Density-dependent</button>
+          <button class="cbtn" onclick="pick(5,10,this,'a')">B. Density-independent</button>
+          <button class="cbtn" onclick="pick(5,10,this,'b')">C. r-selected</button>
+          <button class="cbtn" onclick="pick(5,10,this,'b')">D. K-selected</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q11 — 19.3: Zero population growth (OpenStax Review Q12) -->
+      <div class="qq" id="q5-11">
+        <div class="q-stem">11. A country with zero population growth is likely to be ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,11,this,'b')">A. In Africa</button>
+          <button class="cbtn" onclick="pick(5,11,this,'b')">B. In Asia</button>
+          <button class="cbtn" onclick="pick(5,11,this,'a')">C. Economically developed</button>
+          <button class="cbtn" onclick="pick(5,11,this,'b')">D. Economically underdeveloped</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q12 — 19.3: Young individuals (OpenStax Review Q13) -->
+      <div class="qq" id="q5-12">
+        <div class="q-stem">12. Which type of country has the greatest proportion of young individuals?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,12,this,'b')">A. Economically developed</button>
+          <button class="cbtn" onclick="pick(5,12,this,'a')">B. Economically underdeveloped</button>
+          <button class="cbtn" onclick="pick(5,12,this,'b')">C. Countries with zero population growth</button>
+          <button class="cbtn" onclick="pick(5,12,this,'b')">D. Countries in Europe</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q13 — 19.3: Carrying capacity increase (OpenStax Review Q14) -->
+      <div class="qq" id="q5-13">
+        <div class="q-stem">13. Which of the following is not a way that humans have increased the carrying capacity of the environment?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,13,this,'b')">A. Agriculture</button>
+          <button class="cbtn" onclick="pick(5,13,this,'a')">B. Using large amounts of natural resources</button>
+          <button class="cbtn" onclick="pick(5,13,this,'b')">C. Domestication of animals</button>
+          <button class="cbtn" onclick="pick(5,13,this,'b')">D. Use of language</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q14 — 19.3: Human population growth -->
+      <div class="qq" id="q5-14">
+        <div class="q-stem">14. The fundamental cause of the acceleration of human population growth in the past 200 years has been:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,14,this,'b')">A. Increased birth rates in all countries</button>
+          <button class="cbtn" onclick="pick(5,14,this,'a')">B. The reduced death rate due to technological advances of the industrial age and exploitation of fossil fuels</button>
+          <button class="cbtn" onclick="pick(5,14,this,'b')">C. Elimination of all predators</button>
+          <button class="cbtn" onclick="pick(5,14,this,'b')">D. Discovery of new continents</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q15 — 19.4: Pioneer species (OpenStax Review Q15) -->
+      <div class="qq" id="q5-15">
+        <div class="q-stem">15. The first species to live on new land, such as that formed from volcanic lava, are called ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,15,this,'b')">A. Climax community</button>
+          <button class="cbtn" onclick="pick(5,15,this,'b')">B. Keystone species</button>
+          <button class="cbtn" onclick="pick(5,15,this,'b')">C. Foundation species</button>
+          <button class="cbtn" onclick="pick(5,15,this,'a')">D. Pioneer species</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q16 — 19.4: Mutualism (OpenStax Review Q16) -->
+      <div class="qq" id="q5-16">
+        <div class="q-stem">16. A symbiotic relationship where both of the co-existing species benefit from the interaction is called ________.</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,16,this,'b')">A. Commensalism</button>
+          <button class="cbtn" onclick="pick(5,16,this,'b')">B. Parasitism</button>
+          <button class="cbtn" onclick="pick(5,16,this,'a')">C. Mutualism</button>
+          <button class="cbtn" onclick="pick(5,16,this,'b')">D. Communism</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q17 — 19.4: Invasive species (OpenStax Review Q17) -->
+      <div class="qq" id="q5-17">
+        <div class="q-stem">17. When an invasive species alters the community structure it is introduced to, what can the consequence be?</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,17,this,'b')">A. Extinction of economically important species</button>
+          <button class="cbtn" onclick="pick(5,17,this,'b')">B. Reduced predation on some native species</button>
+          <button class="cbtn" onclick="pick(5,17,this,'b')">C. Increased predation on some native species</button>
+          <button class="cbtn" onclick="pick(5,17,this,'a')">D. All of the above</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q18 — 19.4: Competitive exclusion -->
+      <div class="qq" id="q5-18">
+        <div class="q-stem">18. The competitive exclusion principle states that two species cannot occupy the same niche in a habitat. In the Paramecium experiment, when P. aurelia and P. caudatum were placed together:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,18,this,'b')">A. Both species thrived equally</button>
+          <button class="cbtn" onclick="pick(5,18,this,'a')">B. P. aurelia outcompeted P. caudatum for food, leading to the latter's eventual extinction</button>
+          <button class="cbtn" onclick="pick(5,18,this,'b')">C. P. caudatum outcompeted P. aurelia</button>
+          <button class="cbtn" onclick="pick(5,18,this,'b')">D. Both species went extinct</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q19 — 19.4: Keystone species -->
+      <div class="qq" id="q5-19">
+        <div class="q-stem">19. When the keystone species Pisaster ochraceus (sea star) is removed from intertidal communities, the result is:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,19,this,'b')">A. All species populations remain stable</button>
+          <button class="cbtn" onclick="pick(5,19,this,'a')">B. Mussel populations increase, which completely alters the species composition and reduces biodiversity</button>
+          <button class="cbtn" onclick="pick(5,19,this,'b')">C. Biodiversity increases dramatically</button>
+          <button class="cbtn" onclick="pick(5,19,this,'b')">D. The community immediately reaches climax stage</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <!-- Q20 — 19.4: Mimicry -->
+      <div class="qq" id="q5-20">
+        <div class="q-stem">20. In Batesian mimicry, a harmless species imitates the warning coloration of a harmful species. An example of this is:</div>
+        <div class="choices">
+          <button class="cbtn" onclick="pick(5,20,this,'a')">A. A hoverfly mimicking the coloration of a wasp</button>
+          <button class="cbtn" onclick="pick(5,20,this,'b')">B. Multiple toxic butterfly species sharing the same warning coloration</button>
+          <button class="cbtn" onclick="pick(5,20,this,'b')">C. A chameleon changing color to match its surroundings</button>
+          <button class="cbtn" onclick="pick(5,20,this,'b')">D. A walking stick insect resembling a twig</button>
+        </div>
+        <div class="q-fb"></div>
+      </div>
+
+      <div class="quiz-score" id="score5"></div>
+    </div>
+
+    <div class="callout source"><div class="ci">📚</div><div class="cb"><div class="ct">OpenStax Concepts of Biology — Chapter 19 Review</div><div class="cx">Questions adapted from OpenStax Concepts of Biology, Chapter 19: Population and Community Ecology, Review Questions, by Samantha Fowler, Rebecca Roush, and James Wise. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav">
+    <button class="nbtn prev" onclick="goTo(4)">← Lesson 4: Community Ecology</button>
+    <div class="lnav-info">Practice Test · End of Module</div>
+    <button class="nbtn next" disabled>Module Complete ✓</button>
+  </div>
+</div>
+</main>
+<script>
+window.MODULE_CONFIG = {
+  name: 'Population and Community Ecology',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbz47PH58cbM-1RZ0YrcmZHjBnn-YDqIiXDvGzU2fVFJxxH3f_qPa4aBYfqQBmUT3YF7mw/exec',
+  panelCount: 6,
+  lessonCount: 5,
+  cpMin: 100,
+  lessons: ['Overview','L1: Demographics & Dynamics','L2: Growth & Regulation','L3: The Human Population','L4: Community Ecology','L5: Practice Test']
+};
+</script>
+<script src="../shared/portal-quiz.js"></script>
+</body>
+</html>
