@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO SOL Prep · Unit 6: Biochemistry & Energy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────────── */
+:root{
+  --navy:#0f2240;--navy-mid:#1a3560;
+  --red:#dc2626;--red-pale:#fef2f2;--red-mid:#991b1b;
+  --amber:#d97706;--amber-pale:#fffbeb;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --yellow:#ca8a04;--yellow-pale:#fefce8;
+  --teal:#0b8f8c;--teal-pale:#f0fdfa;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-600:#4b5563;--gray-900:#111827;
+  --border:#e5e7eb;--muted:#6b7280;
+  --header-h:58px;--steps-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.7;font-size:16px;}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-unit{flex:1;text-align:center;}
+.tb-unit-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.tb-unit-name{font-size:.88rem;font-weight:700;color:#fff;}
+.tb-stats{display:flex;gap:10px;align-items:center;}
+.tb-stat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;}
+.tb-stat-icon{font-size:.9rem;}
+.tb-stat-val{font-size:.78rem;font-weight:700;color:#fff;}
+.tb-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.5);}
+.tb-badge{background:var(--red);color:#fff;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+
+/* STEP BAR */
+.steps-bar{position:fixed;top:var(--header-h);left:0;right:0;z-index:299;height:var(--steps-h);background:#fff;border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0;overflow-x:auto;scrollbar-width:none;}
+.steps-bar::-webkit-scrollbar{display:none;}
+.step{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.step-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;border:none;background:transparent;font-family:"Source Sans 3",sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.step-btn:hover{background:var(--gray-100);color:var(--gray-900);}
+.step-btn.active{background:var(--red);color:#fff;font-weight:700;}
+.step-btn.done{color:var(--green);}
+.step-btn.done .step-num{background:var(--green);color:#fff;}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.step-btn.active .step-num{background:rgba(255,255,255,.25);color:#fff;}
+.step-sep{width:20px;height:1px;background:var(--border);flex-shrink:0;}
+.steps-prog{position:fixed;top:calc(var(--header-h)+var(--steps-h)-2px);left:0;z-index:298;height:3px;background:var(--red);transition:width .4s ease;width:0%;}
+
+/* MAIN */
+.main{padding-top:148px;min-height:100vh;}
+.panel{display:none;animation:fadeIn .25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* FOCUS CARD (p0) */
+.focus-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);padding:48px 48px 40px;position:relative;overflow:visible;}
+.focus-hero::after{content:"BIO.6";position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:"Playfair Display",serif;font-size:7rem;font-weight:900;color:rgba(255,255,255,.05);pointer-events:none;}
+.focus-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.focus-title{font-family:"Playfair Display",serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:8px;}
+.focus-sub{font-size:.95rem;color:rgba(255,255,255,.7);max-width:580px;line-height:1.6;}
+.focus-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
+
+/* CONTENT LAYOUT */
+.lc{padding:36px 48px 56px;max-width:860px;}
+.section{margin-bottom:40px;}
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.sh3{font-size:1rem;font-weight:700;color:var(--navy);margin:20px 0 8px;padding-left:10px;border-left:3px solid var(--red);}
+.prose{font-size:.94rem;line-height:1.85;color:#374151;margin-bottom:12px;}
+.prose strong{color:var(--navy);}
+
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:.86rem;margin:14px 0;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:.74rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:9px 14px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top;}
+.dt tr:nth-child(even) td{background:var(--gray-50);}
+.dt tr:last-child td{border-bottom:none;}
+
+/* SOL FOCUS BOXES */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.sol-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.sol-card-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.sol-list{list-style:none;}
+.sol-list li{font-size:.84rem;color:var(--gray-600);padding:4px 0 4px 22px;position:relative;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.sol-list li:last-child{border-bottom:none;}
+.sol-list li::before{content:"\2192";position:absolute;left:0;color:var(--red);font-weight:700;}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;}
+.ci{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.88rem;margin-bottom:3px;}
+.cx{font-size:.87rem;line-height:1.7;}
+.callout.tip{background:#eff6ff;border-left:4px solid #3b82f6;}
+.callout.tip .ct{color:#1d4ed8;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#92400e;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:#134e4a;}
+.callout.mem{background:#faf5ff;border-left:4px solid #7c3aed;}
+.callout.mem .ct{color:#5b21b6;}
+.callout.sol{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.sol .ct{color:var(--red-mid);}
+
+/* VOCAB CARDS */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px;}
+.vcard{height:130px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.08);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:600;color:#fca5a5;line-height:1.3;}
+.vhint{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:6px;}
+.vback{background:var(--red-pale);border:2px solid var(--red);transform:rotateY(180deg);}
+.vdef{font-size:.77rem;color:var(--navy);line-height:1.5;}
+
+/* VOCAB QUIZ */
+.vquiz-box{background:#fff;border:2px solid var(--navy);border-radius:12px;padding:24px;margin:20px 0;}
+.vquiz-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.vquiz-icon{width:38px;height:38px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.vquiz-title{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--navy);}
+.vquiz-sub{font-size:.78rem;color:var(--muted);}
+.vq{margin-bottom:18px;}
+.vq-text{font-size:.9rem;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.55;}
+.vq-opts{display:flex;flex-direction:column;gap:6px;}
+.vq-opt{display:flex;align-items:center;gap:8px;padding:9px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.86rem;transition:all .18s;line-height:1.4;}
+.vq-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.correct{border-color:var(--green);background:var(--green-pale);}
+.vq-opt.incorrect{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.revealed{pointer-events:none;}
+.vq-ol{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vq-opt.correct .vq-ol{background:var(--green);color:#fff;}
+.vq-opt.incorrect .vq-ol{background:var(--red);color:#fff;}
+.vq-result{display:none;margin-top:10px;padding:10px 14px;background:var(--green-pale);border-radius:7px;font-size:.82rem;color:var(--navy);border-left:3px solid var(--green);}
+.vq-result.show{display:block;}
+.vq-result.wrong{background:var(--red-pale);border-left-color:var(--red);}
+.vquiz-score{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:18px 22px;margin-top:14px;text-align:center;}
+.vq-score-n{font-family:"Playfair Display",serif;font-size:2.4rem;color:#fca5a5;}
+.vquiz-pass-msg{font-size:.88rem;color:rgba(255,255,255,.75);margin-top:4px;}
+.vquiz-retry-btn{margin-top:12px;padding:8px 22px;border-radius:7px;border:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:all .2s;}
+.vquiz-retry-btn:hover{background:rgba(255,255,255,.1);}
+
+/* PRACTICE BANK */
+.practice-locked{background:#fff;border:2px dashed var(--gray-200);border-radius:14px;padding:32px;text-align:center;margin:20px 0;}
+.practice-locked-icon{font-size:2.5rem;margin-bottom:10px;}
+.practice-locked-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--gray-600);margin-bottom:6px;}
+.practice-locked-sub{font-size:.85rem;color:var(--muted);}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.q-icon{width:40px;height:40px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.qh p{font-size:.78rem;color:var(--muted);}
+.qq{margin-bottom:22px;}
+.q-stem{font-size:.92rem;font-weight:600;color:var(--navy);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px;line-height:1.6;}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;flex-shrink:0;}
+.q-tag{display:inline-flex;align-items:center;background:var(--red-pale);border:1px solid var(--red);border-radius:20px;padding:1px 8px;font-size:.64rem;font-weight:700;color:var(--red-mid);letter-spacing:.3px;margin-left:4px;white-space:nowrap;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.qo{display:flex;align-items:flex-start;gap:8px;padding:10px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.87rem;transition:all .18s;line-height:1.5;}
+.qo:hover{border-color:var(--red);background:var(--red-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:9px;padding:10px 13px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);}
+
+/* DANGER ZONE */
+.dz-box{display:none;border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center;}
+.dz-box.green{background:var(--green-pale);border:2px solid var(--green);}
+.dz-box.yellow{background:var(--yellow-pale);border:2px solid var(--yellow);}
+.dz-box.red{background:var(--red-pale);border:2px solid var(--red);}
+.dz-emoji{font-size:2.8rem;margin-bottom:8px;}
+.dz-score{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;}
+.dz-box.green .dz-score{color:var(--green);}
+.dz-box.yellow .dz-score{color:var(--yellow);}
+.dz-box.red .dz-score{color:var(--red);}
+.dz-label{font-size:.95rem;font-weight:700;margin:4px 0;}
+.dz-msg{font-size:.85rem;color:var(--gray-600);margin-top:6px;line-height:1.6;}
+.dz-missed{margin-top:16px;text-align:left;background:#fff;border-radius:10px;padding:16px;display:none;}
+.dz-missed-title{font-size:.78rem;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.dz-missed-item{font-size:.82rem;color:var(--gray-600);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.dz-missed-item:last-child{border-bottom:none;}
+.dz-submit-btn{margin-top:16px;padding:10px 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:background .2s;}
+.dz-submit-btn:hover{background:#1a3560;}
+
+/* GRAPH BOX */
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.87rem;margin-bottom:3px;}
+.graph-cap{font-size:.74rem;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.graph-wrap{position:relative;height:220px;max-width:500px;margin:0 auto;}
+.graph-q{margin-top:12px;padding:12px 14px;background:var(--gray-50);border-radius:8px;border-left:3px solid var(--navy);}
+.graph-q-stem{font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.graph-q-opts{display:flex;flex-direction:column;gap:5px;}
+.graph-q-opt{padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:.83rem;cursor:pointer;transition:all .15s;}
+.graph-q-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.graph-q-opt.correct-ans{background:var(--green-pale);border-color:var(--green);color:var(--navy);pointer-events:none;}
+.graph-q-opt.wrong-ans{background:var(--red-pale);border-color:var(--red);color:var(--navy);pointer-events:none;}
+.graph-q-opt.neutral{pointer-events:none;}
+
+/* GATE STATUS */
+.gate-status{background:var(--gray-50);border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;margin:24px 48px 0;}
+.gate-status.unlocked{background:var(--green-pale);border:2px solid var(--green);border-style:solid;}
+.gate-icon{font-size:1.8rem;margin-bottom:4px;}
+.gate-msg{font-size:.88rem;font-weight:600;color:var(--muted);}
+.gate-status.unlocked .gate-msg{color:var(--green);}
+.gate-status.unlocked .gate-icon::after{content:'\2705';}
+.gate-status.unlocked .gate-icon{font-size:0;}
+.gate-count{font-size:.75rem;color:var(--muted);margin-top:4px;}
+.nbtn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* NAV */
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:20px 48px;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0;}
+.nbtn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:7px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--red);color:#fff;}
+.nbtn.next:hover{background:var(--red-mid);}
+.nbtn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;right:20px;background:var(--green);color:#fff;padding:11px 18px;border-radius:8px;font-size:.83rem;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9000;display:none;align-items:center;gap:8px;}
+
+/* MODAL */
+#name-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.nm-box{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,.4);}
+.nm-emoji{font-size:2rem;margin-bottom:8px;}
+.nm-title{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--navy);margin-bottom:5px;}
+.nm-sub{font-size:.87rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.nm-label{font-size:.76rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;margin-bottom:5px;}
+.nm-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:.95rem;font-family:"Source Sans 3",sans-serif;outline:none;transition:border .2s;}
+.nm-input:focus{border-color:var(--red);}
+.nm-err{color:var(--red);font-size:.78rem;margin-top:4px;display:none;}
+.nm-btn{margin-top:16px;width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:background .2s;}
+.nm-btn:hover{background:#1a3560;}
+
+/* STREAK FIRE ANIMATION */
+@keyframes flamePop{0%{transform:scale(1);}50%{transform:scale(1.3);}100%{transform:scale(1);}}
+.streak-fire{display:inline-block;animation:flamePop 0.5s ease;}
+
+/* SOL QUESTION IMAGES */
+.sol-img-wrap{margin:14px 0 12px;background:#f8f9fa;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.sol-img{max-width:100%;height:auto;border-radius:6px;display:block;margin:0 auto;}
+.sol-img-cap{font-size:.72rem;color:var(--muted);margin-top:7px;font-style:italic;letter-spacing:.2px;}
+
+/* DEPTH LINK */
+.depth-link{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gray-50);border:1px solid var(--border);border-radius:8px;font-size:.84rem;color:var(--navy);text-decoration:none;transition:all .2s;margin-top:10px;}
+.depth-link:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;}
+
+/* WORKED EXAMPLE BOX */
+.worked-ex{background:#fff;border:2px solid var(--navy);border-radius:12px;margin:18px 0;overflow:hidden;}
+.worked-ex-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:8px;}
+.worked-ex-header span{color:#fca5a5;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.worked-ex-body{padding:18px 20px;}
+.worked-step{display:flex;gap:10px;margin-bottom:10px;font-size:.88rem;line-height:1.65;}
+.worked-step-num{min-width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.worked-step-text{flex:1;color:#374151;}
+.worked-step-text strong{color:var(--navy);}
+.wrong-answer-box{background:var(--red-pale);border:1px solid var(--red);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:.85rem;line-height:1.65;}
+.wrong-answer-box strong{color:var(--red-mid);}
+
+</style>
+</head>
+<body>
+
+<!-- NAME MODAL -->
+<div id="name-modal">
+  <div class="nm-box">
+    <div class="nm-emoji">&#x1F4CB;</div>
+    <h2 class="nm-title">Biology SOL Prep</h2>
+    <p class="nm-sub">Unit 6: Classification &amp; Diversity. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
+    <label class="nm-label">YOUR FULL NAME</label>
+    <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name" style="margin-bottom:12px">
+    <label class="nm-label">CLASS PERIOD</label>
+    <select class="nm-input" id="class-period" style="margin-bottom:12px">
+      <option value="">Select Period...</option>
+      <option value="Period 1">Period 1</option>
+      <option value="Period 2">Period 2</option>
+      <option value="Period 3">Period 3</option>
+      <option value="Period 4">Period 4</option>
+      <option value="Period 5">Period 5</option>
+      <option value="Period 6">Period 6</option>
+      <option value="Period 7">Period 7</option>
+    </select>
+    <div class="nm-err" id="name-err">Please enter your first and last name.</div>
+    <div class="nm-err" id="period-err">Please select your class period.</div>
+    <button class="nm-btn" onclick="startUnit()">Start Unit 6 &#x2192;</button>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit6_progress');localStorage.removeItem('sol_unit6_vocab');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">&#x1F4E4; <span id="toast-msg">Score sent!</span></div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a class="tb-back" href="index.html">&larr; SOL Prep</a>
+  <div class="tb-unit">
+    <div class="tb-unit-label">Virginia Biology SOL</div>
+    <div class="tb-unit-name">Unit 6 &middot; Classification &amp; Diversity</div>
+  </div>
+  <div class="tb-stats">
+    <div class="tb-stat"><span class="tb-stat-icon streak-fire" id="streak-fire">&#x1F525;</span><div><div class="tb-stat-val" id="streak-val">&ndash;</div><div class="tb-stat-lbl">day streak</div></div></div>
+    <div class="tb-stat"><span class="tb-stat-icon">&#x1F4C5;</span><div><div class="tb-stat-val" id="sol-countdown">&ndash;</div><div class="tb-stat-lbl">days to SOL</div></div></div>
+    <div class="tb-badge">BIO.6</div>
+  </div>
+</header>
+
+<!-- STEP PROGRESS BAR (9 steps) -->
+<nav class="steps-bar" id="steps-bar">
+  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Taxonomy</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Cladograms</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Domains &amp; Kingdoms</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Eukarya Diversity</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Study Guide</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Practice Test</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Results</button></div>
+</nav>
+<div class="steps-prog" id="steps-prog"></div>
+
+<main class="main" id="main">
+
+<!-- =================================================================
+     PANEL 0: SOL FOCUS CARD
+     ================================================================= -->
+<div class="panel active" id="p0">
+  <div class="focus-hero">
+    <div class="focus-tag">&#x1F3AF; SOL Standard</div>
+    <div class="focus-title">Classification &amp; Diversity</div>
+    <div class="focus-sub">BIO.6 &mdash; The student will investigate and understand that modern classification systems can be used as organizational tools for scientists.</div>
+    <div class="focus-meta">
+      <div class="f-chip">~8% of SOL Test</div>
+      <div class="f-chip">~4 Questions on Real SOL</div>
+      <div class="f-chip">22 Vocab Terms</div>
+      <div class="f-chip">20 Practice Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="section">
+      <div class="eyebrow">What VDOE Says You Must Know</div>
+      <div class="sh2">BIO.6 Substandards Breakdown</div>
+      <div class="sol-grid">
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.6a &mdash; Structural &amp; Biochemical Similarities</div>
+          <ul class="sol-list">
+            <li>Organisms classified by structural/biochemical characteristics</li>
+            <li>Binomial nomenclature (genus + species)</li>
+            <li>Amino acid/DNA sequence comparisons</li>
+            <li>Hierarchical classification system</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.6b/c &mdash; Fossils, Cladograms &amp; Embryology</div>
+          <ul class="sol-list">
+            <li>Fossil record interpretation for classification</li>
+            <li>Interpret cladograms/phylogenetic trees</li>
+            <li>Embryonic stage similarities across animals</li>
+            <li>Shared derived characteristics</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.6d &mdash; Three Domains</div>
+          <ul class="sol-list">
+            <li>Archaea: prokaryotic, extremophiles</li>
+            <li>Bacteria: prokaryotic, most common</li>
+            <li>Eukarya: eukaryotic (protists, fungi, plants, animals)</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.6e/f &mdash; Kingdoms &amp; Adaptability</div>
+          <ul class="sol-list">
+            <li>Six kingdoms with key characteristics</li>
+            <li>Eukarya diversity: protists, fungi, plants, animals</li>
+            <li>Classification adapts to new scientific discoveries</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout sol"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">Top Miss Areas on Virginia SOL</div><div class="cx">Students most commonly miss: (1) <strong>interpreting cladograms</strong> (reading which organisms are most closely related based on branching points), (2) <strong>kingdom identification questions</strong> (given characteristics, determine which kingdom an organism belongs to), and (3) <strong>binomial nomenclature rules</strong> (knowing that the first word is genus, second is species, and genus is capitalized).</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="eyebrow">Vocabulary Preview</div>
+      <div class="sh2">22 Terms &mdash; You Must Know All of These</div>
+      <table class="dt">
+        <tr><th>Term</th><th>One-Line Definition</th></tr>
+        <tr><td><strong>Taxonomy</strong></td><td>The science of classifying and naming organisms</td></tr>
+        <tr><td><strong>Binomial Nomenclature</strong></td><td>Two-word naming system: Genus species (e.g., Homo sapiens)</td></tr>
+        <tr><td><strong>Genus</strong></td><td>Classification group above species; first word of scientific name (capitalized)</td></tr>
+        <tr><td><strong>Species</strong></td><td>Most specific classification level; organisms that can breed and produce fertile offspring</td></tr>
+        <tr><td><strong>Domain</strong></td><td>Broadest classification level: Archaea, Bacteria, or Eukarya</td></tr>
+        <tr><td><strong>Kingdom</strong></td><td>Second broadest level: Archaebacteria, Eubacteria, Protista, Fungi, Plantae, Animalia</td></tr>
+        <tr><td><strong>Phylum</strong></td><td>Major division within a kingdom based on body plan</td></tr>
+        <tr><td><strong>Cladogram</strong></td><td>Branching diagram showing evolutionary relationships based on shared derived traits</td></tr>
+        <tr><td><strong>Phylogenetic Tree</strong></td><td>Diagram showing evolutionary history and relationships of organisms</td></tr>
+        <tr><td><strong>Common Ancestor</strong></td><td>An organism from which two or more species have evolved</td></tr>
+        <tr><td><strong>Fossil Record</strong></td><td>Collection of all known fossils; provides evidence of past life and evolutionary change</td></tr>
+        <tr><td><strong>Embryology</strong></td><td>Study of embryo development; similar stages suggest evolutionary relationship</td></tr>
+        <tr><td><strong>Archaea</strong></td><td>Domain of prokaryotes; extremophiles (hot springs, salt lakes, deep-sea vents)</td></tr>
+        <tr><td><strong>Bacteria</strong></td><td>Domain of prokaryotes; most diverse and abundant; includes pathogens and decomposers</td></tr>
+        <tr><td><strong>Eukarya</strong></td><td>Domain of eukaryotes; includes protists, fungi, plants, and animals</td></tr>
+        <tr><td><strong>Protist</strong></td><td>Mostly unicellular eukaryotes; diverse group (amoeba, paramecium, algae)</td></tr>
+        <tr><td><strong>Fungi</strong></td><td>Eukaryotes with cell walls; heterotrophs that absorb nutrients (mushrooms, yeast, mold)</td></tr>
+        <tr><td><strong>Plantae</strong></td><td>Multicellular eukaryotes; autotrophs with cell walls; photosynthesis</td></tr>
+        <tr><td><strong>Animalia</strong></td><td>Multicellular eukaryotes; heterotrophs; no cell wall; mobile at some life stage</td></tr>
+        <tr><td><strong>Dichotomous Key</strong></td><td>Step-by-step tool using paired choices to identify an organism</td></tr>
+        <tr><td><strong>Prokaryote</strong></td><td>Cell without a membrane-bound nucleus (Archaea and Bacteria)</td></tr>
+        <tr><td><strong>Eukaryote</strong></td><td>Cell with a membrane-bound nucleus and organelles</td></tr>
+      </table>
+    </div>
+
+    <div class="callout tip"><div class="ci">&#x1F4A1;</div><div class="cb"><div class="ct">Study Tip for BIO.6</div><div class="cx">Memorize the <strong>hierarchy</strong> (Domain &rarr; Kingdom &rarr; Phylum &rarr; Class &rarr; Order &rarr; Family &rarr; Genus &rarr; Species) and the <strong>6-kingdom comparison table</strong>. If you can classify an organism given its characteristics (prokaryote/eukaryote, cell wall/no wall, autotroph/heterotroph), you can answer most BIO.6 questions.</div></div></div>
+
+    <div class="section" style="margin-top:28px;">
+      <div class="eyebrow">Check Your Understanding</div>
+      <div class="sh2">Answer All Questions to Unlock the Next Step</div>
+
+      <div class="sh3">Do You Know Your Standard?</div>
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">1</span> Approximately how many questions on the real Biology SOL come from BIO.6?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1 question</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 4 questions</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 12 questions</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>20 questions</li>
+        </ul>
+        <div class="qexp">BIO.6 accounts for about 8% of the SOL test, approximately 4 questions out of 50.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="0">
+        <div class="q-stem"><span class="q-num">2</span> Which is identified as a TOP MISS AREA for BIO.6?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Interpreting cladograms to determine which organisms are most closely related</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Drawing every organism in each kingdom</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Memorizing the Latin names of 100 species</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating the age of fossils using math</li>
+        </ul>
+        <div class="qexp">Students struggle with reading cladograms &mdash; specifically determining which organisms share the most recent common ancestor and are therefore most closely related.</div>
+      </div>
+
+      <div class="sh3">Prior Knowledge Check</div>
+      <p class="prose" style="color:var(--muted);font-size:.85rem;">Answer honestly &mdash; right or wrong, these help Mr. England see where you're starting.</p>
+
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">3</span> (2005-11) Escherichia coli is the scientific name of a bacterium. What category is "Escherichia"?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Order</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Genus</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Phylum</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Species</li>
+        </ul>
+        <div class="qexp">In binomial nomenclature, the first word is the GENUS (capitalized) and the second word is the species (lowercase). Escherichia = genus, coli = species.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="0">
+        <div class="q-stem"><span class="q-num">4</span> (2005-32) A new organism is multicellular, does not photosynthesize, absorbs nutrients, has eukaryotic cells with cell walls. Which kingdom?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Plant</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Animal</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Bacteria</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Fungi</li>
+        </ul>
+        <div class="qexp">Eukaryotic + cell walls + no photosynthesis + absorbs nutrients = Fungi. Plants photosynthesize. Animals have no cell wall. Bacteria are prokaryotic.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">5</span> (2006-30) An important feature of modern classification systems is that they &mdash;</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>group organisms that live in the same habitat</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>can incorporate new scientific discoveries</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>can predict the discovery of new species</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>apply only to organisms alive today</li>
+        </ul>
+        <div class="qexp">Classification systems are adaptable &mdash; they change as new evidence and discoveries emerge. This is a key principle: classification is not fixed, it evolves with scientific understanding (BIO.6f).</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-0"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all 5 questions above to unlock the next step.</div><div class="gate-count" id="gate-count-0">0 of 5 answered</div></div>
+    </div>
+
+    <div class="section" style="margin-top:24px;">
+      <a class="depth-link" href="../biology/diversity-of-life.html">&#x1F4D8; Need more depth? See the full lesson in Diversity of Life &rarr;</a>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; Taxonomy &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 1: TAXONOMY & BINOMIAL NOMENCLATURE (BIO.6a/f)
+     ================================================================= -->
+<div class="panel" id="p1">
+  <div class="lc">
+    <div class="eyebrow">BIO.6a/f &mdash; Taxonomy &amp; Binomial Nomenclature</div>
+    <div class="sh2">The Hierarchy of Classification &amp; Naming Organisms</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Binomial Nomenclature Rules Are Directly Tested</div><div class="cx">The SOL will give you a scientific name and ask which word is the genus, which is the species, or what level of classification two organisms share. Know the rules: Genus is capitalized, species is lowercase, both are italicized (or underlined when handwritten).</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Why We Classify Organisms</div>
+      <p class="prose"><strong>Taxonomy</strong> is the science of classifying, naming, and organizing living things into groups based on shared characteristics. With millions of species on Earth, we need a systematic way to organize them so scientists worldwide can communicate clearly about specific organisms.</p>
+
+      <div class="sh3">The Classification Hierarchy</div>
+      <p class="prose">Organisms are arranged in a hierarchy from broadest (most general) to most specific:</p>
+      <p class="prose" style="text-align:center;font-weight:700;font-size:1rem;color:var(--navy);background:var(--gray-100);padding:14px;border-radius:8px;margin:12px 0;">Domain &rarr; Kingdom &rarr; Phylum &rarr; Class &rarr; Order &rarr; Family &rarr; Genus &rarr; Species</p>
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: "Dear King Philip Came Over For Good Spaghetti"</div><div class="cx"><strong>D</strong>ear <strong>K</strong>ing <strong>P</strong>hilip <strong>C</strong>ame <strong>O</strong>ver <strong>F</strong>or <strong>G</strong>ood <strong>S</strong>paghetti = Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species. The MORE levels two organisms share, the MORE closely related they are.</div></div></div>
+
+      <div class="sh3">Binomial Nomenclature</div>
+      <p class="prose"><strong>Binomial nomenclature</strong> is the two-word naming system developed by Carolus Linnaeus. Every organism has a unique scientific name made of two parts:</p>
+      <table class="dt">
+        <tr><th>Part</th><th>Rule</th><th>Example</th></tr>
+        <tr><td><strong>Genus</strong> (first word)</td><td>Always CAPITALIZED</td><td><em>Homo</em></td></tr>
+        <tr><td><strong>Species</strong> (second word)</td><td>Always lowercase</td><td><em>sapiens</em></td></tr>
+        <tr><td><strong>Full name</strong></td><td>Italicized (or underlined)</td><td><em>Homo sapiens</em></td></tr>
+      </table>
+      <p class="prose">The biological definition of a <strong>species</strong> is a group of organisms that can <strong>breed with each other and produce fertile offspring</strong>. A horse and a donkey can breed, but their offspring (a mule) is infertile &mdash; so horses and donkeys are different species.</p>
+
+      <div class="sh3">Biochemical Comparisons for Classification</div>
+      <p class="prose">Modern classification doesn't just look at physical appearance &mdash; it also compares <strong>DNA sequences</strong>, <strong>amino acid sequences</strong> in proteins, and other biochemical data. Organisms with very similar DNA or protein sequences are more closely related. For example, humans and chimpanzees share ~98% of their DNA, indicating a recent common ancestor. The SOL may show you amino acid sequences for several organisms and ask which is most similar to an unknown species.</p>
+
+      <div class="sh3">Classification Systems Are Adaptable (BIO.6f)</div>
+      <p class="prose">The VDOE framework emphasizes that classification systems <strong>change as new evidence emerges</strong>. When DNA analysis reveals that two organisms previously grouped together are actually not closely related, scientists reclassify them. This is the nature of science &mdash; knowledge evolves with new discoveries and technology.</p>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Binomial Nomenclature</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2005-11) Escherichia coli is the scientific name of a bacterium. What category is "Escherichia"?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>Apply binomial nomenclature rules:</strong> First word = Genus (capitalized). Second word = species (lowercase).</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>"Escherichia"</strong> is the first word and is capitalized &rarr; it must be the <strong>Genus</strong>.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: B &mdash; Genus.</strong></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.6a/f</div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="1" data-std="BIO.6a">
+        <div class="q-stem"><span class="q-num">1</span> (2004-32) According to the biological definition, which organisms would belong to the same species? <span class="q-tag">BIO.6a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Animals that can breed and produce fertile offspring</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Protists that are the same shape</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Plants with flowers attracting the same pollinators</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Mushrooms that are the same color</li>
+        </ul>
+        <div class="qexp">The biological species concept: a species is a group of organisms that can interbreed and produce FERTILE offspring. Same shape, color, or flower structure doesn't define a species.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.6a">
+        <div class="q-stem"><span class="q-num">2</span> (2001-10) Four pine trees have the same genus name but different species names. They are NOT classified in the same &mdash; <span class="q-tag">BIO.6a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>phylum</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>species</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>order</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>genus</li>
+        </ul>
+        <div class="qexp">They share the same genus but have different species names, so they are NOT the same species. They share all levels ABOVE species (genus, family, order, class, phylum, kingdom, domain) but differ at the species level.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.6a">
+        <div class="q-stem"><span class="q-num">3</span> (2002-17) Comparing amino acid sequences is used to determine classification. The organism most closely resembling an unknown would have &mdash; <span class="q-tag">BIO.6a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>the longest amino acid sequence</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>the shortest amino acid sequence</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>an identical number of amino acids</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>the most similar amino acid sequence</li>
+        </ul>
+        <div class="qexp">More similar amino acid (or DNA) sequences = more closely related. Scientists compare sequences and count differences; fewer differences = closer evolutionary relationship.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.6f">
+        <div class="q-stem"><span class="q-num">4</span> (2006-30) An important feature of modern classification systems is that they &mdash; <span class="q-tag">BIO.6f</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>group organisms in the same habitat</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>can incorporate new scientific discoveries</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>can predict new species discoveries</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>apply only to organisms alive today</li>
+        </ul>
+        <div class="qexp">Classification systems are adaptable. As DNA analysis and other new technologies reveal new information, organisms can be reclassified. The system is NOT fixed &mdash; it evolves with scientific understanding.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-1"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-1">0 of 4 answered</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Cladograms &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 2: CLADOGRAMS, FOSSILS & EMBRYOLOGY (BIO.6b/c)
+     ================================================================= -->
+<div class="panel" id="p2">
+  <div class="lc">
+    <div class="eyebrow">BIO.6b/c &mdash; Cladograms, Fossils &amp; Embryology</div>
+    <div class="sh2">Using Evidence to Determine Evolutionary Relationships</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Cladogram Interpretation Is a High-Frequency Question</div><div class="cx">The SOL will show you a cladogram (branching diagram) and ask which organisms are most closely related. The rule: organisms that share the most recent branching point (common ancestor) are most closely related. Read the diagram from the bottom up.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">What Is a Cladogram?</div>
+      <p class="prose">A <strong>cladogram</strong> (or phylogenetic tree) is a branching diagram that shows the evolutionary relationships among organisms. Each branching point represents a <strong>common ancestor</strong> &mdash; the organism from which the branches evolved. Organisms that share a MORE RECENT branching point are MORE CLOSELY RELATED than organisms that diverged earlier.</p>
+      <p class="prose"><strong>How to read a cladogram:</strong></p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li><strong>Each branch point</strong> = a common ancestor where two lineages split</li>
+        <li><strong>Organisms on nearby branches</strong> (sharing a recent split) = closely related</li>
+        <li><strong>Organisms on distant branches</strong> (splitting long ago) = distantly related</li>
+        <li><strong>Shared derived characteristics</strong> (traits that evolved in the common ancestor) are marked on branches</li>
+        <li>The MORE shared traits two organisms have on the cladogram, the more closely related they are</li>
+      </ul>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Trap: Position on the Diagram ≠ Relatedness</div><div class="cx">Students often think organisms that are physically NEXT TO each other on a cladogram are most closely related. That's NOT always true. What matters is the <strong>branching point</strong>, not position. Two organisms on opposite sides of the diagram could still be closely related if they share a recent common ancestor. Always trace back to the most recent shared branch point.</div></div></div>
+
+      <div class="sh3">The Fossil Record (BIO.6b)</div>
+      <p class="prose">The <strong>fossil record</strong> provides a time-ordered history of life on Earth. By examining fossils, scientists can:</p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li>Compare structural characteristics of extinct organisms with living ones</li>
+        <li>Track how species have changed over time</li>
+        <li>Identify patterns of diversity, extinction, and change</li>
+        <li>Infer evolutionary relationships between extinct and living species</li>
+      </ul>
+      <p class="prose">The VDOE framework states you should be able to "analyze and interpret data for patterns in the fossil record that document the existence, diversity, extinction, and change of life forms throughout the history of life on Earth."</p>
+
+      <div class="sh3">Embryology (BIO.6c)</div>
+      <p class="prose"><strong>Embryology</strong> is the study of how organisms develop from a fertilized egg (zygote) through embryo stages. A key finding: <strong>many different species show remarkably similar embryonic stages</strong>, even though the adult forms look completely different. For example, fish, chicken, pig, and human embryos all develop gill slits, tails, and similar body segments early in development.</p>
+      <p class="prose">These similarities suggest that these organisms share a <strong>common ancestor</strong> and that the same developmental genes are active in the early embryonic stages. The more similar the embryonic stages, the more closely related the organisms are. This is powerful evidence for evolutionary relationships.</p>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Cladogram Reading</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2001-29) According to a chart, the insects most closely related are &mdash;</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>Find the most recent branch point:</strong> Look for two organisms that share the most recent common ancestor (the closest branching point on the diagram).</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>Count shared derived characteristics:</strong> The pair with the most shared traits on their branch is most closely related.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>The answer is the pair that diverged MOST RECENTLY</strong> on the diagram.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.6b/c</div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.6b">
+        <div class="q-stem"><span class="q-num">1</span> (2006-16) Ascidian larvae have well-developed brains and dorsal nerve cords. This suggests ascidians should be classified with the &mdash; <span class="q-tag">BIO.6b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>cnidarians</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>chordates</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>annelids</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>sponges</li>
+        </ul>
+        <div class="qexp">A dorsal nerve cord is a defining characteristic of chordates (the group that includes vertebrates). Even though adult ascidians look like sac-like invertebrates, their larvae reveal chordate characteristics, showing that developmental stages can reveal evolutionary relationships.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="2" data-std="BIO.6b">
+        <div class="q-stem"><span class="q-num">2</span> (2003-20) What structure is common to ALL five kingdoms of living organisms? <span class="q-tag">BIO.6b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Cell wall</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Mitochondria</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>DNA</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Nucleus</li>
+        </ul>
+        <div class="qexp">ALL living organisms contain DNA &mdash; from bacteria to humans. Not all have cell walls (animals don't), not all have mitochondria (prokaryotes don't), and not all have a nucleus (prokaryotes don't). DNA is universal.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.6c">
+        <div class="q-stem"><span class="q-num">3</span> (2002-30) A scientist found an organism with moist skin, no hair, internal skeleton, and it laid eggs under logs. This is probably a new species of &mdash; <span class="q-tag">BIO.6c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>reptile</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>amphibian</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>invertebrate</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>mammal</li>
+        </ul>
+        <div class="qexp">Moist skin + no hair + internal skeleton + eggs laid in moist environment = amphibian. Reptiles have dry/scaly skin. Mammals have hair. Invertebrates lack internal skeletons.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.6b">
+        <div class="q-stem"><span class="q-num">4</span> (2002-14) An organism is most closely related to animals in Phylum Arthropoda because it has &mdash; <span class="q-tag">BIO.6b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>an elongated body</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>legs</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>antennae</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>jointed appendages</li>
+        </ul>
+        <div class="qexp">The defining characteristic of Arthropoda is JOINTED APPENDAGES (arthro = joint, pod = foot). Many organisms have elongated bodies, legs, or antennae, but jointed appendages are the unique shared characteristic of arthropods.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-2"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-2">0 of 4 answered</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; Taxonomy</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Domains &amp; Kingdoms &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 3: DOMAINS & KINGDOMS (BIO.6d/e)
+     ================================================================= -->
+<div class="panel" id="p3">
+  <div class="lc">
+    <div class="eyebrow">BIO.6d/e &mdash; Domains &amp; Kingdoms</div>
+    <div class="sh2">The Three Domains &amp; Six Kingdoms of Life</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Kingdom Identification Is a Classic SOL Question</div><div class="cx">The SOL gives you a set of characteristics (prokaryote/eukaryote, unicellular/multicellular, cell wall/no wall, autotroph/heterotroph) and asks you to identify the kingdom. If you can fill in the comparison table from memory, you can answer any kingdom question.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">The Three Domains</div>
+      <p class="prose">The broadest level of classification divides all life into three <strong>domains</strong>:</p>
+      <table class="dt">
+        <tr><th>Domain</th><th>Cell Type</th><th>Key Characteristics</th><th>Examples</th></tr>
+        <tr><td><strong>Archaea</strong></td><td>Prokaryotic</td><td>Often extremophiles; unique cell membrane chemistry; no peptidoglycan in cell wall</td><td>Methanogens, halophiles, thermophiles</td></tr>
+        <tr><td><strong>Bacteria</strong></td><td>Prokaryotic</td><td>Most diverse and abundant; peptidoglycan in cell wall; includes pathogens and decomposers</td><td>E. coli, Streptococcus, cyanobacteria</td></tr>
+        <tr><td><strong>Eukarya</strong></td><td>Eukaryotic</td><td>Membrane-bound nucleus and organelles; includes all complex life</td><td>Protists, fungi, plants, animals</td></tr>
+      </table>
+      <p class="prose">The key distinction for domains: <strong>Archaea and Bacteria are both prokaryotic</strong>, but they have different cell membrane chemistry and RNA sequences. These molecular differences are significant enough to place them in separate domains.</p>
+
+      <div class="sh3">The Six Kingdoms</div>
+      <p class="prose">This is the most important table in BIO.6. Memorize these characteristics:</p>
+      <table class="dt">
+        <tr><th>Kingdom</th><th>Domain</th><th>Cell Type</th><th>Cells</th><th>Cell Wall?</th><th>Nutrition</th><th>Examples</th></tr>
+        <tr><td><strong>Archaebacteria</strong></td><td>Archaea</td><td>Prokaryotic</td><td>Unicellular</td><td>Yes (no peptidoglycan)</td><td>Auto or heterotroph</td><td>Methanogens, thermophiles</td></tr>
+        <tr><td><strong>Eubacteria</strong></td><td>Bacteria</td><td>Prokaryotic</td><td>Unicellular</td><td>Yes (peptidoglycan)</td><td>Auto or heterotroph</td><td>E. coli, Streptococcus</td></tr>
+        <tr><td><strong>Protista</strong></td><td>Eukarya</td><td>Eukaryotic</td><td>Mostly unicellular</td><td>Some have</td><td>Auto or heterotroph</td><td>Amoeba, paramecium, algae</td></tr>
+        <tr><td><strong>Fungi</strong></td><td>Eukarya</td><td>Eukaryotic</td><td>Uni or multicellular</td><td>Yes (chitin)</td><td>Heterotroph (absorb)</td><td>Mushroom, yeast, mold</td></tr>
+        <tr><td><strong>Plantae</strong></td><td>Eukarya</td><td>Eukaryotic</td><td>Multicellular</td><td>Yes (cellulose)</td><td>Autotroph (photosynthesis)</td><td>Mosses, ferns, trees, flowers</td></tr>
+        <tr><td><strong>Animalia</strong></td><td>Eukarya</td><td>Eukaryotic</td><td>Multicellular</td><td>NO</td><td>Heterotroph (ingest)</td><td>Sponges, insects, mammals</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: How to Identify a Kingdom</div><div class="cx">Ask these questions in order: (1) Prokaryote or eukaryote? If prokaryote &rarr; Archaebacteria or Eubacteria. (2) If eukaryote, unicellular? &rarr; Probably Protista. (3) Multicellular with cell wall + photosynthesis? &rarr; Plantae. (4) Multicellular with cell wall + absorbs nutrients (no photosynthesis)? &rarr; Fungi. (5) Multicellular, NO cell wall, ingests food? &rarr; Animalia.</div></div></div>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Trap: Fungi Have Cell Walls but Are NOT Plants</div><div class="cx">Students often confuse fungi with plants because both have cell walls. But fungi are HETEROTROPHS (they absorb nutrients from dead/decaying matter) while plants are AUTOTROPHS (they photosynthesize). Also, fungal cell walls are made of <strong>chitin</strong> while plant cell walls are made of <strong>cellulose</strong>. If it has a cell wall but doesn't photosynthesize &rarr; Fungi.</div></div></div>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Kingdom Identification</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2005-32) Multicellular, no photosynthesis, absorbs nutrients, eukaryotic cells with cell walls. Which kingdom?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>Eukaryotic</strong> &rarr; eliminates Archaebacteria and Eubacteria</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>Cell walls</strong> &rarr; eliminates Animalia (no cell wall)</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>No photosynthesis + absorbs nutrients</strong> &rarr; eliminates Plantae (photosynthesizes). Fungi absorb nutrients.</div></div>
+          <div class="worked-step"><div class="worked-step-num">4</div><div class="worked-step-text"><strong>Answer: D &mdash; Fungi.</strong></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.6d/e</div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.6d">
+        <div class="q-stem"><span class="q-num">1</span> (2001-13) The body of which organism has the LEAST specialized organization? <span class="q-tag">BIO.6d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Jellyfish</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Starfish</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Sponge</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Sea urchin</li>
+        </ul>
+        <div class="qexp">Sponges are the simplest multicellular animals. They have NO true tissues, organs, or organ systems. Their cells are loosely organized. Jellyfish, starfish, and sea urchins all have more specialized organization.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="3" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">2</span> (2005-32) Multicellular, no photosynthesis, absorbs nutrients, eukaryotic cells with cell walls. Which kingdom? <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Plant</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Animal</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Bacteria</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Fungi</li>
+        </ul>
+        <div class="qexp">Eukaryotic + cell walls + no photosynthesis + absorbs nutrients = Fungi. Plants photosynthesize. Animals lack cell walls. Bacteria are prokaryotic.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">3</span> (2006-24) Which of these organisms contains no specialized cells? <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Paramecium</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Sea anemone</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Jellyfish</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Sponge</li>
+        </ul>
+        <div class="qexp">Paramecium is a UNICELLULAR protist &mdash; it has only one cell, so it has no cell specialization. Sea anemones, jellyfish, and sponges are all multicellular animals with at least some specialized cells.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.6d">
+        <div class="q-stem"><span class="q-num">4</span> (2006-27) A clam captures food from water flowing over its gills. This makes the clam a &mdash; <span class="q-tag">BIO.6d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>chunk feeder</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>decomposer</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>filter feeder</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>grazer</li>
+        </ul>
+        <div class="qexp">A filter feeder strains food particles from water that passes through a filtering structure (gills in clams). Decomposers break down dead matter. Grazers eat plants. Chunk feeders bite off pieces of food.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-3"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-3">0 of 4 answered</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Cladograms</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Eukarya Diversity &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 4: EUKARYA DIVERSITY (BIO.6e continued)
+     ================================================================= -->
+<div class="panel" id="p4">
+  <div class="lc">
+    <div class="eyebrow">BIO.6e &mdash; Eukarya Diversity</div>
+    <div class="sh2">Protists, Fungi, Plants &amp; Animals</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Know the Key Characteristics That Separate Each Kingdom</div><div class="cx">The SOL tests your ability to classify an organism into the correct kingdom based on its characteristics. Focus on: prokaryote vs. eukaryote, cell wall type, nutrition method (autotroph vs. heterotroph), and unicellular vs. multicellular. These four features are enough to identify any kingdom.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Kingdom Protista</div>
+      <p class="prose"><strong>Protists</strong> are the "everything else" kingdom &mdash; they are eukaryotic organisms that don't fit neatly into fungi, plants, or animals. Most are <strong>unicellular</strong>, though some (like algae) are multicellular. Protists are incredibly diverse: some are autotrophs (algae photosynthesize like plants), some are heterotrophs (amoeba engulf food like animals), and some are decomposers (like slime molds).</p>
+      <p class="prose">Examples: amoeba (moves with pseudopods), paramecium (moves with cilia), euglena (has both chloroplasts and a flagellum), algae (photosynthetic, can be unicellular or multicellular).</p>
+
+      <div class="sh3">Kingdom Fungi</div>
+      <p class="prose"><strong>Fungi</strong> are eukaryotic organisms with cell walls made of <strong>chitin</strong> (not cellulose like plants). They are <strong>heterotrophs</strong> that obtain nutrients by <strong>absorption</strong> &mdash; they secrete digestive enzymes onto organic material and absorb the dissolved nutrients. Most fungi are <strong>decomposers</strong>, breaking down dead organisms and returning nutrients to the soil.</p>
+      <p class="prose">Fungi can be unicellular (yeast) or multicellular (mushrooms, molds). Multicellular fungi grow as networks of thread-like structures called <strong>hyphae</strong>. Fungi reproduce using <strong>spores</strong>.</p>
+
+      <div class="sh3">Kingdom Plantae</div>
+      <p class="prose"><strong>Plants</strong> are multicellular eukaryotes with cell walls made of <strong>cellulose</strong>. They are <strong>autotrophs</strong> that produce food through <strong>photosynthesis</strong>. Plant cells are organized into <strong>tissues</strong>. The major plant groups include:</p>
+      <table class="dt">
+        <tr><th>Group</th><th>Key Feature</th><th>Examples</th></tr>
+        <tr><td><strong>Mosses</strong></td><td>No vascular tissue; must live in moist environments</td><td>Sphagnum, peat moss</td></tr>
+        <tr><td><strong>Ferns</strong></td><td>Vascular tissue but no seeds; reproduce with spores</td><td>Fiddleheads, tree ferns</td></tr>
+        <tr><td><strong>Conifers (gymnosperms)</strong></td><td>Seeds in cones; no flowers</td><td>Pine, spruce, fir</td></tr>
+        <tr><td><strong>Flowering plants (angiosperms)</strong></td><td>Seeds in fruits; have flowers</td><td>Roses, oak trees, grasses</td></tr>
+      </table>
+
+      <div class="sh3">Kingdom Animalia</div>
+      <p class="prose"><strong>Animals</strong> are multicellular eukaryotes with <strong>NO cell wall</strong>. They are <strong>heterotrophs</strong> that obtain food by <strong>ingestion</strong> (eating). Animals are <strong>mobile</strong> during at least part of their life cycle. Animal cells are organized into tissues, organs, and organ systems.</p>
+      <p class="prose">Animals range from simple sponges (no true tissues) to complex mammals (multiple organ systems). Key animal phyla include invertebrates (sponges, cnidarians, worms, arthropods, mollusks, echinoderms) and vertebrates (fish, amphibians, reptiles, birds, mammals).</p>
+
+      <div class="callout key"><div class="ci">&#x1F511;</div><div class="cb"><div class="ct">Quick Kingdom ID: The 4-Question Test</div><div class="cx">(1) <strong>Prokaryote?</strong> &rarr; Archaebacteria or Eubacteria. (2) <strong>Eukaryote + mostly unicellular?</strong> &rarr; Protista. (3) <strong>Eukaryote + cell wall + no photosynthesis?</strong> &rarr; Fungi. (4) <strong>Eukaryote + cell wall + photosynthesis?</strong> &rarr; Plantae. (5) <strong>Eukaryote + NO cell wall + ingests food?</strong> &rarr; Animalia.</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.6e</div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="4" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">1</span> (2002-30) An organism with moist skin, no hair, internal skeleton, and laid eggs under logs is probably a &mdash; <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>reptile</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>amphibian</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>invertebrate</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>mammal</li>
+        </ul>
+        <div class="qexp">Moist skin (not dry/scaly = not reptile), no hair (not mammal), internal skeleton (not invertebrate), eggs in moist location (amphibian trait). Amphibians are the only group matching all characteristics.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">2</span> (2006-5) Which heart structure comparison shows birds and mammals are most closely related? The answer is that both have &mdash; <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>four-chambered hearts</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>three-chambered hearts</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>two-chambered hearts</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>no heart chambers</li>
+        </ul>
+        <div class="qexp">Birds and mammals both have 4-chambered hearts (2 atria + 2 ventricles), which is more efficient at separating oxygenated and deoxygenated blood. This shared structure suggests closer evolutionary relationship than with reptiles (3 chambers) or fish (2 chambers).</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">3</span> Fungi obtain nutrients differently from plants because fungi &mdash; <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>are prokaryotic</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>use photosynthesis</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>have no cell walls</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>absorb nutrients from their environment</li>
+        </ul>
+        <div class="qexp">Plants make food through photosynthesis (autotrophs). Fungi absorb nutrients from dead/decaying matter (heterotrophs). Both have cell walls, but fungi use chitin while plants use cellulose. Both are eukaryotic.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.6e">
+        <div class="q-stem"><span class="q-num">4</span> Plant divisions include mosses, ferns, conifers, and flowering plants. What distinguishes flowering plants from conifers? <span class="q-tag">BIO.6e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Flowering plants have roots; conifers don't</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Flowering plants are autotrophs; conifers aren't</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Flowering plants produce seeds inside fruits; conifers produce seeds in cones</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Flowering plants have cell walls; conifers don't</li>
+        </ul>
+        <div class="qexp">Angiosperms (flowering plants) produce seeds enclosed in fruits. Gymnosperms (conifers) produce seeds in cones, without a fruit covering. Both have roots, are autotrophs, and have cell walls.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-4"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-4">0 of 4 answered</div></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Domains &amp; Kingdoms</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 5: VOCAB LOCK-IN
+     ================================================================= -->
+<div class="panel" id="p5">
+  <div class="lc">
+    <div class="eyebrow">Step 6 of 9 &mdash; Vocab Lock-In</div>
+    <div class="sh2">Flip Every Card, Then Pass the Vocab Quiz</div>
+    <p class="prose">Flip ALL 22 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
+    <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 22 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 22 cards studied</div></div>
+    <div class="vocab-grid">
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Taxonomy</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The science of classifying and naming organisms</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Binomial Nomenclature</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two-word naming system: Genus species (e.g., Homo sapiens)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genus</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">First word of scientific name; CAPITALIZED; group above species</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Species</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Most specific level; organisms that breed and produce FERTILE offspring</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Domain</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Broadest level: Archaea, Bacteria, or Eukarya</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Kingdom</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">6 kingdoms: Archaebacteria, Eubacteria, Protista, Fungi, Plantae, Animalia</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phylum</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Major division within a kingdom based on body plan</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cladogram</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Branching diagram showing evolutionary relationships based on shared derived traits</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phylogenetic Tree</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Diagram showing evolutionary history and relationships of organisms</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Common Ancestor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Organism from which two or more species evolved; represented by branch points</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fossil Record</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All known fossils; provides evidence of past life, extinction, and evolutionary change</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Embryology</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Study of embryo development; similar stages suggest shared ancestry</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Archaea</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Domain of prokaryotes; extremophiles (hot springs, salt lakes)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Bacteria</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Domain of prokaryotes; most diverse/abundant; pathogens + decomposers</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eukarya</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Domain of eukaryotes; includes protists, fungi, plants, animals</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Protist</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Mostly unicellular eukaryotes; diverse (amoeba, paramecium, algae)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fungi</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Eukaryotes; cell walls (chitin); heterotrophs that ABSORB nutrients; mushrooms, yeast</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Plantae</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Multicellular eukaryotes; cell walls (cellulose); autotrophs (photosynthesis)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Animalia</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Multicellular eukaryotes; NO cell wall; heterotrophs that INGEST food; mobile</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dichotomous Key</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Step-by-step tool using paired choices to identify an organism</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Prokaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell without membrane-bound nucleus; Archaea and Bacteria domains</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eukaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with membrane-bound nucleus and organelles</div></div></div></div>
+    </div>
+    <div id="vquiz" style="display:none;">
+      <div class="vquiz-box">
+        <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
+        <div class="vq" id="vq1"><div class="vq-text">1. In binomial nomenclature, the first word of a scientific name is the:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Species</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Genus</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Family</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Phylum</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. A branching diagram showing evolutionary relationships is called a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Dichotomous key</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Punnett square</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Cladogram</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Karyotype</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. Organisms that can breed and produce fertile offspring belong to the same:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Kingdom</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Phylum</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Species</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Domain</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. Which kingdom includes organisms with cell walls that absorb nutrients but don't photosynthesize?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Plantae</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Animalia</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Fungi</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Protista</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. The broadest level of classification is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Kingdom</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Species</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Domain</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Phylum</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. Archaea and Bacteria are both:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Eukaryotic</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Multicellular</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Prokaryotic</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Photosynthetic</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. Which kingdom has organisms with NO cell wall that ingest food?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Fungi</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Plantae</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Animalia</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Protista</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. Similar embryonic stages across species suggest:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>They live in the same habitat</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>They eat the same food</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>They share a common ancestor</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>They are the same species</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. A step-by-step tool using paired choices to identify organisms is a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Cladogram</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Pedigree</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Dichotomous key</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Phylogenetic tree</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. Modern classification systems can change because they:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Are based on personal opinion</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Only apply to living organisms</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Can incorporate new scientific discoveries</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Were created recently</div></div><div class="vq-result" id="vqr10"></div></div>
+        <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+      </div>
+    </div>
+    <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Eukarya Diversity</button><button class="nbtn next" onclick="goTo(6)">Study Guide &rarr;</button></div>
+</div>
+
+<!-- PANEL 6: STUDY GUIDE -->
+<div class="panel" id="p6">
+  <div class="lc">
+    <div class="eyebrow">Step 7 of 9 &mdash; Study Guide</div>
+    <div class="sh2">BIO.6 One-Page Cheat Sheet</div>
+    <p class="prose">Print for quick reference. <button class="nbtn next" onclick="window.print()" style="display:inline-flex;padding:5px 14px;font-size:.8rem;">&#x1F5A8; Print</button></p>
+    <div class="section">
+      <div class="sh3">Hierarchy (BIO.6a)</div>
+      <p class="prose" style="font-size:.85rem;text-align:center;"><strong>D</strong>omain &rarr; <strong>K</strong>ingdom &rarr; <strong>P</strong>hylum &rarr; <strong>C</strong>lass &rarr; <strong>O</strong>rder &rarr; <strong>F</strong>amily &rarr; <strong>G</strong>enus &rarr; <strong>S</strong>pecies</p>
+      <p class="prose" style="font-size:.85rem;">Binomial nomenclature: <em>Genus species</em> (Genus capitalized, species lowercase, italicized). Species = can breed + fertile offspring. More shared DNA/amino acids = more closely related.</p>
+      <div class="sh3">Evidence for Classification (BIO.6b/c)</div>
+      <p class="prose" style="font-size:.85rem;"><strong>Cladograms:</strong> most recent branch point = most closely related. <strong>Fossils:</strong> compare extinct vs. living structures. <strong>Embryology:</strong> similar early development = common ancestor. <strong>DNA/Protein sequences:</strong> more similar = more related.</p>
+      <div class="sh3">Three Domains (BIO.6d)</div>
+      <table class="dt"><tr><th>Domain</th><th>Cell Type</th><th>Key Feature</th></tr><tr><td>Archaea</td><td>Prokaryotic</td><td>Extremophiles; no peptidoglycan</td></tr><tr><td>Bacteria</td><td>Prokaryotic</td><td>Most diverse; peptidoglycan walls</td></tr><tr><td>Eukarya</td><td>Eukaryotic</td><td>Membrane-bound nucleus</td></tr></table>
+      <div class="sh3">Six Kingdoms (BIO.6e)</div>
+      <table class="dt"><tr><th>Kingdom</th><th>Cell</th><th>Wall?</th><th>Nutrition</th><th>Examples</th></tr><tr><td>Archaebacteria</td><td>Prokaryotic</td><td>Yes</td><td>Auto/Hetero</td><td>Methanogens</td></tr><tr><td>Eubacteria</td><td>Prokaryotic</td><td>Yes</td><td>Auto/Hetero</td><td>E. coli</td></tr><tr><td>Protista</td><td>Eukaryotic</td><td>Some</td><td>Auto/Hetero</td><td>Amoeba, algae</td></tr><tr><td>Fungi</td><td>Eukaryotic</td><td>Yes (chitin)</td><td>Hetero (absorb)</td><td>Mushroom</td></tr><tr><td>Plantae</td><td>Eukaryotic</td><td>Yes (cellulose)</td><td>Auto (photo.)</td><td>Trees, ferns</td></tr><tr><td>Animalia</td><td>Eukaryotic</td><td>NO</td><td>Hetero (ingest)</td><td>Insects, mammals</td></tr></table>
+      <p class="prose" style="font-size:.85rem;"><strong>Plants:</strong> mosses (no vascular) &rarr; ferns (vascular, spores) &rarr; conifers (seeds in cones) &rarr; flowering (seeds in fruits). <strong>Classification adapts</strong> to new discoveries (BIO.6f).</p>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Practice Test &rarr;</button></div>
+</div>
+
+<!-- PANEL 7: PRACTICE TEST (20 Qs) -->
+<div class="panel" id="p7">
+  <div class="lc">
+    <div class="eyebrow">Step 8 of 9 &mdash; SOL Practice Test</div>
+    <div class="sh2">20 Questions in SOL Exam Format</div>
+    <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div></div>
+    <div class="quiz-box" id="sol-practice-box">
+      <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.6 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6a"><div class="q-stem"><span class="q-num">1</span> (2005-11) Escherichia coli &mdash; what category is "Escherichia"? <span class="q-tag">BIO.6a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Order</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Genus</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Phylum</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Species</li></ul><div class="qexp">First word of binomial name = Genus (capitalized). Second word = species (lowercase).</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.6a"><div class="q-stem"><span class="q-num">2</span> (2004-32) Which organisms belong to the same species? <span class="q-tag">BIO.6a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Animals that breed and produce fertile offspring</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Protists with same shape</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Plants attracting same pollinators</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Mushrooms of same color</li></ul><div class="qexp">Species = organisms that can interbreed and produce FERTILE offspring.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6a"><div class="q-stem"><span class="q-num">3</span> To determine classification, scientists compare amino acid sequences. The most closely related organism would have &mdash; <span class="q-tag">BIO.6a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>the longest sequence</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>the shortest sequence</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>an identical number of amino acids</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>the most similar sequence</li></ul><div class="qexp">More similar sequences = more closely related. Scientists count differences.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6a"><div class="q-stem"><span class="q-num">4</span> (2003-9) What would most likely change classification of two closely related flower species to a single species? <span class="q-tag">BIO.6a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Discovery of a new related species</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Collection of seeds from each</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Analysis of photosynthesis</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Analysis of DNA sequence of each species</li></ul><div class="qexp">DNA sequence analysis is the most powerful tool for determining species relationships. If DNA shows they're essentially the same, they may be reclassified as one species.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6b"><div class="q-stem"><span class="q-num">5</span> (2006-16) Ascidian larvae have dorsal nerve cords, suggesting classification with &mdash; <span class="q-tag">BIO.6b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>cnidarians</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>chordates</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>annelids</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>sponges</li></ul><div class="qexp">Dorsal nerve cord = defining chordate characteristic. Larvae can reveal evolutionary relationships.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6b"><div class="q-stem"><span class="q-num">6</span> (2002-14) An organism is most related to Arthropoda because it has &mdash; <span class="q-tag">BIO.6b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>elongated body</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>legs</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>antennae</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>jointed appendages</li></ul><div class="qexp">Arthropoda = jointed appendages (arthro=joint, pod=foot). This is the defining characteristic.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.6b"><div class="q-stem"><span class="q-num">7</span> (2003-20) What structure is common to ALL five kingdoms? <span class="q-tag">BIO.6b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Cell wall</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Mitochondria</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>DNA</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Nucleus</li></ul><div class="qexp">ALL life has DNA. Not all have cell walls, mitochondria, or nucleus.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.6d"><div class="q-stem"><span class="q-num">8</span> (2001-13) Which organism has the LEAST specialized organization? <span class="q-tag">BIO.6d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Jellyfish</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Starfish</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Sponge</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Sea urchin</li></ul><div class="qexp">Sponges are the simplest animals &mdash; no true tissues, organs, or organ systems.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6e"><div class="q-stem"><span class="q-num">9</span> (2005-32) Multicellular, no photosynthesis, absorbs nutrients, eukaryotic with cell walls &mdash; which kingdom? <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Plant</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Animal</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Bacteria</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Fungi</li></ul><div class="qexp">Eukaryotic + cell walls + absorbs nutrients + no photosynthesis = Fungi.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6c"><div class="q-stem"><span class="q-num">10</span> (2002-30) Moist skin, no hair, internal skeleton, eggs under logs &mdash; this is probably a &mdash; <span class="q-tag">BIO.6c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>reptile</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>amphibian</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>invertebrate</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>mammal</li></ul><div class="qexp">Moist skin + no hair + skeleton + moist egg environment = amphibian.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6f"><div class="q-stem"><span class="q-num">11</span> (2006-30) An important feature of modern classification is that it &mdash; <span class="q-tag">BIO.6f</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>groups organisms by habitat</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>incorporates new scientific discoveries</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>predicts new species</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>applies only to living organisms</li></ul><div class="qexp">Classification adapts to new evidence &mdash; DNA analysis, fossil discoveries, etc.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.6e"><div class="q-stem"><span class="q-num">12</span> (2006-27) A clam captures food from water over its gills. This makes it a &mdash; <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>chunk feeder</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>decomposer</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>filter feeder</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>grazer</li></ul><div class="qexp">Filter feeders strain food particles from water through a filtering structure.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.6e"><div class="q-stem"><span class="q-num">13</span> (2006-24) Which organism has no specialized cells? <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Paramecium</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Sea anemone</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Jellyfish</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Sponge</li></ul><div class="qexp">Paramecium is unicellular &mdash; one cell, no specialization.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6a"><div class="q-stem"><span class="q-num">14</span> (2001-10) Four pine trees share the same genus but different species. They are NOT in the same &mdash; <span class="q-tag">BIO.6a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>phylum</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>species</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>order</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>genus</li></ul><div class="qexp">Same genus, different species names = NOT in the same species. They share all levels above species.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.6e"><div class="q-stem"><span class="q-num">15</span> Birds and mammals are most closely related based on heart structure because both have &mdash; <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>four-chambered hearts</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>three-chambered hearts</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>two-chambered hearts</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>open circulatory systems</li></ul><div class="qexp">Both birds and mammals have 4-chambered hearts, indicating close evolutionary relationship.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6e"><div class="q-stem"><span class="q-num">16</span> Fungi differ from plants because fungi &mdash; <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>are prokaryotic</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>photosynthesize</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>lack cell walls</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>absorb nutrients instead of photosynthesizing</li></ul><div class="qexp">Both are eukaryotic with cell walls. The key difference: plants photosynthesize, fungi absorb nutrients.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.6e"><div class="q-stem"><span class="q-num">17</span> What distinguishes flowering plants from conifers? <span class="q-tag">BIO.6e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Flowering plants have roots</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Flowering plants are autotrophs</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Flowering plants produce seeds in fruits; conifers in cones</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Flowering plants have cell walls</li></ul><div class="qexp">Angiosperms = seeds in fruits. Gymnosperms = seeds in cones. Both have roots, are autotrophs, have walls.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.6b"><div class="q-stem"><span class="q-num">18</span> On a cladogram, organisms that share the most recent branching point are &mdash; <span class="q-tag">BIO.6b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>identical species</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>most closely related</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>least closely related</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>in the same kingdom but different phylum</li></ul><div class="qexp">Most recent branch point = most recent common ancestor = most closely related.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.6c"><div class="q-stem"><span class="q-num">19</span> Similar embryonic stages in fish, birds, and mammals suggest they &mdash; <span class="q-tag">BIO.6c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>live in similar environments</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>eat the same food</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>share a common ancestor</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>will look similar as adults</li></ul><div class="qexp">Similar embryonic development across species is strong evidence for shared evolutionary ancestry.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.6d"><div class="q-stem"><span class="q-num">20</span> Archaea differ from Bacteria primarily in their &mdash; <span class="q-tag">BIO.6d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>ability to reproduce</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>presence of DNA</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>need for energy</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>cell membrane chemistry and RNA sequences</li></ul><div class="qexp">Both Archaea and Bacteria are prokaryotic, reproduce, have DNA, and need energy. They differ in cell membrane chemistry and RNA sequences, which is why they're in separate domains.</div></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(8)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(8)" disabled>Results &rarr;</button></div>
+</div>
+
+<!-- PANEL 8: RESULTS -->
+<div class="panel" id="p8">
+  <div class="lc">
+    <div class="eyebrow">Step 9 of 9 &mdash; Results</div>
+    <div class="sh2">Your BIO.6 Score &amp; Danger Zone Report</div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(7)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+</div>
+
+</main>
+<script>
+/* ── CONSTANTS ───────────────────────────────────── */
+const UNIT = 'unit6';
+const TOTAL_PANELS = 9;
+const TOTAL_SOL_Q = 20;
+const TOTAL_CARDS = 22;
+const VQ_TOTAL = 10;
+const VQ_PASS = 8;
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+
+/* ── STATE ────────────────────────────────────────── */
+var studentName = '';
+var classPeriod = '';
+var currentPanel = 0;
+var panelStartTime = Date.now();
+var sessionStart = Date.now();
+var activityLog = [];
+var pretestAnswers = [];
+var pretestSent = false;
+var vqAnswers = {};
+var vqScore = 0;
+var vocabPassed = false;
+var pracAnswered = 0;
+var pracCorrect = 0;
+var missedStds = {};
+var questionDetail = [];
+var flippedCards = new Set();
+var graphAnswered = {};
+
+var VQ_CORRECT = {1:'b',2:'c',3:'c',4:'c',5:'c',6:'c',7:'c',8:'c',9:'c',10:'c'};
+var VQ_EXPLAIN = {
+  1:'In binomial nomenclature, the first word is the Genus (capitalized). The second word is the species (lowercase).',
+  2:'A cladogram is a branching diagram showing evolutionary relationships based on shared derived characteristics.',
+  3:'A species is defined as organisms that can interbreed and produce FERTILE offspring.',
+  4:'Fungi have cell walls (chitin), are heterotrophs that absorb nutrients, and do NOT photosynthesize. Plants photosynthesize.',
+  5:'Domain is the broadest (most general) level. Species is the most specific.',
+  6:'Both Archaea and Bacteria are prokaryotic. They lack a membrane-bound nucleus.',
+  7:'Animalia = eukaryotic, multicellular, NO cell wall, heterotrophs that ingest food.',
+  8:'Similar embryonic stages across species suggest shared evolutionary ancestry (common ancestor).',
+  9:'A dichotomous key uses paired choices at each step to narrow down identification of an organism.',
+  10:'Classification systems are adaptable — they change as new evidence (DNA analysis, fossil discoveries) emerges.'
+};
+
+/* ── METADATA ────────────────────────────────────── */
+function initMeta() {
+  var today = new Date().toISOString().slice(0, 10);
+  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
+  var last = localStorage.getItem('sol_streak_last');
+  if (last === today) { /* already counted */ }
+  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
+  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
+  document.getElementById('streak-val').textContent = streak;
+  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
+
+  var solDate = new Date('2026-05-07');
+  var diff = Math.ceil((solDate - new Date()) / 86400000);
+  document.getElementById('sol-countdown').textContent = diff > 0 ? diff : 0;
+}
+
+/* ── TRACKING ────────────────────────────────────── */
+function send(data) {
+  data.student = studentName;
+  data.module = 'SOL Prep — Unit 6: Classification & Diversity';
+  data.classPeriod = classPeriod;
+  data.timestamp = data.timestamp || new Date().toISOString();
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(data));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(function(){});
+  }
+}
+
+function getAnswerText(opt) {
+  var t = opt.textContent.trim();
+  return t.replace(/^[A-D]\s*/, '');
+}
+
+/* ── SAVE / RESTORE ──────────────────────────────── */
+function saveProgress() {
+  if (!studentName) return;
+  var gateObj = {};
+  for (var key in gateAnswered) {
+    gateObj[key] = Array.from(gateAnswered[key]);
+  }
+  var data = {
+    studentName: studentName,
+    classPeriod: classPeriod,
+    currentPanel: currentPanel,
+    gateAnswered: gateObj,
+    graphAnswered: graphAnswered,
+    pretestAnswers: pretestAnswers,
+    pretestSent: pretestSent,
+    vqAnswers: vqAnswers,
+    vqScore: vqScore,
+    vocabPassed: vocabPassed,
+    pracAnswered: pracAnswered,
+    pracCorrect: pracCorrect,
+    missedStds: missedStds,
+    questionDetail: questionDetail,
+    activityLog: activityLog,
+    sessionStart: sessionStart,
+    unlockedPanels: Array.from(unlockedPanels),
+    flippedCards: Array.from(flippedCards)
+  };
+  localStorage.setItem('sol_unit6_progress', JSON.stringify(data));
+}
+
+function restoreProgress(data) {
+  studentName = data.studentName;
+  classPeriod = data.classPeriod;
+  if (data.unlockedPanels) {
+    unlockedPanels = new Set(data.unlockedPanels);
+  } else {
+    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
+  }
+  pretestAnswers = data.pretestAnswers || [];
+  pretestSent = data.pretestSent || false;
+  vqAnswers = data.vqAnswers || {};
+  vqScore = data.vqScore || 0;
+  vocabPassed = data.vocabPassed || false;
+  pracAnswered = data.pracAnswered || 0;
+  pracCorrect = data.pracCorrect || 0;
+  missedStds = data.missedStds || {};
+  questionDetail = data.questionDetail || [];
+  activityLog = data.activityLog || [];
+  sessionStart = data.sessionStart || Date.now();
+  graphAnswered = data.graphAnswered || {};
+
+  gateAnswered = {};
+  if (data.gateAnswered) {
+    for (var pid in data.gateAnswered) {
+      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
+    }
+  }
+
+  document.getElementById('name-modal').style.display = 'none';
+  panelStartTime = Date.now();
+
+  // Replay gate questions visually
+  for (var panelId in gateAnswered) {
+    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+    gateAnswered[panelId].forEach(function(idx) {
+      if (qs[idx]) {
+        var qq = qs[idx];
+        var correct = qq.dataset.ans;
+        qq.querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === correct) o.classList.add('correct');
+        });
+        var exp = qq.querySelector('.qexp');
+        if (exp) exp.classList.add('show');
+      }
+    });
+    checkGate(parseInt(panelId));
+  }
+
+  // Replay graph answers
+  // (No graph questions in Unit 2 content panels)
+
+  // Restore flipped cards
+  if (data.flippedCards) {
+    flippedCards = new Set(data.flippedCards);
+    var allCards = document.querySelectorAll('.vcard');
+    flippedCards.forEach(function(idx) {
+      if (allCards[idx]) allCards[idx].classList.add('flipped');
+    });
+    var countEl = document.getElementById('vocab-flip-count');
+    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+    if (flippedCards.size >= TOTAL_CARDS) {
+      document.getElementById('vquiz').style.display = 'block';
+      var gate = document.getElementById('vocab-flip-gate');
+      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
+    }
+  }
+
+  // Restore vocab quiz answers
+  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
+    for (var qn in data.vqAnswers) {
+      var chosen = data.vqAnswers[qn];
+      var vqDiv = document.getElementById('vq' + qn);
+      if (!vqDiv) continue;
+      var opts = vqDiv.querySelectorAll('.vq-opt');
+      opts.forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
+        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
+      });
+      var res = document.getElementById('vqr' + qn);
+      if (res) {
+        res.textContent = VQ_EXPLAIN[qn];
+        res.classList.add('show');
+        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
+      }
+    }
+    if (data.vocabPassed) {
+      var scoreBox = document.getElementById('vquiz-score');
+      scoreBox.style.display = 'block';
+      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
+      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+      var pl = document.getElementById('practice-locked');
+      if (pl) pl.style.display = 'none';
+      var tl = document.getElementById('practice-test-locked');
+      if (tl) tl.style.display = 'none';
+      var sb = document.getElementById('sol-practice-box');
+      if (sb) sb.style.display = 'block';
+    }
+  }
+
+  // Restore practice test answers
+  if (data.pracAnswered > 0) {
+    var solQs = document.querySelectorAll('#sol-practice-box .qq');
+    for (var qi = 0; qi < data.questionDetail.length; qi++) {
+      var qd = data.questionDetail[qi];
+      if (solQs[qi]) {
+        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
+          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
+        });
+        var exp = solQs[qi].querySelector('.qexp');
+        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
+      }
+    }
+    var progMsg = document.getElementById('sol-progress-msg');
+    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+    if (data.pracAnswered === TOTAL_SOL_Q) {
+      document.getElementById('to-results-btn').disabled = false;
+      showDangerZone();
+    }
+  }
+
+  goTo(data.currentPanel || 0);
+}
+
+/* ── START ────────────────────────────────────────── */
+function startUnit() {
+  var nameInput = document.getElementById('student-name').value.trim();
+  if (nameInput.split(/\s+/).length < 2) {
+    document.getElementById('name-err').style.display = 'block';
+    return;
+  }
+  var periodEl = document.getElementById('class-period');
+  if (periodEl) {
+    classPeriod = periodEl.value;
+    if (!classPeriod) {
+      var periodErr = document.getElementById('period-err');
+      if (periodErr) periodErr.style.display = 'block';
+      return;
+    }
+  }
+  studentName = nameInput;
+
+  var saved = localStorage.getItem('sol_unit6_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName === studentName) {
+      restoreProgress(data);
+      return;
+    }
+  }
+  localStorage.removeItem('sol_unit6_progress');
+
+  document.getElementById('name-modal').style.display = 'none';
+  initMeta();
+  sessionStart = Date.now();
+  panelStartTime = Date.now();
+  send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });
+}
+
+/* ── NAVIGATION ───────────────────────────────────── */
+var unlockedPanels = new Set([0]);
+
+var stepNames = ['SOL Focus','Taxonomy','Cladograms','Domains & Kingdoms','Eukarya Diversity','Vocab Lock-In','Study Guide','Practice Test','Results'];
+
+function goTo(n) {
+  if (n > currentPanel && !unlockedPanels.has(n)) {
+    showToast('Complete the questions on this page first!');
+    return;
+  }
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
+  }
+  panelStartTime = Date.now();
+
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById('p' + n);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
+  var sb = document.getElementById('sb' + n);
+  if (sb) sb.classList.add('active');
+  for (var i = 0; i < n; i++) {
+    var prev = document.getElementById('sb' + i);
+    if (prev) prev.classList.add('done');
+  }
+  currentPanel = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
+  document.getElementById('steps-prog').style.width = pct + '%';
+  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
+  if (!(n in gateRequired)) { unlockedPanels.add(n + 1); }
+  localStorage.setItem('sol_' + UNIT + '_panel', n);
+  saveProgress();
+}
+
+/* ── GATE SYSTEM ─────────────────────────────────── */
+var gateAnswered = {};
+var gateRequired = { 0: 5, 1: 4, 2: 4, 3: 4, 4: 4 };
+
+function gateAnswer(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var panelId = parseInt(qq.dataset.panel);
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
+  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+  for (var i = 0; i < qs.length; i++) {
+    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
+  }
+
+  // Track pretest answers (panel 0, questions 3-5)
+  if (panelId === 0) {
+    var qIndex = Array.from(qs).indexOf(qq);
+    if (qIndex >= 2) {
+      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
+      if (pretestAnswers.length === 3 && !pretestSent) {
+        pretestSent = true;
+        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
+        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
+          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
+        })});
+      }
+    }
+  }
+
+  checkGate(panelId);
+  saveProgress();
+}
+
+function checkGate(panelId) {
+  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
+  var required = gateRequired[panelId] || 0;
+
+  var status = document.getElementById('gate-status-' + panelId);
+  var count = document.getElementById('gate-count-' + panelId);
+  if (count) count.textContent = answered + ' of ' + required + ' answered';
+
+  if (answered >= required) {
+    unlockedPanels.add(panelId + 1);
+    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
+    var btn = document.getElementById('next-' + panelId);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
+    }
+    var sb = document.getElementById('sb' + panelId);
+    if (sb) sb.classList.add('done');
+    saveProgress();
+  }
+}
+
+/* ── FLASHCARDS ──────────────────────────────────── */
+function flipCard(card) {
+  card.classList.toggle('flipped');
+  var allCards = document.querySelectorAll('.vcard');
+  var idx = Array.from(allCards).indexOf(card);
+  if (card.classList.contains('flipped')) {
+    flippedCards.add(idx);
+  }
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+
+  if (flippedCards.size >= TOTAL_CARDS) {
+    document.getElementById('vquiz').style.display = 'block';
+    var gate = document.getElementById('vocab-flip-gate');
+    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
+  }
+  saveProgress();
+}
+
+/* ── VOCAB QUIZ ──────────────────────────────────── */
+function vqPick(el) {
+  var vq = el.closest('.vq');
+  if (vq.querySelector('.vq-opt.revealed')) return;
+  var qNum = vq.id.replace('vq', '');
+  var chosen = el.dataset.v;
+  var correct = VQ_CORRECT[qNum];
+  var isCorrect = (chosen === correct);
+
+  vq.querySelectorAll('.vq-opt').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === el && !isCorrect) o.classList.add('incorrect');
+  });
+
+  var res = document.getElementById('vqr' + qNum);
+  if (res) {
+    res.textContent = VQ_EXPLAIN[qNum];
+    res.classList.add('show');
+    if (!isCorrect) res.classList.add('wrong');
+  }
+
+  vqAnswers[qNum] = chosen;
+  saveProgress();
+}
+
+function gradeVocab() {
+  vqScore = 0;
+  for (var q = 1; q <= VQ_TOTAL; q++) {
+    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
+  }
+  var box = document.getElementById('vquiz-score');
+  var nEl = document.getElementById('vq-score-num');
+  var msgEl = document.getElementById('vq-pass-msg');
+  var retryBtn = document.getElementById('vq-retry-btn');
+  nEl.textContent = vqScore + '/' + VQ_TOTAL;
+  box.style.display = 'block';
+  if (vqScore >= VQ_PASS) {
+    msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+    vocabPassed = true;
+    unlockedPanels.add(6);  // Study Guide
+    unlockedPanels.add(7);  // Practice Test
+    unlockedPanels.add(8);  // Results
+    document.getElementById('practice-locked').style.display = 'none';
+    var testLocked = document.getElementById('practice-test-locked');
+    if (testLocked) testLocked.style.display = 'none';
+    var testBox = document.getElementById('sol-practice-box');
+    if (testBox) testBox.style.display = 'block';
+    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
+    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
+  } else {
+    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
+    retryBtn.style.display = 'inline-block';
+
+    flippedCards = new Set();
+    vqAnswers = {};
+    vqScore = 0;
+
+    saveProgress();
+
+    var allCards = document.querySelectorAll('.vcard');
+    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
+    var flipGate = document.getElementById('vocab-flip-gate');
+    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+    var flipCount = document.getElementById('vocab-flip-count');
+    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+    setTimeout(function() {
+      document.getElementById('vquiz').style.display = 'none';
+      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+      box.style.display = 'none';
+      retryBtn.style.display = 'none';
+      saveProgress();
+      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Study all cards again before retaking the quiz');
+    }, 3000);
+    return;
+  }
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  saveProgress();
+}
+
+function retryVocab() {
+  vqAnswers = {};
+  vqScore = 0;
+  flippedCards = new Set();
+
+  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+  var scoreBox = document.getElementById('vquiz-score');
+  if (scoreBox) scoreBox.style.display = 'none';
+  var retryBtn = document.getElementById('vq-retry-btn');
+  if (retryBtn) retryBtn.style.display = 'none';
+
+  var allCards = document.querySelectorAll('.vcard');
+  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
+
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+  var gate = document.getElementById('vocab-flip-gate');
+  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+
+  var quiz = document.getElementById('vquiz');
+  if (quiz) quiz.style.display = 'none';
+
+  saveProgress();
+  var grid = document.querySelector('.vocab-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
+}
+
+/* ── SOL PRACTICE TEST ───────────────────────────── */
+function solPick(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var std = qq.dataset.std || 'BIO.6';
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  pracAnswered++;
+  if (isCorrect) pracCorrect++;
+  else {
+    if (!missedStds[std]) missedStds[std] = 0;
+    missedStds[std]++;
+  }
+
+  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
+  var qNumMatch = stemText.match(/^(\d+)/);
+  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
+  var studentAnswerText = getAnswerText(opt);
+  var correctAnswerText = '';
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
+  });
+  questionDetail.push({
+    qNum: qNum, std: std, questionText: stemText,
+    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
+    isCorrect: isCorrect, correct: correct, chosen: chosen
+  });
+
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+
+  if (pracAnswered === TOTAL_SOL_Q) {
+    document.getElementById('to-results-btn').disabled = false;
+    showDangerZone();
+    setTimeout(function(){ goTo(8); }, 800);
+  }
+  saveProgress();
+}
+
+/* ── DANGER ZONE ─────────────────────────────────── */
+function showDangerZone() {
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+  var box = document.getElementById('dz-result');
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'none';
+  box.style.display = 'block';
+  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
+
+  var cls, emoji, label, msg;
+  if (pct >= 80) {
+    cls = 'green'; emoji = '\uD83D\uDFE2';
+    label = 'STRONG \u2014 You\'re in good shape on BIO.6';
+    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
+  } else if (pct >= 60) {
+    cls = 'yellow'; emoji = '\uD83D\uDFE1';
+    label = 'CAUTION \u2014 Review needed on BIO.6';
+    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
+  } else {
+    cls = 'red'; emoji = '\uD83D\uDD34';
+    label = 'DANGER ZONE \u2014 BIO.6 needs work';
+    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
+  }
+
+  box.className = 'dz-box ' + cls;
+  document.getElementById('dz-emoji').textContent = emoji;
+  document.getElementById('dz-label').textContent = label;
+  document.getElementById('dz-msg').textContent = msg;
+
+  if (Object.keys(missedStds).length > 0) {
+    var missed = document.getElementById('dz-missed');
+    var list = document.getElementById('dz-missed-list');
+    missed.style.display = 'block';
+    var stdDesc = {
+      'BIO.6a': 'Taxonomy \u2014 Classification Hierarchy, Binomial Nomenclature',
+      'BIO.6b': 'Cladograms \u2014 Evolutionary Relationships, Fossils',
+      'BIO.6c': 'Embryology \u2014 Developmental Evidence',
+      'BIO.6d': 'Domains \u2014 Archaea, Bacteria, Eukarya',
+      'BIO.6e': 'Kingdoms \u2014 Protists, Fungi, Plants, Animals',
+      'BIO.6f': 'Adaptability \u2014 Classification Evolves with Science'
+    };
+    list.innerHTML = Object.keys(missedStds).map(function(s) {
+      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
+    }).join('');
+  }
+
+  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
+  localStorage.setItem('sol_' + UNIT + '_pct', pct);
+  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
+  localStorage.setItem('sol_' + UNIT + '_done', 'true');
+
+  var sb8 = document.getElementById('sb8');
+  if (sb8) sb8.classList.add('done');
+  saveProgress();
+}
+
+/* ── SUBMIT FINAL SCORE ──────────────────────────── */
+function submitFinalScore() {
+  if (!studentName) return;
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+
+  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
+
+  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
+    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
+  })});
+
+  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
+
+  showToast('Score sent to Mr. England \u2713');
+  document.getElementById('dz-submit-btn').textContent = '\u2705 Score Sent!';
+  document.getElementById('dz-submit-btn').disabled = true;
+}
+
+/* ── RETAKE PRACTICE TEST ────────────────────────── */
+function retakePractice() {
+  pracAnswered = 0;
+  pracCorrect = 0;
+  missedStds = {};
+  questionDetail = [];
+  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
+  document.getElementById('dz-result').style.display = 'none';
+  document.getElementById('dz-result').className = 'dz-box';
+  document.getElementById('dz-missed').style.display = 'none';
+  document.getElementById('dz-missed-list').innerHTML = '';
+  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
+  document.getElementById('dz-submit-btn').disabled = false;
+  document.getElementById('to-results-btn').disabled = true;
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'block';
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = '';
+  goTo(7);
+  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
+}
+
+/* ── TOAST ────────────────────────────────────────── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.display = 'flex';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+
+/* ── PAGE EXIT HANDLER ───────────────────────────── */
+window.addEventListener('beforeunload', function() {
+  if (!studentName) return;
+  saveProgress();
+  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+  }
+  var payload = {
+    student: studentName,
+    module: 'SOL Prep — Unit 6: Classification & Diversity',
+    classPeriod: classPeriod,
+    action: 'activity',
+    event: 'session_end',
+    totalSessionSeconds: totalSeconds,
+    panelLog: JSON.stringify(activityLog),
+    timestamp: new Date().toISOString()
+  };
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(payload));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
+  }
+});
+
+/* ── INIT ON DOM READY ───────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  initMeta();
+  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
+    vocabPassed = true;
+    var pl = document.getElementById('practice-locked');
+    if (pl) pl.style.display = 'none';
+    var tl = document.getElementById('practice-test-locked');
+    if (tl) tl.style.display = 'none';
+    var sb = document.getElementById('sol-practice-box');
+    if (sb) sb.style.display = 'block';
+  }
+  var saved = localStorage.getItem('sol_unit6_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName) {
+      var nameInput = document.getElementById('student-name');
+      var periodSelect = document.getElementById('class-period');
+      nameInput.value = data.studentName;
+      if (periodSelect) periodSelect.value = data.classPeriod || '';
+      var modalTitle = document.querySelector('.nm-title');
+      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
+      var modalSub = document.querySelector('.nm-sub');
+      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
+      var modalBtn = document.querySelector('.nm-btn');
+      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
+    }
+  }
+});
+</script>
+</body>
+</html>
