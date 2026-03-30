@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO SOL Prep · Unit 3: Biochemistry & Energy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────────── */
+:root{
+  --navy:#0f2240;--navy-mid:#1a3560;
+  --red:#dc2626;--red-pale:#fef2f2;--red-mid:#991b1b;
+  --amber:#d97706;--amber-pale:#fffbeb;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --yellow:#ca8a04;--yellow-pale:#fefce8;
+  --teal:#0b8f8c;--teal-pale:#f0fdfa;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-600:#4b5563;--gray-900:#111827;
+  --border:#e5e7eb;--muted:#6b7280;
+  --header-h:58px;--steps-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.7;font-size:16px;}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-unit{flex:1;text-align:center;}
+.tb-unit-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.tb-unit-name{font-size:.88rem;font-weight:700;color:#fff;}
+.tb-stats{display:flex;gap:10px;align-items:center;}
+.tb-stat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;}
+.tb-stat-icon{font-size:.9rem;}
+.tb-stat-val{font-size:.78rem;font-weight:700;color:#fff;}
+.tb-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.5);}
+.tb-badge{background:var(--red);color:#fff;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+
+/* STEP BAR */
+.steps-bar{position:fixed;top:var(--header-h);left:0;right:0;z-index:299;height:var(--steps-h);background:#fff;border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0;overflow-x:auto;scrollbar-width:none;}
+.steps-bar::-webkit-scrollbar{display:none;}
+.step{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.step-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;border:none;background:transparent;font-family:"Source Sans 3",sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.step-btn:hover{background:var(--gray-100);color:var(--gray-900);}
+.step-btn.active{background:var(--red);color:#fff;font-weight:700;}
+.step-btn.done{color:var(--green);}
+.step-btn.done .step-num{background:var(--green);color:#fff;}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.step-btn.active .step-num{background:rgba(255,255,255,.25);color:#fff;}
+.step-sep{width:20px;height:1px;background:var(--border);flex-shrink:0;}
+.steps-prog{position:fixed;top:calc(var(--header-h)+var(--steps-h)-2px);left:0;z-index:298;height:3px;background:var(--red);transition:width .4s ease;width:0%;}
+
+/* MAIN */
+.main{padding-top:148px;min-height:100vh;}
+.panel{display:none;animation:fadeIn .25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* FOCUS CARD (p0) */
+.focus-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);padding:48px 48px 40px;position:relative;overflow:visible;}
+.focus-hero::after{content:"BIO.3";position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:"Playfair Display",serif;font-size:7rem;font-weight:900;color:rgba(255,255,255,.05);pointer-events:none;}
+.focus-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.focus-title{font-family:"Playfair Display",serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:8px;}
+.focus-sub{font-size:.95rem;color:rgba(255,255,255,.7);max-width:580px;line-height:1.6;}
+.focus-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
+
+/* CONTENT LAYOUT */
+.lc{padding:36px 48px 56px;max-width:860px;}
+.section{margin-bottom:40px;}
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.sh3{font-size:1rem;font-weight:700;color:var(--navy);margin:20px 0 8px;padding-left:10px;border-left:3px solid var(--red);}
+.prose{font-size:.94rem;line-height:1.85;color:#374151;margin-bottom:12px;}
+.prose strong{color:var(--navy);}
+
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:.86rem;margin:14px 0;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:.74rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:9px 14px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top;}
+.dt tr:nth-child(even) td{background:var(--gray-50);}
+.dt tr:last-child td{border-bottom:none;}
+
+/* SOL FOCUS BOXES */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.sol-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.sol-card-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.sol-list{list-style:none;}
+.sol-list li{font-size:.84rem;color:var(--gray-600);padding:4px 0 4px 22px;position:relative;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.sol-list li:last-child{border-bottom:none;}
+.sol-list li::before{content:"\2192";position:absolute;left:0;color:var(--red);font-weight:700;}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;}
+.ci{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.88rem;margin-bottom:3px;}
+.cx{font-size:.87rem;line-height:1.7;}
+.callout.tip{background:#eff6ff;border-left:4px solid #3b82f6;}
+.callout.tip .ct{color:#1d4ed8;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#92400e;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:#134e4a;}
+.callout.mem{background:#faf5ff;border-left:4px solid #7c3aed;}
+.callout.mem .ct{color:#5b21b6;}
+.callout.sol{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.sol .ct{color:var(--red-mid);}
+
+/* VOCAB CARDS */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px;}
+.vcard{height:130px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.08);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:600;color:#fca5a5;line-height:1.3;}
+.vhint{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:6px;}
+.vback{background:var(--red-pale);border:2px solid var(--red);transform:rotateY(180deg);}
+.vdef{font-size:.77rem;color:var(--navy);line-height:1.5;}
+
+/* VOCAB QUIZ */
+.vquiz-box{background:#fff;border:2px solid var(--navy);border-radius:12px;padding:24px;margin:20px 0;}
+.vquiz-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.vquiz-icon{width:38px;height:38px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.vquiz-title{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--navy);}
+.vquiz-sub{font-size:.78rem;color:var(--muted);}
+.vq{margin-bottom:18px;}
+.vq-text{font-size:.9rem;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.55;}
+.vq-opts{display:flex;flex-direction:column;gap:6px;}
+.vq-opt{display:flex;align-items:center;gap:8px;padding:9px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.86rem;transition:all .18s;line-height:1.4;}
+.vq-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.correct{border-color:var(--green);background:var(--green-pale);}
+.vq-opt.incorrect{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.revealed{pointer-events:none;}
+.vq-ol{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vq-opt.correct .vq-ol{background:var(--green);color:#fff;}
+.vq-opt.incorrect .vq-ol{background:var(--red);color:#fff;}
+.vq-result{display:none;margin-top:10px;padding:10px 14px;background:var(--green-pale);border-radius:7px;font-size:.82rem;color:var(--navy);border-left:3px solid var(--green);}
+.vq-result.show{display:block;}
+.vq-result.wrong{background:var(--red-pale);border-left-color:var(--red);}
+.vquiz-score{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:18px 22px;margin-top:14px;text-align:center;}
+.vq-score-n{font-family:"Playfair Display",serif;font-size:2.4rem;color:#fca5a5;}
+.vquiz-pass-msg{font-size:.88rem;color:rgba(255,255,255,.75);margin-top:4px;}
+.vquiz-retry-btn{margin-top:12px;padding:8px 22px;border-radius:7px;border:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:all .2s;}
+.vquiz-retry-btn:hover{background:rgba(255,255,255,.1);}
+
+/* PRACTICE BANK */
+.practice-locked{background:#fff;border:2px dashed var(--gray-200);border-radius:14px;padding:32px;text-align:center;margin:20px 0;}
+.practice-locked-icon{font-size:2.5rem;margin-bottom:10px;}
+.practice-locked-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--gray-600);margin-bottom:6px;}
+.practice-locked-sub{font-size:.85rem;color:var(--muted);}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.q-icon{width:40px;height:40px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.qh p{font-size:.78rem;color:var(--muted);}
+.qq{margin-bottom:22px;}
+.q-stem{font-size:.92rem;font-weight:600;color:var(--navy);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px;line-height:1.6;}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;flex-shrink:0;}
+.q-tag{display:inline-flex;align-items:center;background:var(--red-pale);border:1px solid var(--red);border-radius:20px;padding:1px 8px;font-size:.64rem;font-weight:700;color:var(--red-mid);letter-spacing:.3px;margin-left:4px;white-space:nowrap;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.qo{display:flex;align-items:flex-start;gap:8px;padding:10px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.87rem;transition:all .18s;line-height:1.5;}
+.qo:hover{border-color:var(--red);background:var(--red-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:9px;padding:10px 13px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);}
+
+/* DANGER ZONE */
+.dz-box{display:none;border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center;}
+.dz-box.green{background:var(--green-pale);border:2px solid var(--green);}
+.dz-box.yellow{background:var(--yellow-pale);border:2px solid var(--yellow);}
+.dz-box.red{background:var(--red-pale);border:2px solid var(--red);}
+.dz-emoji{font-size:2.8rem;margin-bottom:8px;}
+.dz-score{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;}
+.dz-box.green .dz-score{color:var(--green);}
+.dz-box.yellow .dz-score{color:var(--yellow);}
+.dz-box.red .dz-score{color:var(--red);}
+.dz-label{font-size:.95rem;font-weight:700;margin:4px 0;}
+.dz-msg{font-size:.85rem;color:var(--gray-600);margin-top:6px;line-height:1.6;}
+.dz-missed{margin-top:16px;text-align:left;background:#fff;border-radius:10px;padding:16px;display:none;}
+.dz-missed-title{font-size:.78rem;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.dz-missed-item{font-size:.82rem;color:var(--gray-600);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.dz-missed-item:last-child{border-bottom:none;}
+.dz-submit-btn{margin-top:16px;padding:10px 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:background .2s;}
+.dz-submit-btn:hover{background:#1a3560;}
+
+/* GRAPH BOX */
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.87rem;margin-bottom:3px;}
+.graph-cap{font-size:.74rem;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.graph-wrap{position:relative;height:220px;max-width:500px;margin:0 auto;}
+.graph-q{margin-top:12px;padding:12px 14px;background:var(--gray-50);border-radius:8px;border-left:3px solid var(--navy);}
+.graph-q-stem{font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.graph-q-opts{display:flex;flex-direction:column;gap:5px;}
+.graph-q-opt{padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:.83rem;cursor:pointer;transition:all .15s;}
+.graph-q-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.graph-q-opt.correct-ans{background:var(--green-pale);border-color:var(--green);color:var(--navy);pointer-events:none;}
+.graph-q-opt.wrong-ans{background:var(--red-pale);border-color:var(--red);color:var(--navy);pointer-events:none;}
+.graph-q-opt.neutral{pointer-events:none;}
+
+/* GATE STATUS */
+.gate-status{background:var(--gray-50);border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;margin:24px 48px 0;}
+.gate-status.unlocked{background:var(--green-pale);border:2px solid var(--green);border-style:solid;}
+.gate-icon{font-size:1.8rem;margin-bottom:4px;}
+.gate-msg{font-size:.88rem;font-weight:600;color:var(--muted);}
+.gate-status.unlocked .gate-msg{color:var(--green);}
+.gate-status.unlocked .gate-icon::after{content:'\2705';}
+.gate-status.unlocked .gate-icon{font-size:0;}
+.gate-count{font-size:.75rem;color:var(--muted);margin-top:4px;}
+.nbtn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* NAV */
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:20px 48px;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0;}
+.nbtn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:7px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--red);color:#fff;}
+.nbtn.next:hover{background:var(--red-mid);}
+.nbtn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;right:20px;background:var(--green);color:#fff;padding:11px 18px;border-radius:8px;font-size:.83rem;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9000;display:none;align-items:center;gap:8px;}
+
+/* MODAL */
+#name-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.nm-box{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,.4);}
+.nm-emoji{font-size:2rem;margin-bottom:8px;}
+.nm-title{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--navy);margin-bottom:5px;}
+.nm-sub{font-size:.87rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.nm-label{font-size:.76rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;margin-bottom:5px;}
+.nm-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:.95rem;font-family:"Source Sans 3",sans-serif;outline:none;transition:border .2s;}
+.nm-input:focus{border-color:var(--red);}
+.nm-err{color:var(--red);font-size:.78rem;margin-top:4px;display:none;}
+.nm-btn{margin-top:16px;width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:background .2s;}
+.nm-btn:hover{background:#1a3560;}
+
+/* STREAK FIRE ANIMATION */
+@keyframes flamePop{0%{transform:scale(1);}50%{transform:scale(1.3);}100%{transform:scale(1);}}
+.streak-fire{display:inline-block;animation:flamePop 0.5s ease;}
+
+/* SOL QUESTION IMAGES */
+.sol-img-wrap{margin:14px 0 12px;background:#f8f9fa;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.sol-img{max-width:100%;height:auto;border-radius:6px;display:block;margin:0 auto;}
+.sol-img-cap{font-size:.72rem;color:var(--muted);margin-top:7px;font-style:italic;letter-spacing:.2px;}
+
+/* DEPTH LINK */
+.depth-link{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gray-50);border:1px solid var(--border);border-radius:8px;font-size:.84rem;color:var(--navy);text-decoration:none;transition:all .2s;margin-top:10px;}
+.depth-link:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;}
+
+/* WORKED EXAMPLE BOX */
+.worked-ex{background:#fff;border:2px solid var(--navy);border-radius:12px;margin:18px 0;overflow:hidden;}
+.worked-ex-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:8px;}
+.worked-ex-header span{color:#fca5a5;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.worked-ex-body{padding:18px 20px;}
+.worked-step{display:flex;gap:10px;margin-bottom:10px;font-size:.88rem;line-height:1.65;}
+.worked-step-num{min-width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.worked-step-text{flex:1;color:#374151;}
+.worked-step-text strong{color:var(--navy);}
+.wrong-answer-box{background:var(--red-pale);border:1px solid var(--red);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:.85rem;line-height:1.65;}
+.wrong-answer-box strong{color:var(--red-mid);}
+
+</style>
+</head>
+<body>
+
+<!-- NAME MODAL -->
+<div id="name-modal">
+  <div class="nm-box">
+    <div class="nm-emoji">&#x1F52C;</div>
+    <h2 class="nm-title">Biology SOL Prep</h2>
+    <p class="nm-sub">Unit 3: Cell Structure &amp; Function. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
+    <label class="nm-label">YOUR FULL NAME</label>
+    <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name" style="margin-bottom:12px">
+    <label class="nm-label">CLASS PERIOD</label>
+    <select class="nm-input" id="class-period" style="margin-bottom:12px">
+      <option value="">Select Period...</option>
+      <option value="Period 1">Period 1</option>
+      <option value="Period 2">Period 2</option>
+      <option value="Period 3">Period 3</option>
+      <option value="Period 4">Period 4</option>
+      <option value="Period 5">Period 5</option>
+      <option value="Period 6">Period 6</option>
+      <option value="Period 7">Period 7</option>
+    </select>
+    <div class="nm-err" id="name-err">Please enter your first and last name.</div>
+    <div class="nm-err" id="period-err">Please select your class period.</div>
+    <button class="nm-btn" onclick="startUnit()">Start Unit 3 &#x2192;</button>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit3_progress');localStorage.removeItem('sol_unit3_vocab');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">&#x1F4E4; <span id="toast-msg">Score sent!</span></div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a class="tb-back" href="index.html">&larr; SOL Prep</a>
+  <div class="tb-unit">
+    <div class="tb-unit-label">Virginia Biology SOL</div>
+    <div class="tb-unit-name">Unit 3 &middot; Cell Structure &amp; Function</div>
+  </div>
+  <div class="tb-stats">
+    <div class="tb-stat">
+      <span class="tb-stat-icon streak-fire" id="streak-fire">&#x1F525;</span>
+      <div><div class="tb-stat-val" id="streak-val">&ndash;</div><div class="tb-stat-lbl">day streak</div></div>
+    </div>
+    <div class="tb-stat">
+      <span class="tb-stat-icon">&#x1F4C5;</span>
+      <div><div class="tb-stat-val" id="sol-countdown">&ndash;</div><div class="tb-stat-lbl">days to SOL</div></div>
+    </div>
+    <div class="tb-badge">BIO.3</div>
+  </div>
+</header>
+
+<!-- STEP PROGRESS BAR (10 steps) -->
+<nav class="steps-bar" id="steps-bar">
+  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Cell Theory</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Organelles</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Cell Cycle</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Membrane &amp; Transport</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Specialization</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Vocab Lock-In</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
+</nav>
+<div class="steps-prog" id="steps-prog"></div>
+
+<main class="main" id="main">
+
+<!-- =================================================================
+     PANEL 0: SOL FOCUS CARD
+     ================================================================= -->
+<div class="panel active" id="p0">
+  <div class="focus-hero">
+    <div class="focus-tag">&#x1F3AF; SOL Standard</div>
+    <div class="focus-title">Cell Structure &amp; Function</div>
+    <div class="focus-sub">BIO.3 &mdash; The student will investigate and understand that cells have structure and function.</div>
+    <div class="focus-meta">
+      <div class="f-chip">~12% of SOL Test</div>
+      <div class="f-chip">~6 Questions on Real SOL</div>
+      <div class="f-chip">24 Vocab Terms</div>
+      <div class="f-chip">20 Practice Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="section">
+      <div class="eyebrow">What VDOE Says You Must Know</div>
+      <div class="sh2">BIO.3 Substandards Breakdown</div>
+      <div class="sol-grid">
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.3a &mdash; Cell Theory</div>
+          <ul class="sol-list">
+            <li>Original 3 tenets of cell theory</li>
+            <li>Expanded cell theory (metabolism, DNA, same composition)</li>
+            <li>Differentiate hypothesis vs. theory vs. law</li>
+            <li>NOT expected to know specific scientists' contributions</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.3b &mdash; Organelles &amp; Life Processes</div>
+          <ul class="sol-list">
+            <li>Organelle functions individually and as a system</li>
+            <li>Prokaryotic vs. eukaryotic cells</li>
+            <li>Levels of organization: cells &rarr; tissues &rarr; organs &rarr; systems</li>
+            <li>Maintaining homeostasis</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.3c &mdash; Cell Cycle &amp; Mitosis</div>
+          <ul class="sol-list">
+            <li>Stages of the cell cycle (interphase, mitosis, cytokinesis)</li>
+            <li>Stages of mitosis (PMAT)</li>
+            <li>DNA replication before division</li>
+            <li>Result: two genetically identical cells</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.3d &mdash; Membrane &amp; Transport</div>
+          <ul class="sol-list">
+            <li>Cell membrane composition (phospholipid bilayer, proteins)</li>
+            <li>Passive: diffusion, osmosis, facilitated diffusion</li>
+            <li>Active transport (requires energy)</li>
+            <li>Compare energy needs for each type</li>
+          </ul>
+        </div>
+        <div class="sol-card" style="grid-column:span 2;">
+          <div class="sol-card-label">BIO.3e &mdash; Cell Specialization</div>
+          <ul class="sol-list">
+            <li>Unicellular vs. multicellular organisms</li>
+            <li>Specialized cell types and their functions</li>
+            <li>Form fits function (cell shape matches its job)</li>
+            <li>Prokaryote vs. eukaryote structural differences</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout sol">
+        <div class="ci">&#x26A0;&#xFE0F;</div>
+        <div class="cb">
+          <div class="ct">Top Miss Areas on Virginia SOL</div>
+          <div class="cx">Virginia data shows students most commonly miss: (1) <strong>the expanded cell theory</strong> (students know the original 3 tenets but miss that metabolism occurs in cells, DNA is passed cell-to-cell, and all cells share the same basic composition), (2) <strong>distinguishing hypothesis vs. theory vs. law</strong> (this appears on BIO.1 AND BIO.3), and (3) <strong>comparing energy requirements for passive vs. active transport</strong> (students confuse which processes require energy).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="eyebrow">Vocabulary Preview</div>
+      <div class="sh2">24 Terms &mdash; You Must Know All of These</div>
+      <table class="dt">
+        <tr><th>Term</th><th>One-Line Definition</th></tr>
+        <tr><td><strong>Cell Theory</strong></td><td>All living things are made of cells; cells are the basic unit of life; cells come from existing cells</td></tr>
+        <tr><td><strong>Prokaryote</strong></td><td>Cell with NO membrane-bound nucleus or organelles (bacteria, archaea)</td></tr>
+        <tr><td><strong>Eukaryote</strong></td><td>Cell WITH a membrane-bound nucleus and organelles (plants, animals, fungi, protists)</td></tr>
+        <tr><td><strong>Nucleus</strong></td><td>The "control center" of the cell; contains DNA</td></tr>
+        <tr><td><strong>Mitochondria</strong></td><td>Powerhouse of the cell; performs cellular respiration to produce ATP</td></tr>
+        <tr><td><strong>Chloroplast</strong></td><td>Found in plant cells; performs photosynthesis using chlorophyll</td></tr>
+        <tr><td><strong>Ribosome</strong></td><td>Makes proteins; found in ALL cells (prokaryotes and eukaryotes)</td></tr>
+        <tr><td><strong>Endoplasmic Reticulum</strong></td><td>Transport network; rough ER has ribosomes, smooth ER makes lipids</td></tr>
+        <tr><td><strong>Golgi Apparatus</strong></td><td>Packages, modifies, and ships proteins out of the cell</td></tr>
+        <tr><td><strong>Lysosome</strong></td><td>Breaks down waste, old organelles, and foreign material</td></tr>
+        <tr><td><strong>Vacuole</strong></td><td>Storage sac; large central vacuole in plant cells stores water</td></tr>
+        <tr><td><strong>Cell Wall</strong></td><td>Rigid outer layer in plant, fungi, and bacteria cells; provides structure</td></tr>
+        <tr><td><strong>Cell Membrane</strong></td><td>Selectively permeable barrier around ALL cells; controls what enters/exits</td></tr>
+        <tr><td><strong>Cell Cycle</strong></td><td>The life cycle of a cell: growth (interphase) &rarr; division (mitosis + cytokinesis)</td></tr>
+        <tr><td><strong>Interphase</strong></td><td>Longest phase; cell grows, copies DNA, prepares to divide</td></tr>
+        <tr><td><strong>Mitosis</strong></td><td>Division of the nucleus into two identical nuclei (PMAT stages)</td></tr>
+        <tr><td><strong>Cytokinesis</strong></td><td>Division of the cytoplasm after mitosis; produces two separate cells</td></tr>
+        <tr><td><strong>DNA Replication</strong></td><td>Process of copying DNA before cell division so each new cell gets a complete copy</td></tr>
+        <tr><td><strong>Diffusion</strong></td><td>Movement of molecules from HIGH to LOW concentration; NO energy needed</td></tr>
+        <tr><td><strong>Osmosis</strong></td><td>Diffusion of WATER across a semipermeable membrane</td></tr>
+        <tr><td><strong>Facilitated Diffusion</strong></td><td>Passive transport using protein channels; NO energy needed</td></tr>
+        <tr><td><strong>Active Transport</strong></td><td>Movement against the concentration gradient; REQUIRES energy (ATP)</td></tr>
+        <tr><td><strong>Homeostasis</strong></td><td>Maintaining stable internal conditions despite external changes</td></tr>
+        <tr><td><strong>Selectively Permeable</strong></td><td>Membrane allows some substances through but blocks others</td></tr>
+      </table>
+    </div>
+
+    <div class="callout tip"><div class="ci">&#x1F4A1;</div><div class="cb"><div class="ct">Study Tip for BIO.3</div><div class="cx">The key to BIO.3 is organelle functions and transport types. If you can name what each organelle does AND classify each type of transport as passive or active, you can answer most BIO.3 questions. Also memorize the expanded cell theory &mdash; it's a guaranteed question.</div></div></div>
+
+    <div class="section" style="margin-top:28px;">
+      <div class="eyebrow">Check Your Understanding</div>
+      <div class="sh2">Answer All Questions to Unlock the Next Step</div>
+
+      <div class="sh3">Do You Know Your Standard?</div>
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">1</span> According to the SOL Focus Card above, approximately how many questions on the real Biology SOL come from BIO.3?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1&ndash;2 questions</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 6 questions</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 15 questions</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>25 questions</li>
+        </ul>
+        <div class="qexp">BIO.3 accounts for about 12% of the SOL test, which is approximately 6 questions out of 50.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="0">
+        <div class="q-stem"><span class="q-num">2</span> Which of the following is identified as a TOP MISS AREA for Virginia students on BIO.3?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>The expanded cell theory (metabolism, DNA, same composition)</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Drawing the structure of a mitochondrion</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Naming all 20 amino acids</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating cell volume</li>
+        </ul>
+        <div class="qexp">Students commonly know the original 3 tenets of cell theory but miss the expanded additions: metabolism occurs in cells, DNA is passed cell-to-cell, and all cells have the same basic chemical composition.</div>
+      </div>
+
+      <div class="sh3">Prior Knowledge Check</div>
+      <p class="prose" style="color:var(--muted);font-size:.85rem;">Answer honestly &mdash; right or wrong, these help Mr. England see where you're starting.</p>
+
+      <div class="qq gate-q" data-ans="d" data-panel="0">
+        <div class="q-stem"><span class="q-num">3</span> (2006-35) The main difference between prokaryotic and eukaryotic cells is that &mdash;</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>eukaryotic cells have a smaller cell nucleus</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>prokaryotic cells are always much larger</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>prokaryotic cells do not have a plasma membrane</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>eukaryotic cells have a more advanced cellular organization</li>
+        </ul>
+        <div class="qexp">Eukaryotic cells have membrane-bound organelles including a true nucleus, giving them more complex organization. Prokaryotes are simpler &mdash; no membrane-bound nucleus or organelles. Both have cell membranes, so C is wrong.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="0">
+        <div class="q-stem"><span class="q-num">4</span> (2001-50) Which of these functions most like the "brain" of a cell?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>The Golgi apparatus</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>The mitochondrion</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>The nucleus</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>The smooth endoplasmic reticulum</li>
+        </ul>
+        <div class="qexp">The nucleus contains the cell's DNA and controls all cell activities, making it the "brain" or control center. The mitochondrion produces energy. The Golgi packages proteins. The smooth ER makes lipids.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">5</span> (2003-35) In a cell membrane model, the molecules which move large molecules into and out of the cell are known as &mdash;</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>cholesterol</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>proteins</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>lipids</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>carbohydrates</li>
+        </ul>
+        <div class="qexp">Transport proteins embedded in the cell membrane help move large molecules and ions into and out of the cell. Some form channels; others actively pump substances. Lipids form the membrane structure but don't transport.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-0">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all 5 questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-0">0 of 5 answered</div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:24px;">
+      <a class="depth-link" href="../biology/cell-structure.html">&#x1F4D8; Need more depth? See the full lesson in Cell Structure &amp; Function &rarr;</a>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; Cell Theory &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 1: CELL THEORY (BIO.3a) — DEEP REVIEW
+     ================================================================= -->
+<div class="panel" id="p1">
+  <div class="lc">
+    <div class="eyebrow">BIO.3a &mdash; Cell Theory</div>
+    <div class="sh2">The Cell Theory &amp; The Nature of Science</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">The Expanded Cell Theory Is a Guaranteed SOL Question</div><div class="cx">Every released Biology SOL includes at least one question about cell theory. The trick is that the SOL tests the EXPANDED cell theory &mdash; not just the original three tenets you learned in Life Science. You must know all six statements, especially the three additions.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">The Original Three Tenets</div>
+      <p class="prose">You probably learned these in middle school Life Science. They form the foundation of all biology:</p>
+      <table class="dt">
+        <tr><th>#</th><th>Original Cell Theory Tenet</th></tr>
+        <tr><td>1</td><td><strong>All living things are made of one or more cells.</strong></td></tr>
+        <tr><td>2</td><td><strong>The cell is the basic unit of structure and function in all living things.</strong></td></tr>
+        <tr><td>3</td><td><strong>All cells come from pre-existing cells.</strong> (Cells do not arise spontaneously.)</td></tr>
+      </table>
+
+      <div class="sh3">The Expanded Cell Theory (SOL Critical)</div>
+      <p class="prose">As science advanced, researchers discovered additional principles that apply to all cells. The VDOE framework specifically states that "in addition to the original three tenets, the current cell theory contains the following":</p>
+      <table class="dt">
+        <tr><th>#</th><th>Expanded Addition</th><th>What It Means</th></tr>
+        <tr><td>4</td><td><strong>Metabolism occurs within cells.</strong></td><td>All chemical reactions that sustain life (energy production, protein building, waste removal) happen INSIDE cells. Life processes are cellular processes.</td></tr>
+        <tr><td>5</td><td><strong>Hereditary information (DNA) is passed from one cell to another.</strong></td><td>When a cell divides, it copies its DNA and passes it to the new cells. This is how genetic information is transmitted across generations.</td></tr>
+        <tr><td>6</td><td><strong>All cells have the same basic chemical composition.</strong></td><td>Whether a cell is from a bacterium, a tree, or a human, it contains the same basic types of molecules: water, proteins, lipids, carbohydrates, and nucleic acids.</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: The Three Additions (M-D-C)</div><div class="cx"><strong>M</strong>etabolism in cells, <strong>D</strong>NA passed cell-to-cell, same <strong>C</strong>hemical composition. Think "MDC" &mdash; the three things the original cell theory didn't mention but every Biology SOL asks about.</div></div></div>
+
+      <div class="sh3">How the Cell Theory Illustrates the Nature of Science</div>
+      <p class="prose">The VDOE framework uses the cell theory as an example of how scientific knowledge grows over time. The original cell theory was proposed in the 1830s-1850s. Over the next 150+ years, scientists added to it as technology improved (better microscopes, DNA discovery, biochemistry). This demonstrates a key principle: <strong>scientific theories are not "guesses" &mdash; they are well-supported explanations that can be refined as new evidence emerges.</strong></p>
+
+      <div class="sh3">Hypothesis vs. Theory vs. Law</div>
+      <p class="prose">This distinction appears on BOTH BIO.1 and BIO.3. It is one of the most frequently tested Nature of Science concepts:</p>
+      <table class="dt">
+        <tr><th>Term</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>Hypothesis</strong></td><td>A testable prediction or explanation that has NOT yet been extensively tested. It's a starting point for investigation.</td><td>"If I add fertilizer to plant A but not plant B, then plant A will grow taller."</td></tr>
+        <tr><td><strong>Theory</strong></td><td>A well-tested explanation supported by a large body of evidence from many experiments. Theories EXPLAIN why something happens.</td><td>Cell theory, theory of evolution, germ theory of disease</td></tr>
+        <tr><td><strong>Law</strong></td><td>A statement that describes a pattern in nature that has been observed consistently. Laws describe WHAT happens, not why.</td><td>Law of gravity, laws of thermodynamics</td></tr>
+      </table>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Trap: "It's Just a Theory"</div><div class="cx">In everyday language, people say "theory" to mean "guess." In science, a theory is the HIGHEST level of explanation &mdash; it's been tested extensively and is supported by evidence. A theory does NOT become a law. Theories and laws are EQUAL in scientific validity. Theories explain WHY (cell theory explains why all life is cellular). Laws describe WHAT (the law of gravity describes what happens when you drop something). The SOL will test whether you understand this distinction.</div></div></div>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Cell Theory</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2001-49) Which of these statements best summarizes the cell theory?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>What is being asked?</strong> The question asks for the BEST summary of cell theory &mdash; not a detail about cells, but the theory itself.</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>Evaluate each choice:</strong> "Cells contain a nucleus" is a detail about cell structure, not the theory. "Cells come in different shapes" is true but not the theory. "Cells can be seen through a microscope" is a technology fact, not the theory.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: D &mdash; Cells are the building blocks of living things.</strong> This captures the essence of tenet #2: cells are the basic unit of structure and function.</div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> Students often confuse facts ABOUT cells with the cell THEORY. The cell theory is about what cells ARE (building blocks of life), not what they CONTAIN (nucleus) or how they LOOK (shapes).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.3a</div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="1" data-std="BIO.3a">
+        <div class="q-stem"><span class="q-num">1</span> (2006-38) What characteristic do all living things share? <span class="q-tag">BIO.3a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>They reproduce by mitosis.</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>They are made up of many parts.</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>They contain DNA.</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>They need oxygen to survive.</li>
+        </ul>
+        <div class="qexp">All living things contain DNA (expanded cell theory: DNA is passed cell-to-cell). Not all organisms reproduce by mitosis (some use binary fission). Not all are "many parts" (unicellular organisms). Not all need oxygen (some bacteria are anaerobic).</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.3a">
+        <div class="q-stem"><span class="q-num">2</span> (2003-20) What structure is common to ALL five kingdoms of living organisms? <span class="q-tag">BIO.3a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Cell wall</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>DNA</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Nucleus</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Mitochondria</li>
+        </ul>
+        <div class="qexp">ALL cells contain DNA (expanded cell theory). Not all have cell walls (animal cells don't). Not all have a nucleus (prokaryotes don't). Not all have mitochondria (prokaryotes don't).</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="1" data-std="BIO.3a">
+        <div class="q-stem"><span class="q-num">3</span> (2001-17) A data table comparing cell features across kingdoms shows that eukaryotic cells vary in covering and food production. This supports which part of cell theory? <span class="q-tag">BIO.3a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>All cells have the same basic composition but differ in structure</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Cells can only come from other cells</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>All organisms need oxygen</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Cells are too small to see without a microscope</li>
+        </ul>
+        <div class="qexp">The data showing variation in cell covering (wall vs. no wall) and food production (autotroph vs. heterotroph) supports the expanded cell theory: all cells share the same basic chemical composition, but they can have different structures for different functions.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.3a">
+        <div class="q-stem"><span class="q-num">4</span> Which statement correctly describes the relationship between scientific theories and laws? <span class="q-tag">BIO.3a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Theories become laws once they are proven</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Laws are more valid than theories</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Theories are just educated guesses</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Theories explain why; laws describe what happens &mdash; both are equally valid</li>
+        </ul>
+        <div class="qexp">Theories and laws serve different purposes but are EQUALLY valid in science. Theories explain WHY phenomena occur. Laws describe WHAT happens consistently. A theory never "becomes" a law &mdash; they are different types of scientific knowledge.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-1">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-1">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Organelles &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 2: ORGANELLES & LIFE PROCESSES (BIO.3b) — DEEP REVIEW
+     ================================================================= -->
+<div class="panel" id="p2">
+  <div class="lc">
+    <div class="eyebrow">BIO.3b &mdash; Organelles &amp; Life Processes</div>
+    <div class="sh2">Cell Structures, Prokaryotes vs. Eukaryotes &amp; Levels of Organization</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Organelle Questions Are the Most Common BIO.3 Type</div><div class="cx">Released SOL exams contain more organelle-function questions than any other BIO.3 topic. You must know what each organelle does, be able to compare organelles to real-world analogies (factory, city, etc.), and know the difference between prokaryotic and eukaryotic cells.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Prokaryotic vs. Eukaryotic Cells</div>
+      <p class="prose">All cells fall into one of two categories. <strong>Prokaryotic cells</strong> (bacteria and archaea) are small and simple &mdash; they have NO membrane-bound nucleus and NO membrane-bound organelles. Their DNA floats freely in the cytoplasm in a region called the nucleoid. <strong>Eukaryotic cells</strong> (plants, animals, fungi, protists) are larger and more complex &mdash; they have a TRUE nucleus surrounded by a nuclear membrane, plus many membrane-bound organelles that compartmentalize cell functions.</p>
+      <table class="dt">
+        <tr><th>Feature</th><th>Prokaryotic</th><th>Eukaryotic</th></tr>
+        <tr><td><strong>Nucleus</strong></td><td>No membrane-bound nucleus</td><td>True nucleus with nuclear membrane</td></tr>
+        <tr><td><strong>Organelles</strong></td><td>No membrane-bound organelles</td><td>Mitochondria, ER, Golgi, etc.</td></tr>
+        <tr><td><strong>DNA</strong></td><td>Circular, in cytoplasm</td><td>Linear chromosomes, in nucleus</td></tr>
+        <tr><td><strong>Ribosomes</strong></td><td>Yes (smaller)</td><td>Yes (larger)</td></tr>
+        <tr><td><strong>Cell membrane</strong></td><td>Yes</td><td>Yes</td></tr>
+        <tr><td><strong>Cell wall</strong></td><td>Most have one</td><td>Plants and fungi have one; animals don't</td></tr>
+        <tr><td><strong>Size</strong></td><td>1&ndash;10 &mu;m</td><td>10&ndash;100 &mu;m</td></tr>
+        <tr><td><strong>Examples</strong></td><td>Bacteria, archaea</td><td>Plants, animals, fungi, protists</td></tr>
+      </table>
+      <p class="prose">The key SOL fact: <strong>ribosomes are found in ALL cells</strong> &mdash; both prokaryotic and eukaryotic. They are the one organelle that every living cell shares, because every cell needs to make proteins.</p>
+
+      <div class="sh3">The Major Organelles and Their Functions</div>
+      <p class="prose">Think of a eukaryotic cell as a factory. Each organelle is a department that performs a specific job. Together, they keep the cell alive.</p>
+      <table class="dt">
+        <tr><th>Organelle</th><th>Function</th><th>Analogy</th></tr>
+        <tr><td><strong>Nucleus</strong></td><td>Contains DNA; controls all cell activities</td><td>The boss's office / control room</td></tr>
+        <tr><td><strong>Ribosome</strong></td><td>Makes proteins (translation)</td><td>The assembly line workers</td></tr>
+        <tr><td><strong>Rough ER</strong></td><td>Studded with ribosomes; makes and transports proteins</td><td>The assembly line conveyor belt</td></tr>
+        <tr><td><strong>Smooth ER</strong></td><td>Makes lipids; detoxifies chemicals</td><td>The chemical processing department</td></tr>
+        <tr><td><strong>Golgi Apparatus</strong></td><td>Packages, modifies, and ships proteins</td><td>The shipping and packaging department</td></tr>
+        <tr><td><strong>Mitochondria</strong></td><td>Cellular respiration; produces ATP</td><td>The power plant</td></tr>
+        <tr><td><strong>Chloroplast</strong></td><td>Photosynthesis (PLANTS ONLY)</td><td>Solar panels</td></tr>
+        <tr><td><strong>Lysosome</strong></td><td>Digests waste and old cell parts</td><td>The recycling center / cleanup crew</td></tr>
+        <tr><td><strong>Vacuole</strong></td><td>Storage (water, nutrients, waste); very large in plant cells</td><td>The warehouse</td></tr>
+        <tr><td><strong>Cell Membrane</strong></td><td>Controls what enters and exits the cell; selectively permeable</td><td>Security gate / front door</td></tr>
+        <tr><td><strong>Cell Wall</strong></td><td>Rigid outer support (plants, fungi, bacteria only)</td><td>The outer wall of a building</td></tr>
+        <tr><td><strong>Cytoplasm</strong></td><td>Gel-like fluid that fills the cell; holds organelles in place</td><td>The floor / workspace</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: Plant vs. Animal Cell Differences</div><div class="cx"><strong>Plant cells have, animal cells don't:</strong> cell wall, chloroplasts, large central vacuole. <strong>Animal cells have, plant cells don't:</strong> centrioles, lysosomes (typically). Both have: nucleus, mitochondria, ribosomes, ER, Golgi, cell membrane. If the SOL asks "which structures show that plant cells have different functions from animal cells?" the answer is <strong>chloroplasts and cell walls</strong>.</div></div></div>
+
+      <div class="sh3">Organelles Work as a System</div>
+      <p class="prose">The VDOE framework emphasizes that organelles don't work in isolation &mdash; they function as an integrated system. For example, the process of making and exporting a protein involves multiple organelles working together:</p>
+      <p class="prose"><strong>DNA in the nucleus</strong> &rarr; mRNA carries instructions to <strong>ribosomes on the rough ER</strong> &rarr; protein is folded and transported through the <strong>ER</strong> &rarr; protein is packaged and modified by the <strong>Golgi apparatus</strong> &rarr; protein is shipped to its destination (inside or outside the cell) via <strong>vesicles</strong> that merge with the <strong>cell membrane</strong>.</p>
+
+      <div class="sh3">Levels of Cellular Organization</div>
+      <p class="prose">In multicellular organisms, cells are organized into a hierarchy:</p>
+      <p class="prose" style="text-align:center;font-weight:700;font-size:1rem;color:var(--navy);background:var(--gray-100);padding:14px;border-radius:8px;margin:12px 0;">Cells &rarr; Tissues &rarr; Organs &rarr; Organ Systems &rarr; Organism</p>
+      <table class="dt">
+        <tr><th>Level</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>Cell</strong></td><td>Basic unit of life</td><td>A muscle cell</td></tr>
+        <tr><td><strong>Tissue</strong></td><td>Group of similar cells working together</td><td>Muscle tissue (many muscle cells)</td></tr>
+        <tr><td><strong>Organ</strong></td><td>Two or more tissues working together</td><td>The heart (muscle, nerve, and connective tissue)</td></tr>
+        <tr><td><strong>Organ System</strong></td><td>Group of organs working together</td><td>Circulatory system (heart, blood vessels, blood)</td></tr>
+        <tr><td><strong>Organism</strong></td><td>Complete individual living thing</td><td>A human being</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.3b</div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.3b">
+        <div class="q-stem"><span class="q-num">1</span> (2005-5) Which of these is responsible for the "rough" appearance of endoplasmic reticulum? <span class="q-tag">BIO.3b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Enzymes</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>DNA</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Lysosomes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Ribosomes</li>
+        </ul>
+        <div class="qexp">The rough ER is "rough" because it is studded with ribosomes on its surface. These ribosomes are making proteins that will be transported through the ER to the Golgi for packaging. Smooth ER lacks ribosomes and makes lipids instead.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.3b">
+        <div class="q-stem"><span class="q-num">2</span> (2003-22) Compared to a skin cell, a muscle cell is likely to have more &mdash; <span class="q-tag">BIO.3b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>golgi bodies</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>mitochondria</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>cell membranes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>chloroplasts</li>
+        </ul>
+        <div class="qexp">Muscle cells contract constantly and need enormous amounts of energy (ATP). Mitochondria produce ATP through cellular respiration. Therefore, muscle cells have MORE mitochondria than skin cells. This is a classic "form fits function" question. Human cells never have chloroplasts.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.3b">
+        <div class="q-stem"><span class="q-num">3</span> (2003-33) Which of the following organelles is present in BOTH prokaryotes and eukaryotes? <span class="q-tag">BIO.3b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Endoplasmic reticulum</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Ribosome</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Golgi body</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Nucleus</li>
+        </ul>
+        <div class="qexp">Ribosomes are found in ALL cells because ALL cells need to make proteins. ER, Golgi, and nucleus are membrane-bound organelles found only in eukaryotes. Prokaryotes lack all membrane-bound organelles.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.3b">
+        <div class="q-stem"><span class="q-num">4</span> (2005-26) What repackages proteins into forms the cell can use, expel, or keep stored? <span class="q-tag">BIO.3b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Centrioles</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Golgi bodies</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Lysosomes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Mitochondria</li>
+        </ul>
+        <div class="qexp">The Golgi apparatus (Golgi bodies) receives proteins from the ER, modifies and packages them, then ships them to their destination. Think of it as the "shipping department" of the cell. Lysosomes break things down. Mitochondria make energy. Centrioles help with cell division.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="2" data-std="BIO.3b">
+        <div class="q-stem"><span class="q-num">5</span> (2006-5) Which pair of structures best shows that plant cells have functions different from animal cells? <span class="q-tag">BIO.3b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Chloroplasts and cell walls</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Cytoplasm and mitochondria</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Ribosomes and cell membranes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Nuclei and centrioles</li>
+        </ul>
+        <div class="qexp">Chloroplasts (for photosynthesis) and cell walls (for rigid support) are found in plant cells but NOT animal cells. Cytoplasm, mitochondria, ribosomes, cell membranes, and nuclei are found in BOTH plant and animal cells.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-2">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-2">0 of 5 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; Cell Theory</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Cell Cycle &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 3: CELL CYCLE & MITOSIS (BIO.3c) — DEEP REVIEW
+     ================================================================= -->
+<div class="panel" id="p3">
+  <div class="lc">
+    <div class="eyebrow">BIO.3c &mdash; Cell Cycle &amp; Mitosis</div>
+    <div class="sh2">The Cell Cycle, DNA Replication &amp; Stages of Mitosis</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Mitosis Questions Test Stage Order and Purpose</div><div class="cx">SOL questions on the cell cycle ask you to: (1) identify the stages of mitosis in order (PMAT), (2) know WHY DNA replication happens before division, and (3) understand that mitosis produces two IDENTICAL cells. You are NOT expected to memorize every detail of each stage &mdash; just the overall sequence and purpose.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">The Cell Cycle: An Overview</div>
+      <p class="prose">The <strong>cell cycle</strong> is the life cycle of a cell from the time it's formed until it divides into two new cells. It has two main phases:</p>
+      <table class="dt">
+        <tr><th>Phase</th><th>What Happens</th><th>% of Cell Cycle</th></tr>
+        <tr><td><strong>Interphase</strong></td><td>Cell grows, carries out normal functions, and copies its DNA</td><td>~90%</td></tr>
+        <tr><td><strong>M Phase (Mitosis + Cytokinesis)</strong></td><td>Nucleus divides (mitosis), then cytoplasm divides (cytokinesis)</td><td>~10%</td></tr>
+      </table>
+      <p class="prose"><strong>Interphase</strong> is the LONGEST phase. The cell spends most of its life in interphase, growing and performing its normal functions. During interphase, the cell also <strong>replicates (copies) its DNA</strong> so that when it divides, each new cell gets a complete set of genetic instructions.</p>
+
+      <div class="sh3">DNA Replication: Why It Matters</div>
+      <p class="prose"><strong>DNA replication</strong> occurs during interphase, BEFORE mitosis begins. Here's how it works: enzymes unwind and "unzip" the double helix by breaking the hydrogen bonds between base pairs. Each original strand serves as a template. Free nucleotides in the nucleus bond to the exposed bases following the base-pairing rules (A-T, C-G), forming a new complementary strand alongside each original strand. The result: <strong>two identical copies of the DNA</strong>, each consisting of one original strand and one new strand.</p>
+      <p class="prose">Why is this critical? Because when the cell divides, each new daughter cell needs a COMPLETE copy of all the organism's DNA. Without replication, daughter cells would only get half the genetic information &mdash; which would be lethal.</p>
+
+      <div class="sh3">Mitosis: Division of the Nucleus (PMAT)</div>
+      <p class="prose"><strong>Mitosis</strong> is the division of the nucleus into two genetically IDENTICAL nuclei. It occurs in four stages, remembered by the acronym <strong>PMAT</strong>:</p>
+      <table class="dt">
+        <tr><th>Stage</th><th>What Happens</th><th>Key Visual</th></tr>
+        <tr><td><strong>Prophase</strong></td><td>Chromatin condenses into visible chromosomes; nuclear membrane begins to break down; spindle fibers form</td><td>Chromosomes become visible; nucleus starts dissolving</td></tr>
+        <tr><td><strong>Metaphase</strong></td><td>Chromosomes line up in the MIDDLE of the cell; spindle fibers attach to centromeres</td><td>Chromosomes in a line across the center</td></tr>
+        <tr><td><strong>Anaphase</strong></td><td>Sister chromatids are pulled APART to opposite poles of the cell</td><td>Chromosomes being pulled in opposite directions</td></tr>
+        <tr><td><strong>Telophase</strong></td><td>Nuclear membranes re-form around each set of chromosomes; chromosomes uncoil; spindle disappears</td><td>Two nuclei forming at opposite ends</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: PMAT</div><div class="cx"><strong>P</strong>rophase, <strong>M</strong>etaphase, <strong>A</strong>naphase, <strong>T</strong>elophase. Some students remember: <strong>P</strong>lease <strong>M</strong>ake <strong>A</strong>nother <strong>T</strong>aco. Or: <strong>P</strong>eople <strong>M</strong>eet <strong>A</strong>nd <strong>T</strong>alk. The M in Metaphase = Middle (chromosomes line up in the Middle). The A in Anaphase = Apart (chromosomes pull Apart).</div></div></div>
+
+      <div class="sh3">Cytokinesis: Splitting the Cell</div>
+      <p class="prose">After mitosis divides the nucleus, <strong>cytokinesis</strong> divides the cytoplasm, producing two separate daughter cells. In <strong>animal cells</strong>, the cell membrane pinches inward (like tightening a belt) to split the cell in two. In <strong>plant cells</strong>, a <strong>cell plate</strong> forms down the middle and eventually becomes a new cell wall separating the two cells.</p>
+      <p class="prose">The end result of mitosis + cytokinesis: <strong>two genetically IDENTICAL daughter cells</strong>, each with the same number of chromosomes as the original parent cell.</p>
+
+      <div class="sh3">Why Cells Divide</div>
+      <p class="prose">Cells divide for three main reasons: <strong>growth</strong> (adding new cells to a growing organism), <strong>repair</strong> (replacing damaged or dead cells), and <strong>development</strong> (creating specialized cell types during embryonic development). A single-celled organism divides to reproduce.</p>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">Mitosis vs. Meiosis (Don't Confuse Them!)</div><div class="cx"><strong>Mitosis</strong> = one division, produces 2 IDENTICAL cells with the SAME chromosome number (for growth and repair). <strong>Meiosis</strong> = two divisions, produces 4 DIFFERENT cells with HALF the chromosomes (for making gametes/sex cells). BIO.3 focuses on mitosis. Meiosis is covered in BIO.5.</div></div></div>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Cell Cycle</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2004-30) The process of DNA replication is necessary before a cell &mdash;</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>When does DNA replication happen?</strong> During interphase, before the cell divides.</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>WHY does it happen?</strong> So that when the cell divides, each daughter cell gets a complete copy of the DNA.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: C &mdash; divides into two cells.</strong> DNA replication is specifically required before cell division (mitosis).</div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> Some choose "codes for RNA" (transcription happens all the time, not specifically before division) or "makes a protein" (translation also happens all the time). DNA replication is specifically tied to cell division.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.3c</div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.3c">
+        <div class="q-stem"><span class="q-num">1</span> (2005-10) Which of the following phases is the first step in mitosis? <span class="q-tag">BIO.3c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Prophase</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Telophase</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Metaphase</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Anaphase</li>
+        </ul>
+        <div class="qexp">PMAT: Prophase is the FIRST stage of mitosis. During prophase, chromosomes condense and become visible, and the nuclear membrane begins to break down.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.3c">
+        <div class="q-stem"><span class="q-num">2</span> (2004-30) The process of DNA replication is necessary before a cell &mdash; <span class="q-tag">BIO.3c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>codes for RNA molecules</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>modifies lysosome enzymes</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>divides into two cells</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>makes a protein</li>
+        </ul>
+        <div class="qexp">DNA must be copied (replicated) before a cell divides so that each daughter cell receives a complete set of genetic instructions. Transcription and translation happen throughout the cell's life, not specifically before division.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.3c">
+        <div class="q-stem"><span class="q-num">3</span> (2003-36) The jimsonweed normally has 12 chromosomes in body cells. How many chromosomes will an egg cell have? <span class="q-tag">BIO.3c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>6 chromosomes</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>12 chromosomes</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>24 chromosomes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>18 chromosomes</li>
+        </ul>
+        <div class="qexp">Egg cells (gametes) are produced by meiosis, which cuts the chromosome number in HALF. If body cells have 12 chromosomes, egg cells have 12 &divide; 2 = 6. This ensures that when egg + sperm combine at fertilization, the offspring has the correct number (6 + 6 = 12).</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.3c">
+        <div class="q-stem"><span class="q-num">4</span> (2004-15) The processes of meiosis and fertilization help ensure the survival of the species by providing each generation with the same number of &mdash; <span class="q-tag">BIO.3c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>chromosomes</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>offspring</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>gametes</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>body cells</li>
+        </ul>
+        <div class="qexp">Meiosis halves the chromosome number in gametes. Fertilization combines two gametes, restoring the full chromosome number. This cycle ensures each generation has the SAME number of chromosomes as the parents.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-3">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-3">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Organelles</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Membrane &amp; Transport &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 4: MEMBRANE & TRANSPORT (BIO.3d) — DEEP REVIEW
+     ================================================================= -->
+<div class="panel" id="p4">
+  <div class="lc">
+    <div class="eyebrow">BIO.3d &mdash; Cell Membrane &amp; Transport</div>
+    <div class="sh2">Membrane Structure, Passive Transport &amp; Active Transport</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Transport Questions Test Passive vs. Active</div><div class="cx">The SOL loves asking: "Which type of transport requires energy?" and "What happens to a cell in a hypertonic solution?" You must know the difference between diffusion, osmosis, facilitated diffusion (all passive/no energy) and active transport (requires ATP). Osmosis questions appear on nearly every released SOL.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Cell Membrane Structure</div>
+      <p class="prose">The <strong>cell membrane</strong> (also called the plasma membrane) surrounds EVERY cell. It is made primarily of a <strong>phospholipid bilayer</strong> &mdash; two layers of phospholipid molecules arranged with their hydrophilic (water-loving) heads facing outward and their hydrophobic (water-fearing) tails facing inward. Embedded in this bilayer are various <strong>proteins</strong> that serve as channels, pumps, receptors, and identification markers.</p>
+      <p class="prose">The membrane is <strong>selectively permeable</strong> (also called semipermeable) &mdash; it allows some substances to pass through while blocking others. Small, nonpolar molecules (like O&#x2082; and CO&#x2082;) can slip through the lipid bilayer easily. Large molecules, charged ions, and polar molecules generally need help from <strong>transport proteins</strong> to cross.</p>
+      <p class="prose">The VDOE framework states: "The life processes of a cell are maintained by the plasma membrane, which is comprised of a variety of organic molecules. The membrane controls the movement of material in and out of the cell, communication between cells, and the recognition of cells."</p>
+
+      <div class="sh3">Passive Transport (No Energy Required)</div>
+      <p class="prose">Passive transport moves substances from an area of <strong>HIGH concentration to LOW concentration</strong> (down the concentration gradient). It requires <strong>NO energy (no ATP)</strong> from the cell &mdash; substances simply move toward equilibrium on their own.</p>
+
+      <table class="dt">
+        <tr><th>Type</th><th>What Moves</th><th>How It Works</th><th>Example</th></tr>
+        <tr><td><strong>Diffusion</strong></td><td>Any small molecule</td><td>Molecules move from high to low concentration until evenly distributed</td><td>Perfume spreading across a room; O&#x2082; entering cells</td></tr>
+        <tr><td><strong>Osmosis</strong></td><td>WATER only</td><td>Water moves across a semipermeable membrane from high water concentration to low water concentration</td><td>Water entering a cell in a hypotonic solution</td></tr>
+        <tr><td><strong>Facilitated Diffusion</strong></td><td>Large or charged molecules</td><td>Molecules pass through protein channels in the membrane (still high to low &mdash; no energy)</td><td>Glucose entering a cell through a protein channel</td></tr>
+      </table>
+
+      <div class="callout key"><div class="ci">&#x1F511;</div><div class="cb"><div class="ct">Osmosis and Solutions</div><div class="cx">Water moves toward the side with MORE solute (dissolved stuff). In a <strong>hypotonic</strong> solution (less solute outside), water rushes IN &rarr; cell swells. In a <strong>hypertonic</strong> solution (more solute outside), water rushes OUT &rarr; cell shrinks. In an <strong>isotonic</strong> solution (equal solute), no net change. Think: water follows the solute.</div></div></div>
+
+      <div class="sh3">Active Transport (Energy Required)</div>
+      <p class="prose"><strong>Active transport</strong> moves substances from an area of <strong>LOW concentration to HIGH concentration</strong> (against the concentration gradient). This is like pushing a ball uphill &mdash; it requires energy in the form of <strong>ATP</strong>. The cell uses transport proteins (pumps) to force molecules in the direction they wouldn't naturally go.</p>
+      <p class="prose">Two special types of active transport involve the cell membrane itself:</p>
+      <table class="dt">
+        <tr><th>Type</th><th>Direction</th><th>How It Works</th></tr>
+        <tr><td><strong>Endocytosis</strong></td><td>INTO the cell</td><td>Cell membrane wraps around a substance and brings it inside in a vesicle</td></tr>
+        <tr><td><strong>Exocytosis</strong></td><td>OUT of the cell</td><td>A vesicle inside the cell fuses with the membrane and dumps its contents outside</td></tr>
+      </table>
+
+      <div class="sh3">Comparing Transport Types</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>Diffusion</th><th>Osmosis</th><th>Facilitated Diffusion</th><th>Active Transport</th></tr>
+        <tr><td><strong>Energy?</strong></td><td>No</td><td>No</td><td>No</td><td>YES (ATP)</td></tr>
+        <tr><td><strong>Direction</strong></td><td>High &rarr; Low</td><td>High &rarr; Low (water)</td><td>High &rarr; Low</td><td>Low &rarr; High</td></tr>
+        <tr><td><strong>Protein needed?</strong></td><td>No</td><td>No (aquaporins help)</td><td>Yes (channel protein)</td><td>Yes (pump protein)</td></tr>
+        <tr><td><strong>Type</strong></td><td>Passive</td><td>Passive</td><td>Passive</td><td>Active</td></tr>
+      </table>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Trap: Facilitated Diffusion Uses Proteins but NO Energy</div><div class="cx">Students often think that if a protein is involved, it must be active transport. WRONG. Facilitated diffusion uses protein channels, but the molecules still move from high to low concentration (downhill) &mdash; so no energy is needed. Active transport uses protein PUMPS to push molecules against the gradient (uphill) &mdash; THAT requires energy. <strong>Protein involved ≠ active transport.</strong> Direction determines whether it's passive or active.</div></div></div>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Cell Transport</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2002-26) Unicellular organisms cannot grow very large because the &mdash;</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>What limits cell size?</strong> As a cell gets bigger, its volume increases faster than its surface area. The cell membrane (surface) can't transport materials fast enough to support the larger volume.</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>What process is limited?</strong> Diffusion. Nutrients must diffuse from the membrane to the cell's interior. In a very large cell, this diffusion would be too slow.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: A &mdash; diffusion of nutrients into the cell's interior would be too slow.</strong></div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> "Energy expenditures would be too great" sounds plausible but isn't the primary limitation. The fundamental constraint is the surface-area-to-volume ratio &mdash; a large cell can't move materials in and out fast enough through its relatively small membrane surface.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.3d</div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.3d">
+        <div class="q-stem"><span class="q-num">1</span> (2002-26) Unicellular organisms cannot grow very large because the &mdash; <span class="q-tag">BIO.3d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>diffusion of nutrients into the cell's interior would be too slow</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>locomotion of the organisms would be too slow</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>respiratory rate would be too high</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>energy expenditures would be too great</li>
+        </ul>
+        <div class="qexp">As cells grow larger, the surface-area-to-volume ratio decreases. The cell membrane can't transport nutrients fast enough via diffusion to reach the interior of a very large cell. This is why multicellular organisms use many small cells instead of one giant cell.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="4" data-std="BIO.3d">
+        <div class="q-stem"><span class="q-num">2</span> (2001-38) In an osmosis diagram, only water molecules could enter the cell because water molecules &mdash; <span class="q-tag">BIO.3d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>have more energy than the protein molecules</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>are smaller than the protein molecules</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>contain more hydrogen atoms than the protein molecules</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>are more numerous than the protein molecules</li>
+        </ul>
+        <div class="qexp">The cell membrane is selectively permeable. Water molecules are small enough to pass through, while large protein molecules are too big. Size determines what can cross the membrane during osmosis.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.3d">
+        <div class="q-stem"><span class="q-num">3</span> (2004-5) A bacterium can recognize different substances in its environment. What part of the bacterium allows this? <span class="q-tag">BIO.3d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Nucleus</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Lysosomes</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Cell membrane</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Endoplasmic reticulum</li>
+        </ul>
+        <div class="qexp">The cell membrane contains receptor proteins that detect chemicals in the environment. Bacteria don't have a true nucleus (they're prokaryotes), and they lack membrane-bound organelles like lysosomes and ER.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.3d">
+        <div class="q-stem"><span class="q-num">4</span> Which type of transport requires the cell to use ATP energy? <span class="q-tag">BIO.3d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Diffusion</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Osmosis</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Facilitated diffusion</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Active transport</li>
+        </ul>
+        <div class="qexp">Active transport is the ONLY type that requires ATP energy because it moves substances AGAINST the concentration gradient (from low to high concentration). Diffusion, osmosis, and facilitated diffusion are all passive &mdash; no energy needed.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-4">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-4">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Cell Cycle</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Specialization &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 5: CELL SPECIALIZATION (BIO.3e) — DEEP REVIEW
+     ================================================================= -->
+<div class="panel" id="p5">
+  <div class="lc">
+    <div class="eyebrow">BIO.3e &mdash; Cell Specialization</div>
+    <div class="sh2">Unicellular vs. Multicellular, Specialized Cells &amp; Form Fits Function</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Form Fits Function Is a Core Biology Principle</div><div class="cx">The SOL tests whether you understand that a cell's SHAPE is directly related to its JOB. Muscle cells are long and contractile because they need to shorten and lengthen. Red blood cells are flat and disc-shaped to maximize surface area for oxygen exchange. Nerve cells are long and branched to transmit signals over distances. If a question describes a cell's shape, you should be able to figure out its function.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Unicellular vs. Multicellular Organisms</div>
+      <p class="prose">A <strong>unicellular organism</strong> consists of a single cell that must carry out ALL life processes by itself &mdash; obtaining nutrients, producing energy, removing waste, growing, and reproducing. Examples include bacteria, many protists (like paramecium and amoeba), and some fungi (yeast).</p>
+      <p class="prose">A <strong>multicellular organism</strong> is made of many cells that are <strong>specialized</strong> to perform specific functions. No single cell does everything &mdash; instead, there is a <strong>division of labor</strong> among different cell types. This specialization allows multicellular organisms to be much larger and more complex than unicellular ones.</p>
+
+      <table class="dt">
+        <tr><th>Feature</th><th>Unicellular</th><th>Multicellular</th></tr>
+        <tr><td><strong>Cell count</strong></td><td>One cell = entire organism</td><td>Many cells, organized into tissues/organs</td></tr>
+        <tr><td><strong>Specialization</strong></td><td>No &mdash; one cell does everything</td><td>Yes &mdash; different cells for different jobs</td></tr>
+        <tr><td><strong>Size</strong></td><td>Microscopic</td><td>Can be very large (whales, trees)</td></tr>
+        <tr><td><strong>Complexity</strong></td><td>Simple</td><td>Complex (organ systems)</td></tr>
+        <tr><td><strong>Examples</strong></td><td>Bacteria, amoeba, paramecium, yeast</td><td>Plants, animals, fungi, most algae</td></tr>
+      </table>
+
+      <div class="sh3">Specialized Cell Types and Form Fits Function</div>
+      <p class="prose">In multicellular organisms, cells have specific shapes that match their specific jobs. The VDOE framework states: "Each specialized cell type has a specific structure that helps it perform a specific function." Here are key examples:</p>
+      <table class="dt">
+        <tr><th>Cell Type</th><th>Shape/Structure</th><th>Function</th><th>Why Shape Matches Job</th></tr>
+        <tr><td><strong>Red Blood Cell</strong></td><td>Flat, biconcave disc; no nucleus</td><td>Carries oxygen</td><td>Large surface area for gas exchange; no nucleus = more room for hemoglobin</td></tr>
+        <tr><td><strong>Nerve Cell (Neuron)</strong></td><td>Long, branched extensions (axon + dendrites)</td><td>Transmits electrical signals</td><td>Long shape allows signal transmission over distances; branches connect to many cells</td></tr>
+        <tr><td><strong>Muscle Cell</strong></td><td>Long, cylindrical, contains contractile fibers</td><td>Contraction and movement</td><td>Fibers can shorten (contract) to produce force; many mitochondria for ATP</td></tr>
+        <tr><td><strong>Root Hair Cell</strong></td><td>Long, thin extension from root surface</td><td>Absorbs water and minerals from soil</td><td>Thin extension increases surface area for maximum absorption</td></tr>
+        <tr><td><strong>Guard Cell</strong></td><td>Bean-shaped pair around stomata in leaves</td><td>Controls gas exchange</td><td>Shape allows opening/closing of stomata to regulate CO&#x2082; and H&#x2082;O exchange</td></tr>
+        <tr><td><strong>White Blood Cell</strong></td><td>Irregular, can change shape</td><td>Fights infection</td><td>Flexible shape allows it to squeeze through blood vessel walls and engulf pathogens</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: Form = Function</div><div class="cx">If a cell is LONG, it's for transport or transmission (nerve cells, muscle cells). If a cell has a LARGE surface area, it's for absorption or exchange (red blood cells, root hairs). If a cell has LOTS of mitochondria, it needs lots of energy (muscle cells). Shape always tells you the job.</div></div></div>
+
+      <div class="sh3">Organelle Numbers Vary by Cell Type</div>
+      <p class="prose">Different cell types have different numbers and types of organelles depending on their function:</p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li><strong>Muscle cells</strong> have many mitochondria (need lots of ATP for contraction)</li>
+        <li><strong>Cells that make proteins for export</strong> (like pancreas cells making insulin) have lots of rough ER and Golgi apparatus</li>
+        <li><strong>Cells with many ribosomes</strong> are specialized for protein synthesis</li>
+        <li><strong>Plant leaf cells</strong> have many chloroplasts (for photosynthesis)</li>
+        <li><strong>White blood cells</strong> have many lysosomes (to digest engulfed pathogens)</li>
+      </ul>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Cell Specialization</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2006-24) Which of these organisms contains no specialized cells?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>Identify the concept:</strong> "No specialized cells" = unicellular organism (one cell does everything).</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>Evaluate choices:</strong> Sea anemone (multicellular animal), jellyfish (multicellular animal), paramecium (unicellular protist), sponge (multicellular but very simple animal).</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: C &mdash; Paramecium.</strong> It's a single-celled organism with no cell specialization.</div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> Some choose sponge because sponges are very simple, but sponges ARE multicellular and DO have some specialized cells (collar cells, pore cells). Paramecium is the only truly unicellular organism in the list.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.3e</div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="5" data-std="BIO.3e">
+        <div class="q-stem"><span class="q-num">1</span> (2006-24) Which of these organisms contains no specialized cells? <span class="q-tag">BIO.3e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Sea anemone</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Jellyfish</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Paramecium</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Sponge</li>
+        </ul>
+        <div class="qexp">Paramecium is a unicellular organism &mdash; it has only one cell, so there is no cell specialization. Sea anemones, jellyfish, and sponges are all multicellular animals with at least some specialized cell types.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="5" data-std="BIO.3e">
+        <div class="q-stem"><span class="q-num">2</span> (2003-30) A cell with numerous ribosomes is probably specialized for &mdash; <span class="q-tag">BIO.3e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>cell division</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>energy production</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>protein synthesis</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>enzyme storage</li>
+        </ul>
+        <div class="qexp">Ribosomes make proteins. A cell with many ribosomes is specialized to produce large amounts of protein (like an immune cell making antibodies or a pancreas cell making insulin). Many mitochondria would indicate energy production.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="5" data-std="BIO.3e">
+        <div class="q-stem"><span class="q-num">3</span> (2005-22) Some unicellular organisms are motile (have the ability to move). Which cellular structures are associated with movement? <span class="q-tag">BIO.3e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Chloroplasts</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Ribosomes</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Vacuoles</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Flagella</li>
+        </ul>
+        <div class="qexp">Flagella (and cilia) are cellular structures used for movement. A flagellum is a whip-like tail that propels cells through liquid. Chloroplasts are for photosynthesis, ribosomes for protein synthesis, and vacuoles for storage.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="5" data-std="BIO.3e">
+        <div class="q-stem"><span class="q-num">4</span> (2006-20) When a Paramecium takes in food, the food is contained in which organelle? <span class="q-tag">BIO.3e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Chloroplast</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Mitochondrion</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Vacuole</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Nucleus</li>
+        </ul>
+        <div class="qexp">In unicellular organisms like Paramecium, food is taken in through endocytosis and stored/digested in a food vacuole. This is analogous to the stomach in multicellular animals. Chloroplasts make food (plants only), mitochondria make ATP, and the nucleus contains DNA.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-5">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-5">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Membrane &amp; Transport</button><button class="nbtn next" onclick="goTo(6)" id="next-5" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 6: VOCAB LOCK-IN (Flashcards + Quiz)
+     ================================================================= -->
+<div class="panel" id="p6">
+  <div class="lc">
+    <div class="eyebrow">Step 7 of 10 &mdash; Vocab Lock-In</div>
+    <div class="sh2">Flip Every Card, Then Pass the Vocab Quiz</div>
+    <p class="prose">You must flip ALL 24 flashcards before the quiz appears. Then score at least 8/10 on the quiz to unlock the Practice Test.</p>
+
+    <div class="gate-status" id="vocab-flip-gate">
+      <div class="gate-icon">&#x1F512;</div>
+      <div class="gate-msg">Flip all 24 flashcards to unlock the Vocab Quiz</div>
+      <div class="gate-count" id="vocab-flip-count">0 of 24 cards studied</div>
+    </div>
+
+    <div class="vocab-grid">
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cell Theory</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All living things are made of cells; cell is the basic unit of life; cells come from existing cells</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Prokaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with NO membrane-bound nucleus or organelles (bacteria, archaea)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eukaryote</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell WITH a membrane-bound nucleus and organelles (plants, animals, fungi, protists)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nucleus</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Control center of the cell; contains DNA; directs all cell activities</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mitochondria</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Powerhouse of the cell; cellular respiration produces ATP energy</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Chloroplast</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Photosynthesis organelle; found only in plant cells; contains chlorophyll</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ribosome</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Makes proteins; found in ALL cells (prokaryotes and eukaryotes)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Endoplasmic Reticulum</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Transport network; rough ER has ribosomes (makes proteins); smooth ER makes lipids</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Golgi Apparatus</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Packages, modifies, and ships proteins; the cell's &ldquo;shipping department&rdquo;</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Lysosome</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Breaks down waste, old organelles, and foreign material; the cell's &ldquo;recycling center&rdquo;</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Vacuole</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Storage sac; large central vacuole in plant cells stores water and maintains turgor</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cell Wall</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Rigid outer support in plants, fungi, and bacteria; not in animal cells</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cell Membrane</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Selectively permeable barrier around ALL cells; phospholipid bilayer with proteins</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cell Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Life cycle of a cell: interphase (growth + DNA copy) &rarr; mitosis &rarr; cytokinesis</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Interphase</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Longest phase; cell grows, copies DNA, and prepares to divide (~90% of cell cycle)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mitosis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Division of the nucleus; PMAT stages; produces 2 genetically identical cells</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cytokinesis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Division of the cytoplasm after mitosis; splits cell in two</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">DNA Replication</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Copying DNA before division so each daughter cell gets a complete set</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Diffusion</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Movement from HIGH to LOW concentration; no energy; passive transport</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Osmosis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Diffusion of WATER across a semipermeable membrane; passive; no energy</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Facilitated Diffusion</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Passive transport using protein channels; still high &rarr; low; NO energy needed</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Active Transport</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Low &rarr; high concentration (against gradient); REQUIRES ATP energy</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homeostasis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Maintaining stable internal conditions despite external changes</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Selectively Permeable</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Membrane allows some substances through but blocks others based on size/charge</div></div></div></div>
+    </div>
+
+    <!-- VOCAB QUIZ -->
+    <div id="vquiz" style="display:none;">
+      <div class="vquiz-box">
+        <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
+
+        <div class="vq" id="vq1"><div class="vq-text">1. The organelle that produces ATP through cellular respiration is the:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Ribosome</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Mitochondria</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Chloroplast</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Golgi apparatus</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. A cell WITHOUT a membrane-bound nucleus is classified as:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Eukaryotic</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Prokaryotic</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Multicellular</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Specialized</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. The movement of water across a semipermeable membrane is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Diffusion</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Active transport</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Osmosis</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Endocytosis</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. The correct order of mitosis stages is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Metaphase, Anaphase, Prophase, Telophase</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Prophase, Metaphase, Anaphase, Telophase</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Anaphase, Metaphase, Telophase, Prophase</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Telophase, Prophase, Anaphase, Metaphase</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. Which type of transport requires ATP energy?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Diffusion</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Osmosis</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Facilitated diffusion</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Active transport</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. The organelle that packages and ships proteins is the:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Nucleus</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Lysosome</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Golgi apparatus</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Ribosome</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. Which structure is found in plant cells but NOT animal cells?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Cell membrane</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Mitochondria</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Cell wall</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Ribosome</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. The longest phase of the cell cycle is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Mitosis</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Cytokinesis</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Interphase</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Anaphase</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. Which organelle is found in BOTH prokaryotes and eukaryotes?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Nucleus</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Ribosome</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Mitochondria</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Golgi body</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. Maintaining stable internal conditions is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Mitosis</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Diffusion</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Homeostasis</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Metabolism</div></div><div class="vq-result" id="vqr10"></div></div>
+
+        <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+      </div>
+    </div>
+
+    <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the SOL Practice Test.</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Specialization</button><button class="nbtn next" onclick="goTo(7)">Study Guide &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 7: STUDY GUIDE / CHEAT SHEET
+     ================================================================= -->
+<div class="panel" id="p7">
+  <div class="lc">
+    <div class="eyebrow">Step 8 of 10 &mdash; Study Guide</div>
+    <div class="sh2">BIO.3 One-Page Cheat Sheet</div>
+    <p class="prose">Print this page for quick reference. <button class="nbtn next" onclick="window.print()" style="display:inline-flex;padding:5px 14px;font-size:.8rem;">&#x1F5A8; Print</button></p>
+    <div class="section">
+      <div class="sh3">Cell Theory (BIO.3a)</div>
+      <table class="dt"><tr><th>Tenet</th><th>Statement</th></tr><tr><td>Original 1</td><td>All living things are made of cells</td></tr><tr><td>Original 2</td><td>Cell is the basic unit of structure and function</td></tr><tr><td>Original 3</td><td>All cells come from existing cells</td></tr><tr><td>Expanded 4</td><td>Metabolism occurs within cells</td></tr><tr><td>Expanded 5</td><td>DNA is passed from cell to cell</td></tr><tr><td>Expanded 6</td><td>All cells have the same basic chemical composition</td></tr></table>
+      <p class="prose" style="font-size:.85rem;"><strong>Hypothesis</strong> = testable prediction. <strong>Theory</strong> = well-tested explanation (WHY). <strong>Law</strong> = describes pattern (WHAT). Both equal in validity.</p>
+
+      <div class="sh3">Key Organelles (BIO.3b)</div>
+      <table class="dt"><tr><th>Organelle</th><th>Function</th><th>Found In</th></tr><tr><td>Nucleus</td><td>Control center; contains DNA</td><td>Eukaryotes only</td></tr><tr><td>Ribosome</td><td>Makes proteins</td><td>ALL cells</td></tr><tr><td>Mitochondria</td><td>ATP production (respiration)</td><td>Eukaryotes</td></tr><tr><td>Chloroplast</td><td>Photosynthesis</td><td>Plants only</td></tr><tr><td>Rough ER</td><td>Protein transport (has ribosomes)</td><td>Eukaryotes</td></tr><tr><td>Golgi</td><td>Packages &amp; ships proteins</td><td>Eukaryotes</td></tr><tr><td>Lysosome</td><td>Digests waste</td><td>Animal cells</td></tr><tr><td>Vacuole</td><td>Storage (large in plants)</td><td>Both</td></tr></table>
+      <p class="prose" style="font-size:.85rem;"><strong>Plant only:</strong> cell wall, chloroplasts, large central vacuole. <strong>Prokaryotes:</strong> no membrane-bound organelles, but have ribosomes + cell membrane.</p>
+
+      <div class="sh3">Cell Cycle &amp; Mitosis (BIO.3c)</div>
+      <p class="prose" style="font-size:.85rem;"><strong>Interphase</strong> (~90%): cell grows + copies DNA. <strong>Mitosis</strong> (PMAT): <strong>P</strong>rophase &rarr; <strong>M</strong>etaphase (middle) &rarr; <strong>A</strong>naphase (apart) &rarr; <strong>T</strong>elophase. <strong>Cytokinesis</strong>: splits cytoplasm. Result: 2 identical cells. DNA replication happens BEFORE division.</p>
+
+      <div class="sh3">Transport (BIO.3d)</div>
+      <table class="dt"><tr><th>Type</th><th>Energy?</th><th>Direction</th></tr><tr><td>Diffusion</td><td>No (passive)</td><td>High &rarr; Low</td></tr><tr><td>Osmosis</td><td>No (passive)</td><td>Water: High &rarr; Low</td></tr><tr><td>Facilitated diffusion</td><td>No (passive, uses protein channels)</td><td>High &rarr; Low</td></tr><tr><td>Active transport</td><td>YES (ATP)</td><td>Low &rarr; High</td></tr></table>
+      <p class="prose" style="font-size:.85rem;"><strong>Hypotonic</strong> = water IN, cell swells. <strong>Hypertonic</strong> = water OUT, cell shrinks. <strong>Isotonic</strong> = no change.</p>
+
+      <div class="sh3">Specialization (BIO.3e)</div>
+      <p class="prose" style="font-size:.85rem;"><strong>Form fits function:</strong> muscle cells have many mitochondria; RBCs have no nucleus for more hemoglobin; nerve cells are long for signal transmission. Cells &rarr; Tissues &rarr; Organs &rarr; Organ Systems &rarr; Organism.</p>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(8)">Practice Test &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 8: SOL PRACTICE TEST (20 Questions)
+     ================================================================= -->
+<div class="panel" id="p8">
+  <div class="lc">
+    <div class="eyebrow">Step 9 of 10 &mdash; SOL Practice Test</div>
+    <div class="sh2">20 Questions in SOL Exam Format</div>
+    <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div></div>
+    <div class="quiz-box" id="sol-practice-box">
+      <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.3 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
+
+      <div class="qq" data-ans="d" data-std="BIO.3a"><div class="q-stem"><span class="q-num">1</span> (2006-35) The main difference between prokaryotic and eukaryotic cells is that &mdash; <span class="q-tag">BIO.3a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>eukaryotic cells have a smaller cell nucleus</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>prokaryotic cells are always much larger</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>prokaryotic cells do not have a plasma membrane</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>eukaryotic cells have a more advanced cellular organization</li></ul><div class="qexp">Eukaryotes have membrane-bound organelles including a true nucleus. Prokaryotes are simpler. Both have cell membranes.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.3a"><div class="q-stem"><span class="q-num">2</span> (2004-3) Which characteristic makes prokaryotic organisms different from eukaryotes? <span class="q-tag">BIO.3a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Prokaryotes are made of cells</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Prokaryotes do not have chromosomes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Prokaryotes have DNA</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Prokaryotic cells do not have membrane-bound organelles</li></ul><div class="qexp">Prokaryotes lack membrane-bound organelles (including a true nucleus). They ARE made of cells, they DO have DNA, and they DO have chromosomes (just not enclosed in a nucleus).</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3a"><div class="q-stem"><span class="q-num">3</span> (2006-38) What characteristic do all living things share? <span class="q-tag">BIO.3a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>They reproduce by mitosis</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>They are made up of many parts</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>They contain DNA</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>They need oxygen to survive</li></ul><div class="qexp">All living things contain DNA. Not all reproduce by mitosis. Not all are multicellular. Not all need oxygen.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.3b"><div class="q-stem"><span class="q-num">4</span> (2005-5) Which is responsible for the "rough" appearance of endoplasmic reticulum? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Enzymes</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>DNA</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Lysosomes</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Ribosomes</li></ul><div class="qexp">Ribosomes studded on the ER surface make it appear "rough." These ribosomes are making proteins for transport.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3b"><div class="q-stem"><span class="q-num">5</span> (2001-50) Which of these functions most like the "brain" of a cell? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The Golgi apparatus</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The mitochondrion</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The nucleus</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The smooth endoplasmic reticulum</li></ul><div class="qexp">The nucleus contains DNA and controls all cell activities &mdash; the cell's "brain."</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.3b"><div class="q-stem"><span class="q-num">6</span> (2001-11) In the human body, the circulatory system transports substances. Which organelle performs a similar function within the cell? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Nucleus</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Endoplasmic reticulum</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Golgi apparatus</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Mitochondrion</li></ul><div class="qexp">The ER is the cell's internal transport network, moving proteins and lipids throughout the cell, similar to the circulatory system in the body.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.3b"><div class="q-stem"><span class="q-num">7</span> (2003-33) Which organelle is present in BOTH prokaryotes and eukaryotes? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Endoplasmic reticulum</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Ribosome</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Golgi body</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Nucleus</li></ul><div class="qexp">Ribosomes are found in ALL cells because ALL cells need to make proteins.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.3b"><div class="q-stem"><span class="q-num">8</span> (2006-5) Which pair of structures best shows that plant cells have different functions from animal cells? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Chloroplasts and cell walls</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Cytoplasm and mitochondria</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Ribosomes and cell membranes</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Nuclei and centrioles</li></ul><div class="qexp">Chloroplasts and cell walls are unique to plant cells. The other options exist in both.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.3c"><div class="q-stem"><span class="q-num">9</span> (2005-10) Which phase is the first step in mitosis? <span class="q-tag">BIO.3c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Prophase</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Telophase</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Metaphase</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Anaphase</li></ul><div class="qexp">PMAT: Prophase is first. Chromosomes condense and nuclear membrane breaks down.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3c"><div class="q-stem"><span class="q-num">10</span> (2004-30) DNA replication is necessary before a cell &mdash; <span class="q-tag">BIO.3c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>codes for RNA molecules</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>modifies lysosome enzymes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>divides into two cells</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>makes a protein</li></ul><div class="qexp">DNA must be copied before division so each daughter cell gets a complete set of instructions.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3c"><div class="q-stem"><span class="q-num">11</span> (2001-9) Reduction of chromosome number during meiosis is most important for &mdash; <span class="q-tag">BIO.3c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>keeping DNA at a minimum level</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>preventing the nucleus from getting larger</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>maintaining chromosome number during sexual reproduction</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>allowing growth without increasing DNA</li></ul><div class="qexp">Meiosis halves chromosomes so that when gametes fuse at fertilization, the species' chromosome number is maintained (not doubled every generation).</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.3d"><div class="q-stem"><span class="q-num">12</span> (2003-35) In a cell membrane model, the molecules that move large molecules in and out of the cell are &mdash; <span class="q-tag">BIO.3d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>cholesterol</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>proteins</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>lipids</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>carbohydrates</li></ul><div class="qexp">Transport proteins in the membrane help move large molecules across. Lipids form the bilayer structure.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.3d"><div class="q-stem"><span class="q-num">13</span> (2002-26) Unicellular organisms cannot grow very large because &mdash; <span class="q-tag">BIO.3d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>diffusion of nutrients would be too slow</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>locomotion would be too slow</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>respiratory rate would be too high</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>energy expenditures would be too great</li></ul><div class="qexp">As cells grow, surface-area-to-volume ratio decreases. The membrane can't transport nutrients fast enough via diffusion to support a very large cell.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3d"><div class="q-stem"><span class="q-num">14</span> (2004-5) What part of a bacterium allows it to recognize substances in its environment? <span class="q-tag">BIO.3d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Nucleus</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Lysosomes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Cell membrane</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Endoplasmic reticulum</li></ul><div class="qexp">The cell membrane has receptor proteins that detect chemicals. Bacteria lack nucleus, lysosomes, and ER.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.3d"><div class="q-stem"><span class="q-num">15</span> (2006-37) Cells from which organism would contain cell walls? <span class="q-tag">BIO.3d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Sponge</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Water lily</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Cricket</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Paramecium</li></ul><div class="qexp">Water lily is a plant &mdash; plant cells have cell walls. Sponges, crickets (animals), and paramecium (protist) do not have cell walls.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3e"><div class="q-stem"><span class="q-num">16</span> (2006-24) Which organism contains no specialized cells? <span class="q-tag">BIO.3e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Sea anemone</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Jellyfish</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Paramecium</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Sponge</li></ul><div class="qexp">Paramecium is unicellular &mdash; one cell, no specialization. The others are multicellular.</div></div>
+      <div class="qq" data-ans="d" data-std="BIO.3e"><div class="q-stem"><span class="q-num">17</span> (2003-22) Compared to a skin cell, a muscle cell likely has more &mdash; <span class="q-tag">BIO.3e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>golgi bodies</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>chloroplasts</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>cell membranes</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>mitochondria</li></ul><div class="qexp">Muscle cells need lots of ATP for contraction = lots of mitochondria. Human cells never have chloroplasts.</div></div>
+      <div class="qq" data-ans="c" data-std="BIO.3e"><div class="q-stem"><span class="q-num">18</span> (2003-30) A cell with numerous ribosomes is probably specialized for &mdash; <span class="q-tag">BIO.3e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>cell division</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>energy production</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>protein synthesis</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>enzyme storage</li></ul><div class="qexp">Ribosomes make proteins. Many ribosomes = specialized for making lots of protein.</div></div>
+      <div class="qq" data-ans="a" data-std="BIO.3b"><div class="q-stem"><span class="q-num">19</span> (2002-38) What is the purpose of the flagellum? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Movement</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Catching prey</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Circulation</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Attachment</li></ul><div class="qexp">A flagellum is a whip-like tail used for cell movement/locomotion.</div></div>
+      <div class="qq" data-ans="b" data-std="BIO.3b"><div class="q-stem"><span class="q-num">20</span> (2005-26) What repackages proteins into forms the cell can use, expel, or keep stored? <span class="q-tag">BIO.3b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Centrioles</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Golgi bodies</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Lysosomes</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Mitochondria</li></ul><div class="qexp">The Golgi apparatus packages, modifies, and ships proteins to their destination.</div></div>
+
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(9)" disabled>Results &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 9: RESULTS & DANGER ZONE
+     ================================================================= -->
+<div class="panel" id="p9">
+  <div class="lc">
+    <div class="eyebrow">Step 10 of 10 &mdash; Results</div>
+    <div class="sh2">Your BIO.3 Score &amp; Danger Zone Report</div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+</div>
+
+</main>
+<script>
+/* ── CONSTANTS ───────────────────────────────────── */
+const UNIT = 'unit3';
+const TOTAL_PANELS = 10;
+const TOTAL_SOL_Q = 20;
+const TOTAL_CARDS = 24;
+const VQ_TOTAL = 10;
+const VQ_PASS = 8;
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+
+/* ── STATE ────────────────────────────────────────── */
+var studentName = '';
+var classPeriod = '';
+var currentPanel = 0;
+var panelStartTime = Date.now();
+var sessionStart = Date.now();
+var activityLog = [];
+var pretestAnswers = [];
+var pretestSent = false;
+var vqAnswers = {};
+var vqScore = 0;
+var vocabPassed = false;
+var pracAnswered = 0;
+var pracCorrect = 0;
+var missedStds = {};
+var questionDetail = [];
+var flippedCards = new Set();
+var graphAnswered = {};
+
+var VQ_CORRECT = {1:'b',2:'b',3:'c',4:'b',5:'d',6:'c',7:'c',8:'c',9:'b',10:'c'};
+var VQ_EXPLAIN = {
+  1:'Mitochondria are the "powerhouse" of the cell. They perform cellular respiration, converting glucose + O2 into ATP energy.',
+  2:'Prokaryotic cells lack a membrane-bound nucleus. Their DNA floats freely in the cytoplasm. Bacteria and archaea are prokaryotes.',
+  3:'Osmosis is specifically the diffusion of WATER across a semipermeable membrane, from high water concentration to low water concentration.',
+  4:'PMAT: Prophase, Metaphase, Anaphase, Telophase. Remember: Please Make Another Taco.',
+  5:'Active transport is the ONLY type that requires ATP energy because it moves substances AGAINST the concentration gradient (low to high).',
+  6:'The Golgi apparatus receives proteins from the ER, modifies and packages them, then ships them to their destination inside or outside the cell.',
+  7:'Plant cells have cell walls (rigid support) and chloroplasts (photosynthesis) that animal cells lack. Both have cell membranes, mitochondria, and ribosomes.',
+  8:'Interphase is the longest phase (~90% of the cell cycle). The cell grows, carries out normal functions, and copies its DNA before dividing.',
+  9:'Ribosomes are found in ALL cells — both prokaryotes and eukaryotes — because every cell needs to make proteins.',
+  10:'Homeostasis is the maintenance of stable internal conditions (temperature, pH, glucose levels) despite changes in the external environment.'
+};
+
+/* ── METADATA ────────────────────────────────────── */
+function initMeta() {
+  var today = new Date().toISOString().slice(0, 10);
+  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
+  var last = localStorage.getItem('sol_streak_last');
+  if (last === today) { /* already counted */ }
+  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
+  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
+  document.getElementById('streak-val').textContent = streak;
+  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
+
+  var solDate = new Date('2026-05-07');
+  var diff = Math.ceil((solDate - new Date()) / 86400000);
+  document.getElementById('sol-countdown').textContent = diff > 0 ? diff : 0;
+}
+
+/* ── TRACKING ────────────────────────────────────── */
+function send(data) {
+  data.student = studentName;
+  data.module = 'SOL Prep — Unit 3: Cell Structure & Function';
+  data.classPeriod = classPeriod;
+  data.timestamp = data.timestamp || new Date().toISOString();
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(data));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(function(){});
+  }
+}
+
+function getAnswerText(opt) {
+  var t = opt.textContent.trim();
+  return t.replace(/^[A-D]\s*/, '');
+}
+
+/* ── SAVE / RESTORE ──────────────────────────────── */
+function saveProgress() {
+  if (!studentName) return;
+  var gateObj = {};
+  for (var key in gateAnswered) {
+    gateObj[key] = Array.from(gateAnswered[key]);
+  }
+  var data = {
+    studentName: studentName,
+    classPeriod: classPeriod,
+    currentPanel: currentPanel,
+    gateAnswered: gateObj,
+    graphAnswered: graphAnswered,
+    pretestAnswers: pretestAnswers,
+    pretestSent: pretestSent,
+    vqAnswers: vqAnswers,
+    vqScore: vqScore,
+    vocabPassed: vocabPassed,
+    pracAnswered: pracAnswered,
+    pracCorrect: pracCorrect,
+    missedStds: missedStds,
+    questionDetail: questionDetail,
+    activityLog: activityLog,
+    sessionStart: sessionStart,
+    unlockedPanels: Array.from(unlockedPanels),
+    flippedCards: Array.from(flippedCards)
+  };
+  localStorage.setItem('sol_unit3_progress', JSON.stringify(data));
+}
+
+function restoreProgress(data) {
+  studentName = data.studentName;
+  classPeriod = data.classPeriod;
+  if (data.unlockedPanels) {
+    unlockedPanels = new Set(data.unlockedPanels);
+  } else {
+    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
+  }
+  pretestAnswers = data.pretestAnswers || [];
+  pretestSent = data.pretestSent || false;
+  vqAnswers = data.vqAnswers || {};
+  vqScore = data.vqScore || 0;
+  vocabPassed = data.vocabPassed || false;
+  pracAnswered = data.pracAnswered || 0;
+  pracCorrect = data.pracCorrect || 0;
+  missedStds = data.missedStds || {};
+  questionDetail = data.questionDetail || [];
+  activityLog = data.activityLog || [];
+  sessionStart = data.sessionStart || Date.now();
+  graphAnswered = data.graphAnswered || {};
+
+  gateAnswered = {};
+  if (data.gateAnswered) {
+    for (var pid in data.gateAnswered) {
+      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
+    }
+  }
+
+  document.getElementById('name-modal').style.display = 'none';
+  panelStartTime = Date.now();
+
+  // Replay gate questions visually
+  for (var panelId in gateAnswered) {
+    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+    gateAnswered[panelId].forEach(function(idx) {
+      if (qs[idx]) {
+        var qq = qs[idx];
+        var correct = qq.dataset.ans;
+        qq.querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === correct) o.classList.add('correct');
+        });
+        var exp = qq.querySelector('.qexp');
+        if (exp) exp.classList.add('show');
+      }
+    });
+    checkGate(parseInt(panelId));
+  }
+
+  // Replay graph answers
+  // (No graph questions in Unit 2 content panels)
+
+  // Restore flipped cards
+  if (data.flippedCards) {
+    flippedCards = new Set(data.flippedCards);
+    var allCards = document.querySelectorAll('.vcard');
+    flippedCards.forEach(function(idx) {
+      if (allCards[idx]) allCards[idx].classList.add('flipped');
+    });
+    var countEl = document.getElementById('vocab-flip-count');
+    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+    if (flippedCards.size >= TOTAL_CARDS) {
+      document.getElementById('vquiz').style.display = 'block';
+      var gate = document.getElementById('vocab-flip-gate');
+      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
+    }
+  }
+
+  // Restore vocab quiz answers
+  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
+    for (var qn in data.vqAnswers) {
+      var chosen = data.vqAnswers[qn];
+      var vqDiv = document.getElementById('vq' + qn);
+      if (!vqDiv) continue;
+      var opts = vqDiv.querySelectorAll('.vq-opt');
+      opts.forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
+        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
+      });
+      var res = document.getElementById('vqr' + qn);
+      if (res) {
+        res.textContent = VQ_EXPLAIN[qn];
+        res.classList.add('show');
+        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
+      }
+    }
+    if (data.vocabPassed) {
+      var scoreBox = document.getElementById('vquiz-score');
+      scoreBox.style.display = 'block';
+      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
+      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+      var pl = document.getElementById('practice-locked');
+      if (pl) pl.style.display = 'none';
+      var tl = document.getElementById('practice-test-locked');
+      if (tl) tl.style.display = 'none';
+      var sb = document.getElementById('sol-practice-box');
+      if (sb) sb.style.display = 'block';
+    }
+  }
+
+  // Restore practice test answers
+  if (data.pracAnswered > 0) {
+    var solQs = document.querySelectorAll('#sol-practice-box .qq');
+    for (var qi = 0; qi < data.questionDetail.length; qi++) {
+      var qd = data.questionDetail[qi];
+      if (solQs[qi]) {
+        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
+          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
+        });
+        var exp = solQs[qi].querySelector('.qexp');
+        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
+      }
+    }
+    var progMsg = document.getElementById('sol-progress-msg');
+    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+    if (data.pracAnswered === TOTAL_SOL_Q) {
+      document.getElementById('to-results-btn').disabled = false;
+      showDangerZone();
+    }
+  }
+
+  goTo(data.currentPanel || 0);
+}
+
+/* ── START ────────────────────────────────────────── */
+function startUnit() {
+  var nameInput = document.getElementById('student-name').value.trim();
+  if (nameInput.split(/\s+/).length < 2) {
+    document.getElementById('name-err').style.display = 'block';
+    return;
+  }
+  var periodEl = document.getElementById('class-period');
+  if (periodEl) {
+    classPeriod = periodEl.value;
+    if (!classPeriod) {
+      var periodErr = document.getElementById('period-err');
+      if (periodErr) periodErr.style.display = 'block';
+      return;
+    }
+  }
+  studentName = nameInput;
+
+  var saved = localStorage.getItem('sol_unit3_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName === studentName) {
+      restoreProgress(data);
+      return;
+    }
+  }
+  localStorage.removeItem('sol_unit3_progress');
+
+  document.getElementById('name-modal').style.display = 'none';
+  initMeta();
+  sessionStart = Date.now();
+  panelStartTime = Date.now();
+  send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });
+}
+
+/* ── NAVIGATION ───────────────────────────────────── */
+var unlockedPanels = new Set([0]);
+
+var stepNames = ['SOL Focus','Cell Theory','Organelles','Cell Cycle','Membrane & Transport','Specialization','Vocab Lock-In','Study Guide','Practice Test','Results'];
+
+function goTo(n) {
+  if (n > currentPanel && !unlockedPanels.has(n)) {
+    showToast('Complete the questions on this page first!');
+    return;
+  }
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
+  }
+  panelStartTime = Date.now();
+
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById('p' + n);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
+  var sb = document.getElementById('sb' + n);
+  if (sb) sb.classList.add('active');
+  for (var i = 0; i < n; i++) {
+    var prev = document.getElementById('sb' + i);
+    if (prev) prev.classList.add('done');
+  }
+  currentPanel = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
+  document.getElementById('steps-prog').style.width = pct + '%';
+  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
+  if (!(n in gateRequired)) { unlockedPanels.add(n + 1); }
+  localStorage.setItem('sol_' + UNIT + '_panel', n);
+  saveProgress();
+}
+
+/* ── GATE SYSTEM ─────────────────────────────────── */
+var gateAnswered = {};
+var gateRequired = { 0: 5, 1: 4, 2: 5, 3: 4, 4: 4, 5: 4 };
+
+function gateAnswer(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var panelId = parseInt(qq.dataset.panel);
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
+  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+  for (var i = 0; i < qs.length; i++) {
+    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
+  }
+
+  // Track pretest answers (panel 0, questions 3-5)
+  if (panelId === 0) {
+    var qIndex = Array.from(qs).indexOf(qq);
+    if (qIndex >= 2) {
+      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
+      if (pretestAnswers.length === 3 && !pretestSent) {
+        pretestSent = true;
+        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
+        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
+          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
+        })});
+      }
+    }
+  }
+
+  checkGate(panelId);
+  saveProgress();
+}
+
+function checkGate(panelId) {
+  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
+  var required = gateRequired[panelId] || 0;
+
+  var status = document.getElementById('gate-status-' + panelId);
+  var count = document.getElementById('gate-count-' + panelId);
+  if (count) count.textContent = answered + ' of ' + required + ' answered';
+
+  if (answered >= required) {
+    unlockedPanels.add(panelId + 1);
+    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
+    var btn = document.getElementById('next-' + panelId);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
+    }
+    var sb = document.getElementById('sb' + panelId);
+    if (sb) sb.classList.add('done');
+    saveProgress();
+  }
+}
+
+/* ── FLASHCARDS ──────────────────────────────────── */
+function flipCard(card) {
+  card.classList.toggle('flipped');
+  var allCards = document.querySelectorAll('.vcard');
+  var idx = Array.from(allCards).indexOf(card);
+  if (card.classList.contains('flipped')) {
+    flippedCards.add(idx);
+  }
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+
+  if (flippedCards.size >= TOTAL_CARDS) {
+    document.getElementById('vquiz').style.display = 'block';
+    var gate = document.getElementById('vocab-flip-gate');
+    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
+  }
+  saveProgress();
+}
+
+/* ── VOCAB QUIZ ──────────────────────────────────── */
+function vqPick(el) {
+  var vq = el.closest('.vq');
+  if (vq.querySelector('.vq-opt.revealed')) return;
+  var qNum = vq.id.replace('vq', '');
+  var chosen = el.dataset.v;
+  var correct = VQ_CORRECT[qNum];
+  var isCorrect = (chosen === correct);
+
+  vq.querySelectorAll('.vq-opt').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === el && !isCorrect) o.classList.add('incorrect');
+  });
+
+  var res = document.getElementById('vqr' + qNum);
+  if (res) {
+    res.textContent = VQ_EXPLAIN[qNum];
+    res.classList.add('show');
+    if (!isCorrect) res.classList.add('wrong');
+  }
+
+  vqAnswers[qNum] = chosen;
+  saveProgress();
+}
+
+function gradeVocab() {
+  vqScore = 0;
+  for (var q = 1; q <= VQ_TOTAL; q++) {
+    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
+  }
+  var box = document.getElementById('vquiz-score');
+  var nEl = document.getElementById('vq-score-num');
+  var msgEl = document.getElementById('vq-pass-msg');
+  var retryBtn = document.getElementById('vq-retry-btn');
+  nEl.textContent = vqScore + '/' + VQ_TOTAL;
+  box.style.display = 'block';
+  if (vqScore >= VQ_PASS) {
+    msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+    vocabPassed = true;
+    unlockedPanels.add(7);  // Study Guide
+    unlockedPanels.add(8);  // Practice Test
+    unlockedPanels.add(9);  // Results
+    document.getElementById('practice-locked').style.display = 'none';
+    var testLocked = document.getElementById('practice-test-locked');
+    if (testLocked) testLocked.style.display = 'none';
+    var testBox = document.getElementById('sol-practice-box');
+    if (testBox) testBox.style.display = 'block';
+    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
+    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
+  } else {
+    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
+    retryBtn.style.display = 'inline-block';
+
+    flippedCards = new Set();
+    vqAnswers = {};
+    vqScore = 0;
+
+    saveProgress();
+
+    var allCards = document.querySelectorAll('.vcard');
+    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
+    var flipGate = document.getElementById('vocab-flip-gate');
+    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+    var flipCount = document.getElementById('vocab-flip-count');
+    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+    setTimeout(function() {
+      document.getElementById('vquiz').style.display = 'none';
+      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+      box.style.display = 'none';
+      retryBtn.style.display = 'none';
+      saveProgress();
+      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Study all cards again before retaking the quiz');
+    }, 3000);
+    return;
+  }
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  saveProgress();
+}
+
+function retryVocab() {
+  vqAnswers = {};
+  vqScore = 0;
+  flippedCards = new Set();
+
+  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+  var scoreBox = document.getElementById('vquiz-score');
+  if (scoreBox) scoreBox.style.display = 'none';
+  var retryBtn = document.getElementById('vq-retry-btn');
+  if (retryBtn) retryBtn.style.display = 'none';
+
+  var allCards = document.querySelectorAll('.vcard');
+  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
+
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+  var gate = document.getElementById('vocab-flip-gate');
+  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+
+  var quiz = document.getElementById('vquiz');
+  if (quiz) quiz.style.display = 'none';
+
+  saveProgress();
+  var grid = document.querySelector('.vocab-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
+}
+
+/* ── SOL PRACTICE TEST ───────────────────────────── */
+function solPick(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var std = qq.dataset.std || 'BIO.3';
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  pracAnswered++;
+  if (isCorrect) pracCorrect++;
+  else {
+    if (!missedStds[std]) missedStds[std] = 0;
+    missedStds[std]++;
+  }
+
+  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
+  var qNumMatch = stemText.match(/^(\d+)/);
+  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
+  var studentAnswerText = getAnswerText(opt);
+  var correctAnswerText = '';
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
+  });
+  questionDetail.push({
+    qNum: qNum, std: std, questionText: stemText,
+    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
+    isCorrect: isCorrect, correct: correct, chosen: chosen
+  });
+
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+
+  if (pracAnswered === TOTAL_SOL_Q) {
+    document.getElementById('to-results-btn').disabled = false;
+    showDangerZone();
+    setTimeout(function(){ goTo(9); }, 800);
+  }
+  saveProgress();
+}
+
+/* ── DANGER ZONE ─────────────────────────────────── */
+function showDangerZone() {
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+  var box = document.getElementById('dz-result');
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'none';
+  box.style.display = 'block';
+  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
+
+  var cls, emoji, label, msg;
+  if (pct >= 80) {
+    cls = 'green'; emoji = '\uD83D\uDFE2';
+    label = 'STRONG \u2014 You\'re in good shape on BIO.3';
+    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
+  } else if (pct >= 60) {
+    cls = 'yellow'; emoji = '\uD83D\uDFE1';
+    label = 'CAUTION \u2014 Review needed on BIO.3';
+    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
+  } else {
+    cls = 'red'; emoji = '\uD83D\uDD34';
+    label = 'DANGER ZONE \u2014 BIO.3 needs work';
+    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
+  }
+
+  box.className = 'dz-box ' + cls;
+  document.getElementById('dz-emoji').textContent = emoji;
+  document.getElementById('dz-label').textContent = label;
+  document.getElementById('dz-msg').textContent = msg;
+
+  if (Object.keys(missedStds).length > 0) {
+    var missed = document.getElementById('dz-missed');
+    var list = document.getElementById('dz-missed-list');
+    missed.style.display = 'block';
+    var stdDesc = {
+      'BIO.3a': 'Cell Theory \u2014 Original and Expanded Tenets',
+      'BIO.3b': 'Organelles \u2014 Structure and Function',
+      'BIO.3c': 'Cell Cycle \u2014 Mitosis and DNA Replication',
+      'BIO.3d': 'Membrane & Transport \u2014 Passive and Active',
+      'BIO.3e': 'Cell Specialization \u2014 Form Fits Function'
+    };
+    list.innerHTML = Object.keys(missedStds).map(function(s) {
+      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
+    }).join('');
+  }
+
+  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
+  localStorage.setItem('sol_' + UNIT + '_pct', pct);
+  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
+  localStorage.setItem('sol_' + UNIT + '_done', 'true');
+
+  var sb9 = document.getElementById('sb9');
+  if (sb9) sb9.classList.add('done');
+  saveProgress();
+}
+
+/* ── SUBMIT FINAL SCORE ──────────────────────────── */
+function submitFinalScore() {
+  if (!studentName) return;
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+
+  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
+
+  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
+    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
+  })});
+
+  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
+
+  showToast('Score sent to Mr. England \u2713');
+  document.getElementById('dz-submit-btn').textContent = '\u2705 Score Sent!';
+  document.getElementById('dz-submit-btn').disabled = true;
+}
+
+/* ── RETAKE PRACTICE TEST ────────────────────────── */
+function retakePractice() {
+  pracAnswered = 0;
+  pracCorrect = 0;
+  missedStds = {};
+  questionDetail = [];
+  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
+  document.getElementById('dz-result').style.display = 'none';
+  document.getElementById('dz-result').className = 'dz-box';
+  document.getElementById('dz-missed').style.display = 'none';
+  document.getElementById('dz-missed-list').innerHTML = '';
+  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
+  document.getElementById('dz-submit-btn').disabled = false;
+  document.getElementById('to-results-btn').disabled = true;
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'block';
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = '';
+  goTo(8);
+  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
+}
+
+/* ── TOAST ────────────────────────────────────────── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.display = 'flex';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+
+/* ── PAGE EXIT HANDLER ───────────────────────────── */
+window.addEventListener('beforeunload', function() {
+  if (!studentName) return;
+  saveProgress();
+  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+  }
+  var payload = {
+    student: studentName,
+    module: 'SOL Prep — Unit 3: Cell Structure & Function',
+    classPeriod: classPeriod,
+    action: 'activity',
+    event: 'session_end',
+    totalSessionSeconds: totalSeconds,
+    panelLog: JSON.stringify(activityLog),
+    timestamp: new Date().toISOString()
+  };
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(payload));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
+  }
+});
+
+/* ── INIT ON DOM READY ───────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  initMeta();
+  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
+    vocabPassed = true;
+    var pl = document.getElementById('practice-locked');
+    if (pl) pl.style.display = 'none';
+    var tl = document.getElementById('practice-test-locked');
+    if (tl) tl.style.display = 'none';
+    var sb = document.getElementById('sol-practice-box');
+    if (sb) sb.style.display = 'block';
+  }
+  var saved = localStorage.getItem('sol_unit3_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName) {
+      var nameInput = document.getElementById('student-name');
+      var periodSelect = document.getElementById('class-period');
+      nameInput.value = data.studentName;
+      if (periodSelect) periodSelect.value = data.classPeriod || '';
+      var modalTitle = document.querySelector('.nm-title');
+      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
+      var modalSub = document.querySelector('.nm-sub');
+      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
+      var modalBtn = document.querySelector('.nm-btn');
+      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
+    }
+  }
+});
+</script>
+</body>
+</html>
