@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO SOL Prep · Unit 4: Biochemistry & Energy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────────── */
+:root{
+  --navy:#0f2240;--navy-mid:#1a3560;
+  --red:#dc2626;--red-pale:#fef2f2;--red-mid:#991b1b;
+  --amber:#d97706;--amber-pale:#fffbeb;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --yellow:#ca8a04;--yellow-pale:#fefce8;
+  --teal:#0b8f8c;--teal-pale:#f0fdfa;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-600:#4b5563;--gray-900:#111827;
+  --border:#e5e7eb;--muted:#6b7280;
+  --header-h:58px;--steps-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.7;font-size:16px;}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-unit{flex:1;text-align:center;}
+.tb-unit-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.tb-unit-name{font-size:.88rem;font-weight:700;color:#fff;}
+.tb-stats{display:flex;gap:10px;align-items:center;}
+.tb-stat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;}
+.tb-stat-icon{font-size:.9rem;}
+.tb-stat-val{font-size:.78rem;font-weight:700;color:#fff;}
+.tb-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.5);}
+.tb-badge{background:var(--red);color:#fff;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+
+/* STEP BAR */
+.steps-bar{position:fixed;top:var(--header-h);left:0;right:0;z-index:299;height:var(--steps-h);background:#fff;border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0;overflow-x:auto;scrollbar-width:none;}
+.steps-bar::-webkit-scrollbar{display:none;}
+.step{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.step-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;border:none;background:transparent;font-family:"Source Sans 3",sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.step-btn:hover{background:var(--gray-100);color:var(--gray-900);}
+.step-btn.active{background:var(--red);color:#fff;font-weight:700;}
+.step-btn.done{color:var(--green);}
+.step-btn.done .step-num{background:var(--green);color:#fff;}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.step-btn.active .step-num{background:rgba(255,255,255,.25);color:#fff;}
+.step-sep{width:20px;height:1px;background:var(--border);flex-shrink:0;}
+.steps-prog{position:fixed;top:calc(var(--header-h)+var(--steps-h)-2px);left:0;z-index:298;height:3px;background:var(--red);transition:width .4s ease;width:0%;}
+
+/* MAIN */
+.main{padding-top:148px;min-height:100vh;}
+.panel{display:none;animation:fadeIn .25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* FOCUS CARD (p0) */
+.focus-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);padding:48px 48px 40px;position:relative;overflow:visible;}
+.focus-hero::after{content:"BIO.4";position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:"Playfair Display",serif;font-size:7rem;font-weight:900;color:rgba(255,255,255,.05);pointer-events:none;}
+.focus-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.focus-title{font-family:"Playfair Display",serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:8px;}
+.focus-sub{font-size:.95rem;color:rgba(255,255,255,.7);max-width:580px;line-height:1.6;}
+.focus-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
+
+/* CONTENT LAYOUT */
+.lc{padding:36px 48px 56px;max-width:860px;}
+.section{margin-bottom:40px;}
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.sh3{font-size:1rem;font-weight:700;color:var(--navy);margin:20px 0 8px;padding-left:10px;border-left:3px solid var(--red);}
+.prose{font-size:.94rem;line-height:1.85;color:#374151;margin-bottom:12px;}
+.prose strong{color:var(--navy);}
+
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:.86rem;margin:14px 0;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:.74rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:9px 14px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top;}
+.dt tr:nth-child(even) td{background:var(--gray-50);}
+.dt tr:last-child td{border-bottom:none;}
+
+/* SOL FOCUS BOXES */
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.sol-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.sol-card-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.sol-list{list-style:none;}
+.sol-list li{font-size:.84rem;color:var(--gray-600);padding:4px 0 4px 22px;position:relative;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.sol-list li:last-child{border-bottom:none;}
+.sol-list li::before{content:"\2192";position:absolute;left:0;color:var(--red);font-weight:700;}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;}
+.ci{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.88rem;margin-bottom:3px;}
+.cx{font-size:.87rem;line-height:1.7;}
+.callout.tip{background:#eff6ff;border-left:4px solid #3b82f6;}
+.callout.tip .ct{color:#1d4ed8;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#92400e;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:#134e4a;}
+.callout.mem{background:#faf5ff;border-left:4px solid #7c3aed;}
+.callout.mem .ct{color:#5b21b6;}
+.callout.sol{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.sol .ct{color:var(--red-mid);}
+
+/* VOCAB CARDS */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px;}
+.vcard{height:130px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.08);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:600;color:#fca5a5;line-height:1.3;}
+.vhint{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:6px;}
+.vback{background:var(--red-pale);border:2px solid var(--red);transform:rotateY(180deg);}
+.vdef{font-size:.77rem;color:var(--navy);line-height:1.5;}
+
+/* VOCAB QUIZ */
+.vquiz-box{background:#fff;border:2px solid var(--navy);border-radius:12px;padding:24px;margin:20px 0;}
+.vquiz-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.vquiz-icon{width:38px;height:38px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.vquiz-title{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--navy);}
+.vquiz-sub{font-size:.78rem;color:var(--muted);}
+.vq{margin-bottom:18px;}
+.vq-text{font-size:.9rem;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.55;}
+.vq-opts{display:flex;flex-direction:column;gap:6px;}
+.vq-opt{display:flex;align-items:center;gap:8px;padding:9px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.86rem;transition:all .18s;line-height:1.4;}
+.vq-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.correct{border-color:var(--green);background:var(--green-pale);}
+.vq-opt.incorrect{border-color:var(--red);background:var(--red-pale);}
+.vq-opt.revealed{pointer-events:none;}
+.vq-ol{width:20px;height:20px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vq-opt.correct .vq-ol{background:var(--green);color:#fff;}
+.vq-opt.incorrect .vq-ol{background:var(--red);color:#fff;}
+.vq-result{display:none;margin-top:10px;padding:10px 14px;background:var(--green-pale);border-radius:7px;font-size:.82rem;color:var(--navy);border-left:3px solid var(--green);}
+.vq-result.show{display:block;}
+.vq-result.wrong{background:var(--red-pale);border-left-color:var(--red);}
+.vquiz-score{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:18px 22px;margin-top:14px;text-align:center;}
+.vq-score-n{font-family:"Playfair Display",serif;font-size:2.4rem;color:#fca5a5;}
+.vquiz-pass-msg{font-size:.88rem;color:rgba(255,255,255,.75);margin-top:4px;}
+.vquiz-retry-btn{margin-top:12px;padding:8px 22px;border-radius:7px;border:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:all .2s;}
+.vquiz-retry-btn:hover{background:rgba(255,255,255,.1);}
+
+/* PRACTICE BANK */
+.practice-locked{background:#fff;border:2px dashed var(--gray-200);border-radius:14px;padding:32px;text-align:center;margin:20px 0;}
+.practice-locked-icon{font-size:2.5rem;margin-bottom:10px;}
+.practice-locked-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--gray-600);margin-bottom:6px;}
+.practice-locked-sub{font-size:.85rem;color:var(--muted);}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.q-icon{width:40px;height:40px;background:var(--red-pale);border:2px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.qh p{font-size:.78rem;color:var(--muted);}
+.qq{margin-bottom:22px;}
+.q-stem{font-size:.92rem;font-weight:600;color:var(--navy);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px;line-height:1.6;}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;flex-shrink:0;}
+.q-tag{display:inline-flex;align-items:center;background:var(--red-pale);border:1px solid var(--red);border-radius:20px;padding:1px 8px;font-size:.64rem;font-weight:700;color:var(--red-mid);letter-spacing:.3px;margin-left:4px;white-space:nowrap;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.qo{display:flex;align-items:flex-start;gap:8px;padding:10px 13px;border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.87rem;transition:all .18s;line-height:1.5;}
+.qo:hover{border-color:var(--red);background:var(--red-pale);}
+.qo.correct{border-color:var(--green);background:var(--green-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--gray-200);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--green);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:9px;padding:10px 13px;background:var(--green-pale);border-radius:7px;font-size:.83rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--green);}
+.qexp.show{display:block;}
+.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);}
+
+/* DANGER ZONE */
+.dz-box{display:none;border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center;}
+.dz-box.green{background:var(--green-pale);border:2px solid var(--green);}
+.dz-box.yellow{background:var(--yellow-pale);border:2px solid var(--yellow);}
+.dz-box.red{background:var(--red-pale);border:2px solid var(--red);}
+.dz-emoji{font-size:2.8rem;margin-bottom:8px;}
+.dz-score{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;}
+.dz-box.green .dz-score{color:var(--green);}
+.dz-box.yellow .dz-score{color:var(--yellow);}
+.dz-box.red .dz-score{color:var(--red);}
+.dz-label{font-size:.95rem;font-weight:700;margin:4px 0;}
+.dz-msg{font-size:.85rem;color:var(--gray-600);margin-top:6px;line-height:1.6;}
+.dz-missed{margin-top:16px;text-align:left;background:#fff;border-radius:10px;padding:16px;display:none;}
+.dz-missed-title{font-size:.78rem;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.dz-missed-item{font-size:.82rem;color:var(--gray-600);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.dz-missed-item:last-child{border-bottom:none;}
+.dz-submit-btn{margin-top:16px;padding:10px 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:background .2s;}
+.dz-submit-btn:hover{background:#1a3560;}
+
+/* GRAPH BOX */
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.87rem;margin-bottom:3px;}
+.graph-cap{font-size:.74rem;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.graph-wrap{position:relative;height:220px;max-width:500px;margin:0 auto;}
+.graph-q{margin-top:12px;padding:12px 14px;background:var(--gray-50);border-radius:8px;border-left:3px solid var(--navy);}
+.graph-q-stem{font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.graph-q-opts{display:flex;flex-direction:column;gap:5px;}
+.graph-q-opt{padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:.83rem;cursor:pointer;transition:all .15s;}
+.graph-q-opt:hover{border-color:var(--red);background:var(--red-pale);}
+.graph-q-opt.correct-ans{background:var(--green-pale);border-color:var(--green);color:var(--navy);pointer-events:none;}
+.graph-q-opt.wrong-ans{background:var(--red-pale);border-color:var(--red);color:var(--navy);pointer-events:none;}
+.graph-q-opt.neutral{pointer-events:none;}
+
+/* GATE STATUS */
+.gate-status{background:var(--gray-50);border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;margin:24px 48px 0;}
+.gate-status.unlocked{background:var(--green-pale);border:2px solid var(--green);border-style:solid;}
+.gate-icon{font-size:1.8rem;margin-bottom:4px;}
+.gate-msg{font-size:.88rem;font-weight:600;color:var(--muted);}
+.gate-status.unlocked .gate-msg{color:var(--green);}
+.gate-status.unlocked .gate-icon::after{content:'\2705';}
+.gate-status.unlocked .gate-icon{font-size:0;}
+.gate-count{font-size:.75rem;color:var(--muted);margin-top:4px;}
+.nbtn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* NAV */
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:20px 48px;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0;}
+.nbtn{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:7px;border:none;font-size:.87rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--red);color:#fff;}
+.nbtn.next:hover{background:var(--red-mid);}
+.nbtn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;right:20px;background:var(--green);color:#fff;padding:11px 18px;border-radius:8px;font-size:.83rem;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9000;display:none;align-items:center;gap:8px;}
+
+/* MODAL */
+#name-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.nm-box{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,.4);}
+.nm-emoji{font-size:2rem;margin-bottom:8px;}
+.nm-title{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--navy);margin-bottom:5px;}
+.nm-sub{font-size:.87rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.nm-label{font-size:.76rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;margin-bottom:5px;}
+.nm-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:.95rem;font-family:"Source Sans 3",sans-serif;outline:none;transition:border .2s;}
+.nm-input:focus{border-color:var(--red);}
+.nm-err{color:var(--red);font-size:.78rem;margin-top:4px;display:none;}
+.nm-btn{margin-top:16px;width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:background .2s;}
+.nm-btn:hover{background:#1a3560;}
+
+/* STREAK FIRE ANIMATION */
+@keyframes flamePop{0%{transform:scale(1);}50%{transform:scale(1.3);}100%{transform:scale(1);}}
+.streak-fire{display:inline-block;animation:flamePop 0.5s ease;}
+
+/* SOL QUESTION IMAGES */
+.sol-img-wrap{margin:14px 0 12px;background:#f8f9fa;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.sol-img{max-width:100%;height:auto;border-radius:6px;display:block;margin:0 auto;}
+.sol-img-cap{font-size:.72rem;color:var(--muted);margin-top:7px;font-style:italic;letter-spacing:.2px;}
+
+/* DEPTH LINK */
+.depth-link{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gray-50);border:1px solid var(--border);border-radius:8px;font-size:.84rem;color:var(--navy);text-decoration:none;transition:all .2s;margin-top:10px;}
+.depth-link:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;}
+
+/* WORKED EXAMPLE BOX */
+.worked-ex{background:#fff;border:2px solid var(--navy);border-radius:12px;margin:18px 0;overflow:hidden;}
+.worked-ex-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:8px;}
+.worked-ex-header span{color:#fca5a5;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.worked-ex-body{padding:18px 20px;}
+.worked-step{display:flex;gap:10px;margin-bottom:10px;font-size:.88rem;line-height:1.65;}
+.worked-step-num{min-width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.worked-step-text{flex:1;color:#374151;}
+.worked-step-text strong{color:var(--navy);}
+.wrong-answer-box{background:var(--red-pale);border:1px solid var(--red);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:.85rem;line-height:1.65;}
+.wrong-answer-box strong{color:var(--red-mid);}
+
+</style>
+</head>
+<body>
+
+<!-- NAME MODAL -->
+<div id="name-modal">
+  <div class="nm-box">
+    <div class="nm-emoji">&#x1F9A0;</div>
+    <h2 class="nm-title">Biology SOL Prep</h2>
+    <p class="nm-sub">Unit 4: Bacteria &amp; Viruses. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
+    <label class="nm-label">YOUR FULL NAME</label>
+    <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name" style="margin-bottom:12px">
+    <label class="nm-label">CLASS PERIOD</label>
+    <select class="nm-input" id="class-period" style="margin-bottom:12px">
+      <option value="">Select Period...</option>
+      <option value="Period 1">Period 1</option>
+      <option value="Period 2">Period 2</option>
+      <option value="Period 3">Period 3</option>
+      <option value="Period 4">Period 4</option>
+      <option value="Period 5">Period 5</option>
+      <option value="Period 6">Period 6</option>
+      <option value="Period 7">Period 7</option>
+    </select>
+    <div class="nm-err" id="name-err">Please enter your first and last name.</div>
+    <div class="nm-err" id="period-err">Please select your class period.</div>
+    <button class="nm-btn" onclick="startUnit()">Start Unit 4 &#x2192;</button>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit4_progress');localStorage.removeItem('sol_unit4_vocab');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">&#x1F4E4; <span id="toast-msg">Score sent!</span></div>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <a class="tb-back" href="index.html">&larr; SOL Prep</a>
+  <div class="tb-unit">
+    <div class="tb-unit-label">Virginia Biology SOL</div>
+    <div class="tb-unit-name">Unit 4 &middot; Bacteria &amp; Viruses</div>
+  </div>
+  <div class="tb-stats">
+    <div class="tb-stat">
+      <span class="tb-stat-icon streak-fire" id="streak-fire">&#x1F525;</span>
+      <div><div class="tb-stat-val" id="streak-val">&ndash;</div><div class="tb-stat-lbl">day streak</div></div>
+    </div>
+    <div class="tb-stat">
+      <span class="tb-stat-icon">&#x1F4C5;</span>
+      <div><div class="tb-stat-val" id="sol-countdown">&ndash;</div><div class="tb-stat-lbl">days to SOL</div></div>
+    </div>
+    <div class="tb-badge">BIO.4</div>
+  </div>
+</header>
+
+<!-- STEP PROGRESS BAR (9 steps) -->
+<nav class="steps-bar" id="steps-bar">
+  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Viruses</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Bacteria</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Disease &amp; Germ Theory</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Vaccines &amp; Antibiotics</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Study Guide</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Practice Test</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Results</button></div>
+</nav>
+<div class="steps-prog" id="steps-prog"></div>
+
+<main class="main" id="main">
+
+<!-- =================================================================
+     PANEL 0: SOL FOCUS CARD
+     ================================================================= -->
+<div class="panel active" id="p0">
+  <div class="focus-hero">
+    <div class="focus-tag">&#x1F3AF; SOL Standard</div>
+    <div class="focus-title">Bacteria &amp; Viruses</div>
+    <div class="focus-sub">BIO.4 &mdash; The student will investigate and understand that bacteria and viruses have an effect on living systems.</div>
+    <div class="focus-meta">
+      <div class="f-chip">~8% of SOL Test</div>
+      <div class="f-chip">~4 Questions on Real SOL</div>
+      <div class="f-chip">22 Vocab Terms</div>
+      <div class="f-chip">20 Practice Questions</div>
+    </div>
+  </div>
+  <div class="lc">
+    <div class="section">
+      <div class="eyebrow">What VDOE Says You Must Know</div>
+      <div class="sh2">BIO.4 Substandards Breakdown</div>
+      <div class="sol-grid">
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.4a &mdash; Viruses &amp; Host Dependence</div>
+          <ul class="sol-list">
+            <li>Viruses are NOT living &mdash; cannot reproduce alone</li>
+            <li>Virus structure: nucleic acid core + protein coat (capsid)</li>
+            <li>Viruses depend on a host cell for replication</li>
+            <li>Viruses can introduce genetic variation into hosts</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.4b/c &mdash; Structure &amp; Reproduction</div>
+          <ul class="sol-list">
+            <li>Compare virus vs. bacterium (genetic material, reproduction)</li>
+            <li>Lytic cycle (immediate destruction) vs. lysogenic cycle (delayed)</li>
+            <li>Bacteria reproduce asexually (binary fission) and rarely sexually (conjugation)</li>
+            <li>Bacteria classified by energy source: heterotroph, photoautotroph, chemoautotroph</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.4d &mdash; Effects on Living Systems</div>
+          <ul class="sol-list">
+            <li>Effects of bacteria and viruses on human health</li>
+            <li>Bacteria play roles in nutrient cycling</li>
+            <li>Viruses influence biochemical cycles and drive microbial evolution</li>
+          </ul>
+        </div>
+        <div class="sol-card">
+          <div class="sol-card-label">BIO.4e &mdash; Germ Theory &amp; Prevention</div>
+          <ul class="sol-list">
+            <li>Germ theory of infectious disease (Pasteur, Koch)</li>
+            <li>Germ theory as example of nature of science</li>
+            <li>Vaccines prevent disease; antibiotics cure BACTERIAL disease</li>
+            <li>Evidence-based claims on use/misuse of vaccines and antibiotics</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout sol">
+        <div class="ci">&#x26A0;&#xFE0F;</div>
+        <div class="cb">
+          <div class="ct">Top Miss Areas on Virginia SOL</div>
+          <div class="cx">Students most commonly miss: (1) <strong>why viruses are considered nonliving</strong> (they cannot reproduce on their own, have no metabolism, and are not cells), (2) <strong>antibiotics only work on bacteria, NOT viruses</strong> (the SOL frequently asks which diseases can be treated with antibiotics), and (3) <strong>antibiotic resistance</strong> (overuse of antibiotics leads to resistant bacterial strains because bacteria reproduce rapidly and resistant individuals survive).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="eyebrow">Vocabulary Preview</div>
+      <div class="sh2">22 Terms &mdash; You Must Know All of These</div>
+      <table class="dt">
+        <tr><th>Term</th><th>One-Line Definition</th></tr>
+        <tr><td><strong>Virus</strong></td><td>Nonliving infectious agent; nucleic acid + protein coat; needs a host cell to reproduce</td></tr>
+        <tr><td><strong>Capsid</strong></td><td>Protein coat that surrounds and protects the viral nucleic acid</td></tr>
+        <tr><td><strong>Host Cell</strong></td><td>The living cell that a virus infects and uses to replicate</td></tr>
+        <tr><td><strong>Lytic Cycle</strong></td><td>Virus immediately takes over host, replicates, and bursts (lyses) the cell</td></tr>
+        <tr><td><strong>Lysogenic Cycle</strong></td><td>Viral DNA integrates into host DNA; lies dormant; eventually triggers lytic cycle</td></tr>
+        <tr><td><strong>Bacterium</strong></td><td>Prokaryotic, unicellular organism; has cell wall, DNA, ribosomes; IS living</td></tr>
+        <tr><td><strong>Binary Fission</strong></td><td>Asexual reproduction in bacteria; one cell splits into two identical cells</td></tr>
+        <tr><td><strong>Conjugation</strong></td><td>Rare sexual reproduction in bacteria; DNA transferred through a pilus</td></tr>
+        <tr><td><strong>Cell Wall</strong></td><td>Rigid outer layer of bacteria; Gram+ (thick) vs. Gram&minus; (thin + outer membrane)</td></tr>
+        <tr><td><strong>Flagellum</strong></td><td>Whip-like tail used by some bacteria for movement</td></tr>
+        <tr><td><strong>Heterotroph</strong></td><td>Organism that obtains energy by consuming other organisms</td></tr>
+        <tr><td><strong>Photoautotroph</strong></td><td>Organism that uses sunlight to make food (like cyanobacteria)</td></tr>
+        <tr><td><strong>Chemoautotroph</strong></td><td>Organism that uses chemical energy from inorganic compounds</td></tr>
+        <tr><td><strong>Pathogen</strong></td><td>Any microorganism that causes disease</td></tr>
+        <tr><td><strong>Germ Theory</strong></td><td>Theory that many diseases are caused by microorganisms (germs)</td></tr>
+        <tr><td><strong>Pasteur</strong></td><td>Disproved spontaneous generation; developed pasteurization; pioneered germ theory</td></tr>
+        <tr><td><strong>Koch</strong></td><td>Developed Koch's postulates; proved specific bacteria cause specific diseases</td></tr>
+        <tr><td><strong>Vaccine</strong></td><td>Dead or weakened pathogen that triggers immune response without causing disease</td></tr>
+        <tr><td><strong>Antibiotic</strong></td><td>Medicine that kills or stops the growth of BACTERIA (does NOT work on viruses)</td></tr>
+        <tr><td><strong>Antibiotic Resistance</strong></td><td>When bacteria evolve to survive antibiotics due to overuse/misuse</td></tr>
+        <tr><td><strong>Epidemic</strong></td><td>Rapid spread of disease in a population or region</td></tr>
+        <tr><td><strong>Quarantine</strong></td><td>Isolating infected organisms to prevent disease spread</td></tr>
+      </table>
+    </div>
+
+    <div class="callout tip"><div class="ci">&#x1F4A1;</div><div class="cb"><div class="ct">Study Tip for BIO.4</div><div class="cx">The #1 concept: <strong>viruses are NOT alive; bacteria ARE alive.</strong> If you can explain WHY (viruses can't reproduce alone, have no metabolism, aren't cells), and remember that <strong>antibiotics only kill bacteria, not viruses</strong>, you'll handle most BIO.4 questions.</div></div></div>
+
+    <div class="section" style="margin-top:28px;">
+      <div class="eyebrow">Check Your Understanding</div>
+      <div class="sh2">Answer All Questions to Unlock the Next Step</div>
+
+      <div class="sh3">Do You Know Your Standard?</div>
+      <div class="qq gate-q" data-ans="b" data-panel="0">
+        <div class="q-stem"><span class="q-num">1</span> According to the SOL Focus Card above, approximately how many questions on the real Biology SOL come from BIO.4?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1 question</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 4 questions</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 12 questions</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>20 questions</li>
+        </ul>
+        <div class="qexp">BIO.4 accounts for about 8% of the SOL test, which is approximately 4 questions out of 50.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="0">
+        <div class="q-stem"><span class="q-num">2</span> Which of the following is identified as a TOP MISS AREA for Virginia students on BIO.4?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Memorizing the names of 50 different bacteria species</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Drawing the structure of a virus under a microscope</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Knowing that antibiotics only work on bacteria, NOT viruses</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating bacterial population growth rates</li>
+        </ul>
+        <div class="qexp">The SOL frequently asks which diseases can be treated with antibiotics. Students often forget that antibiotics ONLY work on bacteria &mdash; they have no effect on viral infections like the common cold, flu, or HIV.</div>
+      </div>
+
+      <div class="sh3">Prior Knowledge Check</div>
+      <p class="prose" style="color:var(--muted);font-size:.85rem;">Answer honestly &mdash; right or wrong, these help Mr. England see where you're starting.</p>
+
+      <div class="qq gate-q" data-ans="a" data-panel="0">
+        <div class="q-stem"><span class="q-num">3</span> (2003-45) An important difference between viruses and living cells is that viruses &mdash;</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>cannot reproduce outside of cells</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>cannot mutate but cells can</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>contain more nuclei than cells</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>need an energy source but cells do not</li>
+        </ul>
+        <div class="qexp">Viruses CANNOT reproduce on their own &mdash; they must infect a living host cell and hijack its machinery. This is the key reason viruses are considered nonliving. Viruses CAN mutate (that's why flu shots change every year), they don't have nuclei, and all cells DO need energy.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="0">
+        <div class="q-stem"><span class="q-num">4</span> (2004-41) Which of these could be successfully treated with antibiotics?</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Strep throat</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Common cold</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>HIV</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Influenza</li>
+        </ul>
+        <div class="qexp">Strep throat is caused by a BACTERIUM (Streptococcus), so it can be treated with antibiotics. The common cold, HIV, and influenza are caused by VIRUSES &mdash; antibiotics have no effect on them.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="0">
+        <div class="q-stem"><span class="q-num">5</span> (2006-19) The results of Pasteur's experiment helped Pasteur to &mdash;</div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>isolate the virus responsible for smallpox</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>convince people to cover food</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>reject the theory of spontaneous generation</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>produce a vaccine against rabies</li>
+        </ul>
+        <div class="qexp">Pasteur's famous swan-neck flask experiment proved that microorganisms come from other microorganisms, not from non-living matter. This disproved the widely-held theory of spontaneous generation and was a critical step in developing the germ theory of disease.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-0">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all 5 questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-0">0 of 5 answered</div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:24px;">
+      <a class="depth-link" href="../biology/immune-system.html">&#x1F4D8; Need more depth? See the full lesson in Immune System &amp; Disease &rarr;</a>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; Viruses &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 1: VIRUS STRUCTURE & REPLICATION (BIO.4a/b)
+     ================================================================= -->
+<div class="panel" id="p1">
+  <div class="lc">
+    <div class="eyebrow">BIO.4a/b &mdash; Viruses</div>
+    <div class="sh2">Virus Structure, Host Dependence &amp; Replication Cycles</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">The #1 BIO.4 Concept: Viruses Are NOT Alive</div><div class="cx">The SOL will test whether you understand that viruses are considered nonliving. They are NOT cells. They cannot reproduce on their own. They have no metabolism. They are essentially a piece of genetic material wrapped in a protein coat. Every BIO.4 question starts from this fundamental distinction.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">What Is a Virus?</div>
+      <p class="prose">A <strong>virus</strong> is a tiny infectious agent that can only replicate inside the living cells of an organism. Viruses are NOT cells &mdash; they lack a cell membrane, cytoplasm, ribosomes, and all the other organelles that cells have. A virus is essentially a package of genetic instructions wrapped in a protein shell.</p>
+      <p class="prose">The VDOE framework states: "Viruses are small, infectious agents that replicate only inside the living cells of organisms." This is the key: viruses <strong>depend on a host cell</strong> for ALL metabolic processes. Without a host, a virus is inert &mdash; it cannot grow, reproduce, respond to stimuli, or carry out any life process.</p>
+
+      <div class="sh3">Virus Structure</div>
+      <p class="prose">All viruses share two basic structural components:</p>
+      <table class="dt">
+        <tr><th>Component</th><th>Description</th></tr>
+        <tr><td><strong>Nucleic acid core</strong></td><td>The genetic material &mdash; either DNA or RNA (never both). Can be single-stranded or double-stranded. Contains instructions for making new viruses.</td></tr>
+        <tr><td><strong>Capsid (protein coat)</strong></td><td>A protective shell made of protein that surrounds the nucleic acid. Gives the virus its shape. Some viruses also have an outer <strong>envelope</strong> (lipid membrane stolen from the host cell).</td></tr>
+      </table>
+      <p class="prose">That's it. No ribosomes, no mitochondria, no cytoplasm, no cell membrane of their own. This extreme simplicity is WHY viruses are considered nonliving &mdash; they lack the machinery to carry out life processes independently.</p>
+
+      <div class="sh3">Why Viruses Are Considered Nonliving</div>
+      <table class="dt">
+        <tr><th>Characteristic of Life</th><th>Living Cells</th><th>Viruses</th></tr>
+        <tr><td><strong>Made of cells</strong></td><td>Yes</td><td>No &mdash; viruses are NOT cells</td></tr>
+        <tr><td><strong>Reproduce independently</strong></td><td>Yes</td><td>No &mdash; must use a host cell</td></tr>
+        <tr><td><strong>Metabolism</strong></td><td>Yes</td><td>No &mdash; no metabolic activity outside host</td></tr>
+        <tr><td><strong>Grow and develop</strong></td><td>Yes</td><td>No</td></tr>
+        <tr><td><strong>Respond to stimuli</strong></td><td>Yes</td><td>No</td></tr>
+        <tr><td><strong>Contain genetic material</strong></td><td>Yes (DNA)</td><td>Yes (DNA or RNA) &mdash; this is the ONE thing they share</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: What Viruses Share with Living Things</div><div class="cx">The ONLY characteristic viruses share with living cells is that they <strong>contain nucleic acids (DNA or RNA)</strong>. On the SOL, if a question asks "which characteristic do viruses share with living cells?" the answer is always about genetic material/nucleic acids. Never ribosomes, never nucleus, never metabolism.</div></div></div>
+
+      <div class="sh3">How Viruses Infect Host Cells</div>
+      <p class="prose">Viruses replicate through two main cycles:</p>
+
+      <p class="prose"><strong>The Lytic Cycle (Immediate Destruction):</strong></p>
+      <table class="dt">
+        <tr><th>Step</th><th>What Happens</th></tr>
+        <tr><td>1. Attachment</td><td>Virus attaches to specific receptor proteins on the host cell surface</td></tr>
+        <tr><td>2. Entry</td><td>Virus injects its nucleic acid into the host cell (or the whole virus enters)</td></tr>
+        <tr><td>3. Replication</td><td>Viral DNA/RNA takes over the host's machinery (ribosomes, enzymes) to make copies of viral parts</td></tr>
+        <tr><td>4. Assembly</td><td>New virus particles are assembled inside the host cell</td></tr>
+        <tr><td>5. Lysis (burst)</td><td>The host cell BURSTS open (lyses), releasing hundreds of new viruses that infect other cells</td></tr>
+      </table>
+
+      <p class="prose"><strong>The Lysogenic Cycle (Delayed Destruction):</strong></p>
+      <p class="prose">In the lysogenic cycle, the virus does NOT immediately destroy the host. Instead, the viral DNA <strong>integrates into the host cell's DNA</strong> and becomes a <strong>provirus</strong>. Every time the host cell divides, it copies the viral DNA along with its own. The virus "hides" in the host's genome, sometimes for years. Eventually, a trigger (stress, UV light, chemical signal) causes the provirus to exit the host DNA and switch to the <strong>lytic cycle</strong>, destroying the cell.</p>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Key: Lysogenic Always Leads to Lytic</div><div class="cx">The lysogenic cycle is a "waiting phase" that ALWAYS eventually ends with the lytic cycle. The virus delays its reproduction but never abandons it. If the SOL asks "what happens at the end of the lysogenic cycle?" the answer is: the virus enters the lytic cycle and destroys the host cell.</div></div></div>
+
+      <div class="sh3">Viruses and Genetic Variation</div>
+      <p class="prose">Because viruses insert their DNA/RNA into host cells, they can introduce new genetic material into the host organism. This is one way that viruses <strong>drive evolution</strong> and introduce genetic variation into populations. Viruses that infect bacteria (called <strong>bacteriophages</strong>) can transfer genes between different bacterial cells, sometimes giving the bacteria new capabilities like antibiotic resistance.</p>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Virus Characteristics</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2002-41) Which characteristic do viruses possess in common with living cells?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>What do viruses have?</strong> Nucleic acid (DNA or RNA) inside a protein coat (capsid). That's it.</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>What do living cells have?</strong> DNA, ribosomes, nucleus, organelles, cell membrane, metabolism.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>What's the overlap?</strong> Both contain nucleic acids (DNA or RNA). Viruses don't have a nucleus, organelles, or the ability to make food.</div></div>
+          <div class="worked-step"><div class="worked-step-num">4</div><div class="worked-step-text"><strong>Answer: A &mdash; They contain nucleic acids such as DNA or RNA.</strong></div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> "They are inactive outside the body of living cells" is TRUE about viruses, but it's NOT something they share WITH living cells &mdash; living cells are NOT inactive. The question asks what they have IN COMMON.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.4a/b</div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="1" data-std="BIO.4a">
+        <div class="q-stem"><span class="q-num">1</span> (2002-41) Which characteristic do viruses possess in common with living cells? <span class="q-tag">BIO.4a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>They contain nucleic acids such as DNA or RNA.</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>They contain a nucleus and organelles.</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>They make their own food.</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>They are inactive outside the body of living cells.</li>
+        </ul>
+        <div class="qexp">Both viruses and living cells contain nucleic acids (DNA or RNA). Viruses do NOT have a nucleus, organelles, or the ability to make food. Being "inactive outside cells" is true of viruses but NOT something shared with living cells.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="1" data-std="BIO.4a">
+        <div class="q-stem"><span class="q-num">2</span> (2003-45) An important difference between viruses and living cells is that viruses &mdash; <span class="q-tag">BIO.4a</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>cannot reproduce outside of cells</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>cannot mutate but cells can</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>contain more nuclei than cells</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>need an energy source but cells do not</li>
+        </ul>
+        <div class="qexp">Viruses MUST use a host cell's machinery to reproduce &mdash; they cannot do it independently. Viruses CAN mutate (that's why new flu strains emerge). Viruses have NO nuclei. ALL cells need energy.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="1" data-std="BIO.4b">
+        <div class="q-stem"><span class="q-num">3</span> In the lysogenic cycle, what happens to the viral DNA after it enters the host cell? <span class="q-tag">BIO.4b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>It immediately makes copies of the virus</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>It is destroyed by the host cell's enzymes</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>It integrates into the host's DNA and is copied with each cell division</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>It exits the cell and infects neighboring cells</li>
+        </ul>
+        <div class="qexp">In the lysogenic cycle, viral DNA inserts itself into the host cell's chromosome and becomes a provirus. It is copied every time the host divides, lying dormant until a trigger activates the lytic cycle. Choice A describes the lytic cycle, not lysogenic.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.4b">
+        <div class="q-stem"><span class="q-num">4</span> What is the final step of the lytic cycle? <span class="q-tag">BIO.4b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Viral DNA integrates into host chromosome</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>The host cell bursts, releasing new viruses</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>The virus attaches to the host cell surface</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>The host cell begins normal cell division</li>
+        </ul>
+        <div class="qexp">The lytic cycle ends with LYSIS &mdash; the host cell bursts open, releasing hundreds of new virus particles that go on to infect other cells. "Lytic" comes from "lysis" meaning to break open. Integration into host DNA is the lysogenic cycle.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-1">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-1">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Bacteria &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 2: BACTERIA STRUCTURE & CLASSIFICATION (BIO.4b/c)
+     ================================================================= -->
+<div class="panel" id="p2">
+  <div class="lc">
+    <div class="eyebrow">BIO.4b/c &mdash; Bacteria</div>
+    <div class="sh2">Bacterial Structure, Reproduction &amp; Classification</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Bacteria Are Living Organisms &mdash; Viruses Are Not</div><div class="cx">Unlike viruses, bacteria ARE living cells. They are prokaryotic (no membrane-bound nucleus), but they have all the characteristics of life: they grow, reproduce, respond to stimuli, metabolize nutrients, and maintain homeostasis. The SOL will ask you to compare bacteria and viruses &mdash; knowing this fundamental difference is critical.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Bacterial Cell Structure</div>
+      <p class="prose">Bacteria are <strong>prokaryotic cells</strong> &mdash; they lack a membrane-bound nucleus and membrane-bound organelles. Despite being simple, bacterial cells have all the machinery needed for independent life:</p>
+      <table class="dt">
+        <tr><th>Structure</th><th>Function</th></tr>
+        <tr><td><strong>Cell wall</strong></td><td>Rigid outer layer providing shape and protection. Classified as <strong>Gram-positive</strong> (thick cell wall, stains purple) or <strong>Gram-negative</strong> (thin cell wall + outer membrane, stains pink). This distinction affects which antibiotics work.</td></tr>
+        <tr><td><strong>Cell membrane</strong></td><td>Controls what enters and exits the cell (selectively permeable)</td></tr>
+        <tr><td><strong>Cytoplasm</strong></td><td>Gel-like fluid where chemical reactions occur</td></tr>
+        <tr><td><strong>Circular DNA</strong></td><td>Single circular chromosome in the nucleoid region (NOT enclosed in a nucleus)</td></tr>
+        <tr><td><strong>Plasmid</strong></td><td>Small circular DNA separate from the chromosome; often carries antibiotic resistance genes; can be transferred between bacteria</td></tr>
+        <tr><td><strong>Ribosomes</strong></td><td>Make proteins (smaller than eukaryotic ribosomes, but same function)</td></tr>
+        <tr><td><strong>Flagellum</strong> (some)</td><td>Whip-like tail for movement</td></tr>
+        <tr><td><strong>Pilus/Pili</strong> (some)</td><td>Hair-like projections for attachment or DNA transfer during conjugation</td></tr>
+      </table>
+
+      <div class="sh3">Comparing Bacteria and Viruses</div>
+      <table class="dt">
+        <tr><th>Feature</th><th>Bacteria</th><th>Viruses</th></tr>
+        <tr><td><strong>Living?</strong></td><td>YES</td><td>NO</td></tr>
+        <tr><td><strong>Cell?</strong></td><td>Yes (prokaryotic cell)</td><td>No &mdash; not a cell</td></tr>
+        <tr><td><strong>Genetic material</strong></td><td>DNA (circular chromosome)</td><td>DNA or RNA (one or the other)</td></tr>
+        <tr><td><strong>Ribosomes?</strong></td><td>Yes</td><td>No</td></tr>
+        <tr><td><strong>Reproduction</strong></td><td>Binary fission (independent)</td><td>Must use host cell</td></tr>
+        <tr><td><strong>Metabolism?</strong></td><td>Yes</td><td>No</td></tr>
+        <tr><td><strong>Size</strong></td><td>1&ndash;10 &mu;m (bigger)</td><td>20&ndash;300 nm (much smaller)</td></tr>
+        <tr><td><strong>Treated by</strong></td><td>Antibiotics</td><td>Antivirals (NOT antibiotics)</td></tr>
+      </table>
+
+      <div class="sh3">How Bacteria Reproduce</div>
+      <p class="prose"><strong>Binary fission</strong> is the primary method of bacterial reproduction. It is asexual &mdash; one cell splits into two genetically identical cells. The process is fast: some bacteria can divide every 20 minutes under ideal conditions, meaning one bacterium can become millions in just a few hours. This rapid reproduction is why bacterial infections can spread so quickly &mdash; and why antibiotic resistance can evolve in a short time.</p>
+      <p class="prose"><strong>Conjugation</strong> is a rare form of sexual reproduction in bacteria. Two bacterial cells connect through a <strong>pilus</strong> (a tube-like bridge), and one cell transfers a copy of a <strong>plasmid</strong> (a small circle of DNA) to the other. This allows bacteria to share genes &mdash; including genes for antibiotic resistance &mdash; even between different species. The VDOE framework notes that "sexual reproduction in bacteria is rare" and students are NOT expected to know other mechanisms beyond binary fission and conjugation.</p>
+
+      <div class="sh3">Classifying Bacteria by Energy Source</div>
+      <p class="prose">The VDOE framework requires you to classify bacteria by how they obtain energy:</p>
+      <table class="dt">
+        <tr><th>Type</th><th>Energy Source</th><th>Example</th></tr>
+        <tr><td><strong>Heterotroph</strong></td><td>Consumes other organisms or organic material</td><td>Most disease-causing bacteria; decomposers</td></tr>
+        <tr><td><strong>Photoautotroph</strong></td><td>Uses sunlight to make food (like plants)</td><td>Cyanobacteria (blue-green "algae")</td></tr>
+        <tr><td><strong>Chemoautotroph</strong></td><td>Uses chemical energy from inorganic compounds (not sunlight, not food)</td><td>Bacteria near deep-sea hydrothermal vents</td></tr>
+      </table>
+
+      <div class="callout mem"><div class="ci">&#x1F9E0;</div><div class="cb"><div class="ct">Memory: Auto = Self, Hetero = Other</div><div class="cx"><strong>Auto</strong>trophs make their OWN food (auto = self). <strong>Hetero</strong>trophs eat OTHER organisms (hetero = different/other). <strong>Photo</strong> = light. <strong>Chemo</strong> = chemicals. So a photoautotroph uses light to make its own food, and a chemoautotroph uses chemicals to make its own food.</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.4b/c</div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.4c">
+        <div class="q-stem"><span class="q-num">1</span> Which of the following is TRUE about bacteria but NOT true about viruses? <span class="q-tag">BIO.4c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>They contain genetic material</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>They can cause disease</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>They can mutate</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>They can reproduce independently</li>
+        </ul>
+        <div class="qexp">Bacteria can reproduce on their own through binary fission. Viruses CANNOT reproduce independently &mdash; they must use a host cell. Both bacteria and viruses contain genetic material, can cause disease, and can mutate.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.4b">
+        <div class="q-stem"><span class="q-num">2</span> (2005-30) Overuse of antibiotics has led to antibiotic-resistant strains of bacteria in a relatively short time because &mdash; <span class="q-tag">BIO.4b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>there are many different types of bacteria</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>bacteria are very small</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>travelers carry bacteria around the world</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>bacteria reproduce rapidly</li>
+        </ul>
+        <div class="qexp">Bacteria can divide every 20 minutes. When antibiotics kill most bacteria but a few resistant ones survive, those resistant bacteria reproduce rapidly and become the dominant population. Fast reproduction = fast evolution of resistance.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="2" data-std="BIO.4c">
+        <div class="q-stem"><span class="q-num">3</span> Deep-sea bacteria near hydrothermal vents use chemical energy from inorganic compounds to make food. These bacteria are classified as &mdash; <span class="q-tag">BIO.4c</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>heterotrophs</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>photoautotrophs</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>chemoautotrophs</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>decomposers</li>
+        </ul>
+        <div class="qexp">Chemoautotrophs use chemical energy (not sunlight) to make their own food from inorganic compounds. Photoautotrophs use sunlight. Heterotrophs consume other organisms. Deep-sea vents have no sunlight, so the bacteria must use chemical energy.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="2" data-std="BIO.4b">
+        <div class="q-stem"><span class="q-num">4</span> (2002-37) The increasing resistance of M. tuberculosis to streptomycin is most likely due to the increased &mdash; <span class="q-tag">BIO.4b</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>use of streptomycin for bacterial infections</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>numbers of alternatives to streptomycin</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>artificial production of streptomycin</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>early detection of bacterial infections</li>
+        </ul>
+        <div class="qexp">Overuse of an antibiotic kills susceptible bacteria but leaves resistant ones alive to reproduce. The more streptomycin is used, the more opportunity for resistant M. tuberculosis to survive and spread. This is natural selection in action.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-2">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-2">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; Viruses</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Disease &amp; Germ Theory &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 3: DISEASE & GERM THEORY (BIO.4d/e)
+     ================================================================= -->
+<div class="panel" id="p3">
+  <div class="lc">
+    <div class="eyebrow">BIO.4d/e &mdash; Disease &amp; Germ Theory</div>
+    <div class="sh2">Effects on Health, Germ Theory &amp; the Nature of Science</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Germ Theory = Nature of Science Example</div><div class="cx">The VDOE framework specifically uses germ theory as an example of how scientific understanding changes over time. You need to know the basic story: people used to believe in spontaneous generation &rarr; Pasteur disproved it &rarr; Koch proved specific germs cause specific diseases &rarr; modern health practices emerged. The SOL tests this as a Nature of Science concept, not just a history question.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">How Bacteria and Viruses Affect Living Systems</div>
+      <p class="prose">Both bacteria and viruses can cause disease, but they also play essential roles in ecosystems:</p>
+
+      <p class="prose"><strong>Harmful effects:</strong></p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li><strong>Bacterial diseases:</strong> strep throat, tuberculosis, food poisoning (Salmonella, E. coli), tetanus, pneumonia</li>
+        <li><strong>Viral diseases:</strong> common cold, influenza, HIV/AIDS, COVID-19, chickenpox, rabies, Ebola</li>
+        <li>Viruses have killed millions &mdash; the influenza pandemic of 1918 killed 50+ million people worldwide</li>
+        <li>Plants can also be infected by viruses, damaging crops and food supplies</li>
+      </ul>
+
+      <p class="prose"><strong>Beneficial effects (especially bacteria):</strong></p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li><strong>Nutrient cycling:</strong> Bacteria decompose dead organisms, returning nutrients (nitrogen, carbon, phosphorus) to the soil</li>
+        <li><strong>Nitrogen fixation:</strong> Certain bacteria convert atmospheric nitrogen (N&#x2082;) into forms plants can use</li>
+        <li><strong>Digestion:</strong> Gut bacteria help humans digest food and produce vitamins</li>
+        <li><strong>Food production:</strong> Bacteria are used to make yogurt, cheese, sauerkraut, and vinegar</li>
+        <li><strong>Bioremediation:</strong> Bacteria can break down oil spills and toxic waste</li>
+      </ul>
+
+      <div class="sh3">The Germ Theory of Disease</div>
+      <p class="prose">The <strong>germ theory</strong> states that many diseases are caused by <strong>microorganisms</strong> (bacteria, viruses, fungi, and other pathogens) that invade the body. This seems obvious today, but for most of human history, people believed disease was caused by "bad air" (miasma), evil spirits, or imbalanced body fluids.</p>
+
+      <p class="prose"><strong>Louis Pasteur (1860s):</strong> Pasteur conducted his famous <strong>swan-neck flask experiment</strong> to disprove <strong>spontaneous generation</strong> &mdash; the idea that living organisms could arise from non-living matter. He showed that broth in a flask with a curved neck (which trapped airborne microbes) stayed clear indefinitely, while broth exposed to air quickly grew cloudy with bacteria. This proved that microorganisms come from OTHER microorganisms, not from thin air. Pasteur also developed <strong>pasteurization</strong> (heating liquids to kill harmful bacteria) and created vaccines for rabies and anthrax.</p>
+
+      <p class="prose"><strong>Robert Koch (1880s):</strong> Koch proved that <strong>specific bacteria cause specific diseases</strong>. He developed <strong>Koch's postulates</strong>, a set of four criteria for establishing that a particular microorganism causes a particular disease:</p>
+      <table class="dt">
+        <tr><th>Step</th><th>Koch's Postulate</th></tr>
+        <tr><td>1</td><td>The microorganism must be found in all organisms with the disease, but not in healthy ones</td></tr>
+        <tr><td>2</td><td>The microorganism must be isolated from the diseased organism and grown in pure culture</td></tr>
+        <tr><td>3</td><td>The cultured microorganism must cause the same disease when introduced into a healthy host</td></tr>
+        <tr><td>4</td><td>The same microorganism must be re-isolated from the newly infected host</td></tr>
+      </table>
+
+      <div class="callout key"><div class="ci">&#x1F511;</div><div class="cb"><div class="ct">Germ Theory Illustrates the Nature of Science</div><div class="cx">The VDOE framework explicitly connects germ theory to how science works: (1) Old ideas (spontaneous generation) were replaced when new evidence contradicted them. (2) Technology (microscopes) enabled new discoveries. (3) Multiple scientists built on each other's work (Pasteur &rarr; Koch). (4) The theory led to practical changes (sanitation, vaccines, antibiotics). This is exactly how all scientific knowledge develops &mdash; through evidence, testing, and revision.</div></div></div>
+
+      <div class="sh3">Modern Health Practices from Germ Theory</div>
+      <p class="prose">The acceptance of germ theory revolutionized medicine and public health:</p>
+      <ul style="margin:0 0 12px 24px;font-size:.92rem;line-height:1.85;color:#374151;">
+        <li><strong>Sanitation:</strong> Proper sewage systems, clean water supplies, handwashing</li>
+        <li><strong>Safe food handling:</strong> Pasteurization, refrigeration, cooking temperatures</li>
+        <li><strong>Aseptic technique:</strong> Sterilizing surgical instruments, wearing gloves, disinfecting surfaces</li>
+        <li><strong>Vaccination:</strong> Exposing the immune system to weakened/dead pathogens to build immunity</li>
+        <li><strong>Quarantine:</strong> Isolating infected individuals to prevent disease spread</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.4d/e</div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">1</span> (2006-19) The results of Pasteur's experiment helped Pasteur to &mdash; <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>isolate the virus responsible for smallpox</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>convince people to cover food</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>reject the theory of spontaneous generation</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>produce a vaccine against rabies</li>
+        </ul>
+        <div class="qexp">Pasteur's swan-neck flask experiment proved that microorganisms come from other microorganisms, disproving spontaneous generation. While Pasteur DID later create a rabies vaccine, his flask experiment specifically addressed spontaneous generation.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.4d">
+        <div class="q-stem"><span class="q-num">2</span> (2003-3) Animals coming from foreign countries are kept in quarantine before being allowed into the United States. This precaution is taken to help prevent &mdash; <span class="q-tag">BIO.4d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>the escape of foreign animals into local natural habitats</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>the introduction of foreign animal diseases</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>cross-breeding of native animals with the foreign ones</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>predator destruction of the foreign animals</li>
+        </ul>
+        <div class="qexp">Quarantine isolates potentially infected organisms to prevent disease from spreading to the local population. This is a direct application of germ theory &mdash; if disease is caused by microorganisms, keeping infected animals separate prevents transmission.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.4d">
+        <div class="q-stem"><span class="q-num">3</span> (2003-27) A certain virus causes a disease of the digestive system. What is the most likely source of this virus? <span class="q-tag">BIO.4d</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Soil</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Water</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Air</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Insects</li>
+        </ul>
+        <div class="qexp">Digestive system diseases are typically transmitted through contaminated water or food (fecal-oral route). Respiratory viruses spread through air. Soil-borne diseases involve wounds. Insect-borne diseases include malaria and West Nile (spread by mosquitoes).</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">4</span> (2002-5) People moved from cities during smallpox epidemics but still contracted the disease from family members. Smallpox transmission was discovered to be by &mdash; <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>being bitten by mosquitoes that carry the virus</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>directly contacting a person with smallpox</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>drinking water from local wells</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>eating food that contains the virus</li>
+        </ul>
+        <div class="qexp">The passage describes people who moved away from cities but brought infected family members with them &mdash; and STILL got sick. This showed that smallpox spreads through direct contact with infected individuals, not through air, water, or food.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-3">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-3">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Bacteria</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Vaccines &amp; Antibiotics &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 4: VACCINES & ANTIBIOTICS (BIO.4e)
+     ================================================================= -->
+<div class="panel" id="p4">
+  <div class="lc">
+    <div class="eyebrow">BIO.4e &mdash; Vaccines &amp; Antibiotics</div>
+    <div class="sh2">Prevention, Treatment &amp; Antibiotic Resistance</div>
+    <div class="callout sol"><div class="ci">&#x1F3AF;</div><div class="cb"><div class="ct">Antibiotics vs. Viruses Is a Guaranteed SOL Question</div><div class="cx">The SOL WILL ask you whether a specific disease can be treated with antibiotics. The rule is simple: <strong>antibiotics kill bacteria, NOT viruses.</strong> If the disease is caused by a virus (cold, flu, HIV), antibiotics won't help. If it's caused by a bacterium (strep throat, TB), antibiotics CAN help.</div></div></div>
+
+    <div class="section">
+      <div class="sh3">Vaccines: Prevention Through Immunity</div>
+      <p class="prose">A <strong>vaccine</strong> is a preparation containing a dead, weakened, or partial form of a pathogen. When injected (or taken orally), it doesn't cause the disease, but it DOES trigger the body's <strong>immune system</strong> to build a defense against that pathogen. The immune system creates <strong>antibodies</strong> and <strong>memory cells</strong> that "remember" the pathogen. If the real pathogen invades later, the immune system can destroy it quickly before it causes illness.</p>
+      <p class="prose">Vaccines have eradicated smallpox, nearly eliminated polio, and dramatically reduced measles, mumps, rubella, tetanus, and many other deadly diseases. They are one of the most important public health tools in human history.</p>
+
+      <div class="callout key"><div class="ci">&#x1F511;</div><div class="cb"><div class="ct">Vaccines Prevent; Antibiotics Cure</div><div class="cx"><strong>Vaccines</strong> = given BEFORE infection to PREVENT disease (build immunity). <strong>Antibiotics</strong> = given AFTER infection to CURE bacterial disease (kill bacteria). They serve completely different purposes. The SOL tests this distinction.</div></div></div>
+
+      <div class="sh3">Antibiotics: Treatment for Bacterial Infections</div>
+      <p class="prose"><strong>Antibiotics</strong> are medicines that kill bacteria or stop their growth. They work by targeting structures or processes that bacteria have but human cells don't &mdash; for example, destroying the bacterial cell wall (which human cells lack) or blocking bacterial protein synthesis (using the differences between bacterial and human ribosomes).</p>
+
+      <p class="prose"><strong>Critical SOL fact: Antibiotics do NOT work on viruses.</strong> Why? Because viruses don't have cell walls, ribosomes, or their own metabolism &mdash; there's nothing for the antibiotic to target. A virus hides inside your own cells, and the antibiotic can't attack your cells without harming you. This is why your doctor won't prescribe antibiotics for a cold or flu.</p>
+
+      <table class="dt">
+        <tr><th>Disease</th><th>Caused By</th><th>Treatable with Antibiotics?</th></tr>
+        <tr><td>Strep throat</td><td>Bacterium (Streptococcus)</td><td><strong>YES</strong></td></tr>
+        <tr><td>Tuberculosis</td><td>Bacterium (Mycobacterium)</td><td><strong>YES</strong></td></tr>
+        <tr><td>Food poisoning</td><td>Bacteria (Salmonella, E. coli)</td><td><strong>YES</strong> (in severe cases)</td></tr>
+        <tr><td>Common cold</td><td>Virus (rhinovirus)</td><td><strong>NO</strong></td></tr>
+        <tr><td>Influenza (flu)</td><td>Virus (influenza virus)</td><td><strong>NO</strong></td></tr>
+        <tr><td>HIV/AIDS</td><td>Virus (HIV)</td><td><strong>NO</strong> (antivirals help, not antibiotics)</td></tr>
+        <tr><td>Chickenpox</td><td>Virus (varicella)</td><td><strong>NO</strong></td></tr>
+      </table>
+
+      <div class="sh3">Antibiotic Resistance: A Growing Crisis</div>
+      <p class="prose">When antibiotics are <strong>overused or misused</strong> (e.g., not finishing the full prescription, using antibiotics for viral infections, or giving antibiotics to livestock), some bacteria with random mutations that make them resistant to the antibiotic survive and reproduce. Because bacteria reproduce so rapidly (every 20 minutes), resistant populations can develop within weeks or months. Eventually, the antibiotic becomes ineffective against that bacterial strain.</p>
+      <p class="prose">This is <strong>natural selection in action</strong>: the antibiotic creates a selective pressure, resistant bacteria survive and pass on their resistance genes, and the population evolves. The VDOE framework asks students to "use evidence from scientific literature and research to support a claim on the use or misuse of vaccines or antibiotics."</p>
+
+      <div class="callout warn"><div class="ci">&#x26A0;&#xFE0F;</div><div class="cb"><div class="ct">SOL Trap: WHY Resistance Develops Quickly</div><div class="cx">Students know that antibiotic resistance is bad, but they miss WHY it happens so fast. The answer is always: <strong>bacteria reproduce rapidly</strong>. Fast reproduction = fast evolution. If the SOL asks "why has antibiotic resistance developed in a relatively short time?" the answer is always about rapid bacterial reproduction.</div></div></div>
+
+      <div class="worked-ex">
+        <div class="worked-ex-header"><span>&#x1F50D; Worked SOL Example &mdash; Antibiotics</span></div>
+        <div class="worked-ex-body">
+          <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">(2006-26) Which is NOT a method of preventing bacterial illness from spreading in a meat-processing plant?</p>
+          <div class="worked-step"><div class="worked-step-num">1</div><div class="worked-step-text"><strong>Key word: "NOT."</strong> We're looking for the answer that does NOT prevent bacterial spread.</div></div>
+          <div class="worked-step"><div class="worked-step-num">2</div><div class="worked-step-text"><strong>Evaluate choices:</strong> Washing hands (prevents spread &#x2713;), gloves (prevents spread &#x2713;), disinfecting surfaces (prevents spread &#x2713;). Using antibiotics to TREAT food poisoning doesn't PREVENT the illness from spreading in the plant &mdash; it treats people who are already sick.</div></div>
+          <div class="worked-step"><div class="worked-step-num">3</div><div class="worked-step-text"><strong>Answer: A &mdash; Using antibiotics to treat persons with food poisoning.</strong> Treatment is not prevention.</div></div>
+          <div class="wrong-answer-box"><strong>Why students pick the wrong answer:</strong> Students confuse PREVENTION (stopping bacteria from spreading) with TREATMENT (curing someone who's already infected). Prevention involves sanitation, hygiene, and barriers. Antibiotics are treatment AFTER infection.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh3">Gate Questions &mdash; BIO.4e</div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">1</span> (2006-26) Which is NOT a method of preventing bacterial illness from spreading in a meat-processing plant? <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Using antibiotics to treat persons with food poisoning</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Washing hands and utensils with hot soapy water</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Use of gloves when handling raw meat products</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Treatment of work areas with chemical disinfectants</li>
+        </ul>
+        <div class="qexp">Antibiotics TREAT infections after they happen; they don't PREVENT bacteria from spreading in a facility. Prevention requires hygiene practices: handwashing, gloves, and disinfection.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">2</span> (2004-41) Which of these could be successfully treated with antibiotics? <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Strep throat</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Common cold</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>HIV</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Influenza</li>
+        </ul>
+        <div class="qexp">Strep throat is caused by bacteria (Streptococcus) and CAN be treated with antibiotics. Common cold (rhinovirus), HIV, and influenza are all caused by VIRUSES &mdash; antibiotics are useless against them.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">3</span> How do vaccines prevent disease? <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>They kill all viruses in the body</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>They provide antibiotics that fight infection</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>They expose the immune system to a weakened pathogen so it builds immunity</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>They strengthen the cell wall to block viruses</li>
+        </ul>
+        <div class="qexp">Vaccines contain dead or weakened pathogens that trigger an immune response WITHOUT causing disease. The immune system creates antibodies and memory cells that provide protection against future exposure to the real pathogen.</div>
+      </div>
+
+      <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.4e">
+        <div class="q-stem"><span class="q-num">4</span> (2005-30) Overuse of antibiotics has led to resistant bacteria in a short time because &mdash; <span class="q-tag">BIO.4e</span></div>
+        <ul class="qopts">
+          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>there are many different types of bacteria</li>
+          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>bacteria are very small</li>
+          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>travelers carry bacteria around the world</li>
+          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>bacteria reproduce rapidly</li>
+        </ul>
+        <div class="qexp">Bacteria can divide every 20 minutes. Rapid reproduction means resistant individuals quickly become the dominant population. This is natural selection: the antibiotic selects FOR resistant bacteria by killing the non-resistant ones.</div>
+      </div>
+
+      <div class="gate-status" id="gate-status-4">
+        <div class="gate-icon">&#x1F512;</div>
+        <div class="gate-msg">Answer all questions above to unlock the next step.</div>
+        <div class="gate-count" id="gate-count-4">0 of 4 answered</div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Disease &amp; Germ Theory</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+</div>
+<!-- =================================================================
+     PANEL 5: VOCAB LOCK-IN
+     ================================================================= -->
+<div class="panel" id="p5">
+  <div class="lc">
+    <div class="eyebrow">Step 6 of 9 &mdash; Vocab Lock-In</div>
+    <div class="sh2">Flip Every Card, Then Pass the Vocab Quiz</div>
+    <p class="prose">Flip ALL 22 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
+    <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 22 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 22 cards studied</div></div>
+    <div class="vocab-grid">
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Virus</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Nonliving infectious agent; nucleic acid + protein coat; needs host cell to reproduce</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Capsid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Protein coat surrounding and protecting the viral nucleic acid</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Host Cell</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">The living cell a virus infects and uses to replicate itself</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Lytic Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Virus takes over host, replicates, host cell BURSTS (lyses), releasing new viruses</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Lysogenic Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Viral DNA integrates into host DNA; lies dormant; eventually triggers lytic cycle</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Bacterium</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Prokaryotic, unicellular, LIVING organism; has cell wall, DNA, ribosomes</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Binary Fission</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Asexual reproduction; one bacterium splits into two identical cells</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Conjugation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Rare sexual reproduction in bacteria; DNA transferred through a pilus</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Cell Wall</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Rigid outer layer; Gram+ (thick, purple stain) vs Gram&minus; (thin + outer membrane, pink stain)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Flagellum</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Whip-like tail for bacterial movement/locomotion</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Heterotroph</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Gets energy by consuming other organisms or organic material</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Photoautotroph</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Uses sunlight to make own food (e.g., cyanobacteria)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Chemoautotroph</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Uses chemical energy from inorganic compounds (e.g., deep-sea vent bacteria)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Pathogen</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Any microorganism that causes disease</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Germ Theory</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Theory that many diseases are caused by microorganisms (germs); replaced spontaneous generation</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Pasteur</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Disproved spontaneous generation; developed pasteurization; pioneered germ theory</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Koch</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Proved specific bacteria cause specific diseases; developed Koch's postulates</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Vaccine</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Dead/weakened pathogen that triggers immune response WITHOUT causing disease</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Antibiotic</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Medicine that kills BACTERIA (does NOT work on viruses)</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Antibiotic Resistance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Bacteria evolve to survive antibiotics due to overuse; rapid reproduction speeds this</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Epidemic</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Rapid spread of disease in a population or region</div></div></div></div>
+      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Quarantine</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Isolating infected organisms to prevent disease spread</div></div></div></div>
+    </div>
+    <!-- VOCAB QUIZ -->
+    <div id="vquiz" style="display:none;">
+      <div class="vquiz-box">
+        <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
+        <div class="vq" id="vq1"><div class="vq-text">1. A protein coat surrounding viral genetic material is called a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Cell wall</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Capsid</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Ribosome</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Flagellum</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. In the lytic cycle, the host cell ultimately:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Becomes immune</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Integrates viral DNA permanently</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Bursts open, releasing new viruses</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Divides normally by mitosis</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. Antibiotics are effective against:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Viruses only</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Both bacteria and viruses</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Bacteria only</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Neither bacteria nor viruses</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. Bacteria that use sunlight to make their own food are classified as:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Heterotrophs</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Chemoautotrophs</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Decomposers</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Photoautotrophs</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. Asexual reproduction in bacteria where one cell splits into two identical cells is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Conjugation</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Binary fission</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Mitosis</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Lysis</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. Which scientist disproved spontaneous generation?</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Koch</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Darwin</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Pasteur</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Mendel</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. Antibiotic resistance develops quickly because bacteria:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Are very large</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Reproduce rapidly</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Are eukaryotic</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Cannot mutate</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. The ONE characteristic viruses share with living cells is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Ribosomes</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Cell membrane</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Nucleic acids (DNA or RNA)</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Metabolism</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. A vaccine works by:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Killing all pathogens in the body</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Providing antibiotics</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Strengthening cell walls</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Exposing the immune system to a weakened pathogen to build immunity</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. Isolating infected organisms to prevent disease spread is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Pasteurization</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Vaccination</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Quarantine</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Conjugation</div></div><div class="vq-result" id="vqr10"></div></div>
+        <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+      </div>
+    </div>
+    <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the SOL Practice Test.</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Vaccines &amp; Antibiotics</button><button class="nbtn next" onclick="goTo(6)">Study Guide &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 6: STUDY GUIDE
+     ================================================================= -->
+<div class="panel" id="p6">
+  <div class="lc">
+    <div class="eyebrow">Step 7 of 9 &mdash; Study Guide</div>
+    <div class="sh2">BIO.4 One-Page Cheat Sheet</div>
+    <p class="prose">Print this page for quick reference. <button class="nbtn next" onclick="window.print()" style="display:inline-flex;padding:5px 14px;font-size:.8rem;">&#x1F5A8; Print</button></p>
+    <div class="section">
+      <div class="sh3">Viruses (BIO.4a/b)</div>
+      <table class="dt"><tr><th>Feature</th><th>Detail</th></tr><tr><td>Structure</td><td>Nucleic acid (DNA OR RNA) + protein coat (capsid); NOT a cell</td></tr><tr><td>Living?</td><td>NO &mdash; cannot reproduce alone, no metabolism, not cells</td></tr><tr><td>Shared with life</td><td>Contains nucleic acids (DNA or RNA) &mdash; ONLY shared trait</td></tr><tr><td>Lytic cycle</td><td>Virus hijacks host &rarr; replicates &rarr; host BURSTS &rarr; new viruses released</td></tr><tr><td>Lysogenic cycle</td><td>Viral DNA integrates into host DNA &rarr; dormant &rarr; eventually triggers lytic</td></tr></table>
+      <div class="sh3">Bacteria (BIO.4b/c)</div>
+      <table class="dt"><tr><th>Feature</th><th>Detail</th></tr><tr><td>Living?</td><td>YES &mdash; prokaryotic cells with DNA, ribosomes, metabolism</td></tr><tr><td>Reproduction</td><td>Binary fission (asexual, fast); conjugation (sexual, rare)</td></tr><tr><td>Classification</td><td>Heterotroph (eats others), Photoautotroph (sunlight), Chemoautotroph (chemicals)</td></tr><tr><td>Cell wall</td><td>Gram+ (thick, purple) vs Gram&minus; (thin + outer membrane, pink)</td></tr></table>
+      <div class="sh3">Bacteria vs. Viruses</div>
+      <table class="dt"><tr><th></th><th>Bacteria</th><th>Viruses</th></tr><tr><td>Living</td><td>Yes</td><td>No</td></tr><tr><td>Cell</td><td>Yes (prokaryotic)</td><td>No</td></tr><tr><td>Reproduce</td><td>Independently (binary fission)</td><td>Only inside host cell</td></tr><tr><td>Treated by</td><td>Antibiotics</td><td>Antivirals (NOT antibiotics)</td></tr></table>
+      <div class="sh3">Germ Theory &amp; Prevention (BIO.4d/e)</div>
+      <p class="prose" style="font-size:.85rem;"><strong>Pasteur:</strong> disproved spontaneous generation (swan-neck flask). <strong>Koch:</strong> specific germs cause specific diseases (Koch's postulates). <strong>Vaccines</strong> = prevent disease (dead/weakened pathogen &rarr; immune response). <strong>Antibiotics</strong> = cure BACTERIAL disease only. <strong>Antibiotic resistance</strong> = overuse &rarr; resistant bacteria survive &rarr; rapid reproduction spreads resistance.</p>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Practice Test &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 7: SOL PRACTICE TEST (20 Questions)
+     ================================================================= -->
+<div class="panel" id="p7">
+  <div class="lc">
+    <div class="eyebrow">Step 8 of 9 &mdash; SOL Practice Test</div>
+    <div class="sh2">20 Questions in SOL Exam Format</div>
+    <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div></div>
+    <div class="quiz-box" id="sol-practice-box">
+      <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.4 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
+      <!-- Q1 --><div class="qq" data-ans="a" data-std="BIO.4a"><div class="q-stem"><span class="q-num">1</span> (2003-45) An important difference between viruses and living cells is that viruses &mdash; <span class="q-tag">BIO.4a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>cannot reproduce outside of cells</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>cannot mutate but cells can</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>contain more nuclei than cells</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>need an energy source but cells do not</li></ul><div class="qexp">Viruses must use a host cell to reproduce. They CAN mutate. They have NO nuclei. ALL cells need energy.</div></div>
+      <!-- Q2 --><div class="qq" data-ans="a" data-std="BIO.4a"><div class="q-stem"><span class="q-num">2</span> (2002-41) Which characteristic do viruses possess in common with living cells? <span class="q-tag">BIO.4a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>They contain nucleic acids such as DNA or RNA</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>They contain a nucleus and organelles</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>They make their own food</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>They are inactive outside living cells</li></ul><div class="qexp">Both viruses and cells contain nucleic acids. Viruses lack nucleus, organelles, and metabolism.</div></div>
+      <!-- Q3 --><div class="qq" data-ans="c" data-std="BIO.4b"><div class="q-stem"><span class="q-num">3</span> In the lysogenic cycle, viral DNA &mdash; <span class="q-tag">BIO.4b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>immediately destroys the host cell</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>is digested by host enzymes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>integrates into the host's DNA and lies dormant</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>exits the cell immediately</li></ul><div class="qexp">In the lysogenic cycle, viral DNA integrates into host chromosome as a provirus and lies dormant until triggered.</div></div>
+      <!-- Q4 --><div class="qq" data-ans="d" data-std="BIO.4b"><div class="q-stem"><span class="q-num">4</span> The final step of the lytic cycle is &mdash; <span class="q-tag">BIO.4b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>viral DNA integrating into host</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>virus attaching to host surface</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>host cell dividing normally</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>host cell bursting, releasing new viruses</li></ul><div class="qexp">Lytic = lysis = burst. The host cell explodes, releasing hundreds of new viral particles.</div></div>
+      <!-- Q5 --><div class="qq" data-ans="d" data-std="BIO.4c"><div class="q-stem"><span class="q-num">5</span> Which is TRUE about bacteria but NOT viruses? <span class="q-tag">BIO.4c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>They contain genetic material</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>They can cause disease</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>They can mutate</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>They can reproduce independently</li></ul><div class="qexp">Bacteria reproduce on their own (binary fission). Viruses cannot. Both have genetic material, cause disease, and mutate.</div></div>
+      <!-- Q6 --><div class="qq" data-ans="c" data-std="BIO.4c"><div class="q-stem"><span class="q-num">6</span> Deep-sea vent bacteria that use chemical energy to make food are &mdash; <span class="q-tag">BIO.4c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>heterotrophs</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>photoautotrophs</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>chemoautotrophs</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>parasites</li></ul><div class="qexp">Chemoautotrophs use inorganic chemical energy (not sunlight) to make their own food.</div></div>
+      <!-- Q7 --><div class="qq" data-ans="d" data-std="BIO.4b"><div class="q-stem"><span class="q-num">7</span> (2005-30) Overuse of antibiotics has led to resistant bacteria quickly because &mdash; <span class="q-tag">BIO.4b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>there are many types of bacteria</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>bacteria are very small</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>travelers carry bacteria worldwide</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>bacteria reproduce rapidly</li></ul><div class="qexp">Rapid reproduction = rapid evolution. Resistant bacteria survive and quickly become dominant.</div></div>
+      <!-- Q8 --><div class="qq" data-ans="a" data-std="BIO.4b"><div class="q-stem"><span class="q-num">8</span> (2002-37) Increasing resistance of M. tuberculosis to streptomycin is most likely due to &mdash; <span class="q-tag">BIO.4b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>increased use of streptomycin</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>more alternatives to streptomycin</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>artificial production of streptomycin</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>early detection of infections</li></ul><div class="qexp">Overuse of streptomycin kills susceptible bacteria, leaving resistant ones to reproduce and spread.</div></div>
+      <!-- Q9 --><div class="qq" data-ans="c" data-std="BIO.4e"><div class="q-stem"><span class="q-num">9</span> (2006-19) Pasteur's experiment helped him to &mdash; <span class="q-tag">BIO.4e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>isolate the smallpox virus</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>convince people to cover food</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>reject the theory of spontaneous generation</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>produce a vaccine against rabies</li></ul><div class="qexp">Pasteur's swan-neck flask experiment proved microbes come from other microbes, disproving spontaneous generation.</div></div>
+      <!-- Q10 --><div class="qq" data-ans="a" data-std="BIO.4e"><div class="q-stem"><span class="q-num">10</span> (2004-41) Which could be treated with antibiotics? <span class="q-tag">BIO.4e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Strep throat</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Common cold</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>HIV</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Influenza</li></ul><div class="qexp">Strep throat = bacteria = antibiotics work. Cold, HIV, flu = viruses = antibiotics useless.</div></div>
+      <!-- Q11 --><div class="qq" data-ans="a" data-std="BIO.4e"><div class="q-stem"><span class="q-num">11</span> (2006-26) Which is NOT a method of preventing bacterial illness in a meat plant? <span class="q-tag">BIO.4e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Using antibiotics to treat food poisoning</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Washing hands with hot soapy water</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Using gloves with raw meat</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Disinfecting work areas</li></ul><div class="qexp">Antibiotics treat infections AFTER they happen; they don't PREVENT spread. Prevention = sanitation.</div></div>
+      <!-- Q12 --><div class="qq" data-ans="b" data-std="BIO.4d"><div class="q-stem"><span class="q-num">12</span> (2003-27) A virus causes a digestive disease. The most likely source is &mdash; <span class="q-tag">BIO.4d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Soil</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Water</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Air</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Insects</li></ul><div class="qexp">Digestive diseases typically spread through contaminated water or food (fecal-oral route).</div></div>
+      <!-- Q13 --><div class="qq" data-ans="b" data-std="BIO.4d"><div class="q-stem"><span class="q-num">13</span> (2002-5) Smallpox transmission was discovered to be by &mdash; <span class="q-tag">BIO.4d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>mosquito bites</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>direct contact with infected person</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>contaminated water</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>food containing the virus</li></ul><div class="qexp">Smallpox spreads through direct contact with infected individuals or their bodily fluids.</div></div>
+      <!-- Q14 --><div class="qq" data-ans="b" data-std="BIO.4d"><div class="q-stem"><span class="q-num">14</span> (2003-3) Animals from foreign countries are quarantined to prevent &mdash; <span class="q-tag">BIO.4d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>escape into local habitats</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>introduction of foreign animal diseases</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>cross-breeding with native animals</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>predator destruction of foreign animals</li></ul><div class="qexp">Quarantine prevents disease transmission from potentially infected foreign animals to domestic populations.</div></div>
+      <!-- Q15 --><div class="qq" data-ans="c" data-std="BIO.4e"><div class="q-stem"><span class="q-num">15</span> How do vaccines prevent disease? <span class="q-tag">BIO.4e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>They kill all pathogens immediately</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>They provide antibiotics</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>They expose the immune system to weakened pathogens to build immunity</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>They strengthen cell membranes</li></ul><div class="qexp">Vaccines contain dead/weakened pathogens that trigger immune response and create memory cells for future protection.</div></div>
+      <!-- Q16 --><div class="qq" data-ans="d" data-std="BIO.4c"><div class="q-stem"><span class="q-num">16</span> Bacteria can reproduce independently by binary fission. What does this tell you about bacteria compared to viruses? <span class="q-tag">BIO.4c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Bacteria are smaller than viruses</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Bacteria contain RNA, viruses contain DNA</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Bacteria cannot cause disease</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Bacteria are living organisms, viruses are not</li></ul><div class="qexp">Independent reproduction is a characteristic of life. Bacteria reproduce independently = living. Viruses cannot = nonliving.</div></div>
+      <!-- Q17 --><div class="qq" data-ans="a" data-std="BIO.4a"><div class="q-stem"><span class="q-num">17</span> A virus consists of &mdash; <span class="q-tag">BIO.4a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>nucleic acid surrounded by a protein coat</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>a cell membrane, cytoplasm, and ribosomes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>a cell wall, DNA, and flagellum</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>mitochondria, nucleus, and Golgi</li></ul><div class="qexp">Virus = nucleic acid core (DNA or RNA) + capsid (protein coat). They lack all cellular structures.</div></div>
+      <!-- Q18 --><div class="qq" data-ans="b" data-std="BIO.4e"><div class="q-stem"><span class="q-num">18</span> Koch's postulates established that &mdash; <span class="q-tag">BIO.4e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>all diseases are caused by viruses</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>specific microorganisms cause specific diseases</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>spontaneous generation is real</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>antibiotics can cure any infection</li></ul><div class="qexp">Koch proved that specific bacteria cause specific diseases through his 4-step postulates: isolate, culture, infect, re-isolate.</div></div>
+      <!-- Q19 --><div class="qq" data-ans="c" data-std="BIO.4d"><div class="q-stem"><span class="q-num">19</span> Bacteria play an important role in ecosystems by &mdash; <span class="q-tag">BIO.4d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>producing oxygen through photosynthesis in all environments</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>consuming all dead organisms before they decompose</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>cycling nutrients by decomposing dead organisms</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>preventing all diseases in plants and animals</li></ul><div class="qexp">Bacteria are key decomposers. They break down dead organisms and return nutrients (N, C, P) to the soil and atmosphere, keeping nutrient cycles going.</div></div>
+      <!-- Q20 --><div class="qq" data-ans="a" data-std="BIO.4a"><div class="q-stem"><span class="q-num">20</span> Why are viruses considered nonliving? <span class="q-tag">BIO.4a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>They cannot carry out life processes without a host cell</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>They are too small to be alive</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>They do not contain any genetic material</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>They only infect bacteria</li></ul><div class="qexp">Viruses are nonliving because they cannot reproduce, metabolize, or carry out ANY life process without hijacking a host cell. They DO contain genetic material (DNA or RNA), so C is wrong. Size alone doesn't determine if something is alive.</div></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(8)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(8)" disabled>Results &rarr;</button></div>
+</div>
+
+<!-- =================================================================
+     PANEL 8: RESULTS & DANGER ZONE
+     ================================================================= -->
+<div class="panel" id="p8">
+  <div class="lc">
+    <div class="eyebrow">Step 9 of 9 &mdash; Results</div>
+    <div class="sh2">Your BIO.4 Score &amp; Danger Zone Report</div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(7)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+</div>
+
+</main>
+<script>
+/* ── CONSTANTS ───────────────────────────────────── */
+const UNIT = 'unit4';
+const TOTAL_PANELS = 9;
+const TOTAL_SOL_Q = 20;
+const TOTAL_CARDS = 22;
+const VQ_TOTAL = 10;
+const VQ_PASS = 8;
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+
+/* ── STATE ────────────────────────────────────────── */
+var studentName = '';
+var classPeriod = '';
+var currentPanel = 0;
+var panelStartTime = Date.now();
+var sessionStart = Date.now();
+var activityLog = [];
+var pretestAnswers = [];
+var pretestSent = false;
+var vqAnswers = {};
+var vqScore = 0;
+var vocabPassed = false;
+var pracAnswered = 0;
+var pracCorrect = 0;
+var missedStds = {};
+var questionDetail = [];
+var flippedCards = new Set();
+var graphAnswered = {};
+
+var VQ_CORRECT = {1:'b',2:'c',3:'c',4:'d',5:'b',6:'c',7:'b',8:'c',9:'d',10:'c'};
+var VQ_EXPLAIN = {
+  1:'The capsid is the protein coat that surrounds and protects the viral nucleic acid. Cell walls are found in bacteria and plants, not viruses.',
+  2:'In the lytic cycle, the virus hijacks the host cell, replicates, and the host cell BURSTS (lyses), releasing hundreds of new viruses.',
+  3:'Antibiotics kill bacteria only. They have NO effect on viruses because viruses lack the cellular structures that antibiotics target.',
+  4:'Photoautotrophs use sunlight to make their own food. Photo = light, auto = self. Cyanobacteria are the classic example.',
+  5:'Binary fission is asexual reproduction where one bacterium splits into two identical cells. Conjugation is sexual (rare). Mitosis is in eukaryotes.',
+  6:'Pasteur\'s swan-neck flask experiment proved that microorganisms come from other microorganisms, disproving the theory of spontaneous generation.',
+  7:'Bacteria reproduce every ~20 minutes. When antibiotics kill susceptible bacteria, resistant ones survive and quickly become the dominant population.',
+  8:'The ONLY characteristic viruses share with living cells is containing nucleic acids (DNA or RNA). Viruses lack ribosomes, membranes, and metabolism.',
+  9:'Vaccines contain dead or weakened pathogens that trigger an immune response and create memory cells, providing protection against future infection.',
+  10:'Quarantine isolates infected organisms to prevent disease from spreading to healthy populations. It\'s a direct application of germ theory.'
+};
+
+/* ── METADATA ────────────────────────────────────── */
+function initMeta() {
+  var today = new Date().toISOString().slice(0, 10);
+  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
+  var last = localStorage.getItem('sol_streak_last');
+  if (last === today) { /* already counted */ }
+  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
+  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
+  document.getElementById('streak-val').textContent = streak;
+  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
+
+  var solDate = new Date('2026-05-07');
+  var diff = Math.ceil((solDate - new Date()) / 86400000);
+  document.getElementById('sol-countdown').textContent = diff > 0 ? diff : 0;
+}
+
+/* ── TRACKING ────────────────────────────────────── */
+function send(data) {
+  data.student = studentName;
+  data.module = 'SOL Prep — Unit 4: Bacteria & Viruses';
+  data.classPeriod = classPeriod;
+  data.timestamp = data.timestamp || new Date().toISOString();
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(data));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(function(){});
+  }
+}
+
+function getAnswerText(opt) {
+  var t = opt.textContent.trim();
+  return t.replace(/^[A-D]\s*/, '');
+}
+
+/* ── SAVE / RESTORE ──────────────────────────────── */
+function saveProgress() {
+  if (!studentName) return;
+  var gateObj = {};
+  for (var key in gateAnswered) {
+    gateObj[key] = Array.from(gateAnswered[key]);
+  }
+  var data = {
+    studentName: studentName,
+    classPeriod: classPeriod,
+    currentPanel: currentPanel,
+    gateAnswered: gateObj,
+    graphAnswered: graphAnswered,
+    pretestAnswers: pretestAnswers,
+    pretestSent: pretestSent,
+    vqAnswers: vqAnswers,
+    vqScore: vqScore,
+    vocabPassed: vocabPassed,
+    pracAnswered: pracAnswered,
+    pracCorrect: pracCorrect,
+    missedStds: missedStds,
+    questionDetail: questionDetail,
+    activityLog: activityLog,
+    sessionStart: sessionStart,
+    unlockedPanels: Array.from(unlockedPanels),
+    flippedCards: Array.from(flippedCards)
+  };
+  localStorage.setItem('sol_unit4_progress', JSON.stringify(data));
+}
+
+function restoreProgress(data) {
+  studentName = data.studentName;
+  classPeriod = data.classPeriod;
+  if (data.unlockedPanels) {
+    unlockedPanels = new Set(data.unlockedPanels);
+  } else {
+    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
+  }
+  pretestAnswers = data.pretestAnswers || [];
+  pretestSent = data.pretestSent || false;
+  vqAnswers = data.vqAnswers || {};
+  vqScore = data.vqScore || 0;
+  vocabPassed = data.vocabPassed || false;
+  pracAnswered = data.pracAnswered || 0;
+  pracCorrect = data.pracCorrect || 0;
+  missedStds = data.missedStds || {};
+  questionDetail = data.questionDetail || [];
+  activityLog = data.activityLog || [];
+  sessionStart = data.sessionStart || Date.now();
+  graphAnswered = data.graphAnswered || {};
+
+  gateAnswered = {};
+  if (data.gateAnswered) {
+    for (var pid in data.gateAnswered) {
+      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
+    }
+  }
+
+  document.getElementById('name-modal').style.display = 'none';
+  panelStartTime = Date.now();
+
+  // Replay gate questions visually
+  for (var panelId in gateAnswered) {
+    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+    gateAnswered[panelId].forEach(function(idx) {
+      if (qs[idx]) {
+        var qq = qs[idx];
+        var correct = qq.dataset.ans;
+        qq.querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === correct) o.classList.add('correct');
+        });
+        var exp = qq.querySelector('.qexp');
+        if (exp) exp.classList.add('show');
+      }
+    });
+    checkGate(parseInt(panelId));
+  }
+
+  // Replay graph answers
+  // (No graph questions in Unit 2 content panels)
+
+  // Restore flipped cards
+  if (data.flippedCards) {
+    flippedCards = new Set(data.flippedCards);
+    var allCards = document.querySelectorAll('.vcard');
+    flippedCards.forEach(function(idx) {
+      if (allCards[idx]) allCards[idx].classList.add('flipped');
+    });
+    var countEl = document.getElementById('vocab-flip-count');
+    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+    if (flippedCards.size >= TOTAL_CARDS) {
+      document.getElementById('vquiz').style.display = 'block';
+      var gate = document.getElementById('vocab-flip-gate');
+      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
+    }
+  }
+
+  // Restore vocab quiz answers
+  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
+    for (var qn in data.vqAnswers) {
+      var chosen = data.vqAnswers[qn];
+      var vqDiv = document.getElementById('vq' + qn);
+      if (!vqDiv) continue;
+      var opts = vqDiv.querySelectorAll('.vq-opt');
+      opts.forEach(function(o) {
+        o.classList.add('revealed');
+        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
+        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
+      });
+      var res = document.getElementById('vqr' + qn);
+      if (res) {
+        res.textContent = VQ_EXPLAIN[qn];
+        res.classList.add('show');
+        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
+      }
+    }
+    if (data.vocabPassed) {
+      var scoreBox = document.getElementById('vquiz-score');
+      scoreBox.style.display = 'block';
+      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
+      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+      var pl = document.getElementById('practice-locked');
+      if (pl) pl.style.display = 'none';
+      var tl = document.getElementById('practice-test-locked');
+      if (tl) tl.style.display = 'none';
+      var sb = document.getElementById('sol-practice-box');
+      if (sb) sb.style.display = 'block';
+    }
+  }
+
+  // Restore practice test answers
+  if (data.pracAnswered > 0) {
+    var solQs = document.querySelectorAll('#sol-practice-box .qq');
+    for (var qi = 0; qi < data.questionDetail.length; qi++) {
+      var qd = data.questionDetail[qi];
+      if (solQs[qi]) {
+        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
+          o.classList.add('revealed');
+          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
+          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
+        });
+        var exp = solQs[qi].querySelector('.qexp');
+        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
+      }
+    }
+    var progMsg = document.getElementById('sol-progress-msg');
+    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+    if (data.pracAnswered === TOTAL_SOL_Q) {
+      document.getElementById('to-results-btn').disabled = false;
+      showDangerZone();
+    }
+  }
+
+  goTo(data.currentPanel || 0);
+}
+
+/* ── START ────────────────────────────────────────── */
+function startUnit() {
+  var nameInput = document.getElementById('student-name').value.trim();
+  if (nameInput.split(/\s+/).length < 2) {
+    document.getElementById('name-err').style.display = 'block';
+    return;
+  }
+  var periodEl = document.getElementById('class-period');
+  if (periodEl) {
+    classPeriod = periodEl.value;
+    if (!classPeriod) {
+      var periodErr = document.getElementById('period-err');
+      if (periodErr) periodErr.style.display = 'block';
+      return;
+    }
+  }
+  studentName = nameInput;
+
+  var saved = localStorage.getItem('sol_unit4_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName === studentName) {
+      restoreProgress(data);
+      return;
+    }
+  }
+  localStorage.removeItem('sol_unit4_progress');
+
+  document.getElementById('name-modal').style.display = 'none';
+  initMeta();
+  sessionStart = Date.now();
+  panelStartTime = Date.now();
+  send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });
+}
+
+/* ── NAVIGATION ───────────────────────────────────── */
+var unlockedPanels = new Set([0]);
+
+var stepNames = ['SOL Focus','Viruses','Bacteria','Disease & Germ Theory','Vaccines & Antibiotics','Vocab Lock-In','Study Guide','Practice Test','Results'];
+
+function goTo(n) {
+  if (n > currentPanel && !unlockedPanels.has(n)) {
+    showToast('Complete the questions on this page first!');
+    return;
+  }
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
+  }
+  panelStartTime = Date.now();
+
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById('p' + n);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
+  var sb = document.getElementById('sb' + n);
+  if (sb) sb.classList.add('active');
+  for (var i = 0; i < n; i++) {
+    var prev = document.getElementById('sb' + i);
+    if (prev) prev.classList.add('done');
+  }
+  currentPanel = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
+  document.getElementById('steps-prog').style.width = pct + '%';
+  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
+  if (!(n in gateRequired)) { unlockedPanels.add(n + 1); }
+  localStorage.setItem('sol_' + UNIT + '_panel', n);
+  saveProgress();
+}
+
+/* ── GATE SYSTEM ─────────────────────────────────── */
+var gateAnswered = {};
+var gateRequired = { 0: 5, 1: 4, 2: 4, 3: 4, 4: 4 };
+
+function gateAnswer(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var panelId = parseInt(qq.dataset.panel);
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
+  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
+  for (var i = 0; i < qs.length; i++) {
+    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
+  }
+
+  // Track pretest answers (panel 0, questions 3-5)
+  if (panelId === 0) {
+    var qIndex = Array.from(qs).indexOf(qq);
+    if (qIndex >= 2) {
+      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
+      if (pretestAnswers.length === 3 && !pretestSent) {
+        pretestSent = true;
+        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
+        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
+          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
+        })});
+      }
+    }
+  }
+
+  checkGate(panelId);
+  saveProgress();
+}
+
+function checkGate(panelId) {
+  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
+  var required = gateRequired[panelId] || 0;
+
+  var status = document.getElementById('gate-status-' + panelId);
+  var count = document.getElementById('gate-count-' + panelId);
+  if (count) count.textContent = answered + ' of ' + required + ' answered';
+
+  if (answered >= required) {
+    unlockedPanels.add(panelId + 1);
+    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
+    var btn = document.getElementById('next-' + panelId);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
+    }
+    var sb = document.getElementById('sb' + panelId);
+    if (sb) sb.classList.add('done');
+    saveProgress();
+  }
+}
+
+/* ── FLASHCARDS ──────────────────────────────────── */
+function flipCard(card) {
+  card.classList.toggle('flipped');
+  var allCards = document.querySelectorAll('.vcard');
+  var idx = Array.from(allCards).indexOf(card);
+  if (card.classList.contains('flipped')) {
+    flippedCards.add(idx);
+  }
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
+
+  if (flippedCards.size >= TOTAL_CARDS) {
+    document.getElementById('vquiz').style.display = 'block';
+    var gate = document.getElementById('vocab-flip-gate');
+    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
+  }
+  saveProgress();
+}
+
+/* ── VOCAB QUIZ ──────────────────────────────────── */
+function vqPick(el) {
+  var vq = el.closest('.vq');
+  if (vq.querySelector('.vq-opt.revealed')) return;
+  var qNum = vq.id.replace('vq', '');
+  var chosen = el.dataset.v;
+  var correct = VQ_CORRECT[qNum];
+  var isCorrect = (chosen === correct);
+
+  vq.querySelectorAll('.vq-opt').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === el && !isCorrect) o.classList.add('incorrect');
+  });
+
+  var res = document.getElementById('vqr' + qNum);
+  if (res) {
+    res.textContent = VQ_EXPLAIN[qNum];
+    res.classList.add('show');
+    if (!isCorrect) res.classList.add('wrong');
+  }
+
+  vqAnswers[qNum] = chosen;
+  saveProgress();
+}
+
+function gradeVocab() {
+  vqScore = 0;
+  for (var q = 1; q <= VQ_TOTAL; q++) {
+    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
+  }
+  var box = document.getElementById('vquiz-score');
+  var nEl = document.getElementById('vq-score-num');
+  var msgEl = document.getElementById('vq-pass-msg');
+  var retryBtn = document.getElementById('vq-retry-btn');
+  nEl.textContent = vqScore + '/' + VQ_TOTAL;
+  box.style.display = 'block';
+  if (vqScore >= VQ_PASS) {
+    msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+    vocabPassed = true;
+    unlockedPanels.add(6);  // Study Guide
+    unlockedPanels.add(7);  // Practice Test
+    unlockedPanels.add(8);  // Results
+    document.getElementById('practice-locked').style.display = 'none';
+    var testLocked = document.getElementById('practice-test-locked');
+    if (testLocked) testLocked.style.display = 'none';
+    var testBox = document.getElementById('sol-practice-box');
+    if (testBox) testBox.style.display = 'block';
+    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
+    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
+  } else {
+    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
+    retryBtn.style.display = 'inline-block';
+
+    flippedCards = new Set();
+    vqAnswers = {};
+    vqScore = 0;
+
+    saveProgress();
+
+    var allCards = document.querySelectorAll('.vcard');
+    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
+    var flipGate = document.getElementById('vocab-flip-gate');
+    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+    var flipCount = document.getElementById('vocab-flip-count');
+    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+    setTimeout(function() {
+      document.getElementById('vquiz').style.display = 'none';
+      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+      box.style.display = 'none';
+      retryBtn.style.display = 'none';
+      saveProgress();
+      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast('Study all cards again before retaking the quiz');
+    }, 3000);
+    return;
+  }
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  saveProgress();
+}
+
+function retryVocab() {
+  vqAnswers = {};
+  vqScore = 0;
+  flippedCards = new Set();
+
+  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
+  var scoreBox = document.getElementById('vquiz-score');
+  if (scoreBox) scoreBox.style.display = 'none';
+  var retryBtn = document.getElementById('vq-retry-btn');
+  if (retryBtn) retryBtn.style.display = 'none';
+
+  var allCards = document.querySelectorAll('.vcard');
+  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
+
+  var countEl = document.getElementById('vocab-flip-count');
+  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
+  var gate = document.getElementById('vocab-flip-gate');
+  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
+
+  var quiz = document.getElementById('vquiz');
+  if (quiz) quiz.style.display = 'none';
+
+  saveProgress();
+  var grid = document.querySelector('.vocab-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
+}
+
+/* ── SOL PRACTICE TEST ───────────────────────────── */
+function solPick(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+  var correct = qq.dataset.ans;
+  var std = qq.dataset.std || 'BIO.4';
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correct);
+
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correct) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+  var exp = qq.querySelector('.qexp');
+  if (exp) {
+    exp.classList.add('show');
+    if (!isCorrect) exp.classList.add('qexp-wrong');
+  }
+
+  pracAnswered++;
+  if (isCorrect) pracCorrect++;
+  else {
+    if (!missedStds[std]) missedStds[std] = 0;
+    missedStds[std]++;
+  }
+
+  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
+  var qNumMatch = stemText.match(/^(\d+)/);
+  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
+  var studentAnswerText = getAnswerText(opt);
+  var correctAnswerText = '';
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
+  });
+  questionDetail.push({
+    qNum: qNum, std: std, questionText: stemText,
+    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
+    isCorrect: isCorrect, correct: correct, chosen: chosen
+  });
+
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
+
+  if (pracAnswered === TOTAL_SOL_Q) {
+    document.getElementById('to-results-btn').disabled = false;
+    showDangerZone();
+    setTimeout(function(){ goTo(8); }, 800);
+  }
+  saveProgress();
+}
+
+/* ── DANGER ZONE ─────────────────────────────────── */
+function showDangerZone() {
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+  var box = document.getElementById('dz-result');
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'none';
+  box.style.display = 'block';
+  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
+
+  var cls, emoji, label, msg;
+  if (pct >= 80) {
+    cls = 'green'; emoji = '\uD83D\uDFE2';
+    label = 'STRONG \u2014 You\'re in good shape on BIO.4';
+    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
+  } else if (pct >= 60) {
+    cls = 'yellow'; emoji = '\uD83D\uDFE1';
+    label = 'CAUTION \u2014 Review needed on BIO.4';
+    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
+  } else {
+    cls = 'red'; emoji = '\uD83D\uDD34';
+    label = 'DANGER ZONE \u2014 BIO.4 needs work';
+    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
+  }
+
+  box.className = 'dz-box ' + cls;
+  document.getElementById('dz-emoji').textContent = emoji;
+  document.getElementById('dz-label').textContent = label;
+  document.getElementById('dz-msg').textContent = msg;
+
+  if (Object.keys(missedStds).length > 0) {
+    var missed = document.getElementById('dz-missed');
+    var list = document.getElementById('dz-missed-list');
+    missed.style.display = 'block';
+    var stdDesc = {
+      'BIO.4a': 'Viruses \u2014 Host Dependence and Nonliving Status',
+      'BIO.4b': 'Reproduction \u2014 Lytic/Lysogenic Cycles, Binary Fission',
+      'BIO.4c': 'Structure \u2014 Bacteria vs. Virus Comparison',
+      'BIO.4d': 'Effects \u2014 Disease, Nutrient Cycling',
+      'BIO.4e': 'Germ Theory \u2014 Vaccines, Antibiotics, Resistance'
+    };
+    list.innerHTML = Object.keys(missedStds).map(function(s) {
+      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
+    }).join('');
+  }
+
+  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
+  localStorage.setItem('sol_' + UNIT + '_pct', pct);
+  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
+  localStorage.setItem('sol_' + UNIT + '_done', 'true');
+
+  var sb8 = document.getElementById('sb8');
+  if (sb8) sb8.classList.add('done');
+  saveProgress();
+}
+
+/* ── SUBMIT FINAL SCORE ──────────────────────────── */
+function submitFinalScore() {
+  if (!studentName) return;
+  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
+
+  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
+
+  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
+    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
+  })});
+
+  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
+
+  showToast('Score sent to Mr. England \u2713');
+  document.getElementById('dz-submit-btn').textContent = '\u2705 Score Sent!';
+  document.getElementById('dz-submit-btn').disabled = true;
+}
+
+/* ── RETAKE PRACTICE TEST ────────────────────────── */
+function retakePractice() {
+  pracAnswered = 0;
+  pracCorrect = 0;
+  missedStds = {};
+  questionDetail = [];
+  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
+  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
+  document.getElementById('dz-result').style.display = 'none';
+  document.getElementById('dz-result').className = 'dz-box';
+  document.getElementById('dz-missed').style.display = 'none';
+  document.getElementById('dz-missed-list').innerHTML = '';
+  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
+  document.getElementById('dz-submit-btn').disabled = false;
+  document.getElementById('to-results-btn').disabled = true;
+  var waiting = document.getElementById('dz-waiting');
+  if (waiting) waiting.style.display = 'block';
+  var progMsg = document.getElementById('sol-progress-msg');
+  if (progMsg) progMsg.textContent = '';
+  goTo(7);
+  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
+}
+
+/* ── TOAST ────────────────────────────────────────── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.display = 'flex';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+
+/* ── PAGE EXIT HANDLER ───────────────────────────── */
+window.addEventListener('beforeunload', function() {
+  if (!studentName) return;
+  saveProgress();
+  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
+  var duration = Math.round((Date.now() - panelStartTime) / 1000);
+  if (duration > 2) {
+    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
+  }
+  var payload = {
+    student: studentName,
+    module: 'SOL Prep — Unit 4: Bacteria & Viruses',
+    classPeriod: classPeriod,
+    action: 'activity',
+    event: 'session_end',
+    totalSessionSeconds: totalSeconds,
+    panelLog: JSON.stringify(activityLog),
+    timestamp: new Date().toISOString()
+  };
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(APPS_URL, JSON.stringify(payload));
+  } else {
+    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
+  }
+});
+
+/* ── INIT ON DOM READY ───────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  initMeta();
+  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
+    vocabPassed = true;
+    var pl = document.getElementById('practice-locked');
+    if (pl) pl.style.display = 'none';
+    var tl = document.getElementById('practice-test-locked');
+    if (tl) tl.style.display = 'none';
+    var sb = document.getElementById('sol-practice-box');
+    if (sb) sb.style.display = 'block';
+  }
+  var saved = localStorage.getItem('sol_unit4_progress');
+  if (saved) {
+    var data = JSON.parse(saved);
+    if (data.studentName) {
+      var nameInput = document.getElementById('student-name');
+      var periodSelect = document.getElementById('class-period');
+      nameInput.value = data.studentName;
+      if (periodSelect) periodSelect.value = data.classPeriod || '';
+      var modalTitle = document.querySelector('.nm-title');
+      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
+      var modalSub = document.querySelector('.nm-sub');
+      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
+      var modalBtn = document.querySelector('.nm-btn');
+      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
+    }
+  }
+});
+</script>
+</body>
+</html>
