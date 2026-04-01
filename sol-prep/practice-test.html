@@ -207,7 +207,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
   <!-- PROGRESS -->
   <div class="prog-bar" id="prog-bar" style="display:none;">
-    <span class="prog-text"><strong id="prog-count">0</strong> of <strong>50</strong> answered</span>
+    <span class="prog-text"><strong id="prog-count">0</strong> of <strong id="prog-total">50</strong> answered</span>
     <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
     <span class="prog-text" id="prog-pct">0%</span>
   </div>
@@ -247,6 +247,56 @@ const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn
 const SOL_DATE = new Date('2026-05-07');
 const TOTAL_Q = 50;
 
+/* ── ASSIGNMENT SUPPORT ─── */
+var assignmentId = '';
+var assignmentData = null;  // { mode, seed, stdTargets, questionCount, allowRetake, title }
+
+// Check URL params for assignment
+(function checkAssignment() {
+  var params = new URLSearchParams(window.location.search);
+  var aId = params.get('assignmentId');
+  if (!aId) return;
+  assignmentId = aId;
+
+  // Fetch assignment details (student-facing, no password needed)
+  fetch(APPS_URL + '?action=assignments&period=')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var assignments = d.data || [];
+      var match = assignments.find(function(a) { return a.assignmentId === aId; });
+      if (match) {
+        assignmentData = match;
+        // Update hero text
+        document.querySelector('.test-hero h1').textContent = match.title || 'Biology SOL Practice Test';
+        document.querySelector('.test-hero p').textContent = 'Assigned practice test — ' +
+          (match.mode === 'fixed' ? 'all students receive the same questions' : 'each student receives a unique set of questions') +
+          '. ' + match.questionCount + ' questions from the Virginia Biology SOL question bank.';
+        // Update hero chips
+        var chips = document.querySelector('.hero-chips');
+        if (chips) {
+          chips.innerHTML =
+            '<div class="hero-chip">' + match.questionCount + ' Questions</div>' +
+            '<div class="hero-chip">' + (match.mode === 'fixed' ? 'Same Test for All' : 'Unique per Student') + '</div>' +
+            '<div class="hero-chip">BIO.1 &ndash; BIO.8</div>' +
+            '<div class="hero-chip">' + (match.allowRetake ? 'Retakes Allowed' : 'One Attempt') + '</div>';
+        }
+        console.log('Assignment loaded:', match.title, '(' + match.mode + ')');
+      }
+    })
+    .catch(function() {});
+})();
+
+/* ── SEEDED RANDOM (for fixed-mode assignments) ─── */
+function seededRandom(seed) {
+  // Simple mulberry32 PRNG
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
 /* ── QUESTION BANK (loaded from external JSON) ─── */
 var BANK = [];
 var bankLoaded = false;
@@ -260,9 +310,6 @@ fetch('question-bank.json')
     console.log('Question bank loaded: ' + BANK.length + ' questions (' + data.filter(function(q){return q.hasImage;}).length + ' with images)');
   })
   .catch(function(e){ console.error('Failed to load question bank:', e); });
-
-/* REPLACED INLINE ARRAY — was 152 questions embedded here, now loaded from question-bank.json */
-
 
 /* ── SOL standard distribution target (50 questions) ─── */
 var STD_TARGETS = {
@@ -352,6 +399,31 @@ function startTest() {
   document.getElementById('submit-btn').disabled = false;
   document.getElementById('submit-btn').textContent = 'Submit Score to Mr. England';
 
+  // Determine targets and shuffle function based on assignment
+  var targets = STD_TARGETS;
+  var shuffleFn = shuffle;
+
+  if (assignmentData) {
+    // Use assignment's standard targets if provided
+    try {
+      var parsed = typeof assignmentData.stdTargets === 'string' ? JSON.parse(assignmentData.stdTargets) : assignmentData.stdTargets;
+      if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+        targets = parsed;
+      }
+    } catch(e) {}
+
+    // For fixed mode, use seeded shuffle so all students get the same test
+    if (assignmentData.mode === 'fixed' && assignmentData.seed) {
+      var rng = seededRandom(assignmentData.seed);
+      shuffleFn = function(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(rng() * (i + 1));
+          var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+        }
+      };
+    }
+  }
+
   // Group bank by parent standard (BIO.1a → BIO.1)
   var byStd = {};
   BANK.forEach(function(q) {
@@ -360,13 +432,16 @@ function startTest() {
     byStd[parent].push(q);
   });
 
-  // Shuffle each standard's pool
-  Object.keys(byStd).forEach(function(s) { shuffle(byStd[s]); });
+  // Sort each pool by ID first (deterministic starting point for seeded shuffle)
+  Object.keys(byStd).forEach(function(s) {
+    byStd[s].sort(function(a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
+    shuffleFn(byStd[s]);
+  });
 
   // Draw questions per standard target
   testQuestions = [];
-  Object.keys(STD_TARGETS).forEach(function(std) {
-    var need = STD_TARGETS[std];
+  Object.keys(targets).forEach(function(std) {
+    var need = targets[std];
     var pool = byStd[std] || [];
     for (var i = 0; i < need && i < pool.length; i++) {
       testQuestions.push(pool[i]);
@@ -376,18 +451,20 @@ function startTest() {
   });
 
   // Shuffle final question order
-  shuffle(testQuestions);
+  shuffleFn(testQuestions);
 
   // Render
   renderQuestions();
+  document.getElementById('prog-total').textContent = testQuestions.length;
   updateProgress();
 
   // Send activity log
   send({
     action: 'activity',
-    lesson: 'Practice Test Generator',
+    lesson: assignmentData ? assignmentData.title : 'Practice Test Generator',
     event: 'test_started',
-    questionCount: testQuestions.length
+    questionCount: testQuestions.length,
+    assignmentId: assignmentId || ''
   });
 }
 
@@ -616,20 +693,24 @@ function submitScore() {
 
   var pct = Math.round((correct / testQuestions.length) * 100);
 
+  var lessonLabel = assignmentData ? assignmentData.title : 'Practice Test (Generated)';
+
   // 1. Score summary
   send({
     action: 'score',
-    lesson: 'Practice Test (Generated)',
+    lesson: lessonLabel,
     score: correct,
     total: testQuestions.length,
     pct: pct,
-    timeOnQuiz: Math.round((Date.now() - testStart) / 1000)
+    timeOnQuiz: Math.round((Date.now() - testStart) / 1000),
+    assignmentId: assignmentId || ''
   });
 
   // 2. Question detail
   send({
     action: 'quizDetail',
-    lesson: 'Practice Test (Generated)',
+    lesson: lessonLabel,
+    assignmentId: assignmentId || '',
     questions: questionDetail.map(function(q) {
       return {
         qNum: q.qNum,

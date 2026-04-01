@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOL Prep Teacher Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;color:#0f2240;min-height:100vh}
+
+/* Password Gate */
+#gate{position:fixed;inset:0;background:#0f2240;display:flex;align-items:center;justify-content:center;z-index:9999}
+#gate .box{background:#fff;border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center}
+#gate h2{font-size:1.4rem;margin-bottom:8px}
+#gate p{font-size:.85rem;color:#5e6e8a;margin-bottom:16px}
+#gate input{width:100%;padding:12px;border:2px solid #dde3ef;border-radius:8px;font-size:1rem;outline:none;text-align:center}
+#gate input:focus{border-color:#dc2626}
+#gate button{margin-top:12px;width:100%;padding:12px;background:#0f2240;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer}
+#gate .err{color:#c0392b;font-size:.8rem;margin-top:8px;display:none}
+
+/* Header */
+.header{background:#0f2240;color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header h1{font-size:1.2rem;font-weight:700}
+.header .subtitle{font-size:.8rem;color:rgba(255,255,255,.6)}
+.header .btn-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;padding:6px 12px;border:1px solid rgba(255,255,255,.2);border-radius:6px;margin-left:auto}
+.header .btn-back:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.header .refresh{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.header .refresh:hover{background:rgba(255,255,255,.25)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e2e8f0;padding:0 24px}
+.tab{padding:12px 20px;font-weight:600;font-size:.9rem;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:#0f2240;border-bottom-color:#dc2626}
+.tab:hover{color:#0f2240}
+
+/* Content */
+.content{padding:24px;max-width:1200px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+
+/* Cards & Forms */
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:28px;margin-bottom:20px}
+.card h3{font-size:1.05rem;font-weight:700;margin-bottom:16px;color:#0f2240}
+.card h3 .sub{font-size:.8rem;font-weight:400;color:#64748b;margin-left:8px}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:.78rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:2px solid #dde3ef;border-radius:8px;font-size:.92rem;font-family:inherit;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus{border-color:#dc2626}
+.form-group .hint{font-size:.72rem;color:#94a3b8;margin-top:2px}
+
+/* Standard Targets Grid */
+.std-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.std-cell{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center}
+.std-cell .std-name{font-size:.7rem;font-weight:700;color:#dc2626;letter-spacing:.5px}
+.std-cell .std-topic{font-size:.65rem;color:#94a3b8;margin:2px 0 6px}
+.std-cell input{width:50px;padding:6px;text-align:center;border:2px solid #dde3ef;border-radius:6px;font-size:.88rem;font-weight:700;font-family:inherit}
+.std-cell input:focus{border-color:#dc2626;outline:none}
+.std-cell .std-avail{font-size:.62rem;color:#94a3b8;margin-top:3px}
+.std-total{text-align:center;padding:10px;font-size:.88rem;font-weight:700;color:#0f2240}
+.std-total span{color:#dc2626}
+
+/* Mode Toggle */
+.mode-toggle{display:flex;gap:0;border:2px solid #dde3ef;border-radius:10px;overflow:hidden}
+.mode-opt{flex:1;padding:12px 16px;text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.mode-opt:first-child{border-right:2px solid #dde3ef}
+.mode-opt.active{background:#0f2240;color:#fff}
+.mode-opt .mode-title{font-weight:700;font-size:.88rem}
+.mode-opt .mode-desc{font-size:.72rem;color:#94a3b8;margin-top:2px}
+.mode-opt.active .mode-desc{color:rgba(255,255,255,.6)}
+
+/* Period Checkboxes */
+.period-checks{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.period-checks label{display:flex;align-items:center;gap:4px;font-size:.85rem;cursor:pointer;padding:4px 10px;border:1px solid #dde3ef;border-radius:6px;transition:all .2s}
+.period-checks label:hover{border-color:#dc2626}
+.period-checks input[type="checkbox"]{accent-color:#dc2626}
+.period-checks .all-check{font-weight:700;background:#f8fafc}
+
+/* Buttons */
+.btn{padding:10px 24px;border:none;border-radius:8px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-primary{background:#dc2626;color:#fff}
+.btn-primary:hover{background:#b91c1c}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #dde3ef}
+.btn-secondary:hover{background:#e2e8f0}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:6px 14px;font-size:.78rem}
+
+/* Assignment List */
+.asgn-list{display:flex;flex-direction:column;gap:12px}
+.asgn-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;display:flex;align-items:flex-start;gap:16px;transition:box-shadow .2s}
+.asgn-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.asgn-card.inactive{opacity:.6;background:#f8fafc}
+.asgn-info{flex:1}
+.asgn-title{font-weight:700;font-size:1rem;color:#0f2240;margin-bottom:4px}
+.asgn-meta{font-size:.78rem;color:#64748b;display:flex;gap:12px;flex-wrap:wrap}
+.asgn-meta span{display:flex;align-items:center;gap:4px}
+.asgn-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.badge-gray{background:#f1f5f9;color:#64748b}
+
+/* Stats Row */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat-card .label{font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.stat-card .value{font-size:2rem;font-weight:800;color:#0f2240;margin-top:4px}
+.stat-card .sub{font-size:.8rem;color:#94a3b8;margin-top:2px}
+
+/* Table */
+.tbl-wrap{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow-x:auto}
+.tbl-header{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tbl-header h3{font-size:1rem;font-weight:700}
+.filter{padding:6px 12px;border:1px solid #dde3ef;border-radius:6px;font-size:.85rem;outline:none;font-family:inherit}
+.filter:focus{border-color:#dc2626}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;position:sticky;top:0}
+td{padding:10px 14px;font-size:.85rem;border-top:1px solid #f1f5f9}
+tr:hover td{background:#f8fafc}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;border-top:1px solid #e2e8f0}
+.page-btn{padding:6px 14px;border:1px solid #dde3ef;border-radius:6px;background:#fff;cursor:pointer;font-size:.85rem;font-family:inherit}
+.page-btn:hover{background:#f1f5f9}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-info{font-size:.82rem;color:#64748b}
+
+/* Loading */
+.loading{text-align:center;padding:60px;color:#94a3b8;font-size:1rem}
+.loading::after{content:'';display:block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#dc2626;border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#0f2240;color:#fff;padding:12px 24px;border-radius:10px;font-size:.85rem;font-weight:600;z-index:600;opacity:0;transition:all .3s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Responsive */
+@media(max-width:768px){
+  .form-row{grid-template-columns:1fr}
+  .std-grid{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:1fr 1fr}
+  .asgn-card{flex-direction:column}
+  .asgn-actions{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="box">
+    <h2>SOL Prep Dashboard</h2>
+    <p>Enter the dashboard password to create and manage assignments.</p>
+    <input type="password" id="pw-input" placeholder="Password" autofocus>
+    <button onclick="unlock()">Access Dashboard</button>
+    <div class="err" id="pw-err">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header" id="main-ui" style="display:none">
+  <div>
+    <h1>SOL Prep &mdash; Teacher Dashboard</h1>
+    <div class="subtitle">Create and manage practice test assignments</div>
+  </div>
+  <a class="btn-back" href="index.html">&larr; SOL Prep Hub</a>
+  <button class="refresh" onclick="loadAllData()">Refresh Data</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="tab-bar" style="display:none">
+  <div class="tab active" onclick="showTab('create',this)">Create Assignment</div>
+  <div class="tab" onclick="showTab('manage',this)">Manage Assignments</div>
+  <div class="tab" onclick="showTab('results',this)">Results</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content" style="display:none">
+
+  <!-- ═══ CREATE ASSIGNMENT TAB ═══ -->
+  <div class="panel active" id="tab-create">
+    <div class="card">
+      <h3>New Assignment</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Assignment Title</label>
+          <input type="text" id="f-title" placeholder="e.g. SOL Practice Test #3 — Week of April 7">
+        </div>
+        <div class="form-group">
+          <label>Question Count</label>
+          <input type="number" id="f-qcount" value="50" min="5" max="100">
+          <div class="hint">Total questions on the test (auto-adjusts standard targets)</div>
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="form-group">
+          <label>Test Mode</label>
+          <div class="mode-toggle" id="mode-toggle">
+            <div class="mode-opt active" data-mode="fixed" onclick="setMode('fixed')">
+              <div class="mode-title">Fixed (Same Test)</div>
+              <div class="mode-desc">Every student gets the same questions in the same order</div>
+            </div>
+            <div class="mode-opt" data-mode="randomized" onclick="setMode('randomized')">
+              <div class="mode-title">Randomized (Unique Tests)</div>
+              <div class="mode-desc">Each student gets a different set of questions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Assign to Periods</label>
+          <div class="period-checks" id="period-checks">
+            <label class="all-check"><input type="checkbox" id="per-all" checked onchange="toggleAllPeriods(this.checked)"> ALL</label>
+            <label><input type="checkbox" class="per-cb" value="1" onchange="uncheckAll()"> 1st</label>
+            <label><input type="checkbox" class="per-cb" value="2" onchange="uncheckAll()"> 2nd</label>
+            <label><input type="checkbox" class="per-cb" value="3" onchange="uncheckAll()"> 3rd</label>
+            <label><input type="checkbox" class="per-cb" value="4" onchange="uncheckAll()"> 4th</label>
+            <label><input type="checkbox" class="per-cb" value="5" onchange="uncheckAll()"> 5th</label>
+            <label><input type="checkbox" class="per-cb" value="6" onchange="uncheckAll()"> 6th</label>
+            <label><input type="checkbox" class="per-cb" value="7" onchange="uncheckAll()"> 7th</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Allow Retakes?</label>
+          <select id="f-retake">
+            <option value="NO">No &mdash; one attempt only</option>
+            <option value="YES">Yes &mdash; students can retake</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Standard Targets -->
+    <div class="card">
+      <h3>Questions per Standard <span class="sub">Adjust how many questions come from each standard</span></h3>
+      <div class="std-grid" id="std-grid"></div>
+      <div class="std-total">Total: <span id="std-total-num">50</span> questions</div>
+    </div>
+
+    <!-- Preview & Create -->
+    <div class="card" style="text-align:center">
+      <button class="btn btn-primary" id="create-btn" onclick="createAssignment()" style="padding:14px 40px;font-size:1rem">Create Assignment</button>
+      <div id="create-status" style="margin-top:12px;font-size:.85rem;color:#64748b"></div>
+    </div>
+  </div>
+
+  <!-- ═══ MANAGE ASSIGNMENTS TAB ═══ -->
+  <div class="panel" id="tab-manage">
+    <div class="stats" id="manage-stats"></div>
+    <div class="card">
+      <h3>All Assignments</h3>
+      <div class="asgn-list" id="asgn-list">
+        <div class="loading">Loading assignments...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS TAB ═══ -->
+  <div class="panel" id="tab-results">
+    <div class="stats" id="results-stats"></div>
+    <div class="tbl-wrap" id="results-wrap">
+      <div class="tbl-header">
+        <h3>Scores by Assignment</h3>
+        <select class="filter" id="results-asgn-filter" onchange="renderResults()">
+          <option value="">All Assignments</option>
+        </select>
+        <select class="filter" id="results-period-filter" onchange="renderResults()">
+          <option value="">All Periods</option>
+          <option value="1st Period">1st Period</option>
+          <option value="2nd Period">2nd Period</option>
+          <option value="3rd Period">3rd Period</option>
+          <option value="4th Period">4th Period</option>
+          <option value="5th Period">5th Period</option>
+          <option value="6th Period">6th Period</option>
+          <option value="7th Period">7th Period</option>
+        </select>
+        <input class="filter" type="text" placeholder="Filter by student..." id="results-student-filter" oninput="renderResults()">
+      </div>
+      <table id="results-table">
+        <thead><tr><th>Time</th><th>Student</th><th>Period</th><th>Assignment</th><th>Score</th><th>Pct</th><th>Quiz Time</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+var PW = '';
+var DATA = { assignments: [], scores: [] };
+var BANK_COUNTS = {};  // How many questions per standard in the bank
+
+var STD_INFO = {
+  'BIO.1': { name: 'Scientific Investigation', default: 8 },
+  'BIO.2': { name: 'Biochemistry & Energy', default: 7 },
+  'BIO.3': { name: 'Cell Structure & Function', default: 7 },
+  'BIO.4': { name: 'Bacteria & Viruses', default: 4 },
+  'BIO.5': { name: 'Genetics & Inheritance', default: 7 },
+  'BIO.6': { name: 'Classification & Diversity', default: 6 },
+  'BIO.7': { name: 'Evolution', default: 6 },
+  'BIO.8': { name: 'Ecology & Ecosystems', default: 5 }
+};
+
+var PAGE_SIZE = 25;
+var resultsPage = 1;
+
+/* ═══════════════════════════════════════════
+   INIT — Load question bank to get counts
+   ═══════════════════════════════════════════ */
+fetch('question-bank.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    data.forEach(function(q) {
+      var parent = q.stdParent || q.std.replace(/[a-z]$/, '');
+      BANK_COUNTS[parent] = (BANK_COUNTS[parent] || 0) + 1;
+    });
+    buildStdGrid();
+  })
+  .catch(function() { buildStdGrid(); });
+
+/* ═══════════════════════════════════════════
+   PASSWORD GATE
+   ═══════════════════════════════════════════ */
+document.getElementById('pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') unlock();
+});
+
+function unlock() {
+  PW = document.getElementById('pw-input').value;
+  document.getElementById('pw-err').style.display = 'none';
+
+  fetch(API + '?action=assignments&pw=' + encodeURIComponent(PW))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.status === 'unauthorized') {
+        document.getElementById('pw-err').style.display = 'block';
+      } else {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'flex';
+        document.getElementById('tab-bar').style.display = 'flex';
+        document.getElementById('content').style.display = 'block';
+        DATA.assignments = d.data || [];
+        loadAllData();
+      }
+    })
+    .catch(function() { document.getElementById('pw-err').style.display = 'block'; });
+}
+
+/* ═══════════════════════════════════════════
+   LOAD DATA
+   ═══════════════════════════════════════════ */
+function loadAllData() {
+  // Assignments
+  fetch(API + '?action=assignments&pw=' + encodeURIComponent(PW))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      DATA.assignments = d.data || [];
+      renderManage();
+      populateAssignmentFilter();
+    }).catch(function() {});
+
+  // Scores
+  fetch(API + '?action=summary&pw=' + encodeURIComponent(PW))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      DATA.scores = d.data || [];
+      renderResults();
+    }).catch(function() {});
+}
+
+/* ═══════════════════════════════════════════
+   STANDARD TARGETS GRID
+   ═══════════════════════════════════════════ */
+function buildStdGrid() {
+  var grid = document.getElementById('std-grid');
+  var html = '';
+  var stds = Object.keys(STD_INFO);
+  stds.forEach(function(s) {
+    var info = STD_INFO[s];
+    var avail = BANK_COUNTS[s] || '?';
+    html += '<div class="std-cell">';
+    html += '<div class="std-name">' + s + '</div>';
+    html += '<div class="std-topic">' + info.name + '</div>';
+    html += '<input type="number" class="std-input" data-std="' + s + '" value="' + info.default + '" min="0" max="' + (typeof avail === 'number' ? avail : 100) + '" onchange="updateStdTotal()" oninput="updateStdTotal()">';
+    html += '<div class="std-avail">' + avail + ' available</div>';
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+  updateStdTotal();
+}
+
+function updateStdTotal() {
+  var inputs = document.querySelectorAll('.std-input');
+  var total = 0;
+  inputs.forEach(function(inp) { total += parseInt(inp.value) || 0; });
+  document.getElementById('std-total-num').textContent = total;
+  document.getElementById('f-qcount').value = total;
+}
+
+/* ═══════════════════════════════════════════
+   MODE TOGGLE
+   ═══════════════════════════════════════════ */
+function setMode(mode) {
+  document.querySelectorAll('.mode-opt').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.mode === mode);
+  });
+}
+
+function getMode() {
+  var active = document.querySelector('.mode-opt.active');
+  return active ? active.dataset.mode : 'fixed';
+}
+
+/* ═══════════════════════════════════════════
+   PERIOD CHECKBOXES
+   ═══════════════════════════════════════════ */
+function toggleAllPeriods(checked) {
+  if (checked) {
+    document.querySelectorAll('.per-cb').forEach(function(cb) { cb.checked = false; });
+  }
+}
+
+function uncheckAll() {
+  var anySingle = false;
+  document.querySelectorAll('.per-cb').forEach(function(cb) { if (cb.checked) anySingle = true; });
+  document.getElementById('per-all').checked = !anySingle;
+}
+
+function getSelectedPeriods() {
+  if (document.getElementById('per-all').checked) return 'ALL';
+  var periods = [];
+  document.querySelectorAll('.per-cb:checked').forEach(function(cb) { periods.push(cb.value); });
+  return periods.length ? periods.join(',') : 'ALL';
+}
+
+/* ═══════════════════════════════════════════
+   CREATE ASSIGNMENT
+   ═══════════════════════════════════════════ */
+function createAssignment() {
+  var title = document.getElementById('f-title').value.trim();
+  if (!title) {
+    showToast('Please enter an assignment title.');
+    document.getElementById('f-title').focus();
+    return;
+  }
+
+  var mode = getMode();
+  var seed = mode === 'fixed' ? Math.floor(Math.random() * 1000000) : 0;
+  var periods = getSelectedPeriods();
+  var retake = document.getElementById('f-retake').value;
+
+  // Gather standard targets
+  var stdTargets = {};
+  var totalQ = 0;
+  document.querySelectorAll('.std-input').forEach(function(inp) {
+    var val = parseInt(inp.value) || 0;
+    stdTargets[inp.dataset.std] = val;
+    totalQ += val;
+  });
+
+  if (totalQ < 5) {
+    showToast('Please set at least 5 total questions.');
+    return;
+  }
+
+  var btn = document.getElementById('create-btn');
+  btn.disabled = true;
+  btn.textContent = 'Creating...';
+  document.getElementById('create-status').textContent = '';
+
+  fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'createAssignment',
+      pw: PW,
+      title: title,
+      periods: periods,
+      mode: mode,
+      seed: seed,
+      stdTargets: JSON.stringify(stdTargets),
+      questionCount: totalQ,
+      allowRetake: retake
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'ok') {
+      document.getElementById('create-status').innerHTML = '<span style="color:#16a34a;font-weight:700">Assignment created! ID: ' + d.assignmentId + '</span>';
+      showToast('Assignment created successfully!');
+      document.getElementById('f-title').value = '';
+      loadAllData();
+    } else {
+      document.getElementById('create-status').innerHTML = '<span style="color:#dc2626">Error: ' + (d.status || 'unknown') + '</span>';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Create Assignment';
+  })
+  .catch(function(err) {
+    document.getElementById('create-status').innerHTML = '<span style="color:#dc2626">Network error. Check your connection.</span>';
+    btn.disabled = false;
+    btn.textContent = 'Create Assignment';
+  });
+}
+
+/* ═══════════════════════════════════════════
+   MANAGE ASSIGNMENTS
+   ═══════════════════════════════════════════ */
+function renderManage() {
+  var assignments = DATA.assignments;
+  var active = assignments.filter(function(a) { return String(a.Active).toUpperCase() === 'YES'; });
+  var inactive = assignments.filter(function(a) { return String(a.Active).toUpperCase() !== 'YES'; });
+
+  document.getElementById('manage-stats').innerHTML =
+    statCard('Total Assignments', assignments.length, 'created all time') +
+    statCard('Active', active.length, 'currently visible to students') +
+    statCard('Inactive', inactive.length, 'hidden from students');
+
+  var list = document.getElementById('asgn-list');
+  if (!assignments.length) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8">No assignments yet. Create one in the "Create Assignment" tab.</div>';
+    return;
+  }
+
+  var html = '';
+  // Show active first, then inactive
+  var sorted = active.concat(inactive);
+  sorted.forEach(function(a) {
+    var isActive = String(a.Active).toUpperCase() === 'YES';
+    var mode = a.Mode || 'randomized';
+    var periods = a.Periods || 'ALL';
+    var retake = String(a.AllowRetake).toUpperCase() === 'YES';
+    var qCount = a.QuestionCount || 50;
+
+    // Count submissions for this assignment
+    var submissions = DATA.scores.filter(function(s) { return s.AssignmentId === a.AssignmentId; });
+
+    html += '<div class="asgn-card' + (isActive ? '' : ' inactive') + '">';
+    html += '<div class="asgn-info">';
+    html += '<div class="asgn-title">' + esc(a.Title || 'Untitled') + '</div>';
+    html += '<div class="asgn-meta">';
+    html += '<span>' + (isActive ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">Inactive</span>') + '</span>';
+    html += '<span><span class="badge badge-blue">' + esc(mode === 'fixed' ? 'Fixed' : 'Randomized') + '</span></span>';
+    html += '<span>Periods: ' + esc(periods) + '</span>';
+    html += '<span>' + qCount + ' questions</span>';
+    html += '<span>' + (retake ? 'Retakes allowed' : 'No retakes') + '</span>';
+    html += '<span>' + submissions.length + ' submission' + (submissions.length !== 1 ? 's' : '') + '</span>';
+    html += '<span style="color:#94a3b8;font-size:.72rem">' + esc(a.AssignmentId || '') + '</span>';
+    html += '</div></div>';
+    html += '<div class="asgn-actions">';
+    if (isActive) {
+      html += '<button class="btn btn-danger btn-sm" onclick="toggleAssignment(\'' + esc(a.AssignmentId) + '\',\'NO\')">Deactivate</button>';
+    } else {
+      html += '<button class="btn btn-secondary btn-sm" onclick="toggleAssignment(\'' + esc(a.AssignmentId) + '\',\'YES\')">Activate</button>';
+    }
+    html += '<button class="btn btn-secondary btn-sm" onclick="toggleRetake(\'' + esc(a.AssignmentId) + '\',\'' + (retake ? 'NO' : 'YES') + '\')">' + (retake ? 'Disable Retakes' : 'Enable Retakes') + '</button>';
+    html += '</div></div>';
+  });
+
+  list.innerHTML = html;
+}
+
+function toggleAssignment(id, active) {
+  fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'updateAssignment',
+      pw: PW,
+      assignmentId: id,
+      active: active
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'ok') {
+      showToast('Assignment ' + (active === 'YES' ? 'activated' : 'deactivated'));
+      loadAllData();
+    } else {
+      showToast('Error updating assignment');
+    }
+  })
+  .catch(function() { showToast('Network error'); });
+}
+
+function toggleRetake(id, allowRetake) {
+  fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'updateAssignment',
+      pw: PW,
+      assignmentId: id,
+      allowRetake: allowRetake
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'ok') {
+      showToast('Retake setting updated');
+      loadAllData();
+    } else {
+      showToast('Error updating assignment');
+    }
+  })
+  .catch(function() { showToast('Network error'); });
+}
+
+/* ═══════════════════════════════════════════
+   RESULTS TAB
+   ═══════════════════════════════════════════ */
+function populateAssignmentFilter() {
+  var sel = document.getElementById('results-asgn-filter');
+  var val = sel.value;
+  sel.innerHTML = '<option value="">All Assignments</option>';
+  DATA.assignments.forEach(function(a) {
+    sel.innerHTML += '<option value="' + esc(a.AssignmentId) + '">' + esc(a.Title || a.AssignmentId) + '</option>';
+  });
+  sel.value = val;
+}
+
+function renderResults() {
+  var asgnFilter = document.getElementById('results-asgn-filter').value;
+  var periodFilter = document.getElementById('results-period-filter').value;
+  var studentFilter = (document.getElementById('results-student-filter').value || '').toLowerCase();
+
+  // Filter to SOL Prep scores only
+  var rows = DATA.scores.filter(function(r) {
+    return (r.Module || '').indexOf('SOL Prep') !== -1 || r.AssignmentId;
+  });
+
+  if (asgnFilter) {
+    rows = rows.filter(function(r) { return r.AssignmentId === asgnFilter; });
+  }
+  if (periodFilter) {
+    rows = rows.filter(function(r) { return r.ClassPeriod === periodFilter; });
+  }
+  if (studentFilter) {
+    rows = rows.filter(function(r) { return (r.Student || '').toLowerCase().indexOf(studentFilter) !== -1; });
+  }
+
+  // Stats
+  var students = {};
+  rows.forEach(function(r) { students[r.Student] = true; });
+  var avgPct = rows.length ? Math.round(rows.reduce(function(a, r) { return a + (Number(r.Pct) || 0); }, 0) / rows.length) : 0;
+
+  document.getElementById('results-stats').innerHTML =
+    statCard('Submissions', rows.length, 'matching current filters') +
+    statCard('Students', Object.keys(students).length, 'unique students') +
+    statCard('Average', avgPct + '%', 'across filtered scores');
+
+  // Paginate
+  var totalRows = rows.length;
+  var totalPages = Math.ceil(totalRows / PAGE_SIZE) || 1;
+  if (resultsPage > totalPages) resultsPage = totalPages;
+  var pageRows = rows.slice((resultsPage - 1) * PAGE_SIZE, resultsPage * PAGE_SIZE);
+
+  var tbody = '';
+  pageRows.forEach(function(r) {
+    var pct = Number(r.Pct) || 0;
+    var badge = pct >= 80 ? 'badge-green' : pct >= 60 ? 'badge-yellow' : 'badge-red';
+    var time = r.TimeOnQuiz ? formatDuration(r.TimeOnQuiz) : '—';
+    var asgnTitle = '';
+    if (r.AssignmentId) {
+      var match = DATA.assignments.find(function(a) { return a.AssignmentId === r.AssignmentId; });
+      asgnTitle = match ? match.Title : r.AssignmentId;
+    }
+    tbody += '<tr><td>' + esc(r.Timestamp) + '</td><td>' + esc(r.Student) + '</td><td>' + esc(r.ClassPeriod) + '</td><td>' + esc(asgnTitle || 'Practice') + '</td><td>' + r.Score + '/' + r.Total + '</td><td><span class="badge ' + badge + '">' + pct + '%</span></td><td>' + time + '</td></tr>';
+  });
+
+  document.getElementById('results-table').querySelector('tbody').innerHTML = tbody || '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:40px">No scores yet.</td></tr>';
+
+  // Pagination
+  var wrap = document.getElementById('results-wrap');
+  var oldPag = wrap.querySelector('.pagination');
+  if (oldPag) oldPag.remove();
+  if (totalRows > PAGE_SIZE) {
+    var pagHtml = '<div class="pagination">' +
+      '<button class="page-btn" onclick="resultsPage--;renderResults()" ' + (resultsPage <= 1 ? 'disabled' : '') + '>&larr; Prev</button>' +
+      '<span class="page-info">Page ' + resultsPage + ' of ' + totalPages + '</span>' +
+      '<button class="page-btn" onclick="resultsPage++;renderResults()" ' + (resultsPage >= totalPages ? 'disabled' : '') + '>Next &rarr;</button>' +
+      '</div>';
+    wrap.insertAdjacentHTML('beforeend', pagHtml);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   TAB SWITCHING
+   ═══════════════════════════════════════════ */
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════ */
+function statCard(label, value, sub) {
+  return '<div class="stat-card"><div class="label">' + label + '</div><div class="value">' + value + '</div><div class="sub">' + sub + '</div></div>';
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function formatDuration(sec) {
+  sec = Number(sec) || 0;
+  if (sec < 60) return sec + 's';
+  var m = Math.floor(sec / 60);
+  var s = sec % 60;
+  if (m < 60) return m + 'm ' + s + 's';
+  var h = Math.floor(m / 60);
+  m = m % 60;
+  return h + 'h ' + m + 'm';
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>
