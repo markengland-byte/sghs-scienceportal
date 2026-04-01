@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO SOL Practice Test Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0f2240;--navy-mid:#1a3560;
+  --red:#dc2626;--red-pale:#fef2f2;--red-mid:#991b1b;
+  --amber:#d97706;--amber-pale:#fffbeb;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --yellow:#ca8a04;--yellow-pale:#fefce8;
+  --teal:#0b8f8c;--teal-pale:#f0fdfa;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-600:#4b5563;--gray-900:#111827;
+  --border:#e5e7eb;--muted:#6b7280;
+  --header-h:58px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.7;font-size:16px;}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);white-space:nowrap;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-unit{flex:1;text-align:center;}
+.tb-unit-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.tb-unit-name{font-size:.88rem;font-weight:700;color:#fff;}
+.tb-stats{display:flex;gap:10px;align-items:center;}
+.tb-stat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;}
+.tb-stat-icon{font-size:.9rem;}
+.tb-stat-val{font-size:.78rem;font-weight:700;color:#fff;}
+.tb-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.5);}
+.tb-badge{background:var(--red);color:#fff;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+
+/* MAIN */
+.main{padding-top:calc(var(--header-h) + 20px);min-height:100vh;max-width:860px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:80px;}
+
+/* NAME MODAL */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,34,64,.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-card{background:#fff;border-radius:16px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);padding:32px 28px 24px;text-align:center;}
+.modal-hero h2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:6px;}
+.modal-hero p{font-size:.85rem;color:rgba(255,255,255,.65);}
+.modal-body{padding:28px;}
+.f-group{margin-bottom:16px;}
+.f-group label{display:block;font-size:.78rem;font-weight:600;color:var(--gray-600);margin-bottom:5px;}
+.f-group input,.f-group select{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:8px;font-family:inherit;font-size:.92rem;transition:border-color .2s;}
+.f-group input:focus,.f-group select:focus{outline:none;border-color:var(--red);}
+.modal-go{width:100%;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:8px;}
+.modal-go:hover{background:var(--red-mid);}
+.modal-go:disabled{opacity:.5;cursor:not-allowed;}
+
+/* HERO */
+.test-hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);border-radius:16px;padding:40px 36px;margin-bottom:28px;position:relative;overflow:hidden;}
+.test-hero::after{content:"SOL";position:absolute;right:24px;top:50%;transform:translateY(-50%);font-family:"Playfair Display",serif;font-size:8rem;font-weight:900;color:rgba(255,255,255,.04);pointer-events:none;}
+.test-hero h1{font-family:"Playfair Display",serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:#fff;margin-bottom:8px;}
+.test-hero p{font-size:.9rem;color:rgba(255,255,255,.65);max-width:520px;line-height:1.6;}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.hero-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.74rem;color:rgba(255,255,255,.8);}
+
+/* PROGRESS BAR */
+.prog-bar{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.prog-track{flex:1;min-width:120px;height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--amber));border-radius:4px;transition:width .4s ease;width:0%;}
+.prog-text{font-size:.82rem;font-weight:600;color:var(--gray-600);white-space:nowrap;}
+.prog-text strong{color:var(--gray-900);}
+
+/* QUESTIONS */
+.qq{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;transition:box-shadow .2s;}
+.qq.answered{border-color:var(--green);box-shadow:0 0 0 1px var(--green);}
+.qq.answered-wrong{border-color:var(--red);box-shadow:0 0 0 1px var(--red);}
+.q-num{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:6px;}
+.q-std{font-size:.65rem;font-weight:600;color:var(--muted);background:var(--gray-100);border-radius:4px;padding:2px 8px;margin-left:8px;}
+.q-stem{font-size:.94rem;font-weight:500;color:var(--gray-900);margin-bottom:14px;line-height:1.65;}
+.q-opts{display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;font-size:.88rem;line-height:1.5;}
+.qo:hover:not(.revealed){border-color:var(--navy);background:rgba(15,34,64,.03);}
+.ol{width:24px;height:24px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px;}
+.qo.revealed{pointer-events:none;opacity:.6;}
+.qo.revealed.correct{opacity:1;border-color:var(--green);background:var(--green-pale);}
+.qo.revealed.correct .ol{background:var(--green);color:#fff;}
+.qo.revealed.incorrect{opacity:1;border-color:var(--red);background:var(--red-pale);}
+.qo.revealed.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6;background:var(--green-pale);border-left:3px solid var(--green);color:#166534;}
+.qexp.show{display:block;}
+.qexp.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);color:#991b1b;}
+.q-img{margin:10px 0 14px;text-align:center;background:var(--gray-100);border-radius:8px;padding:8px;border:1px solid var(--border);}
+.q-img img{max-width:100%;height:auto;max-height:400px;border-radius:4px;}
+.q-source{font-size:.65rem;color:var(--muted);margin-top:8px;font-style:italic;}
+
+/* GENERATE BTN */
+.gen-section{text-align:center;padding:40px 20px;}
+.gen-btn{padding:16px 40px;background:linear-gradient(135deg,var(--red),var(--amber));color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(220,38,38,.3);}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(220,38,38,.4);}
+.gen-info{font-size:.82rem;color:var(--muted);margin-top:12px;max-width:400px;margin-left:auto;margin-right:auto;}
+
+/* SUBMIT / RESULTS */
+.results-box{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:28px;}
+.results-header{padding:28px;text-align:center;}
+.results-score{font-family:"Playfair Display",serif;font-size:3rem;font-weight:900;}
+.results-pct{font-size:1.1rem;font-weight:600;margin-top:4px;}
+.results-msg{font-size:.88rem;color:var(--muted);margin-top:8px;max-width:400px;margin-left:auto;margin-right:auto;}
+
+.dz-box{padding:24px 28px;border-top:1px solid var(--border);}
+.dz-box.green .results-score{color:var(--green);}
+.dz-box.green .results-pct{color:var(--green);}
+.dz-box.yellow .results-score{color:var(--yellow);}
+.dz-box.yellow .results-pct{color:var(--yellow);}
+.dz-box.red .results-score{color:var(--red);}
+.dz-box.red .results-pct{color:var(--red);}
+
+.std-breakdown{padding:20px 28px;}
+.std-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.std-row:last-child{border-bottom:none;}
+.std-label{font-size:.78rem;font-weight:700;color:var(--navy);min-width:50px;}
+.std-name{font-size:.78rem;color:var(--muted);flex:1;}
+.std-bar-wrap{width:100px;height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;}
+.std-bar-fill{height:100%;border-radius:3px;transition:width .5s ease;}
+.std-score{font-size:.78rem;font-weight:700;min-width:40px;text-align:right;}
+
+.btn-row{display:flex;gap:12px;justify-content:center;padding:20px 28px 28px;flex-wrap:wrap;}
+.btn-primary{padding:10px 24px;background:var(--red);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-primary:hover{background:var(--red-mid);}
+.btn-secondary{padding:10px 24px;background:var(--gray-100);color:var(--gray-600);border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{background:var(--gray-200);}
+
+/* CHART */
+.chart-wrap{max-width:400px;margin:20px auto;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:12px 24px;border-radius:10px;font-size:.85rem;font-weight:600;z-index:600;opacity:0;transition:all .3s ease;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .main{padding-left:12px;padding-right:12px;}
+  .test-hero{padding:28px 20px;}
+  .qq{padding:16px;}
+  .modal-body{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <a class="tb-back" href="index.html">&larr; SOL Prep</a>
+  <div class="tb-unit">
+    <div class="tb-unit-label">Practice Test Generator</div>
+    <div class="tb-unit-name">Biology SOL Practice</div>
+  </div>
+  <div class="tb-stats">
+    <div class="tb-stat"><span class="tb-stat-icon" id="streak-fire">&#x1F525;</span><span class="tb-stat-val" id="streak-val">0</span><span class="tb-stat-lbl">streak</span></div>
+    <div class="tb-stat"><span class="tb-stat-icon">&#x1F4C5;</span><span class="tb-stat-val" id="sol-countdown">--</span><span class="tb-stat-lbl">days</span></div>
+  </div>
+  <span class="tb-badge">SOL PRACTICE</span>
+</header>
+
+<!-- NAME MODAL -->
+<div class="modal-overlay" id="name-modal">
+  <div class="modal-card">
+    <div class="modal-hero">
+      <h2>Biology SOL Practice Test</h2>
+      <p>50 random questions from released Virginia Biology SOL exams</p>
+    </div>
+    <div class="modal-body">
+      <div class="f-group">
+        <label for="sname">Full Name (First Last)</label>
+        <input type="text" id="sname" placeholder="e.g. Jane Smith" autocomplete="name">
+      </div>
+      <div class="f-group">
+        <label for="speriod">Class Period</label>
+        <select id="speriod">
+          <option value="">Select period&hellip;</option>
+          <option>1st Period</option>
+          <option>2nd Period</option>
+          <option>3rd Period</option>
+          <option>4th Period</option>
+          <option>5th Period</option>
+          <option>6th Period</option>
+          <option>7th Period</option>
+        </select>
+      </div>
+      <button class="modal-go" id="start-btn" disabled onclick="startTest()">Generate Practice Test</button>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- HERO -->
+  <div class="test-hero" id="test-hero">
+    <h1>Biology SOL Practice Test</h1>
+    <p>Each test draws 50 random questions from a bank of 240 released Virginia Biology SOL exam items (2005&ndash;2015), weighted by standard distribution. Every test is different.</p>
+    <div class="hero-chips">
+      <div class="hero-chip">50 Questions per Test</div>
+      <div class="hero-chip">240 Item Bank</div>
+      <div class="hero-chip">BIO.1 &ndash; BIO.8</div>
+      <div class="hero-chip">Released SOL Items</div>
+      <div class="hero-chip">Auto-Scored</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-bar" id="prog-bar" style="display:none;">
+    <span class="prog-text"><strong id="prog-count">0</strong> of <strong>50</strong> answered</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <span class="prog-text" id="prog-pct">0%</span>
+  </div>
+
+  <!-- QUESTIONS CONTAINER -->
+  <div id="questions-container"></div>
+
+  <!-- RESULTS (hidden until all 50 answered) -->
+  <div id="results-section" style="display:none;">
+    <div class="results-box">
+      <div class="results-header" id="results-header">
+        <div class="results-score" id="res-score">--/50</div>
+        <div class="results-pct" id="res-pct">--%</div>
+        <div class="results-msg" id="res-msg"></div>
+      </div>
+      <div class="std-breakdown" id="std-breakdown"></div>
+      <div class="chart-wrap"><canvas id="std-chart"></canvas></div>
+      <div class="btn-row">
+        <button class="btn-primary" id="submit-btn" onclick="submitScore()">Submit Score to Mr. England</button>
+        <button class="btn-secondary" onclick="newTest()">Generate New Test</button>
+        <button class="btn-secondary" onclick="window.location.href='index.html'">Back to SOL Prep</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   SOL PRACTICE TEST GENERATOR
+   Draws 50 random questions from released VA Biology SOL exams
+   ================================================================ */
+
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
+const SOL_DATE = new Date('2026-05-07');
+const TOTAL_Q = 50;
+
+/* ── QUESTION BANK (loaded from external JSON) ─── */
+var BANK = [];
+var bankLoaded = false;
+
+fetch('question-bank.json')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    // Include all questions (text-only + image questions with imageUrl)
+    BANK = data;
+    bankLoaded = true;
+    console.log('Question bank loaded: ' + BANK.length + ' questions (' + data.filter(function(q){return q.hasImage;}).length + ' with images)');
+  })
+  .catch(function(e){ console.error('Failed to load question bank:', e); });
+
+/* REPLACED INLINE ARRAY — was 152 questions embedded here, now loaded from question-bank.json */
+
+
+/* ── SOL standard distribution target (50 questions) ─── */
+var STD_TARGETS = {
+  'BIO.1': 8, 'BIO.2': 7, 'BIO.3': 7, 'BIO.4': 4,
+  'BIO.5': 7, 'BIO.6': 6, 'BIO.7': 6, 'BIO.8': 5
+};
+
+var STD_NAMES = {
+  'BIO.1': 'Scientific Investigation',
+  'BIO.2': 'Biochemistry & Energy',
+  'BIO.3': 'Cell Structure & Function',
+  'BIO.4': 'Bacteria & Viruses',
+  'BIO.5': 'Genetics & Inheritance',
+  'BIO.6': 'Classification & Diversity',
+  'BIO.7': 'Evolution',
+  'BIO.8': 'Ecology & Ecosystems'
+};
+
+/* ── STATE ─── */
+var studentName = '';
+var classPeriod = '';
+var testQuestions = [];
+var answered = 0;
+var correct = 0;
+var stdCorrect = {};
+var stdTotal = {};
+var questionDetail = [];
+var testStart = 0;
+var submitted = false;
+
+/* ── INIT ─── */
+(function init() {
+  // Enable start button when name + period filled
+  var nameEl = document.getElementById('sname');
+  var perEl = document.getElementById('speriod');
+  function check() {
+    document.getElementById('start-btn').disabled = !(nameEl.value.trim() && perEl.value);
+  }
+  nameEl.addEventListener('input', check);
+  perEl.addEventListener('change', check);
+
+  // Enter key on name field
+  nameEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('start-btn').disabled) startTest();
+  });
+
+  // Streak + countdown
+  initMeta();
+})();
+
+function initMeta() {
+  var today = new Date().toDateString();
+  var yesterday = new Date(Date.now() - 86400000).toDateString();
+  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
+  var last = localStorage.getItem('sol_streak_last');
+  if (last === today) { /* same day */ }
+  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
+  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
+  document.getElementById('streak-val').textContent = streak;
+
+  var days = Math.max(0, Math.ceil((SOL_DATE - new Date()) / (1000 * 60 * 60 * 24)));
+  document.getElementById('sol-countdown').textContent = days;
+  document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
+}
+
+/* ── GENERATE TEST ─── */
+function startTest() {
+  if (!bankLoaded || BANK.length === 0) {
+    showToast('Loading questions\u2026 please wait a moment.');
+    setTimeout(startTest, 500);
+    return;
+  }
+  studentName = document.getElementById('sname').value.trim();
+  classPeriod = document.getElementById('speriod').value;
+  document.getElementById('name-modal').style.display = 'none';
+
+  // Reset state
+  answered = 0;
+  correct = 0;
+  stdCorrect = {};
+  stdTotal = {};
+  questionDetail = [];
+  submitted = false;
+  testStart = Date.now();
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('prog-bar').style.display = 'flex';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').textContent = 'Submit Score to Mr. England';
+
+  // Group bank by parent standard (BIO.1a → BIO.1)
+  var byStd = {};
+  BANK.forEach(function(q) {
+    var parent = q.stdParent || q.std.replace(/[a-z]$/, '');
+    if (!byStd[parent]) byStd[parent] = [];
+    byStd[parent].push(q);
+  });
+
+  // Shuffle each standard's pool
+  Object.keys(byStd).forEach(function(s) { shuffle(byStd[s]); });
+
+  // Draw questions per standard target
+  testQuestions = [];
+  Object.keys(STD_TARGETS).forEach(function(std) {
+    var need = STD_TARGETS[std];
+    var pool = byStd[std] || [];
+    for (var i = 0; i < need && i < pool.length; i++) {
+      testQuestions.push(pool[i]);
+    }
+    stdCorrect[std] = 0;
+    stdTotal[std] = Math.min(need, pool.length);
+  });
+
+  // Shuffle final question order
+  shuffle(testQuestions);
+
+  // Render
+  renderQuestions();
+  updateProgress();
+
+  // Send activity log
+  send({
+    action: 'activity',
+    lesson: 'Practice Test Generator',
+    event: 'test_started',
+    questionCount: testQuestions.length
+  });
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+/* ── RENDER QUESTIONS ─── */
+function renderQuestions() {
+  var container = document.getElementById('questions-container');
+  var html = '';
+  testQuestions.forEach(function(q, idx) {
+    var num = idx + 1;
+    var keys = ['a','b','c','d'];
+    var parentStd = q.stdParent || q.std.replace(/[a-z]$/, '');
+    html += '<div class="qq" id="qq-' + idx + '" data-ans="' + q.correct + '" data-std="' + q.std + '" data-idx="' + idx + '">';
+    html += '<div class="q-num">QUESTION ' + num + ' <span class="q-std">' + parentStd + '</span></div>';
+    html += '<div class="q-stem">' + escHtml(q.stem) + '</div>';
+    if (q.imageUrl) {
+      html += '<div class="q-img"><img src="' + q.imageUrl + '" alt="' + escHtml(q.imageNote || 'Question figure') + '" loading="lazy"></div>';
+    }
+    html += '<div class="q-opts">';
+    keys.forEach(function(k) {
+      html += '<div class="qo" data-v="' + k + '" onclick="pickAnswer(this)">';
+      html += '<div class="ol">' + k.toUpperCase() + '</div>';
+      html += '<span>' + escHtml(q.options[k]) + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    var srcLabel = (q.year === 'review') ? 'SOL Review' : q.year + ' Released SOL';
+    html += '<div class="q-source">' + srcLabel + ' \u2022 ' + q.id + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function escHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ── PICK ANSWER ─── */
+function pickAnswer(opt) {
+  var qq = opt.closest('.qq');
+  if (qq.querySelector('.qo.revealed')) return;
+
+  var correctKey = qq.dataset.ans;
+  var rawStd = qq.dataset.std;
+  var std = rawStd.replace(/[a-z]$/, '');  // BIO.1a → BIO.1
+  var idx = parseInt(qq.dataset.idx);
+  var chosen = opt.dataset.v;
+  var isCorrect = (chosen === correctKey);
+
+  // Reveal all options
+  qq.querySelectorAll('.qo').forEach(function(o) {
+    o.classList.add('revealed');
+    if (o.dataset.v === correctKey) o.classList.add('correct');
+    else if (o === opt && !isCorrect) o.classList.add('incorrect');
+  });
+
+  qq.classList.add(isCorrect ? 'answered' : 'answered-wrong');
+
+  answered++;
+  if (isCorrect) {
+    correct++;
+    stdCorrect[std]++;
+  }
+
+  // Track detail
+  var q = testQuestions[idx];
+  questionDetail.push({
+    qNum: idx + 1,
+    std: std,
+    questionText: q.stem,
+    studentAnswer: q.options[chosen],
+    correctAnswer: q.options[correctKey],
+    isCorrect: isCorrect,
+    correct: correctKey,
+    chosen: chosen
+  });
+
+  updateProgress();
+
+  // Auto-scroll to next unanswered
+  if (answered < testQuestions.length) {
+    var nextQ = document.querySelector('.qq:not(.answered):not(.answered-wrong)');
+    if (nextQ) {
+      setTimeout(function() {
+        nextQ.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
+  }
+
+  // All done?
+  if (answered === testQuestions.length) {
+    setTimeout(showResults, 600);
+  }
+}
+
+/* ── PROGRESS ─── */
+function updateProgress() {
+  var pct = Math.round((answered / testQuestions.length) * 100);
+  document.getElementById('prog-count').textContent = answered;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+/* ── RESULTS ─── */
+function showResults() {
+  var pct = Math.round((correct / testQuestions.length) * 100);
+  var section = document.getElementById('results-section');
+  section.style.display = 'block';
+
+  document.getElementById('res-score').textContent = correct + '/' + testQuestions.length;
+  document.getElementById('res-pct').textContent = pct + '%';
+
+  var header = document.getElementById('results-header');
+  var msg;
+  if (pct >= 80) {
+    header.className = 'results-header dz-box green';
+    msg = 'Strong performance! You\'re above the 80% threshold. Keep reviewing to stay sharp for the SOL.';
+  } else if (pct >= 60) {
+    header.className = 'results-header dz-box yellow';
+    msg = 'You\'re below 80%. Focus on the standards you missed and try another practice test.';
+  } else {
+    header.className = 'results-header dz-box red';
+    msg = 'This score needs work. Go back to the review units for the standards you missed, then retake a practice test.';
+  }
+  document.getElementById('res-msg').textContent = msg;
+
+  // Standard breakdown
+  var breakdown = document.getElementById('std-breakdown');
+  var bHtml = '<div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px;">Score by Standard</div>';
+  var stds = ['BIO.1','BIO.2','BIO.3','BIO.4','BIO.5','BIO.6','BIO.7','BIO.8'];
+  var chartLabels = [];
+  var chartData = [];
+  var chartColors = [];
+
+  stds.forEach(function(s) {
+    var tot = stdTotal[s] || 0;
+    var cor = stdCorrect[s] || 0;
+    var sPct = tot > 0 ? Math.round((cor / tot) * 100) : 0;
+    var color = sPct >= 80 ? 'var(--green)' : sPct >= 60 ? 'var(--yellow)' : 'var(--red)';
+    bHtml += '<div class="std-row">';
+    bHtml += '<div class="std-label">' + s + '</div>';
+    bHtml += '<div class="std-name">' + STD_NAMES[s] + '</div>';
+    bHtml += '<div class="std-bar-wrap"><div class="std-bar-fill" style="width:' + sPct + '%;background:' + color + '"></div></div>';
+    bHtml += '<div class="std-score" style="color:' + color + '">' + cor + '/' + tot + '</div>';
+    bHtml += '</div>';
+
+    chartLabels.push(s);
+    chartData.push(sPct);
+    chartColors.push(sPct >= 80 ? '#16a34a' : sPct >= 60 ? '#ca8a04' : '#dc2626');
+  });
+  breakdown.innerHTML = bHtml;
+
+  // Chart
+  var ctx = document.getElementById('std-chart').getContext('2d');
+  if (window._stdChart) window._stdChart.destroy();
+  window._stdChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: 'Score %',
+        data: chartData,
+        backgroundColor: 'rgba(220,38,38,0.15)',
+        borderColor: '#dc2626',
+        borderWidth: 2,
+        pointBackgroundColor: chartColors,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { stepSize: 20, font: { size: 10 } },
+          pointLabels: { font: { size: 11, weight: 'bold' } }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Save to localStorage
+  var testNum = parseInt(localStorage.getItem('sol_practice_count') || '0') + 1;
+  localStorage.setItem('sol_practice_count', testNum);
+  localStorage.setItem('sol_practice_last_score', correct + '/' + testQuestions.length);
+  localStorage.setItem('sol_practice_last_pct', pct);
+
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── NEW TEST ─── */
+function newTest() {
+  document.getElementById('questions-container').innerHTML = '';
+  document.getElementById('results-section').style.display = 'none';
+  startTest();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── SEND HELPER ─── */
+function send(payload) {
+  payload.student = studentName;
+  payload.module = 'SOL Prep \u2014 Practice Test Generator';
+  payload.classPeriod = classPeriod;
+  fetch(APPS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+
+/* ── SUBMIT SCORE ─── */
+function submitScore() {
+  if (submitted || !studentName) return;
+  submitted = true;
+
+  var pct = Math.round((correct / testQuestions.length) * 100);
+
+  // 1. Score summary
+  send({
+    action: 'score',
+    lesson: 'Practice Test (Generated)',
+    score: correct,
+    total: testQuestions.length,
+    pct: pct,
+    timeOnQuiz: Math.round((Date.now() - testStart) / 1000)
+  });
+
+  // 2. Question detail
+  send({
+    action: 'quizDetail',
+    lesson: 'Practice Test (Generated)',
+    questions: questionDetail.map(function(q) {
+      return {
+        qNum: q.qNum,
+        questionText: q.questionText,
+        studentAnswer: q.studentAnswer,
+        correctAnswer: q.correctAnswer,
+        isCorrect: q.isCorrect
+      };
+    })
+  });
+
+  // 3. Standard breakdown
+  var stdBreakdown = {};
+  ['BIO.1','BIO.2','BIO.3','BIO.4','BIO.5','BIO.6','BIO.7','BIO.8'].forEach(function(s) {
+    stdBreakdown[s] = { correct: stdCorrect[s] || 0, total: stdTotal[s] || 0 };
+  });
+  send({
+    action: 'activity',
+    lesson: 'Practice Test (Generated)',
+    event: 'submit_score',
+    duration: Math.round((Date.now() - testStart) / 1000),
+    stdBreakdown: stdBreakdown
+  });
+
+  var btn = document.getElementById('submit-btn');
+  btn.textContent = '\u2705 Score Submitted';
+  btn.disabled = true;
+  showToast('Score submitted to Mr. England!');
+}
+
+/* ── TOAST ─── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+</script>
+
+</body>
+</html>
