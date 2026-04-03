@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A&P · The Axial Skeleton | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--teal);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(11,143,140,.2);border-right-color:var(--teal);}
+.sb-link.done .sb-num{background:var(--teal)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--teal);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#002a35,#0b8f8c);}
+.hero-bone{background:linear-gradient(135deg,#001a2a,#0b6060);}
+.hero-amber{background:linear-gradient(135deg,#2a1500,#8a5000);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.hero-skull{background:linear-gradient(135deg,#1a0a2e,#4a2070);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--teal);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:var(--teal-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--teal-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--teal-pale);border:1px solid var(--teal);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px;margin:20px 0;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.diagram img{max-width:100%;height:auto;border-radius:8px;}
+.d-cap{font-size:.77rem;color:var(--muted);font-style:italic;margin-top:12px;line-height:1.5;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:var(--teal-light);}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.checkpoint-box{background:#fff;border:2px solid var(--teal);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--teal-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--teal);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--teal);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--teal);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#076b68;}
+.cp-done{display:none;padding:10px 18px;background:var(--teal-pale);border:1px solid var(--teal);border-radius:8px;font-size:.85rem;color:var(--teal);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--teal-pale);border:2px solid var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--teal-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--teal);background:transparent;color:var(--teal);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--teal);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<!-- NAME MODAL -->
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">💀</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">The Axial Skeleton</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../ap/index.html">← A&amp;P</a>
+  <div class="tb-logo">💀</div>
+  <div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">The Axial Skeleton</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Divisions &amp; Skull</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">7.1 · Divisions of the Skeletal System</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">7.2 · The Skull</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Spine &amp; Thorax</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">7.3 · The Vertebral Column</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">7.4 · The Thoracic Cage</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Development</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">7.5 · Embryonic Development</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<!-- PANEL 0: OVERVIEW -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">A&amp;P · Chapter 7 · <span>Overview</span></div>
+    <div class="h-title">The Axial Skeleton</div>
+    <div class="h-desc">The skeletal system forms the rigid internal framework of the body. It consists of the bones, cartilages, and ligaments. Bones support the body against gravity, enable movement, and protect internal organs.</div>
+    <div class="h-meta"><div class="h-chip">📚 5 Lessons</div><div class="h-chip">💀 OpenStax A&amp;P 2e Ch. 7</div><div class="h-chip">📊 Data Interpretation</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 20 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Chapter Objectives</div><ul class="obj-list">
+      <li>Discuss the functions of the skeletal system</li>
+      <li>Distinguish between the axial skeleton and the appendicular skeleton</li>
+      <li>Define the axial skeleton and its components</li>
+      <li>Identify the bones and bony structures of the skull, the sutures, and the fontanelles</li>
+      <li>Discuss the vertebral column and regional variations</li>
+      <li>Describe the components of the thoracic cage</li>
+      <li>Discuss the embryonic development of the axial skeleton</li>
+    </ul></div>
+    <div class="cs">
+      <div class="eyebrow">Course Map</div>
+      <div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Section</th><th>Key Concepts</th></tr>
+        <tr><td>7.1</td><td>Divisions of the Skeletal System</td><td>Axial (80 bones) vs. appendicular (126 bones) skeleton</td></tr>
+        <tr><td>7.2</td><td>The Skull</td><td>8 cranial bones, 14 facial bones, sutures, sinuses, orbits, hyoid</td></tr>
+        <tr><td>7.3</td><td>The Vertebral Column</td><td>Cervical, thoracic, lumbar, sacrum, coccyx; curvatures; intervertebral discs</td></tr>
+        <tr><td>7.4</td><td>The Thoracic Cage</td><td>Sternum, true/false/floating ribs, costal cartilage</td></tr>
+        <tr><td>7.5</td><td>Embryonic Development</td><td>Intramembranous vs. endochondral ossification of skull; fontanelles; vertebral development</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Anatomy &amp; Physiology 2e — Chapter 7</div><div class="cx">All content is from OpenStax A&amp;P 2e, Chapter 7: Axial Skeleton. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Quick Facts</div>
+      <div class="sh2">The Axial Skeleton by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">80</div><div class="fact-l">Bones in the axial skeleton</div></div>
+        <div class="fact"><div class="fact-n">22</div><div class="fact-l">Bones in the skull</div></div>
+        <div class="fact"><div class="fact-n">24</div><div class="fact-l">Individual vertebrae</div></div>
+        <div class="fact"><div class="fact-n">12</div><div class="fact-l">Pairs of ribs</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 5</div><button class="nbtn next" onclick="goTo(1)">Section 7.1 →</button></div>
+</div>
+
+<!-- PANEL 1: 7.1 DIVISIONS OF THE SKELETAL SYSTEM -->
+<div class="panel" id="p1">
+  <div class="hero hero-bone"><div class="h-crumb">Divisions &amp; Skull · <span>Section 7.1</span></div><div class="h-title">Divisions of the Skeletal System</div><div class="h-desc">The adult human skeleton has 206 bones, divided into two major divisions: the axial skeleton, which forms the vertical central axis of the body, and the appendicular skeleton, which includes the limbs and girdles.</div><div class="h-meta"><div class="h-chip">⏱ ~15 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 7.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the functions of the skeletal system</li>
+      <li>Distinguish between the axial skeleton and the appendicular skeleton</li>
+      <li>Define the axial skeleton and its components</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Axial Skeleton</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Central, vertical axis of the body, including the skull, vertebral column, and thoracic cage. Contains 80 bones.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Appendicular Skeleton</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">All bones of the upper and lower limbs, plus the girdle bones that attach each limb to the axial skeleton. Contains 126 bones.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Skull</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Bony structure that forms the head, face, and jaws, and protects the brain. Contains 22 bones.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 7.1</div>
+      <div class="sh2">Two Divisions of the Skeleton</div>
+      <p class="prose">The skeleton is subdivided into two major divisions — the <strong>axial</strong> and <strong>appendicular</strong> skeleton. The axial skeleton forms the vertical, central axis of the body and includes all bones of the head, neck, chest, and back. It serves to protect the brain, spinal cord, heart, and lungs. It also serves as the attachment site for muscles that move the head, neck, and back, and for muscles that act across the shoulder and hip joints to move their corresponding limbs.</p>
+      <p class="prose">The <strong>axial skeleton</strong> of the adult consists of 80 bones, including the skull, the vertebral column, and the thoracic cage. The <strong>skull</strong> is formed by 22 bones. Also associated with the head are an additional seven bones, including the hyoid bone and the ear ossicles (three small bones in each middle ear). The <strong>vertebral column</strong> consists of 24 bones, each called a vertebra, plus the sacrum and coccyx. The <strong>thoracic cage</strong> includes the 12 pairs of ribs and the sternum, the flattened bone of the anterior chest.</p>
+      <p class="prose">The <strong>appendicular skeleton</strong> includes all bones of the upper and lower limbs, plus the bones that attach each limb to the axial skeleton. There are 126 bones in the appendicular skeleton of an adult.</p>
+      <table class="dt">
+        <tr><th>Division</th><th>Bones</th><th>Components</th></tr>
+        <tr><td><strong>Axial Skeleton</strong></td><td>80</td><td>Skull (22), associated head bones (7), vertebral column (26), thoracic cage (25)</td></tr>
+        <tr><td><strong>Appendicular Skeleton</strong></td><td>126</td><td>Upper limbs + pectoral girdle (64), lower limbs + pelvic girdle (62)</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>206</strong></td><td></td></tr>
+      </table>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 7.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Axial vs. Appendicular Bone Count</div>
+      <div class="graph-box"><div class="graph-title">Distribution of 206 Adult Skeleton Bones</div><div class="graph-cap">The appendicular skeleton contains more bones (126) than the axial (80)</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required to unlock quiz</div></div></div>
+      <div class="cp-question">Define the two divisions of the skeleton. Discuss the functions of the axial skeleton.</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 7.1 Quiz — Divisions of the Skeletal System</h3><p>3 questions · OpenStax Review Questions</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following is part of the axial skeleton?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>shoulder bones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>thigh bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>foot bones</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>vertebral column</li></ul>
+        <div class="qexp">The <strong>vertebral column</strong> is part of the axial skeleton, which forms the central vertical axis of the body. The shoulder, thigh, and foot bones are all part of the appendicular skeleton.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is a function of the axial skeleton?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>allows for movement of the wrist and hand</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>protects nerves and blood vessels at the elbow</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>supports trunk of body</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>allows for movements of the ankle and foot</li></ul>
+        <div class="qexp">The axial skeleton <strong>supports the trunk of the body</strong>. It protects the brain, spinal cord, heart, and lungs — the most vital organs. Movement of the wrist, elbow, ankle, and foot involves the appendicular skeleton.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The axial skeleton ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>consists of 126 bones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>forms the vertical axis of the body</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>includes all bones of the body trunk and limbs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>includes only the bones of the lower limbs</li></ul>
+        <div class="qexp">The axial skeleton <strong>forms the vertical, central axis of the body</strong>. It contains 80 bones (not 126 — that's the appendicular). It does not include the limb bones.</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 3 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Section 7.2 →</button></div>
+</div>
+
+<!-- PANEL 2: 7.2 THE SKULL -->
+<div class="panel" id="p2">
+  <div class="hero hero-skull"><div class="h-crumb">Divisions &amp; Skull · <span>Section 7.2</span></div><div class="h-title">The Skull</div><div class="h-desc">The cranium consists of 22 bones: 8 cranial bones that enclose and protect the brain and 14 facial bones that form the face. The mandible is the only moveable bone of the skull.</div><div class="h-meta"><div class="h-chip">⏱ ~45 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 7.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>List the bones of the brain case and face</li>
+      <li>Describe the sutures of the skull</li>
+      <li>Discuss the cranial fossae and foramina</li>
+      <li>Describe the paranasal sinuses, nasal cavity, orbits, and hyoid bone</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Frontal Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Forms the forehead, roof of the orbit, and floor of the anterior cranial fossa.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Parietal Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Paired bones forming the upper, lateral sides of the skull.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Temporal Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Paired bones forming the lateral, inferior portions of the skull. Contains the external acoustic meatus and mastoid process.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sphenoid Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The "keystone" bone forming the central skull base. Contains the sella turcica, which houses the pituitary gland.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Foramen Magnum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Large opening in the occipital bone through which the spinal cord passes to connect with the brain.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Mandible</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Unpaired bone forming the lower jaw; the only moveable bone of the skull.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Paranasal Sinuses</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Air-filled spaces within the frontal, maxillary, sphenoid, and ethmoid bones. Warm and humidify inhaled air.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hyoid Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Small, U-shaped bone in the upper neck that does not contact any other bone. Supports the larynx and tongue.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 7.2</div>
+      <div class="sh2">The Brain Case</div>
+      <p class="prose">The brain case, or cranial vault, consists of <strong>eight bones</strong>: the paired parietal and temporal bones, and the unpaired frontal, occipital, sphenoid, and ethmoid bones. Together these bones enclose the cranial cavity, which houses and protects the brain. The interior of the skull base is divided into three cranial fossae — the <strong>anterior</strong>, <strong>middle</strong>, and <strong>posterior cranial fossa</strong> — which increase in depth from front to back.</p>
+      <table class="dt">
+        <tr><th>Cranial Bone</th><th>Number</th><th>Key Features</th></tr>
+        <tr><td><strong>Frontal</strong></td><td>1</td><td>Forms forehead; roof of orbits; floor of anterior cranial fossa</td></tr>
+        <tr><td><strong>Parietal</strong></td><td>2</td><td>Form upper, lateral skull sides; joined at midline by sagittal suture</td></tr>
+        <tr><td><strong>Temporal</strong></td><td>2</td><td>External acoustic meatus, mastoid process, mandibular fossa, styloid process, zygomatic process</td></tr>
+        <tr><td><strong>Occipital</strong></td><td>1</td><td>Posterior skull; foramen magnum; occipital condyles (articulate with C1)</td></tr>
+        <tr><td><strong>Sphenoid</strong></td><td>1</td><td>"Keystone" bone; sella turcica (pituitary gland); greater and lesser wings; pterygoid plates</td></tr>
+        <tr><td><strong>Ethmoid</strong></td><td>1</td><td>Crista galli; cribriform plates (olfactory nerves); perpendicular plate (nasal septum); superior and middle nasal conchae</td></tr>
+      </table>
+      <div class="sh3">Sutures of the Skull</div>
+      <p class="prose">A <strong>suture</strong> is an immobile joint between adjacent bones of the skull. The narrow gap between the bones is filled with dense, fibrous connective tissue that unites the bones. The four major sutures are:</p>
+      <table class="dt">
+        <tr><th>Suture</th><th>Bones United</th><th>Location</th></tr>
+        <tr><td><strong>Coronal</strong></td><td>Frontal to parietal bones</td><td>Across the top of the skull</td></tr>
+        <tr><td><strong>Sagittal</strong></td><td>Right and left parietal bones</td><td>Midline of the skull top</td></tr>
+        <tr><td><strong>Lambdoid</strong></td><td>Parietal bones to occipital bone</td><td>Inverted V-shape at posterior skull</td></tr>
+        <tr><td><strong>Squamous</strong></td><td>Parietal to temporal bone</td><td>Lateral skull</td></tr>
+      </table>
+      <div class="sh3">Facial Bones</div>
+      <p class="prose">The facial skeleton consists of <strong>14 bones</strong>: the paired maxillae, zygomatic, nasal, lacrimal, palatine, and inferior nasal conchae bones, plus the unpaired vomer and mandible. The <strong>mandible</strong> is the largest and strongest facial bone and the only moveable bone of the skull, forming the lower jaw.</p>
+      <div class="sh3">Paranasal Sinuses</div>
+      <p class="prose">The <strong>paranasal sinuses</strong> are hollow, air-filled spaces found within the frontal, maxillary, sphenoid, and ethmoid bones only. They function to warm and humidify inhaled air, reduce skull weight, and serve as resonance chambers for speech. They are connected to the nasal cavity.</p>
+      <div class="sh3">The Hyoid Bone</div>
+      <p class="prose">The <strong>hyoid bone</strong> is an independent bone that does not contact any other bone and thus is not part of the skull. It is a small U-shaped bone located in the upper neck near the level of the inferior mandible. The hyoid serves as the base for the tongue above, and is attached to the larynx below and to the pharynx posteriorly.</p>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 7.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Skull Bone Distribution</div>
+      <div class="graph-box"><div class="graph-title">22 Skull Bones — Cranial vs. Facial</div><div class="graph-cap">8 cranial bones protect the brain; 14 facial bones form the face and jaw</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Identify the major sutures of the skull, their locations, and the bones united by each.</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 7.2 Quiz — The Skull</h3><p>7 questions</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following is a bone of the brain case?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>parietal bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>zygomatic bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>maxillary bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>lacrimal bone</li></ul>
+        <div class="qexp">The <strong>parietal bone</strong> is one of the 8 cranial (brain case) bones. The zygomatic, maxillary, and lacrimal are all facial bones.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The lambdoid suture joins the parietal bone to the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>frontal bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>occipital bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>other parietal bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>temporal bone</li></ul>
+        <div class="qexp">The <strong>lambdoid suture</strong> is the inverted V-shaped joint at the back of the skull that unites the parietal bones to the occipital bone. The coronal suture joins frontal to parietal; the sagittal joins the two parietals; the squamous joins parietal to temporal.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The middle cranial fossa ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>is bounded anteriorly by the petrous ridge</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>is bounded posteriorly by the lesser wing of the sphenoid bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>is divided at the midline by a small area of the ethmoid bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>has the foramen rotundum, foramen ovale, and foramen spinosum</li></ul>
+        <div class="qexp">The middle cranial fossa contains the <strong>foramen rotundum, foramen ovale, and foramen spinosum</strong>. It is bounded anteriorly by the lesser wing of the sphenoid and posteriorly by the petrous ridge.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">The paranasal sinuses are ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>air-filled spaces found within the frontal, maxilla, sphenoid, and ethmoid bones only</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>air-filled spaces found within all bones of the skull</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>not connected to the nasal cavity</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>divided at the midline by the nasal septum</li></ul>
+        <div class="qexp"><strong>Paranasal sinuses</strong> are air-filled spaces found within only four skull bones: frontal, maxilla, sphenoid, and ethmoid. They are connected to the nasal cavity and help warm and humidify inhaled air.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Parts of the sphenoid bone include the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>sella turcica</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>squamous portion</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>glabella</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>zygomatic process</li></ul>
+        <div class="qexp">The <strong>sella turcica</strong> is a saddle-shaped depression on the superior surface of the sphenoid bone that houses the pituitary gland. The squamous portion belongs to the temporal bone.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">6</span><span class="qt-inner">The bony openings of the skull include the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>carotid canal, which is located in the anterior cranial fossa</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>superior orbital fissure, which is located at the superior margin of the anterior orbit</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>mental foramen, which is located just below the orbit</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>hypoglossal canal, which is located in the posterior cranial fossa</li></ul>
+        <div class="qexp">The <strong>hypoglossal canal</strong> is located in the posterior cranial fossa and transmits the hypoglossal nerve (CN XII) for tongue movement. The carotid canal is in the temporal bone, not the anterior fossa. The mental foramen is on the mandible, below the premolars — not below the orbit.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">7</span><span class="qt-inner">Which of the following is NOT a bone of the brain case?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>maxillary bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>temporal bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>sphenoid bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ethmoid bone</li></ul>
+        <div class="qexp">The <strong>maxillary bone</strong> (upper jaw) is a facial bone, not a cranial bone. The 8 cranial bones are: frontal, 2 parietal, 2 temporal, occipital, sphenoid, and ethmoid.</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 7 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Section 7.1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Section 7.3 →</button></div>
+</div>
+
+<!-- PANEL 3: 7.3 THE VERTEBRAL COLUMN -->
+<div class="panel" id="p3">
+  <div class="hero hero-bone"><div class="h-crumb">Spine &amp; Thorax · <span>Section 7.3</span></div><div class="h-title">The Vertebral Column</div><div class="h-desc">The vertebral column consists of 24 vertebrae plus the sacrum and coccyx. It protects the spinal cord while supporting the head and body, and provides flexibility for movement.</div><div class="h-meta"><div class="h-chip">⏱ ~35 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 7.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe the vertebral column and regional variations</li>
+      <li>Describe a typical vertebra</li>
+      <li>Describe the cervical, thoracic, and lumbar vertebrae, the sacrum, and the coccyx</li>
+      <li>Define the curvatures of the vertebral column</li>
+      <li>Describe the intervertebral discs and vertebral ligaments</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Cervical Vertebrae</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Seven vertebrae (C1–C7) of the neck region. Smallest vertebrae; contain transverse foramina for vertebral arteries.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Thoracic Vertebrae</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Twelve vertebrae (T1–T12) of the upper back. Articulate with the ribs via costal facets. Long spinous processes that point inferiorly.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Lumbar Vertebrae</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Five vertebrae (L1–L5) of the lower back. Largest and thickest vertebrae; bear maximum body weight. Short, blunt spinous processes.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sacrum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Single triangular bone near the inferior end of the vertebral column, formed by the fusion of five sacral vertebrae.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Intervertebral Disc</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Structure between vertebral bodies providing padding and mobility. Outer anulus fibrosus (tough, fibrous) surrounds inner nucleus pulposus (gel-like).</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Kyphosis</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Excessive posterior curvature of the thoracic region, producing a "hunchback" appearance.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 7.3</div>
+      <div class="sh2">Regions of the Vertebral Column</div>
+      <p class="prose">The vertebral column originally develops as a series of 33 vertebrae, but this number is eventually reduced to 24 vertebrae, plus the sacrum and coccyx. The vertebral column is subdivided into five regions, with the vertebrae in each area named for that region and numbered in increasing order from the superior to inferior direction.</p>
+      <table class="dt">
+        <tr><th>Region</th><th>Vertebrae</th><th>Characteristics</th></tr>
+        <tr><td><strong>Cervical</strong></td><td>7 (C1–C7)</td><td>Smallest; transverse foramina; C1 (atlas) supports skull; C2 (axis) has dens for head rotation; C3–C7 are typical</td></tr>
+        <tr><td><strong>Thoracic</strong></td><td>12 (T1–T12)</td><td>Costal facets for rib articulation; long spinous processes; heart-shaped bodies</td></tr>
+        <tr><td><strong>Lumbar</strong></td><td>5 (L1–L5)</td><td>Largest bodies; bear maximum body weight; short, blunt spinous processes</td></tr>
+        <tr><td><strong>Sacrum</strong></td><td>5 fused</td><td>Triangular; transmits body weight to hip bones; sacral foramina for nerves</td></tr>
+        <tr><td><strong>Coccyx</strong></td><td>4 fused</td><td>Tailbone; small; muscle attachment site</td></tr>
+      </table>
+      <div class="sh3">Curvatures of the Vertebral Column</div>
+      <p class="prose">The adult vertebral column has four curvatures that increase its strength, flexibility, and ability to absorb shock. The <strong>thoracic</strong> and <strong>sacrococcygeal</strong> curvatures are primary curvatures — remnants of the original fetal curvature. The <strong>cervical</strong> and <strong>lumbar</strong> curvatures are secondary curvatures that develop after birth. Abnormal curvatures include <strong>kyphosis</strong> (excessive thoracic curve), <strong>lordosis</strong> (excessive lumbar curve), and <strong>scoliosis</strong> (abnormal lateral curvature).</p>
+      <div class="sh3">Intervertebral Discs</div>
+      <p class="prose">An <strong>intervertebral disc</strong> is found between the bodies of adjacent vertebrae. Each disc is made up of two parts. The <strong>anulus fibrosus</strong> is the tough, fibrous outer layer that strongly unites the adjacent vertebrae to each other. The <strong>nucleus pulposus</strong> is the gel-like center of the disc that provides padding and allows for movements between the vertebrae. With increasing age, the water content of the nucleus pulposus gradually declines, contributing to the loss of body height in older individuals.</p>
+      <div class="sh3">Ligaments of the Vertebral Column</div>
+      <p class="prose">Several ligaments support the vertebral column, including the <strong>anterior longitudinal ligament</strong> running along the front of the vertebral bodies, the <strong>posterior longitudinal ligament</strong> along the back, the <strong>ligamentum flavum</strong> connecting adjacent laminae, and the <strong>supraspinous ligament</strong> connecting spinous processes. In the neck, the supraspinous ligament expands into the <strong>nuchal ligament</strong>, which is found only in the cervical region.</p>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 7.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Vertebral Column — Bone Count by Region</div>
+      <div class="graph-box"><div class="graph-title">Vertebrae by Region (33 original, 26 in adult)</div><div class="graph-cap">Cervical (7), Thoracic (12), Lumbar (5), Sacral (5 fused), Coccygeal (4 fused)</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the structure and function of an intervertebral disc. What happens to these discs as a person ages?</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 7.3 Quiz — The Vertebral Column</h3><p>5 questions</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The cervical region of the vertebral column consists of ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>seven vertebrae</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12 vertebrae</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>five vertebrae</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>a single bone derived from the fusion of five vertebrae</li></ul>
+        <div class="qexp">There are <strong>seven cervical vertebrae</strong> (C1–C7) in the neck region. 12 is thoracic, 5 is lumbar, and the fused bone is the sacrum.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The primary curvatures of the vertebral column ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>include the lumbar curve</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>are remnants of the original fetal curvature</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>include the cervical curve</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>develop after the time of birth</li></ul>
+        <div class="qexp">The <strong>primary curvatures</strong> (thoracic and sacrococcygeal) are remnants of the original fetal curvature, present at birth. The cervical and lumbar curves are secondary curvatures that develop after birth.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A typical vertebra has ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>a vertebral foramen that passes through the body</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>a superior articular process that projects downward</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>lamina that spans between the transverse process and spinous process</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>a pair of laterally projecting spinous processes</li></ul>
+        <div class="qexp">The <strong>lamina</strong> spans between the transverse process and the spinous process, forming part of the vertebral arch. The vertebral foramen is enclosed by the arch, not through the body. There is only one spinous process per vertebra.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A typical lumbar vertebra has ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>a short, rounded spinous process</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>a bifid spinous process</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>articulation sites for ribs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>a transverse foramen</li></ul>
+        <div class="qexp">Lumbar vertebrae have <strong>short, rounded (blunt) spinous processes</strong>. Bifid spinous processes are cervical. Rib articulations are thoracic. Transverse foramina are cervical.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which is found only in the cervical region of the vertebral column?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>nuchal ligament</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>ligamentum flavum</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>supraspinous ligament</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>anterior longitudinal ligament</li></ul>
+        <div class="qexp">The <strong>nuchal ligament</strong> is the expanded portion of the supraspinous ligament found only in the posterior neck (cervical region). The other ligaments span the entire vertebral column.</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Section 7.2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Section 7.4 →</button></div>
+</div>
+
+<!-- PANEL 4: 7.4 THE THORACIC CAGE -->
+<div class="panel" id="p4">
+  <div class="hero hero-bone"><div class="h-crumb">Spine &amp; Thorax · <span>Section 7.4</span></div><div class="h-title">The Thoracic Cage</div><div class="h-desc">The thoracic cage (rib cage) forms the chest and consists of the 12 pairs of ribs with their costal cartilages and the sternum. It protects the heart and lungs and supports the muscles of respiration.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 7.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the components of the thoracic cage</li>
+      <li>Identify the parts of the sternum</li>
+      <li>Discuss the parts of a typical rib</li>
+      <li>Define the classes of ribs</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sternum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Flattened bone located at the center of the anterior chest. Three parts: manubrium, body, and xiphoid process.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Manubrium</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Expanded, superior portion of the sternum. Features the jugular (suprasternal) notch and clavicular notches.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sternal Angle</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Junction between the manubrium and body of the sternum. Important anatomical landmark — the second rib attaches here.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">True Ribs</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Ribs 1–7. Their costal cartilage attaches directly to the sternum.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">False Ribs</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Ribs 8–12. Their costal cartilages do not attach directly to the sternum. Ribs 8–10 attach indirectly via the cartilage above.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Floating Ribs</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Ribs 11–12. Short ribs that do not attach to the sternum at all. Their small costal cartilages terminate in the abdominal wall musculature.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 7.4</div>
+      <div class="sh2">The Sternum</div>
+      <p class="prose">The sternum is the elongated bony structure that anchors the anterior thoracic cage. It consists of three parts: the <strong>manubrium</strong>, the <strong>body</strong>, and the <strong>xiphoid process</strong>. The manubrium is the wider, superior portion. The top of the manubrium has a shallow, U-shaped border called the <strong>jugular (suprasternal) notch</strong>. The <strong>clavicular notch</strong> on each side receives the sternal end of the clavicle.</p>
+      <p class="prose">The manubrium and body meet at the <strong>sternal angle</strong>, so called because the junction between these two components is not flat, but forms a slight bend. The sternal angle is an important anatomical landmark because the second rib attaches here. Since the first rib is hidden behind the clavicle, the second rib found at the sternal angle is used to count ribs.</p>
+      <p class="prose">The inferior tip of the sternum is the <strong>xiphoid process</strong>. This small structure is cartilaginous early in life, but gradually becomes ossified starting during middle age.</p>
+      <div class="sh3">Ribs</div>
+      <p class="prose">Each rib is a curved, flattened bone that contributes to the wall of the thorax. The ribs articulate posteriorly with the T1–T12 thoracic vertebrae. At the posterior end, each rib has a <strong>head</strong> (which articulates with the vertebral body), a <strong>neck</strong>, and a <strong>tubercle</strong> (which articulates with the transverse process). The <strong>angle of the rib</strong> is the point at which the rib has its greatest degree of curvature. The inferior margin has the <strong>costal groove</strong>, a shallow groove for blood vessels and a nerve.</p>
+      <div class="sh3">Classification of Ribs</div>
+      <table class="dt">
+        <tr><th>Classification</th><th>Ribs</th><th>Attachment</th></tr>
+        <tr><td><strong>True Ribs</strong></td><td>1–7</td><td>Costal cartilage attaches directly to the sternum</td></tr>
+        <tr><td><strong>False Ribs</strong></td><td>8–12</td><td>Costal cartilages do not attach directly to the sternum; ribs 8–10 attach to cartilage of the rib above</td></tr>
+        <tr><td><strong>Floating Ribs</strong></td><td>11–12</td><td>Do not attach to the sternum at all; costal cartilages terminate in the abdominal wall musculature</td></tr>
+      </table>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Floating Ribs are a Subset of False Ribs</div><div class="cx">All floating ribs (11–12) are also classified as false ribs. The key distinction: true ribs (1–7) attach directly to the sternum, false ribs (8–12) do not. Within the false ribs, floating ribs (11–12) have no sternal attachment whatsoever.</div></div></div>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 7.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Rib Classification</div>
+      <div class="graph-box"><div class="graph-title">24 Ribs (12 pairs) by Classification</div><div class="graph-cap">True ribs attach directly to sternum; false ribs attach indirectly or not at all</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Describe the parts of the sternum. Define the classes of ribs and explain how each class attaches (or does not attach) to the sternum.</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 7.4 Quiz — The Thoracic Cage</h3><p>4 questions</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">The sternum ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>consists of only two parts, the manubrium and xiphoid process</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>has the sternal angle located between the manubrium and body</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>receives direct attachments from the costal cartilages of all 12 pairs of ribs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>articulates directly with the thoracic vertebrae</li></ul>
+        <div class="qexp">The <strong>sternal angle</strong> is located at the junction between the manubrium and body of the sternum. The sternum has three parts (not two), only ribs 1–7 attach directly, and it does not articulate with vertebrae.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The sternal angle is the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>junction between the body and xiphoid process</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>site for attachment of the clavicle</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>site for attachment of the floating ribs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>junction between the manubrium and body</li></ul>
+        <div class="qexp">The <strong>sternal angle</strong> is the junction between the manubrium and body of the sternum. It is an important anatomical landmark because the second rib attaches at this point.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The tubercle of a rib ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>is for articulation with the transverse process of a thoracic vertebra</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>is for articulation with the body of a thoracic vertebra</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>provides for passage of blood vessels and a nerve</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>is the area of greatest rib curvature</li></ul>
+        <div class="qexp">The <strong>tubercle</strong> of a rib articulates with the transverse process of the corresponding thoracic vertebra. The head articulates with the vertebral body. The costal groove provides passage for vessels and nerves. The angle is the area of greatest curvature.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">True ribs are ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>ribs 8–12</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>attached via their costal cartilage to the next higher rib</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>made entirely of bone, and thus do not have a costal cartilage</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>attached via their costal cartilage directly to the sternum</li></ul>
+        <div class="qexp"><strong>True ribs (1–7)</strong> are attached via their costal cartilage directly to the sternum. Ribs 8–12 are false ribs. All ribs have costal cartilage.</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 4 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Section 7.3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Section 7.5 →</button></div>
+</div>
+
+<!-- PANEL 5: 7.5 EMBRYONIC DEVELOPMENT -->
+<div class="panel" id="p5">
+  <div class="hero hero-amber"><div class="h-crumb">Development · <span>Section 7.5</span></div><div class="h-title">Embryonic Development of the Axial Skeleton</div><div class="h-desc">The axial skeleton forms during embryonic development through two distinct ossification processes. The skull, vertebrae, ribs, and sternum each follow unique developmental pathways.</div><div class="h-meta"><div class="h-chip">⏱ ~20 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 7.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the two types of skull development</li>
+      <li>Describe the fontanelles and their significance</li>
+      <li>Discuss the development of the vertebrae, ribs, and sternum</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Fontanelle</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Area of fibrous connective tissue found at birth between the brain case bones. The "soft spots" on an infant's head that allow skull compression during birth and brain growth afterward.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Notochord</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Rod-like structure along the dorsal side of the early embryo. Remnants persist as the nucleus pulposus of the intervertebral discs.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Somite</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Paired, repeating tissue blocks on either side of the notochord in the early embryo.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sclerotome</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Medial portion of a somite that forms bone and cartilage. Gives rise to vertebrae.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 7.5</div>
+      <div class="sh2">Skull Development</div>
+      <p class="prose">The skull develops through two distinct mechanisms. The bones of the brain case (top and sides of the skull) develop via <strong>intramembranous ossification</strong>, in which mesenchymal cells accumulate and differentiate directly into bone-producing osteoblasts. During fetal development, the brain case bones are separated by areas of fibrous connective tissue called <strong>fontanelles</strong> — the "soft spots" on an infant's head. Fontanelles allow the skull to compress during birth passage and accommodate rapid brain growth during infancy.</p>
+      <p class="prose">The bones at the base of the skull and the facial bones develop via <strong>endochondral ossification</strong>, in which mesenchymal cells differentiate into cartilage first, creating a hyaline cartilage model that is gradually replaced by bone. At birth, the brain case is disproportionately large relative to the underdeveloped facial bones. During early childhood, the mandible fuses from two halves, the mastoid processes enlarge, and the paranasal sinuses expand as teeth emerge.</p>
+      <div class="sh3">Vertebral Column, Ribs, and Sternum</div>
+      <p class="prose">Vertebrae develop from <strong>sclerotome</strong> mesenchyme (the medial portion of the somites) that accumulates around the <strong>notochord</strong>. These cells form hyaline cartilage models that ossify through endochondral ossification. Small remnants of the notochord persist between vertebrae, contributing to the <strong>nucleus pulposus</strong> of the intervertebral discs.</p>
+      <p class="prose">Ribs initially develop as part of the vertebral cartilage models but separate during week eight in the thorax region. The sternum forms from paired cartilage models beginning at week five that eventually fuse at the midline and ossify.</p>
+      <div class="callout warn"><div class="ci">⚠️</div><div class="cb"><div class="ct">Homeostatic Imbalance: Craniosynostosis</div><div class="cx">Premature closure (fusion) of a suture line is a condition called <strong>craniosynostosis</strong>, affecting approximately 1 in 2,000 births. This abnormal fusion restricts skull growth in one direction, causing compensatory growth in other areas. It can produce scaphocephaly (long, narrow heads) and may require surgical intervention to restore normal development.</div></div></div>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 7.5. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">Discuss the processes by which the brain-case bones of the skull are formed and grow during skull enlargement. How does this differ from the development of facial bones?</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 7.5 Quiz — Embryonic Development</h3><p>2 questions</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Embryonic development of the axial skeleton involves ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>intramembranous ossification, which forms the facial bones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>endochondral ossification, which forms the ribs and sternum</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the notochord, which produces the cartilage models for the vertebrae</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the formation of hyaline cartilage models, which give rise to the flat bones of the skull</li></ul>
+        <div class="qexp">The ribs and sternum form via <strong>endochondral ossification</strong> (cartilage → bone). Facial bones also form via endochondral ossification (not intramembranous). The sclerotome (not notochord) produces cartilage models for vertebrae. The flat skull bones form via intramembranous ossification, not from cartilage models.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A fontanelle ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>is the cartilage model for a vertebra that later is converted into bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>gives rise to the facial bones and vertebrae</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>is the rod-like structure that runs the length of the early embryo</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>is the area of fibrous connective tissue found at birth between the brain case bones</li></ul>
+        <div class="qexp">A <strong>fontanelle</strong> is an area of fibrous connective tissue found at birth between the brain case bones — the "soft spots" on an infant's head. Option C describes the notochord.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 2 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Section 7.4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Chapter Review →</button></div>
+</div>
+
+<!-- PANEL 6: CHAPTER REVIEW & PRACTICE TEST -->
+<div class="panel" id="p6">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 7</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review covering all 5 sections of Chapter 7: The Axial Skeleton. Test your knowledge with the OpenStax review questions.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📊 Comprehensive</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter 7 at a Glance</div>
+      <table class="dt">
+        <tr><th>Section</th><th>Key Takeaways</th></tr>
+        <tr><td><strong>7.1</strong></td><td>Axial (80 bones: skull, vertebral column, thoracic cage) vs. appendicular (126 bones: limbs + girdles)</td></tr>
+        <tr><td><strong>7.2</strong></td><td>22 skull bones (8 cranial, 14 facial); 4 sutures; 3 cranial fossae; paranasal sinuses; hyoid bone</td></tr>
+        <tr><td><strong>7.3</strong></td><td>24 vertebrae: 7 cervical, 12 thoracic, 5 lumbar + sacrum + coccyx; 4 curvatures; intervertebral discs</td></tr>
+        <tr><td><strong>7.4</strong></td><td>Sternum (manubrium, body, xiphoid); 12 rib pairs: true (1–7), false (8–12), floating (11–12)</td></tr>
+        <tr><td><strong>7.5</strong></td><td>Brain case via intramembranous ossification (fontanelles); face/base via endochondral; vertebrae from sclerotome</td></tr>
+      </table>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required to unlock the practice test</div></div></div>
+      <div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 100 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Practice Test →</button></div>
+      <div class="cp-done" id="cpd6">✅ Practice test unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 7 Practice Test</h3><p>20 questions · All OpenStax Review Questions</p></div></div>
+    <div id="q6">
+      <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 20 review questions from OpenStax A&amp;P 2e, Chapter 7. Take your time — there is no time limit.</div></div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 21 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Section 7.5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'The Axial Skeleton',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:7,lessonCount:6,cpMin:80,lessons:['Overview','7.1 Divisions','7.2 The Skull','7.3 Vertebral Column','7.4 Thoracic Cage','7.5 Embryonic Development','Chapter Review']};
+
+// Override cpMin for panel 6 (100 chars for the final checkpoint)
+const origCpCheck=window.cpCheck;
+window.cpCheck=function(id){
+  const min=id===6?100:80;
+  const ta=document.getElementById('cpt'+id);
+  const n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  const btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+
+function initCharts(){
+  // Chart L1: Axial vs Appendicular
+  new Chart(document.getElementById('chartL1'),{type:'doughnut',data:{labels:['Axial Skeleton (80)','Appendicular Skeleton (126)'],datasets:[{data:[80,126],backgroundColor:['#0b8f8c','#e8920e']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+
+  // Chart L2: Skull Bones
+  new Chart(document.getElementById('chartL2'),{type:'bar',data:{labels:['Frontal','Parietal (2)','Temporal (2)','Occipital','Sphenoid','Ethmoid','Maxilla (2)','Zygomatic (2)','Nasal (2)','Lacrimal (2)','Palatine (2)','Inf. Concha (2)','Vomer','Mandible'],datasets:[{label:'Cranial',data:[1,2,2,1,1,1,0,0,0,0,0,0,0,0],backgroundColor:'rgba(11,143,140,.7)',borderRadius:4},{label:'Facial',data:[0,0,0,0,0,0,2,2,2,2,2,2,1,1],backgroundColor:'rgba(232,146,14,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:10}}}},scales:{x:{beginAtZero:true,max:3,ticks:{stepSize:1}}}}});
+
+  // Chart L3: Vertebral Column
+  new Chart(document.getElementById('chartL3'),{type:'bar',data:{labels:['Cervical','Thoracic','Lumbar','Sacral (fused)','Coccygeal (fused)'],datasets:[{label:'Vertebrae Count',data:[7,12,5,5,4],backgroundColor:['#0b8f8c','#3a86e0','#e8920e','#6c3fa0','#c0392b'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:14,title:{display:true,text:'Number of Vertebrae',font:{size:11}}}}}});
+
+  // Chart L4: Rib Classification
+  new Chart(document.getElementById('chartL4'),{type:'doughnut',data:{labels:['True Ribs 1–7 (14)','False Ribs 8–10 (6)','Floating Ribs 11–12 (4)'],datasets:[{data:[14,6,4],backgroundColor:['#0b8f8c','#e8920e','#c0392b']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+}
+document.addEventListener('DOMContentLoaded',initCharts);
+</script>
+</body>
+</html>

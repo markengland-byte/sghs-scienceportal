@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A&P · Bone Tissue and the Skeletal System | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--teal);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(11,143,140,.2);border-right-color:var(--teal);}
+.sb-link.done .sb-num{background:var(--teal)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--teal);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#002a35,#0b8f8c);}
+.hero-bone{background:linear-gradient(135deg,#001a2a,#0b6060);}
+.hero-amber{background:linear-gradient(135deg,#2a1500,#8a5000);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--teal);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"✓";position:absolute;left:0;color:var(--teal-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--teal-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--teal-pale);border:1px solid var(--teal);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.warn{background:var(--amber-pale);border-left:4px solid var(--amber);}
+.callout.warn .ct{color:#8a5000;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.mem{background:var(--purple-pale);border-left:4px solid var(--purple);}
+.callout.mem .ct{color:var(--purple);}
+.callout.red{background:var(--red-pale);border-left:4px solid var(--red);}
+.callout.red .ct{color:var(--red);}
+.callout.green{background:var(--green-pale);border-left:4px solid var(--green);}
+.callout.green .ct{color:var(--green);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px;margin:20px 0;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.diagram img{max-width:100%;height:auto;border-radius:8px;}
+.d-cap{font-size:.77rem;color:var(--muted);font-style:italic;margin-top:12px;line-height:1.5;}
+.fact-box{background:var(--navy);border-radius:12px;padding:20px 24px;margin:18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.fact{text-align:center;}
+.fact-n{font-family:"Playfair Display",serif;font-size:2rem;color:var(--teal-light);}
+.fact-l{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4;}
+.graph-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-title{font-weight:700;color:var(--navy);font-size:.9rem;margin-bottom:4px;}
+.graph-cap{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:14px;}
+.graph-wrap{position:relative;height:240px;max-width:540px;margin:0 auto;}
+.checkpoint-box{background:#fff;border:2px solid var(--teal);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--teal-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--teal);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-counter.met span{color:var(--teal);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--teal);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{background:#076b68;}
+.cp-done{display:none;padding:10px 18px;background:var(--teal-pale);border:1px solid var(--teal);border-radius:8px;font-size:.85rem;color:var(--teal);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--teal-pale);border:2px solid var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--teal-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--teal);background:transparent;color:var(--teal);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--teal);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<!-- NAME MODAL -->
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div style="font-size:2rem;margin-bottom:10px;">🦴</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Bone Tissue &amp; the Skeletal System</h2>
+    <p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p>
+    <label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label>
+    <input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#0b8f8c'" onblur="this.style.borderColor='#dde3ef'">
+    <div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div>
+    <button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button>
+  </div>
+</div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;">
+  <span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span>
+</div>
+<header class="top-bar">
+  <a class="tb-back" href="../ap/index.html">← A&amp;P</a>
+  <div class="tb-logo">🦴</div>
+  <div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div>
+  <div class="tb-badge" id="student-badge">Bone Tissue &amp; the Skeletal System</div>
+</header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Functions &amp; Classification</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">6.1 · The Functions of the Skeletal System</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">6.2 · Bone Classification</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Bone Structure</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">6.3 · Bone Structure</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Development &amp; Repair</div>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">6.4 · Bone Formation &amp; Development</div></a>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">6.5 · Fractures: Bone Repair</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Regulation</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">6.6 · Exercise, Nutrition, Hormones &amp; Bone</div></a>
+  <a class="sb-link" onclick="goTo(7)" href="#"><div class="sb-num">7</div><div class="sb-txt">6.7 · Calcium Homeostasis</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(8)" href="#"><div class="sb-num">8</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<!-- PANEL 0: OVERVIEW -->
+<div class="panel active" id="p0">
+  <div class="hero hero-ov">
+    <div class="h-crumb">A&amp;P · Chapter 6 · <span>Overview</span></div>
+    <div class="h-title">Bone Tissue &amp; the Skeletal System</div>
+    <div class="h-desc">Bones make good fossils. While the soft tissue of a once living organism will decay and fall away over time, bone tissue will, under the right conditions, undergo a process of mineralization, effectively turning the bone to stone. Your skeleton, however, consists of living tissue that grows, repairs, and renews itself.</div>
+    <div class="h-meta"><div class="h-chip">📚 7 Lessons</div><div class="h-chip">🦴 OpenStax A&amp;P 2e Ch. 6</div><div class="h-chip">📊 Data Interpretation</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 39 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Chapter Objectives</div><ul class="obj-list">
+      <li>List and describe the functions of bones</li>
+      <li>Describe the classes of bones</li>
+      <li>Discuss the process of bone formation and development</li>
+      <li>Explain how bone repairs itself after a fracture</li>
+      <li>Discuss the effect of exercise, nutrition, and hormones on bone tissue</li>
+      <li>Describe how an imbalance of calcium can affect bone tissue</li>
+    </ul></div>
+    <div class="cs">
+      <div class="eyebrow">Course Map</div>
+      <div class="sh2">What You Will Study</div>
+      <table class="dt">
+        <tr><th>#</th><th>Section</th><th>Key Concepts</th></tr>
+        <tr><td>6.1</td><td>The Functions of the Skeletal System</td><td>Support, movement, protection, mineral storage, hematopoiesis, energy storage</td></tr>
+        <tr><td>6.2</td><td>Bone Classification</td><td>Long, short, flat, irregular, sesamoid bones</td></tr>
+        <tr><td>6.3</td><td>Bone Structure</td><td>Diaphysis, epiphysis, periosteum, bone cells, osteons, compact &amp; spongy bone, bone markings</td></tr>
+        <tr><td>6.4</td><td>Bone Formation and Development</td><td>Intramembranous &amp; endochondral ossification, epiphyseal plate, remodeling</td></tr>
+        <tr><td>6.5</td><td>Fractures: Bone Repair</td><td>8 fracture types, 4-stage repair process</td></tr>
+        <tr><td>6.6</td><td>Exercise, Nutrition, Hormones, and Bone Tissue</td><td>Wolff's law, calcium, vitamin D, hormones, osteoporosis</td></tr>
+        <tr><td>6.7</td><td>Calcium Homeostasis</td><td>PTH, calcitonin, hypocalcemia, hypercalcemia</td></tr>
+      </table>
+      <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Anatomy &amp; Physiology 2e — Chapter 6</div><div class="cx">All content is from OpenStax A&amp;P 2e, Chapter 6: Bone Tissue and the Skeletal System. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    </div>
+    <div class="cs">
+      <div class="eyebrow">Quick Facts</div>
+      <div class="sh2">Bone Tissue by the Numbers</div>
+      <div class="fact-box">
+        <div class="fact"><div class="fact-n">206</div><div class="fact-l">Bones in the adult skeleton</div></div>
+        <div class="fact"><div class="fact-n">270</div><div class="fact-l">Bones present at birth</div></div>
+        <div class="fact"><div class="fact-n">5–10%</div><div class="fact-l">Of skeleton remodeled annually</div></div>
+        <div class="fact"><div class="fact-n">61</div><div class="fact-l">Key terms in this chapter</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 7</div><button class="nbtn next" onclick="goTo(1)">Section 6.1 →</button></div>
+</div>
+
+<!-- PANEL 1: 6.1 FUNCTIONS OF THE SKELETAL SYSTEM -->
+<div class="panel" id="p1">
+  <div class="hero hero-bone"><div class="h-crumb">Functions &amp; Classification · <span>Section 6.1</span></div><div class="h-title">The Functions of the Skeletal System</div><div class="h-desc">Bone, or osseous tissue, is a hard, dense connective tissue that forms most of the adult skeleton, the support structure of the body. In the areas of the skeleton where bones move, cartilage, a semi-rigid form of connective tissue, provides flexibility and smooth surfaces for movement.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define bone, cartilage, and the skeletal system</li>
+      <li>List and describe the functions of the skeletal system</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Bone / Osseous Tissue</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Hard, dense connective tissue that forms the structural elements of the skeleton.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Cartilage</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Semi-rigid connective tissue found on the skeleton in areas where flexibility and smooth surfaces support movement.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Skeletal System</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Organ system composed of bones and cartilage that provides for movement, support, and protection.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hematopoiesis</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Production of blood cells, which occurs in the red marrow of the bones.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Red Marrow</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Connective tissue in the interior cavity of a bone where hematopoiesis takes place.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Yellow Marrow</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Connective tissue in the interior cavity of a bone where fat is stored.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Orthopedist</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Doctor who specializes in diagnosing and treating musculoskeletal disorders and injuries.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.1</div>
+      <div class="sh2">Support, Movement, and Protection</div>
+      <p class="prose">The most apparent functions of the skeletal system are the gross functions — those visible by observation. Simply by looking at a person, you can see how the bones provide a framework for the body, much as the steel beams of a building provide a scaffold to support its weight. Bones also facilitate movement by serving as points of attachment for your muscles. Bones also protect internal organs from injury by covering or surrounding them. For example, your ribs protect your lungs and heart, the bones of your vertebral column (spine) protect your spinal cord, and the bones of your cranium (skull) protect your brain.</p>
+      <div class="diagram">
+        <img src="https://med.libretexts.org/@api/deki/files/42521/600px-611_Bones_702-01.jpg" alt="Bones Support Movement">
+        <div class="d-cap">Figure 6.2 — Bones Support Movement. Bones act as levers when muscles span a joint and contract. (OpenStax A&amp;P 2e, CC BY 4.0)</div>
+      </div>
+      <div class="diagram">
+        <img src="https://med.libretexts.org/@api/deki/files/42522/600px-612_Bones_702-01.jpg" alt="Bones Protect Brain">
+        <div class="d-cap">Figure 6.3 — Bones Protect Brain. The cranium completely surrounds and protects the brain from non-traumatic injury. (OpenStax A&amp;P 2e, CC BY 4.0)</div>
+      </div>
+      <div class="callout info"><div class="ci">💼</div><div class="cb"><div class="ct">Career Connection: Orthopedist</div><div class="cx">An orthopedist is a doctor who specializes in diagnosing and treating disorders and injuries related to the musculoskeletal system. Some orthopedic problems can be treated with medications, exercises, braces, and other devices, but others may be best treated with surgery. While the bones of an adult do not generally change in shape, the growing skeleton of a child can be affected by abnormal curvatures of the spine (such as scoliosis, kyphosis, or lordosis). Orthopedists may address these and other issues, including sports injuries.</div></div></div>
+      <div class="sh3">Mineral Storage, Energy Storage, and Hematopoiesis</div>
+      <p class="prose">On a metabolic level, bone tissue performs several critical functions. The bone matrix acts as a reservoir for a number of minerals important to the functioning of the body, especially calcium and phosphorus. These minerals, incorporated into bone tissue, can be released back into the bloodstream to maintain levels needed to support physiological processes. Calcium ions, for example, are essential for muscle contractions and controlling the flow of other ions involved in the transmission of nerve impulses.</p>
+      <p class="prose">Bone also serves as a site for fat storage and blood cell production. The softer connective tissue that fills the interior of most bone is referred to as bone marrow. There are two types of bone marrow: yellow marrow and red marrow. <strong>Yellow marrow</strong> contains adipose tissue; the triglycerides stored in the adipocytes of the tissue can serve as a source of energy. <strong>Red marrow</strong> is where hematopoiesis — the production of blood cells — takes place. Red blood cells, white blood cells, and platelets are all produced in the red marrow.</p>
+      <div class="diagram">
+        <img src="https://med.libretexts.org/@api/deki/files/42523/600px-613_Bones_702-01.jpg" alt="Head of Femur Showing Red and Yellow Marrow">
+        <div class="d-cap">Figure 6.4 — Head of Femur Showing Red and Yellow Marrow. The head of the femur contains both yellow and red marrow. Yellow marrow stores fat. Red marrow is responsible for hematopoiesis. (OpenStax A&amp;P 2e, CC BY 4.0)</div>
+      </div>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.1. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Skeletal Functions — Mechanical vs. Metabolic</div>
+      <div class="graph-box"><div class="graph-title">The Five Functions of the Skeletal System</div><div class="graph-cap">Categorized by mechanical (structural) vs. metabolic (chemical/cellular) roles</div><div class="graph-wrap"><canvas id="chartL1"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required to unlock quiz</div></div></div>
+      <div class="cp-question">The skeletal system is composed of bone and cartilage and has many functions. Choose three of these functions and discuss what features of the skeletal system allow it to accomplish these functions.</div>
+      <textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd1">✅ Checkpoint complete — quiz unlocked!</div>
+    </div>
+    <div id="quiz-wrap1" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.1 Quiz — Functions of the Skeletal System</h3><p>6 questions · OpenStax Review Questions</p></div></div>
+    <div id="q1">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which function of the skeletal system would be especially important if you were in a car accident?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>mineral storage</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>protection of internal organs</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>facilitation of movement</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>fat storage</li></ul>
+        <div class="qexp">In a car accident, the <strong>protective function</strong> is most critical — the skull protects the brain, the rib cage shields the heart and lungs, and the vertebral column guards the spinal cord from traumatic injury.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Bone tissue can best be described as ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>dead calcium deposits</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>cartilage</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the skeletal system</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>dense, hard connective tissue</li></ul>
+        <div class="qexp"><strong>Bone, or osseous tissue</strong>, is a hard, dense connective tissue that forms most of the adult skeleton. It is living tissue — not dead or calcified material.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Without red marrow, bones would not be able to ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>store phosphate</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>store calcium</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>make blood cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>act as levers</li></ul>
+        <div class="qexp"><strong>Red marrow</strong> is the site of hematopoiesis — the production of red blood cells, white blood cells, and platelets. Without it, the body could not produce new blood cells.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Yellow marrow has been identified as ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>an important site for fat storage</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>a point of muscle attachment</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the hard calcium portion of bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the cause of kyphosis</li></ul>
+        <div class="qexp"><strong>Yellow marrow</strong> contains adipose tissue, and the triglycerides stored in the adipocytes can serve as a source of energy. It fills the medullary cavity of long bone diaphyses in adults.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which of the following can be found in areas of the body where movement takes place?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>hematopoiesis</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>cartilage</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>yellow marrow</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>red marrow</li></ul>
+        <div class="qexp"><strong>Cartilage</strong> is the semi-rigid connective tissue found in areas of the skeleton where flexibility and smooth surfaces support movement, such as at joints.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">The skeletal system is made of ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>muscles and tendons</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>bones and cartilage</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>vitreous humor</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>minerals and fat</li></ul>
+        <div class="qexp">The <strong>skeletal system</strong> is the organ system composed of bones and cartilage that provides for movement, support, and protection.</div></div>
+    </div>
+    <div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 6 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Overview</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Section 6.2 →</button></div>
+</div>
+
+<!-- PANEL 2: 6.2 BONE CLASSIFICATION -->
+<div class="panel" id="p2">
+  <div class="hero hero-bone"><div class="h-crumb">Functions &amp; Classification · <span>Section 6.2</span></div><div class="h-title">Bone Classification</div><div class="h-desc">The 206 bones that compose the adult skeleton are divided into five categories based on their shapes. Their shapes and their functions are related such that each categorical shape of bone has a distinct function.</div><div class="h-meta"><div class="h-chip">⏱ ~20 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Classify bones according to their shapes</li>
+      <li>Describe the function of each category of bones</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Long Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Cylinder-shaped bone that is longer than it is wide; functions as a lever.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Short Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Cube-shaped bone that is approximately equal in length, width, and thickness; provides limited motion.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Flat Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Thin and curved bone; serves as a point of attachment for muscles and protects internal organs.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Irregular Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Bone of complex shape; protects internal organs from compressive forces.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Sesamoid Bone</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Small, round bone embedded in a tendon; protects the tendon from compressive forces.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.2</div>
+      <div class="sh2">Five Categories of Bone Shapes</div>
+      <p class="prose">A <strong>long bone</strong> is one that is cylindrical in shape, being longer than it is wide. Keep in mind, however, that the term describes the shape of a bone, not its size. Long bones are found in the arms (humerus, ulna, radius) and legs (femur, tibia, fibula), as well as in the fingers (metacarpals, phalanges) and toes (metatarsals, phalanges). Long bones function as levers; they move when muscles contract.</p>
+      <p class="prose">A <strong>short bone</strong> is one that is cube-like in shape, being approximately equal in length, width, and thickness. The only short bones in the human skeleton are in the carpals of the wrists and the tarsals of the ankles. Short bones provide stability and support as well as some limited motion.</p>
+      <p class="prose">The term <strong>"flat bone"</strong> is somewhat of a misnomer because, although a flat bone is typically thin, it is also often curved. Examples include the cranial bones, the scapulae (shoulder blades), the sternum (breastbone), and the ribs. Flat bones serve as points of attachment for muscles and often protect internal organs.</p>
+      <p class="prose">An <strong>irregular bone</strong> is one that does not have any easily characterized shape and therefore does not fit any other classification. These bones tend to have more complex shapes, like the vertebrae that support the spinal cord and protect it from compressive forces. Many facial bones, particularly the ones containing sinuses, are classified as irregular bones.</p>
+      <p class="prose">A <strong>sesamoid bone</strong> is a small, round bone that, as the name suggests, is shaped like a sesame seed. These bones form in tendons (the sheaths of tissue that connect bones to muscles) where a great deal of pressure is generated in a joint. The sesamoid bones protect tendons by helping them overcome compressive forces. Sesamoid bones vary in number and placement from person to person but are typically found in tendons associated with the feet, hands, and knees. The patellae (singular = patella) are the only sesamoid bones found in common with every person.</p>
+      <div class="diagram">
+        <img src="https://med.libretexts.org/@api/deki/files/42524/8c39869bbb68827024b1fcdd62601e63aac06f78" alt="Classifications of Bones">
+        <div class="d-cap">Figure 6.5 — Classifications of Bones. Bones are classified according to their shape. (OpenStax A&amp;P 2e, CC BY 4.0)</div>
+      </div>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.2. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Bone Shape Distribution in the Adult Skeleton</div>
+      <div class="graph-box"><div class="graph-title">Count of Bones by Shape Category (206 total)</div><div class="graph-cap">Long bones are most numerous; sesamoid bones vary between individuals</div><div class="graph-wrap"><canvas id="chartL2"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">What are the structural and functional differences between a tarsal bone and a metatarsal bone? Which category does each belong to?</div>
+      <textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd2">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap2" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.2 Quiz — Bone Classification</h3><p>5 questions</p></div></div>
+    <div id="q2">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Most of the bones of the wrist are categorized as ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>flat bones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>short bones</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>sesamoid bones</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>irregular bones</li></ul>
+        <div class="qexp">The carpals (wrist bones) are <strong>short bones</strong> — cube-shaped, approximately equal in length, width, and thickness. They provide stability and limited gliding motion.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Sesamoid bones are found embedded in ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>joints</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>muscles</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>ligaments</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>tendons</li></ul>
+        <div class="qexp"><strong>Sesamoid bones</strong> form in tendons where a great deal of pressure is generated. The patella (kneecap) is the largest sesamoid bone and the only one found in every person.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Bones that surround the spinal cord are classified as ________ bones.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>irregular</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>sesamoid</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>flat</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>short</li></ul>
+        <div class="qexp"><strong>Vertebrae</strong> are irregular bones — they have complex shapes that don't fit other categories. They surround and protect the spinal cord from compressive forces.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which category of bone is the most numerous in the adult skeleton?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>long bones</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>sesamoid bones</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>short bones</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>flat bones</li></ul>
+        <div class="qexp"><strong>Long bones</strong> are the most numerous — they include the bones of the arms, legs, fingers, and toes (humerus, radius, ulna, femur, tibia, fibula, metacarpals, metatarsals, and phalanges).</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Long bones enable movement by acting as a ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>counterweight</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>resistive force</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>lever</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>fulcrum</li></ul>
+        <div class="qexp">Long bones function as <strong>levers</strong> — when muscles contract across a joint, the bone pivots around the joint (fulcrum) to produce movement.</div></div>
+    </div>
+    <div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Section 6.1</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Section 6.3 →</button></div>
+</div>
+
+<!-- PANEL 3: 6.3 BONE STRUCTURE -->
+<div class="panel" id="p3">
+  <div class="hero hero-bone"><div class="h-crumb">Bone Structure · <span>Section 6.3</span></div><div class="h-title">Bone Structure</div><div class="h-desc">Under the microscope, bone reveals two distinct architectures — the dense cylinders of osteons in compact bone and the open lattice of trabeculae in spongy bone. Each is engineered for its location and load.</div><div class="h-meta"><div class="h-chip">⏱ ~40 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe the microscopic and gross anatomical structures of bones</li>
+      <li>Identify the gross anatomical features of a bone</li>
+      <li>Describe the histology of bone tissue</li>
+      <li>Compare and contrast compact and spongy bone</li>
+      <li>Identify the types of cells found in bone and their functions</li>
+      <li>List the common bone markings</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Diaphysis</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Tubular shaft that runs between the proximal and distal ends of a long bone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Epiphysis</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Wide section at each end of a long bone; filled with spongy bone and red marrow.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Periosteum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Fibrous membrane covering the outer surface of bone and continuous with ligaments.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Endosteum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Delicate membranous lining of a bone's medullary cavity.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteon</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Basic structural unit of compact bone; made of concentric layers of calcified matrix.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteoblast</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Cell responsible for forming new bone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteocyte</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Primary cell in mature bone; responsible for maintaining the matrix.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteoclast</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Cell responsible for resorbing bone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Trabeculae</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Spikes or sections of the lattice-like matrix in spongy bone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Lacunae</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Spaces in a bone that house an osteocyte.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.3</div>
+      <div class="sh2">Gross Anatomy of Bone</div>
+      <p class="prose">The structure of a long bone allows for the best visualization of all of the parts of a bone. A long bone has two parts: the <strong>diaphysis</strong> and the <strong>epiphysis</strong>. The diaphysis is the tubular shaft that runs between the proximal and distal ends of the bone. The hollow region in the diaphysis is called the <strong>medullary cavity</strong>, which is filled with yellow marrow. The walls of the diaphysis are composed of dense and hard <strong>compact bone</strong>.</p>
+      <p class="prose">The wider section at each end of the bone is called the <strong>epiphysis</strong> (plural = epiphyses), which is filled with <strong>spongy bone</strong>. Red marrow fills the spaces in the spongy bone. Each epiphysis meets the diaphysis at the <strong>metaphysis</strong>, the narrow area that contains the <strong>epiphyseal plate</strong> (growth plate), a layer of hyaline cartilage in a growing bone. When the bone stops growing in early adulthood (approximately 18–21 years), the cartilage is replaced by osseous tissue and the epiphyseal plate becomes an <strong>epiphyseal line</strong>.</p>
+      <p class="prose">The medullary cavity has a delicate membranous lining called the <strong>endosteum</strong>, where bone growth, repair, and remodeling occur. The outer surface of the bone is covered with a fibrous membrane called the <strong>periosteum</strong>. The periosteum contains blood vessels, nerves, and lymphatic vessels that nourish compact bone. Tendons and ligaments also attach to bones at the periosteum.</p>
+      <div class="sh3">Bone Cells and Tissue</div>
+      <p class="prose">Bone contains four types of cells: <strong>osteogenic cells</strong>, <strong>osteoblasts</strong>, <strong>osteocytes</strong>, and <strong>osteoclasts</strong>. The osteogenic cell is an undifferentiated cell with high mitotic activity and is the only bone cell that divides. Osteoblasts are bone cells responsible for forming new bone and are found in the growing portions of bone. Osteocytes are mature bone cells and the primary cell in mature bone. They maintain the mineral concentration of the matrix via secretion of enzymes. Osteoclasts are large cells that break down bone, and this process is known as <strong>resorption</strong>.</p>
+      <table class="dt">
+        <tr><th>Cell Type</th><th>Function</th><th>Location</th></tr>
+        <tr><td><strong>Osteogenic cells</strong></td><td>Undifferentiated stem cells; divide to produce osteoblasts</td><td>Endosteum, periosteum</td></tr>
+        <tr><td><strong>Osteoblasts</strong></td><td>Form new bone by secreting osteoid (uncalcified matrix)</td><td>Growing portions of bone</td></tr>
+        <tr><td><strong>Osteocytes</strong></td><td>Maintain the bone matrix; mature bone cells trapped in lacunae</td><td>Within lacunae of compact and spongy bone</td></tr>
+        <tr><td><strong>Osteoclasts</strong></td><td>Resorb (break down) bone; release minerals into blood</td><td>Bone surfaces; derived from monocytes</td></tr>
+      </table>
+      <div class="sh3">Compact Bone</div>
+      <p class="prose">Compact bone is the denser, stronger of the two types of bone tissue. It can be found under the periosteum and in the diaphyses of long bones, where it provides support and protection. The microscopic structural unit of compact bone is called an <strong>osteon</strong>, or Haversian system. Each osteon is composed of concentric rings of calcified matrix called <strong>lamellae</strong> (singular = lamella), surrounding a central canal called the <strong>central canal</strong> (or Haversian canal), which contains blood vessels, nerves, and lymphatic vessels. Osteocytes are found in <strong>lacunae</strong> between the rings of matrix. Small channels called <strong>canaliculi</strong> radiate from the lacunae to the central canal to provide passageways through the hard matrix. <strong>Perforating canals</strong> (Volkmann's canals) connect the central canals to each other and to the periosteum.</p>
+      <div class="sh3">Spongy (Cancellous) Bone</div>
+      <p class="prose">Like compact bone, spongy bone contains osteocytes housed in lacunae, but they are not arranged in concentric circles. Instead, the lacunae and osteocytes are found in a lattice-like network of matrix spikes called <strong>trabeculae</strong>. The trabeculae may appear to be a random network, but each trabecula forms along lines of stress to provide strength to the bone. The spaces of the trabeculated network provide balance to the dense and heavy compact bone by making bones lighter so that muscles can move them more easily.</p>
+      <div class="sh3">Bone Markings</div>
+      <p class="prose">The surface features of bones vary considerably, depending on the function and location in the body. There are three general classes of bone markings: (1) <strong>articulations</strong>, (2) <strong>projections</strong>, and (3) <strong>holes</strong>. Articulations are places where two bone surfaces meet. Projections grow out from the bone surface and serve as either sites of muscle and ligament attachment or as part of a joint. Holes are openings or depressions in the bones that allow blood vessels and nerves to enter.</p>
+      <table class="dt">
+        <tr><th>Marking</th><th>Description</th><th>Example</th></tr>
+        <tr><td><strong>Head</strong></td><td>Prominent rounded surface</td><td>Head of femur</td></tr>
+        <tr><td><strong>Facet</strong></td><td>Flat surface</td><td>Vertebrae</td></tr>
+        <tr><td><strong>Condyle</strong></td><td>Rounded surface</td><td>Occipital condyles</td></tr>
+        <tr><td><strong>Tubercle</strong></td><td>Small, rounded process</td><td>Tubercle of humerus</td></tr>
+        <tr><td><strong>Tuberosity</strong></td><td>Rough surface</td><td>Deltoid tuberosity</td></tr>
+        <tr><td><strong>Crest</strong></td><td>Ridge of bone</td><td>Iliac crest</td></tr>
+        <tr><td><strong>Trochanter</strong></td><td>Very large projection</td><td>Greater trochanter of femur</td></tr>
+        <tr><td><strong>Foramen</strong></td><td>Hole through which vessels/nerves pass</td><td>Foramen magnum</td></tr>
+        <tr><td><strong>Fossa</strong></td><td>Elongated basin or depression</td><td>Mandibular fossa</td></tr>
+        <tr><td><strong>Sinus</strong></td><td>Air-filled space in bone</td><td>Nasal sinuses</td></tr>
+      </table>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.3. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Compact vs. Spongy Bone — Key Properties</div>
+      <div class="graph-box"><div class="graph-title">Compact vs. Spongy Bone — Property Comparison</div><div class="graph-cap">Relative values across key structural and functional properties (scale 1–10)</div><div class="graph-wrap"><canvas id="chartL3"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">In what ways is the structural makeup of compact and spongy bone well suited to their respective functions?</div>
+      <textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd3">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap3" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.3 Quiz — Bone Structure</h3><p>9 questions</p></div></div>
+    <div id="q3">
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following occurs in the spongy bone of the epiphysis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>bone growth in length</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>bone remodeling</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>hematopoiesis</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>shock absorption only</li></ul>
+        <div class="qexp"><strong>Hematopoiesis</strong> (blood cell production) occurs in the red marrow found within the spongy bone of the epiphysis.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">The diaphysis of a long bone contains ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>the metaphysis</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>fat stores in red marrow</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>spongy bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>compact bone</li></ul>
+        <div class="qexp">The walls of the <strong>diaphysis</strong> are composed of dense, hard <strong>compact bone</strong>. The hollow interior (medullary cavity) is filled with yellow marrow.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The outer membrane covering a bone is called the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>periosteum</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>epiphysis</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>endosteum</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>diaphysis</li></ul>
+        <div class="qexp">The <strong>periosteum</strong> is the fibrous membrane covering the outer surface of bone. It contains blood vessels, nerves, and osteoblasts for growth and repair.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which of the following two cell types cannot undergo mitosis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>osteoblasts and osteoclasts</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>osteocytes and osteoclasts</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>osteoblasts and osteocytes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>osteogenic cells and osteoclasts</li></ul>
+        <div class="qexp"><strong>Osteocytes</strong> are mature cells trapped in lacunae that cannot divide. <strong>Osteoclasts</strong> are derived from monocytes and are terminally differentiated. Only osteogenic cells have high mitotic activity.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which of the following cell types does NOT originate from osteogenic cells?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>osteoblasts</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>osteoclasts</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>osteocytes</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>osteoprogenitor cells</li></ul>
+        <div class="qexp"><strong>Osteoclasts</strong> are derived from monocytes/macrophages (hematopoietic lineage), NOT from osteogenic cells. Osteoblasts and osteocytes both originate from osteogenic cells.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">6</span><span class="qt-inner">Which of the following is found in both compact AND cancellous bone?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Haversian systems</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Haversian canals</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>lamellae in concentric rings</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>lacunae</li></ul>
+        <div class="qexp"><strong>Lacunae</strong> (spaces housing osteocytes) are found in both compact and spongy bone. Haversian systems and concentric lamellae are features unique to compact bone.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">Which of the following is found ONLY in cancellous bone?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>canaliculi</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Volkmann's canals</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>trabeculae</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>calcium salts</li></ul>
+        <div class="qexp"><strong>Trabeculae</strong> — the lattice-like network of matrix spikes — are found only in spongy (cancellous) bone. They form along lines of stress to provide strength while keeping the bone lightweight.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">8</span><span class="qt-inner">The nutrient foramen is an example of which type of bone marking?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>a hole</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>a facet</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>a canal</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>a fissure</li></ul>
+        <div class="qexp">A <strong>foramen</strong> is classified as a <strong>hole</strong> — an opening in bone through which blood vessels and nerves pass. The nutrient foramen allows an artery to enter the bone.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">9</span><span class="qt-inner">Why does cartilage heal slowly compared to bone?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>cartilage eventually develops into bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>cartilage is semi-solid and flexible</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>cartilage does not have a blood supply</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ossification replaces all cartilage with bone</li></ul>
+        <div class="qexp">Cartilage is <strong>avascular</strong> — it does not have a blood supply. It relies on diffusion for nutrients and waste removal, which severely limits its ability to heal after injury.</div></div>
+    </div>
+    <div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 9 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Section 6.2</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Section 6.4 →</button></div>
+</div>
+
+<!-- PANEL 4: 6.4 BONE FORMATION AND DEVELOPMENT -->
+<div class="panel" id="p4">
+  <div class="hero hero-amber"><div class="h-crumb">Development &amp; Repair · <span>Section 6.4</span></div><div class="h-title">Bone Formation &amp; Development</div><div class="h-desc">Bone is a replacement tissue; that is, it uses a model tissue on which to lay down its mineral matrix. Every bone in your body formed through one of two ossification pathways — intramembranous or endochondral.</div><div class="h-meta"><div class="h-chip">⏱ ~35 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the function of cartilage</li>
+      <li>List the steps of intramembranous ossification</li>
+      <li>List the steps of endochondral ossification</li>
+      <li>Explain the growth activity at the epiphyseal plate</li>
+      <li>Compare and contrast the processes of modeling and remodeling</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Ossification</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Bone formation — the process by which osteoblasts lay down new bone tissue.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Intramembranous Ossification</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Process by which bone forms directly from mesenchymal tissue. Produces flat bones of the skull and clavicles.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Endochondral Ossification</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Process in which bone forms by replacing hyaline cartilage. Produces most bones of the skeleton.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Epiphyseal Plate</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Sheet of hyaline cartilage in the metaphysis of an immature bone; replaced by bone tissue as the organ grows in length.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Epiphyseal Line</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Completely ossified remnant of the epiphyseal plate; indicates that bone growth in length has stopped.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteoid</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Uncalcified bone matrix secreted by osteoblasts before mineralization occurs.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.4</div>
+      <div class="sh2">Cartilage Templates</div>
+      <p class="prose">Bone is a replacement tissue; that is, it uses a model tissue on which to lay down its mineral matrix. For skeletal development, the most common template is cartilage. During fetal development, a framework is laid down that determines where bones will form. This framework is a flexible, semi-solid matrix produced by chondroblasts and consists of hyaluronic acid, chondroitin sulfate, collagen fibers, and water. As the matrix becomes calcified, nutrients can no longer reach the chondrocytes, and cartilage is gradually replaced by bone.</p>
+      <div class="sh3">Intramembranous Ossification</div>
+      <p class="prose">During <strong>intramembranous ossification</strong>, compact and spongy bone develops directly from sheets of mesenchymal (undifferentiated) connective tissue. The flat bones of the face, most of the cranial bones, and the clavicles are formed via intramembranous ossification. The process begins when mesenchymal cells in the embryonic skeleton gather together and begin to differentiate into specialized cells. Some of these cells differentiate into capillaries; others change their shape and become osteogenic cells and then osteoblasts. The osteoblasts secrete <strong>osteoid</strong>, uncalcified matrix, which calcifies within a few days as mineral salts are deposited on it. Once entrapped, the osteoblasts become osteocytes.</p>
+      <div class="sh3">Endochondral Ossification</div>
+      <p class="prose">In <strong>endochondral ossification</strong>, bone develops by replacing hyaline cartilage. Cartilage does not become bone. Instead, cartilage serves as a template to be completely replaced by new bone. Endochondral ossification takes much longer than intramembranous ossification. Bones at the base of the skull and long bones form via endochondral ossification. In a long bone, at about 6 to 8 weeks after conception, some of the mesenchymal cells differentiate into chondrocytes that form the cartilaginous skeletal precursor of the bones. Soon after, the perichondrium that surrounds the cartilage model becomes vascularized, transforms into the periosteum, and the first bone collar (primary ossification center) develops.</p>
+      <div class="sh3">How Bones Grow in Length</div>
+      <p class="prose">The <strong>epiphyseal plate</strong> is the area of growth in a long bone. It is a layer of hyaline cartilage where ossification occurs in immature bones. The plate has four zones:</p>
+      <table class="dt">
+        <tr><th>Zone</th><th>Description</th></tr>
+        <tr><td><strong>Reserve zone</strong></td><td>Region closest to the epiphysis; anchors the plate to the osseous tissue of the epiphysis</td></tr>
+        <tr><td><strong>Proliferative zone</strong></td><td>Region where chondrocytes rapidly divide to make new cartilage, replacing old chondrocytes that die at the diaphyseal end</td></tr>
+        <tr><td><strong>Zone of maturation and hypertrophy</strong></td><td>Region where chondrocytes grow in size (hypertrophy) and the matrix begins to calcify</td></tr>
+        <tr><td><strong>Zone of calcified matrix</strong></td><td>Region closest to the diaphysis; cartilage matrix is fully calcified and replaced by bone tissue</td></tr>
+      </table>
+      <div class="sh3">How Bones Grow in Diameter</div>
+      <p class="prose">While bones are increasing in length, they are also increasing in diameter; growth in diameter can continue even after longitudinal growth ceases. This is called <strong>appositional growth</strong>. Osteoclasts resorb old bone that lines the medullary cavity, while osteoblasts, via intramembranous ossification, produce new bone tissue beneath the periosteum. The erosion of old bone along the medullary cavity and the deposition of new bone beneath the periosteum not only increase the diameter of the diaphysis but also increase the diameter of the medullary cavity.</p>
+      <div class="sh3">Bone Remodeling</div>
+      <p class="prose">The process by which matrix is resorbed on one surface of a bone and deposited on another is known as bone <strong>modeling</strong>. <strong>Remodeling</strong> is the process by which osteoclasts resorb old or damaged bone at the same time as and on the same surface where osteoblasts form new bone to replace what is resorbed. Approximately 5 to 10 percent of the skeleton is remodeled annually.</p>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.4. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Bone Growth Timeline</div>
+      <div class="graph-box"><div class="graph-title">Long Bone Length as % of Adult Length by Age</div><div class="graph-cap">Rapid fetal/infant growth, adolescent growth spurt, then plateau when epiphyseal plates close (~18–21 years)</div><div class="graph-wrap"><canvas id="chartL4"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">In what ways do intramembranous and endochondral ossification differ? What types of bones does each process produce?</div>
+      <textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd4">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap4" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.4 Quiz — Bone Formation &amp; Development</h3><p>6 questions</p></div></div>
+    <div id="q4">
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Why do osteocytes spread out during intramembranous ossification?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They develop from mesenchymal cells.</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are surrounded by osteoid.</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They travel through capillaries.</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>As osteoid is secreted around them, the osteoblasts become trapped and differentiate into osteocytes.</li></ul>
+        <div class="qexp">As osteoblasts secrete osteoid, they become trapped in the calcifying matrix and differentiate into <strong>osteocytes</strong> — spreading out as the ossification center expands outward.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In endochondral ossification, what happens to the chondrocytes?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They develop into osteocytes.</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They die in the calcified matrix, creating the medullary cavity.</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They grow and form the periosteum.</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They group together to form an ossification center.</li></ul>
+        <div class="qexp">In endochondral ossification, chondrocytes in the center of the cartilage model hypertrophy (enlarge) and then <strong>die</strong> as the matrix calcifies around them. This leaves cavities that form the beginnings of the medullary cavity.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The flat bones of the skull are formed by ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>endochondral ossification of the metatarsals</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>endochondral ossification of the femur template</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>intramembranous ossification of the ribs</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>intramembranous ossification from mesenchymal tissue</li></ul>
+        <div class="qexp">The flat bones of the skull and the clavicles form via <strong>intramembranous ossification</strong> — bone develops directly from mesenchymal connective tissue without a cartilage template.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Bones grow in length due to activity at the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>epiphyseal plate</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>perichondrium</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>periosteum</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>medullary cavity</li></ul>
+        <div class="qexp">The <strong>epiphyseal plate</strong> (growth plate) is the area of growth in a long bone. Chondrocytes in the proliferative zone divide to produce new cartilage, which is then replaced by bone at the diaphyseal side.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Bones grow in diameter due to bone deposition ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>in the medullary cavity</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>beneath the periosteum</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>in the epiphyseal plate</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>at the metaphysis</li></ul>
+        <div class="qexp">Appositional growth increases bone diameter by depositing new bone <strong>beneath the periosteum</strong> while osteoclasts resorb old bone along the medullary cavity.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">6</span><span class="qt-inner">What is the correct order of the zones of the epiphyseal plate, starting from the epiphysis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>proliferation, reserve, maturation, calcification</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>maturation, proliferation, reserve, calcification</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>reserve, proliferation, maturation, calcification</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>calcification, reserve, proliferation, maturation</li></ul>
+        <div class="qexp">Starting from the epiphysis: <strong>reserve zone</strong> (anchors plate) → <strong>proliferative zone</strong> (new chondrocytes) → <strong>zone of maturation and hypertrophy</strong> (cells enlarge) → <strong>zone of calcified matrix</strong> (replaced by bone).</div></div>
+    </div>
+    <div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 6 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Section 6.3</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Section 6.5 →</button></div>
+</div>
+
+<!-- PANEL 5: 6.5 FRACTURES: BONE REPAIR -->
+<div class="panel" id="p5">
+  <div class="hero hero-amber"><div class="h-crumb">Development &amp; Repair · <span>Section 6.5</span></div><div class="h-title">Fractures: Bone Repair</div><div class="h-desc">A fracture is a broken bone. It will heal whether or not a physician resets it in its anatomical position. If it is not reset correctly, the healing process will keep the bone in its deformed position.</div><div class="h-meta"><div class="h-chip">⏱ ~25 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Differentiate among the common types of fractures</li>
+      <li>Describe the steps involved in bone repair</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Fracture</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">A broken bone.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Closed Reduction</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Manual manipulation of a broken bone to set it into its natural position without surgery.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Open Reduction</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Surgical exposure of a bone to reset a fracture.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Fracture Hematoma</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Blood clot that forms at the site of a broken bone; the first step in fracture repair.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">External Callus</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Collar of hyaline cartilage and bone that forms around the outside of a fracture.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Internal Callus</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Fibrocartilaginous matrix, in the endosteal region, between the two ends of a broken bone.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.5</div>
+      <div class="sh2">Types of Fractures</div>
+      <p class="prose">A <strong>fracture</strong> is a broken bone. It will heal whether or not a physician resets it in its anatomical position. If it is not reset correctly, the healing process will keep the bone in its deformed position. When a broken bone is manipulated and set into its natural position without surgery, the procedure is called a <strong>closed reduction</strong>. <strong>Open reduction</strong> requires surgery to expose the fracture and reset the bone. While some fractures can be minor, others are quite severe and result in grave complications.</p>
+      <table class="dt">
+        <tr><th>Fracture Type</th><th>Description</th></tr>
+        <tr><td><strong>Transverse</strong></td><td>Occurs straight across the long axis of the bone</td></tr>
+        <tr><td><strong>Oblique</strong></td><td>Occurs at an angle that is not perpendicular to the bone's axis</td></tr>
+        <tr><td><strong>Spiral</strong></td><td>Bone segments are pulled apart as a result of a twisting motion</td></tr>
+        <tr><td><strong>Comminuted</strong></td><td>Several breaks result in many small pieces between two large segments</td></tr>
+        <tr><td><strong>Impacted</strong></td><td>One fragment is driven into the other, usually the result of compression</td></tr>
+        <tr><td><strong>Greenstick</strong></td><td>A partial fracture in which only one side of the bone is broken</td></tr>
+        <tr><td><strong>Open (Compound)</strong></td><td>A fracture in which at least one end of the broken bone tears through the skin; carries a high risk of infection</td></tr>
+        <tr><td><strong>Closed (Simple)</strong></td><td>A fracture in which the skin remains intact</td></tr>
+      </table>
+      <div class="sh3">Bone Repair</div>
+      <p class="prose">When a bone breaks, blood flows from any vessel torn by the fracture. These vessels could be in the periosteum, osteons, and/or medullary cavity. The blood begins to clot, and about six to eight hours after the fracture, the clotting blood has formed a <strong>fracture hematoma</strong>. The disruption of blood flow to the bone results in the death of bone cells around the fracture.</p>
+      <table class="dt">
+        <tr><th>Stage</th><th>Time</th><th>Process</th></tr>
+        <tr><td><strong>1. Fracture Hematoma</strong></td><td>6–8 hours</td><td>Blood clots at the fracture site; bone cells around the break die due to disrupted blood supply</td></tr>
+        <tr><td><strong>2. Callus Formation</strong></td><td>~48 hours</td><td>Internal callus forms from endosteal cells; external callus forms from periosteal cells; both contain fibrocartilage and hyaline cartilage</td></tr>
+        <tr><td><strong>3. Cartilage Replacement</strong></td><td>Weeks</td><td>Osteoclasts resorb dead bone; osteogenic cells differentiate into osteoblasts that replace cartilaginous callus with trabecular bone</td></tr>
+        <tr><td><strong>4. Remodeling</strong></td><td>Months–years</td><td>Compact bone replaces spongy bone; external swelling is remodeled until no trace of fracture remains</td></tr>
+      </table>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.5. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Fracture Healing Timeline</div>
+      <div class="graph-box"><div class="graph-title">Bone Repair Stages — Relative Activity Over Time</div><div class="graph-cap">Timeline of the four healing stages after a typical closed long bone fracture</div><div class="graph-wrap"><canvas id="chartL5"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">What is the difference between closed reduction and open reduction? In what type of fracture would closed reduction most likely occur? In what type of fracture would open reduction most likely occur?</div>
+      <textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd5">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap5" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.5 Quiz — Fractures: Bone Repair</h3><p>5 questions</p></div></div>
+    <div id="q5">
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A fracture can be classified as both ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>open and closed</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>open and transverse</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>transverse and greenstick</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>greenstick and comminuted</li></ul>
+        <div class="qexp">A fracture can be both <strong>open (compound)</strong> and a specific shape type (like <strong>transverse</strong>). Open/closed describes whether skin is broken; transverse/oblique/spiral describes the break pattern. A fracture can't be both open AND closed simultaneously.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">How can a fractured diaphysis release fat globules into the blood?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The fracture pierces through subcutaneous fat.</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The yellow marrow within the diaphysis is exposed and can enter damaged blood vessels.</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The body releases fat in response to trauma.</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Red marrow releases fat during hematopoiesis.</li></ul>
+        <div class="qexp">The medullary cavity of the diaphysis contains <strong>yellow marrow</strong> (fat). When fractured, this fat can enter torn blood vessels and potentially cause a fat embolism — a serious complication.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">In a compound fracture, ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>the break occurs at an angle</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>the skin is not torn or broken</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>one bone fragment is driven into another</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the broken bone pierces the skin</li></ul>
+        <div class="qexp">A <strong>compound (open) fracture</strong> is one in which at least one end of the broken bone tears through the skin, carrying a high risk of infection.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">The internal and external calli are eventually replaced by ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>hyaline cartilage</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>trabecular bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>osteogenic cells</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>osteoclasts</li></ul>
+        <div class="qexp">During Stage 3 of fracture repair, the cartilaginous calli are replaced by <strong>trabecular (spongy) bone</strong>, which is later remodeled into compact bone during Stage 4.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">During fracture repair, the first type of bone to form is ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>compact bone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>lamellar bone</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>spongy bone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>dense irregular bone</li></ul>
+        <div class="qexp"><strong>Spongy (trabecular) bone</strong> forms first during fracture repair, replacing the cartilaginous callus. Compact bone then replaces spongy bone during the final remodeling stage.</div></div>
+    </div>
+    <div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Section 6.4</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Section 6.6 →</button></div>
+</div>
+
+<!-- PANEL 6: 6.6 EXERCISE, NUTRITION, HORMONES, AND BONE TISSUE -->
+<div class="panel" id="p6">
+  <div class="hero hero-bone"><div class="h-crumb">Regulation · <span>Section 6.6</span></div><div class="h-title">Exercise, Nutrition, Hormones &amp; Bone Tissue</div><div class="h-desc">Mechanical stress stimulates the deposition of mineral salts and collagen fibers within bone. Without exercise, bones lose mass — astronauts can lose 1–2% of bone mass per month in space.</div><div class="h-meta"><div class="h-chip">⏱ ~30 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe the effect that exercise has on bone tissue</li>
+      <li>List the nutrients that affect bone health</li>
+      <li>Discuss the role hormones play in bone tissue</li>
+      <li>Describe how an imbalance of hormones and minerals can affect bone tissue</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Osteoporosis</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Disease characterized by a decrease in bone mass; occurs when the rate of bone resorption exceeds the rate of bone formation.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Calcitriol</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">The active form of vitamin D; essential for calcium absorption in the small intestine.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.6</div>
+      <div class="sh2">Exercise and Bone Tissue</div>
+      <p class="prose">During long space missions, astronauts can lose approximately 1 to 2 percent of their bone mass per month. This loss of bone mass is thought to be caused by the lack of mechanical stress on astronaut's bones due to the low gravitational forces in space. Mechanical stress stimulates the deposition of mineral salts and collagen fibers within bones. The internal and external structure of a bone will change as stress increases or decreases so that the bone is an ideal size and weight for the amount of activity it endures. That is why regular weight-bearing exercise is so critical to maintaining bone health.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">Wolff's Law</div><div class="cx">Bone adapts to the loads placed upon it. When you increase loading on a bone (e.g., weight-bearing exercise), the bone remodels itself over time to become stronger to resist that sort of loading. Conversely, if loading decreases (bed rest, space flight), bone becomes weaker.</div></div></div>
+      <div class="sh3">Nutrition and Bone Tissue</div>
+      <p class="prose">The vitamins and minerals contained in all of the food we consume are important for all of our organ systems. However, there are certain nutrients that affect bone health.</p>
+      <table class="dt">
+        <tr><th>Nutrient</th><th>Role in Bone Health</th></tr>
+        <tr><td><strong>Calcium</strong></td><td>Forms the mineral crystals (hydroxyapatite) that give bone its hardness. Cannot be absorbed without vitamin D.</td></tr>
+        <tr><td><strong>Vitamin D</strong></td><td>Essential for calcium absorption from the small intestine. Synthesized in skin (UV light) and activated by liver and kidneys to form calcitriol.</td></tr>
+        <tr><td><strong>Vitamin K</strong></td><td>Supports mineralization of the bone matrix</td></tr>
+        <tr><td><strong>Magnesium</strong></td><td>Over 60% of body's magnesium is in the skeleton; supports bone crystal formation</td></tr>
+        <tr><td><strong>Fluoride</strong></td><td>Strengthens bone mineral crystals</td></tr>
+        <tr><td><strong>Omega-3 fatty acids</strong></td><td>Reduce inflammation affecting osteoblast activity</td></tr>
+      </table>
+      <div class="sh3">Hormones and Bone Tissue</div>
+      <p class="prose">Several hormones affect bone tissue. <strong>Growth hormone</strong> increases bone length and density during childhood and adolescence. <strong>Sex hormones</strong> (estrogen and testosterone) promote bone growth during puberty, causing the adolescent growth spurt, and maintain bone density in adults. <strong>Calcitriol</strong> (active vitamin D) stimulates calcium absorption from the intestines. <strong>Parathyroid hormone (PTH)</strong> stimulates osteoclasts to release calcium from bone when blood calcium is low. <strong>Calcitonin</strong> opposes PTH by inhibiting osteoclast activity when blood calcium is high.</p>
+      <div class="sh3">Aging and the Skeletal System</div>
+      <p class="prose"><strong>Osteoporosis</strong> is a disease characterized by a decrease in bone mass that occurs when the rate of bone resorption exceeds the rate of bone formation. Osteoporosis is more common in women, but men can develop it too. Women lose bone mass more rapidly after menopause (~age 50) due to the decline in estrogen. Exercise, calcium, and vitamin D are the three best tools for preventing and slowing osteoporosis.</p>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.6. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Age vs. Bone Mass</div>
+      <div class="graph-box"><div class="graph-title">Bone Mass Changes Across the Lifespan — Male vs. Female</div><div class="graph-cap">Peak bone mass at ~30 years. Note accelerated female decline after menopause (~age 50) due to estrogen loss.</div><div class="graph-wrap"><canvas id="chartL6"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">During the early years of space exploration, astronauts who had been floating in space would return to earth showing significant bone loss. Discuss how this might happen and what could be done to alleviate this condition.</div>
+      <textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd6">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap6" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.6 Quiz — Exercise, Nutrition, Hormones &amp; Bone</h3><p>5 questions</p></div></div>
+    <div id="q6">
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Wolff's law would predict that a right-handed baseball pitcher would ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>have thicker bones in the right arm compared to the left</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>have thicker leg bones from running</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>develop thicker bones at fracture sites</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>develop thicker bones during bed rest</li></ul>
+        <div class="qexp"><strong>Wolff's law</strong> states that bone adapts to the loads placed upon it. The repeated mechanical stress of pitching with the right arm would stimulate bone deposition, making those bones thicker and stronger than the left arm.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Calcium cannot be absorbed from the small intestine without ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>vitamin D</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>vitamin K</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>calcitonin</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>fluoride</li></ul>
+        <div class="qexp"><strong>Vitamin D</strong> (calcitriol, its active form) is essential for calcium absorption from the small intestine. Without it, dietary calcium passes through unabsorbed.</div></div>
+      <div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which food would be best to eat to improve bone health?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>carrots</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>liver</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>leafy greens</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>oranges</li></ul>
+        <div class="qexp"><strong>Leafy greens</strong> are rich in calcium, vitamin K, and magnesium — all critical nutrients for bone health and mineralization.</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">The adolescent growth spurt is initiated primarily by ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>estrogen and testosterone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>calcitonin and calcitriol</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>growth hormone and parathyroid hormone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>thyroxine and progesterone</li></ul>
+        <div class="qexp"><strong>Sex hormones (estrogen and testosterone)</strong> promote rapid bone growth during puberty, causing the adolescent growth spurt. They also eventually cause the epiphyseal plates to close, stopping longitudinal growth.</div></div>
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">5</span><span class="qt-inner">The two hormones that have opposing effects on bone are ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>estrogen and testosterone</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>calcitonin and calcitriol</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>estrogen and progesterone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>calcitonin and parathyroid hormone</li></ul>
+        <div class="qexp"><strong>Calcitonin</strong> and <strong>parathyroid hormone (PTH)</strong> have opposing effects: PTH stimulates osteoclasts (bone resorption, releasing calcium), while calcitonin inhibits osteoclasts (bone preservation, lowering blood calcium).</div></div>
+    </div>
+    <div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 5 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Section 6.5</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Section 6.7 →</button></div>
+</div>
+
+<!-- PANEL 7: 6.7 CALCIUM HOMEOSTASIS -->
+<div class="panel" id="p7">
+  <div class="hero hero-bone"><div class="h-crumb">Regulation · <span>Section 6.7</span></div><div class="h-title">Calcium Homeostasis</div><div class="h-desc">Calcium is not only the most abundant mineral in bone, it is also the most abundant mineral in the human body. The body carefully regulates blood calcium levels through the interactions of multiple organ systems.</div><div class="h-meta"><div class="h-chip">⏱ ~20 min</div><div class="h-chip">📖 OpenStax A&amp;P 2e, 6.7</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe the roles of the skeletal system in calcium homeostasis</li>
+      <li>Explain how hypocalcemia and hypercalcemia affect the body</li>
+      <li>Describe the hormonal regulation of blood calcium levels</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+      <div class="vocab-grid">
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hypocalcemia</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Condition characterized by abnormally low levels of calcium in the blood.</div></div></div></div>
+        <div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Hypercalcemia</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Condition characterized by abnormally high levels of calcium in the blood.</div></div></div></div>
+      </div>
+    </div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, 6.7</div>
+      <div class="sh2">Calcium Homeostasis</div>
+      <p class="prose">The normal level of calcium in the blood is about 10 mg/dL. When calcium levels drop below this threshold, the body enters a state of <strong>hypocalcemia</strong>. Hypocalcemia can have adverse effects on numerous body systems, including impaired blood coagulation, heart irregularities, muscle contraction difficulties, and weakened bones.</p>
+      <p class="prose">In <strong>hypercalcemia</strong>, abnormally high levels of calcium make the nervous system underactive, resulting in lethargy, sluggish reflexes, constipation and loss of appetite, confusion, and in severe cases, coma.</p>
+      <div class="sh3">Hormonal Regulation of Blood Calcium</div>
+      <p class="prose">Three hormones work together to maintain calcium homeostasis:</p>
+      <table class="dt">
+        <tr><th>Hormone</th><th>Released When</th><th>Effect on Bone</th><th>Effect on Blood Calcium</th></tr>
+        <tr><td><strong>Parathyroid Hormone (PTH)</strong></td><td>Blood calcium is LOW</td><td>Stimulates osteoclasts → bone resorption</td><td>INCREASES blood calcium</td></tr>
+        <tr><td><strong>Vitamin D (Calcitriol)</strong></td><td>Activated by PTH signaling</td><td>Enhances calcium absorption from intestines</td><td>INCREASES blood calcium</td></tr>
+        <tr><td><strong>Calcitonin</strong></td><td>Blood calcium is HIGH</td><td>Inhibits osteoclasts → reduces resorption</td><td>DECREASES blood calcium</td></tr>
+      </table>
+      <p class="prose">The skeletal, endocrine, digestive, and urinary systems all work together to maintain calcium homeostasis. When blood calcium drops, PTH is released by the parathyroid glands. PTH stimulates osteoclasts to break down bone and release calcium, increases calcium reabsorption in the kidneys, and promotes vitamin D activation, which enhances calcium absorption from the intestines. When blood calcium rises above normal, calcitonin is released by the thyroid gland to inhibit osteoclast activity and reduce calcium reabsorption in the kidneys.</p>
+      <div class="callout key"><div class="ci">🔑</div><div class="cb"><div class="ct">PTH and Calcitonin — A Negative Feedback Loop</div><div class="cx">PTH and calcitonin work as a <strong>negative feedback system</strong> to maintain blood calcium within a narrow range (~10 mg/dL). PTH raises calcium; calcitonin lowers it. Together they ensure that calcium is always available for muscle contraction, nerve signaling, and blood clotting.</div></div></div>
+      <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section 6.7. openstax.org · CC BY 4.0</p>
+    </div>
+    <div class="cs"><div class="eyebrow">Data Interpretation</div><div class="sh2">Calcium Regulation Pathways</div>
+      <div class="graph-box"><div class="graph-title">Blood Calcium Response to PTH vs. Calcitonin</div><div class="graph-cap">Opposing hormonal effects maintain calcium within the homeostatic range</div><div class="graph-wrap"><canvas id="chartL7"></canvas></div></div>
+    </div>
+    <div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint</div><div class="cp-sub">80+ characters required</div></div></div>
+      <div class="cp-question">An individual with very low levels of vitamin D presents complaining of seemingly fragile bones. Explain how low vitamin D and fragile bones might be connected.</div>
+      <textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div>
+      <div class="cp-done" id="cpd7">✅ Unlocked!</div>
+    </div>
+    <div id="quiz-wrap7" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.7 Quiz — Calcium Homeostasis</h3><p>3 questions</p></div></div>
+    <div id="q7">
+      <div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Calcium imbalance primarily affects the function of the ________.</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>skeletal system</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>endocrine system</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>digestive system</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>nervous system</li></ul>
+        <div class="qexp">Calcium imbalance most immediately affects the <strong>nervous system</strong>. Hypocalcemia causes overactive nerves (spasms, tingling), while hypercalcemia causes an underactive nervous system (lethargy, confusion, coma).</div></div>
+      <div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following does NOT play a role in calcium homeostasis?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>thyroxine</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>calcitonin</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>parathyroid hormone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>vitamin D</li></ul>
+        <div class="qexp"><strong>Thyroxine</strong> is a thyroid hormone that regulates metabolism — it does not directly participate in calcium homeostasis. Calcitonin, PTH, and vitamin D are the three key regulators of blood calcium.</div></div>
+      <div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">When blood calcium levels are elevated, which hormone is released?</span></div>
+        <ul class="qopts"><li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>thyroxine</li><li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>calcitonin</li><li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>parathyroid hormone</li><li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>vitamin D</li></ul>
+        <div class="qexp"><strong>Calcitonin</strong> is released by the thyroid gland when blood calcium is elevated. It inhibits osteoclast activity and reduces calcium reabsorption in the kidneys, lowering blood calcium back to normal.</div></div>
+    </div>
+    <div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 3 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Section 6.6</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Chapter Review →</button></div>
+</div>
+
+<!-- PANEL 8: CHAPTER REVIEW & PRACTICE TEST -->
+<div class="panel" id="p8">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 6</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review covering all 7 sections of Chapter 6: Bone Tissue and the Skeletal System. Test your knowledge with all 39 OpenStax review questions.</div><div class="h-meta"><div class="h-chip">📝 39 Questions</div><div class="h-chip">⏱ ~45 min</div><div class="h-chip">📊 Comprehensive</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter 6 at a Glance</div>
+      <table class="dt">
+        <tr><th>Section</th><th>Key Takeaways</th></tr>
+        <tr><td><strong>6.1</strong></td><td>Five functions: support, protection, movement, mineral/energy storage, hematopoiesis</td></tr>
+        <tr><td><strong>6.2</strong></td><td>Five bone shapes: long, short, flat, irregular, sesamoid</td></tr>
+        <tr><td><strong>6.3</strong></td><td>Diaphysis/epiphysis, 4 bone cell types, osteons (compact), trabeculae (spongy), bone markings</td></tr>
+        <tr><td><strong>6.4</strong></td><td>Intramembranous vs. endochondral ossification, epiphyseal plate zones, appositional growth</td></tr>
+        <tr><td><strong>6.5</strong></td><td>8 fracture types, 4-stage repair: hematoma → callus → trabecular bone → remodeling</td></tr>
+        <tr><td><strong>6.6</strong></td><td>Wolff's law, calcium + vitamin D, hormones (GH, sex hormones, PTH, calcitonin), osteoporosis</td></tr>
+        <tr><td><strong>6.7</strong></td><td>Calcium homeostasis: PTH raises, calcitonin lowers; hypocalcemia vs. hypercalcemia</td></tr>
+      </table>
+    </div>
+    <div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required to unlock the practice test</div></div></div>
+      <div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important or surprising. Explain why.</div>
+      <textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea>
+      <div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 100 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Practice Test →</button></div>
+      <div class="cp-done" id="cpd8">✅ Practice test unlocked!</div>
+    </div>
+    <div id="quiz-wrap8" style="display:none;">
+    <div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 6 Practice Test</h3><p>39 questions · All OpenStax Review Questions</p></div></div>
+    <div id="q8">
+      <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 39 review questions from OpenStax A&amp;P 2e, Chapter 6. Questions cover sections 6.1 through 6.7. Take your time — there is no time limit.</div></div></div>
+    </div>
+    <div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 39 correct</div></div>
+    </div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Section 6.7</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Bone Tissue & the Skeletal System',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:9,lessonCount:8,cpMin:80,lessons:['Overview','6.1 Functions','6.2 Classification','6.3 Bone Structure','6.4 Formation & Development','6.5 Fractures','6.6 Exercise & Nutrition','6.7 Calcium Homeostasis','Chapter Review']};
+
+// Override cpMin for panel 8 (100 chars for the final checkpoint)
+const origCpCheck=window.cpCheck;
+window.cpCheck=function(id){
+  const min=id===8?100:80;
+  const ta=document.getElementById('cpt'+id);
+  const n=ta.value.length;
+  const counter=document.getElementById('cpc'+id);
+  const span=document.getElementById('cpn'+id);
+  const btn=document.getElementById('cpb'+id);
+  span.textContent=n;
+  counter.querySelector('.cp-counter')||null;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+
+function initCharts(){
+  // Chart L1: Skeletal Functions
+  new Chart(document.getElementById('chartL1'),{type:'bar',data:{labels:['Support','Protection','Movement','Mineral Storage','Hematopoiesis','Energy Storage'],datasets:[{label:'Mechanical',data:[9,9,10,0,0,0],backgroundColor:'rgba(11,143,140,.7)',borderRadius:4},{label:'Metabolic',data:[0,0,0,8,9,6],backgroundColor:'rgba(232,146,14,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,max:10,title:{display:true,text:'Relative Importance',font:{size:11}}}}}});
+
+  // Chart L2: Bone Classification
+  new Chart(document.getElementById('chartL2'),{type:'doughnut',data:{labels:['Long (90)','Short (30)','Flat (44)','Irregular (40)','Sesamoid (2+)'],datasets:[{data:[90,30,44,40,2],backgroundColor:['#0b8f8c','#e8920e','#3a86e0','#6c3fa0','#c0392b']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+
+  // Chart L3: Compact vs Spongy
+  new Chart(document.getElementById('chartL3'),{type:'radar',data:{labels:['Density','Strength','Weight','Blood Supply','Flexibility','Marrow Content'],datasets:[{label:'Compact Bone',data:[10,10,8,6,2,2],borderColor:'#0b8f8c',backgroundColor:'rgba(11,143,140,.15)',pointBackgroundColor:'#0b8f8c'},{label:'Spongy Bone',data:[3,5,3,8,7,9],borderColor:'#e8920e',backgroundColor:'rgba(232,146,14,.15)',pointBackgroundColor:'#e8920e'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{r:{beginAtZero:true,max:10,ticks:{display:false}}}}});
+
+  // Chart L4: Bone Growth Timeline
+  new Chart(document.getElementById('chartL4'),{type:'line',data:{labels:['Birth','2','5','10','13','16','18','21','30','50','70'],datasets:[{label:'% of Adult Length',data:[30,50,65,78,85,95,99,100,100,100,100],borderColor:'#0b8f8c',backgroundColor:'rgba(11,143,140,.1)',fill:true,tension:.4,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Age (years)',font:{size:11}}},y:{beginAtZero:true,max:110,title:{display:true,text:'% of Adult Length',font:{size:11}}}}}});
+
+  // Chart L5: Fracture Repair Timeline
+  new Chart(document.getElementById('chartL5'),{type:'line',data:{labels:['0h','8h','48h','1wk','2wk','4wk','8wk','12wk','6mo','1yr'],datasets:[{label:'Hematoma',data:[0,10,8,4,1,0,0,0,0,0],borderColor:'#c0392b',backgroundColor:'rgba(192,57,43,.1)',fill:true,tension:.3},{label:'Callus Formation',data:[0,0,3,8,10,8,4,2,0,0],borderColor:'#e8920e',backgroundColor:'rgba(232,146,14,.1)',fill:true,tension:.3},{label:'Trabecular Bone',data:[0,0,0,1,3,6,9,10,8,4],borderColor:'#0b8f8c',backgroundColor:'rgba(11,143,140,.1)',fill:true,tension:.3},{label:'Remodeling',data:[0,0,0,0,0,1,3,5,8,10],borderColor:'#6c3fa0',backgroundColor:'rgba(108,63,160,.1)',fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10}}}},scales:{x:{title:{display:true,text:'Time After Fracture',font:{size:11}}},y:{beginAtZero:true,max:12,title:{display:true,text:'Relative Activity',font:{size:11}}}}}});
+
+  // Chart L6: Bone Mass vs Age
+  new Chart(document.getElementById('chartL6'),{type:'line',data:{labels:['10','15','20','25','30','35','40','45','50','55','60','65','70','75','80'],datasets:[{label:'Male',data:[45,65,85,95,100,99,97,95,92,89,86,82,78,74,70],borderColor:'#3a86e0',backgroundColor:'rgba(58,134,224,.1)',fill:true,tension:.4,pointRadius:3},{label:'Female',data:[45,68,88,96,100,98,96,93,85,75,68,62,57,53,50],borderColor:'#c0392b',backgroundColor:'rgba(192,57,43,.1)',fill:true,tension:.4,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{title:{display:true,text:'Age (years)',font:{size:11}}},y:{beginAtZero:true,max:110,title:{display:true,text:'Bone Mass (% of peak)',font:{size:11}}}}}});
+
+  // Chart L7: PTH vs Calcitonin
+  new Chart(document.getElementById('chartL7'),{type:'bar',data:{labels:['Low Ca²⁺\n(PTH Active)','Normal\n(~10 mg/dL)','High Ca²⁺\n(Calcitonin Active)'],datasets:[{label:'PTH Activity',data:[10,3,0],backgroundColor:'rgba(192,57,43,.7)',borderRadius:4},{label:'Calcitonin Activity',data:[0,3,10],backgroundColor:'rgba(11,143,140,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,max:12,title:{display:true,text:'Relative Hormone Activity',font:{size:11}}}}}});
+}
+document.addEventListener('DOMContentLoaded',initCharts);
+</script>
+</body>
+</html>
