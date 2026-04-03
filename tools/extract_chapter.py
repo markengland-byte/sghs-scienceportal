@@ -38,6 +38,10 @@ except ImportError:
 # --- CONFIG ---
 LIBRETEXTS_BASE = "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)"
 UNIT_MAP = {
+    1: "01%3A_Levels_of_Organization",
+    2: "01%3A_Levels_of_Organization",
+    3: "01%3A_Levels_of_Organization",
+    4: "01%3A_Levels_of_Organization",
     5: "02%3A_Support_and_Movement",
     6: "02%3A_Support_and_Movement",
     7: "02%3A_Support_and_Movement",
@@ -58,12 +62,16 @@ UNIT_MAP = {
     22: "05%3A_Energy_Maintenance_and_Environmental_Exchange",
     23: "05%3A_Energy_Maintenance_and_Environmental_Exchange",
     24: "05%3A_Energy_Maintenance_and_Environmental_Exchange",
-    25: "06%3A_Human_Development_and_the_Continuity_of_Life",
-    26: "06%3A_Human_Development_and_the_Continuity_of_Life",
-    27: "07%3A_Human_Development_and_the_Continuity_of_Life",
-    28: "07%3A_Human_Development_and_the_Continuity_of_Life",
+    25: "05%3A_Energy_Maintenance_and_Environmental_Exchange",
+    26: "05%3A_Energy_Maintenance_and_Environmental_Exchange",
+    27: "06%3A_Human_Development_and_the_Continuity_of_Life",
+    28: "06%3A_Human_Development_and_the_Continuity_of_Life",
 }
 CHAPTER_TITLES = {
+    1: "01%3A_An_Introduction_to_the_Human_Body",
+    2: "02%3A_The_Chemical_Level_of_Organization",
+    3: "03%3A_The_Cellular_Level_of_Organization",
+    4: "04%3A_The_Tissue_Level_of_Organization",
     5: "05%3A_The_Integumentary_System",
     6: "06%3A_Bone_Tissue_and_the_Skeletal_System",
     7: "07%3A_Axial_Skeleton",
