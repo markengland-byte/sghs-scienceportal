@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOL Prep Teacher Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;color:#0f2240;min-height:100vh}
@@ -132,6 +133,37 @@ tr:hover td{background:#f8fafc}
   .admin-form{flex-direction:column}
   .admin-form .form-group{min-width:100%}
 }
+
+/* Heatmap */
+.heatmap-wrap{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow-x:auto;margin-bottom:24px}
+.heatmap-wrap h3{padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:1rem;font-weight:700;margin:0}
+.heatmap{width:100%;border-collapse:collapse;font-size:.78rem}
+.heatmap th{background:#f8fafc;padding:8px 10px;text-align:center;font-weight:700;color:#64748b;font-size:.7rem;letter-spacing:.5px;text-transform:uppercase;position:sticky;top:0}
+.heatmap th:first-child{text-align:left;min-width:140px}
+.heatmap td{padding:6px 8px;text-align:center;border-top:1px solid #f1f5f9;font-weight:600;font-size:.82rem}
+.heatmap td:first-child{text-align:left;font-weight:500;color:#0f2240}
+.heatmap tr:hover td{background:#f8fafc}
+.hm-cell{display:inline-block;padding:3px 10px;border-radius:4px;min-width:44px;font-weight:700;font-size:.78rem}
+.hm-green{background:#d1fae5;color:#065f46}
+.hm-yellow{background:#fef3c7;color:#92400e}
+.hm-red{background:#fee2e2;color:#991b1b}
+.hm-gray{background:#f1f5f9;color:#94a3b8}
+
+/* Chart containers */
+.chart-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:20px;margin-bottom:24px}
+.chart-card h3{font-size:1rem;font-weight:700;margin-bottom:16px}
+.chart-container{position:relative;height:300px;max-height:400px}
+
+/* Most missed */
+.missed-wrap{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:24px}
+.missed-wrap h3{padding:16px 20px;border-bottom:1px solid #e2e8f0;font-size:1rem;font-weight:700;margin:0}
+.miss-rate{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700}
+.miss-high{background:#fee2e2;color:#991b1b}
+.miss-med{background:#fef3c7;color:#92400e}
+.miss-low{background:#d1fae5;color:#065f46}
+
+/* Student trend chart in modal */
+.trend-container{position:relative;height:200px;margin:16px 0}
 </style>
 </head>
 <body>
@@ -166,6 +198,7 @@ tr:hover td{background:#f8fafc}
   <div class="tab" onclick="showTab('questions',this)">Question Detail</div>
   <div class="tab" onclick="showTab('checkpoints',this)">Checkpoints</div>
   <div class="tab" onclick="showTab('activity',this)">Activity / Time</div>
+  <div class="tab" onclick="showTab('analytics',this)">Analytics</div>
   <div class="tab-sep" id="admin-tab-sep" style="display:none"></div>
   <div class="tab" id="admin-tab" style="display:none" onclick="showTab('admin',this)">Admin</div>
 </div>
@@ -239,6 +272,33 @@ tr:hover td{background:#f8fafc}
         <button class="btn-export" onclick="exportCSV('activity')">Export CSV</button>
       </div>
       <table id="activity-table"><thead><tr><th>Time</th><th>Student</th><th>Class</th><th>Module</th><th>Lesson</th><th>Event</th><th>Duration</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div class="panel" id="tab-analytics">
+    <!-- Standard Mastery Heatmap -->
+    <div class="heatmap-wrap" id="heatmap-section">
+      <h3>Standard Mastery Heatmap</h3>
+      <table class="heatmap" id="heatmap-table">
+        <thead><tr><th>Student</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Class Averages Chart -->
+    <div class="chart-card">
+      <h3>Average Score by Unit</h3>
+      <div class="chart-container"><canvas id="avg-chart"></canvas></div>
+    </div>
+
+    <!-- Most-Missed Questions -->
+    <div class="missed-wrap" id="missed-section">
+      <h3>Most-Missed Questions (Top 20)</h3>
+      <table id="missed-table" style="width:100%;border-collapse:collapse">
+        <thead><tr><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Rank</th><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b">Standard</th><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b">Question</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Times Asked</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Times Missed</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Miss Rate</th></tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 
@@ -458,6 +518,7 @@ function renderAll() {
   renderQuestions();
   renderCheckpoints();
   renderActivity();
+  renderAnalytics();
 }
 
 /* ══════════════════════════════════════════════
@@ -770,6 +831,10 @@ function showStudentDetail(name) {
       html += '<tr><td>' + esc(r.module) + '</td><td>' + esc(r.lesson) + '</td><td>' + r.score + '/' + r.total + '</td><td>' + pctBadge(r.pct) + '</td><td>' + (r.time_on_quiz ? formatDuration(r.time_on_quiz) : '&mdash;') + '</td><td>' + formatTimestamp(r.created_at) + '</td></tr>';
     });
     html += '</tbody></table>';
+    // Score trend chart
+    if (scores.length >= 2) {
+      html += '<div class="trend-container"><canvas id="trend-chart"></canvas></div>';
+    }
   } else {
     html += '<p style="color:#94a3b8;font-size:.85rem">No quiz scores recorded.</p>';
   }
@@ -801,6 +866,70 @@ function showStudentDetail(name) {
 
   document.getElementById('detail-content').innerHTML = html;
   document.getElementById('detail-modal').classList.add('show');
+
+  // Render trend chart if scores exist
+  if (scores.length >= 2) {
+    var trendScores = scores.slice().reverse(); // chronological order
+    var trendLabels = trendScores.map(function(r, i) {
+      var d = new Date(r.created_at);
+      return (d.getMonth() + 1) + '/' + d.getDate();
+    });
+    var trendData = trendScores.map(function(r) { return Number(r.pct) || 0; });
+    var trendColors = trendData.map(function(v) {
+      return v >= 80 ? '#16a34a' : v >= 60 ? '#ca8a04' : '#dc2626';
+    });
+
+    var trendCtx = document.getElementById('trend-chart');
+    if (trendCtx) {
+      new Chart(trendCtx, {
+        type: 'line',
+        data: {
+          labels: trendLabels,
+          datasets: [{
+            label: 'Score %',
+            data: trendData,
+            borderColor: '#0f2240',
+            backgroundColor: 'rgba(15,34,64,.1)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: trendColors,
+            pointBorderColor: trendColors,
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: function(items) {
+                  var idx = items[0].dataIndex;
+                  var r = trendScores[idx];
+                  return (r.lesson || r.module || '').replace(/^SOL Prep\s*[\u2014\u2014-]\s*/i, '');
+                },
+                label: function(ctx) { return ctx.parsed.y + '%'; }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { callback: function(v) { return v + '%'; }, font: { size: 11 } },
+              grid: { color: '#f1f5f9' }
+            },
+            x: {
+              ticks: { font: { size: 10 } },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+  }
 }
 
 function closeDetail() {
@@ -923,6 +1052,231 @@ function csvRow(arr) {
     }
     return s;
   }).join(',') + '\n';
+}
+
+/* ══════════════════════════════════════════════
+   ANALYTICS TAB
+   ══════════════════════════════════════════════ */
+var avgChart = null;
+
+function renderAnalytics() {
+  renderHeatmap();
+  renderAvgChart();
+  renderMostMissed();
+}
+
+/* ── STANDARD MASTERY HEATMAP ── */
+function renderHeatmap() {
+  var detail = DATA.quizDetail;
+  if (!detail.length) {
+    document.getElementById('heatmap-table').querySelector('tbody').innerHTML =
+      '<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:40px">No question data yet.</td></tr>';
+    document.getElementById('heatmap-table').querySelector('thead tr').innerHTML = '<th>Student</th>';
+    return;
+  }
+
+  // Get all standards present in data
+  var stdSet = {};
+  detail.forEach(function(r) {
+    if (r.standard) {
+      var parent = r.standard.replace(/[a-z]$/i, '');
+      stdSet[parent] = true;
+    }
+  });
+  var standards = Object.keys(stdSet).sort();
+
+  if (standards.length === 0) {
+    // Fall back to module-based grouping if no standards tagged
+    document.getElementById('heatmap-table').querySelector('tbody').innerHTML =
+      '<tr><td colspan="2" style="text-align:center;color:#94a3b8;padding:40px">No standard tags on questions. Heatmap requires quiz questions with BIO standard tags.</td></tr>';
+    return;
+  }
+
+  // Build header
+  var thead = '<th>Student</th>';
+  standards.forEach(function(s) { thead += '<th>' + esc(s) + '</th>'; });
+  thead += '<th>Overall</th>';
+  document.getElementById('heatmap-table').querySelector('thead tr').innerHTML = thead;
+
+  // Aggregate: student → standard → { correct, total }
+  var studentData = {};
+  detail.forEach(function(r) {
+    if (!r.standard) return;
+    var parent = r.standard.replace(/[a-z]$/i, '');
+    var name = r.student_name;
+    if (!studentData[name]) studentData[name] = {};
+    if (!studentData[name][parent]) studentData[name][parent] = { correct: 0, total: 0 };
+    studentData[name][parent].total++;
+    var isCorrect = r.is_correct === true || r.is_correct === 'true';
+    if (isCorrect) studentData[name][parent].correct++;
+  });
+
+  var studentNames = Object.keys(studentData).sort();
+  var tbody = '';
+
+  studentNames.forEach(function(name) {
+    tbody += '<tr><td>' + esc(name) + '</td>';
+    var totalCorrect = 0, totalAll = 0;
+
+    standards.forEach(function(s) {
+      var d = studentData[name][s];
+      if (!d || d.total === 0) {
+        tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
+      } else {
+        var pct = Math.round(100 * d.correct / d.total);
+        var cls = pct >= 80 ? 'hm-green' : pct >= 60 ? 'hm-yellow' : 'hm-red';
+        tbody += '<td><span class="hm-cell ' + cls + '">' + pct + '%</span></td>';
+        totalCorrect += d.correct;
+        totalAll += d.total;
+      }
+    });
+
+    // Overall column
+    if (totalAll > 0) {
+      var overall = Math.round(100 * totalCorrect / totalAll);
+      var cls = overall >= 80 ? 'hm-green' : overall >= 60 ? 'hm-yellow' : 'hm-red';
+      tbody += '<td><span class="hm-cell ' + cls + '">' + overall + '%</span></td>';
+    } else {
+      tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
+    }
+
+    tbody += '</tr>';
+  });
+
+  document.getElementById('heatmap-table').querySelector('tbody').innerHTML = tbody;
+}
+
+/* ── AVERAGE SCORE BY UNIT CHART ── */
+function renderAvgChart() {
+  var scores = DATA.scores;
+  if (!scores.length) return;
+
+  // Group by module
+  var moduleData = {};
+  scores.forEach(function(r) {
+    if (!r.module) return;
+    if (!moduleData[r.module]) moduleData[r.module] = { sum: 0, count: 0 };
+    moduleData[r.module].sum += (Number(r.pct) || 0);
+    moduleData[r.module].count++;
+  });
+
+  var labels = Object.keys(moduleData).sort();
+  var avgs = labels.map(function(m) {
+    return Math.round(moduleData[m].sum / moduleData[m].count);
+  });
+
+  // Shorten labels (remove "SOL Prep — " prefix)
+  var shortLabels = labels.map(function(l) {
+    return l.replace(/^SOL Prep\s*[\u2014\u2014-]\s*/i, '');
+  });
+
+  var colors = avgs.map(function(v) {
+    return v >= 80 ? '#16a34a' : v >= 60 ? '#ca8a04' : '#dc2626';
+  });
+
+  var ctx = document.getElementById('avg-chart');
+  if (avgChart) avgChart.destroy();
+
+  avgChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: shortLabels,
+      datasets: [{
+        label: 'Average Score %',
+        data: avgs,
+        backgroundColor: colors,
+        borderRadius: 6,
+        maxBarThickness: 60
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.parsed.y + '% average'; }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: function(v) { return v + '%'; },
+            font: { size: 11 }
+          },
+          grid: { color: '#f1f5f9' }
+        },
+        x: {
+          ticks: {
+            font: { size: 10 },
+            maxRotation: 45,
+            minRotation: 0
+          },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ── MOST-MISSED QUESTIONS ── */
+function renderMostMissed() {
+  var detail = DATA.quizDetail;
+  if (!detail.length) {
+    document.getElementById('missed-table').querySelector('tbody').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:40px">No question data yet.</td></tr>';
+    return;
+  }
+
+  // Aggregate by question text
+  var qMap = {};
+  detail.forEach(function(r) {
+    var key = (r.question_text || '').substring(0, 200);
+    if (!key) return;
+    if (!qMap[key]) qMap[key] = { text: r.question_text, standard: r.standard || '', asked: 0, missed: 0 };
+    qMap[key].asked++;
+    var isCorrect = r.is_correct === true || r.is_correct === 'true';
+    if (!isCorrect) qMap[key].missed++;
+  });
+
+  // Sort by miss rate desc, then by times asked desc
+  var questions = Object.values(qMap)
+    .filter(function(q) { return q.asked >= 2; })  // Only show questions asked 2+ times
+    .map(function(q) {
+      q.missRate = Math.round(100 * q.missed / q.asked);
+      return q;
+    })
+    .sort(function(a, b) {
+      if (b.missRate !== a.missRate) return b.missRate - a.missRate;
+      return b.asked - a.asked;
+    })
+    .slice(0, 20);
+
+  if (questions.length === 0) {
+    document.getElementById('missed-table').querySelector('tbody').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:40px">Not enough data. Questions appear here after being answered by 2+ students.</td></tr>';
+    return;
+  }
+
+  var tbody = '';
+  questions.forEach(function(q, i) {
+    var rateCls = q.missRate >= 60 ? 'miss-high' : q.missRate >= 40 ? 'miss-med' : 'miss-low';
+    var stdParent = q.standard ? q.standard.replace(/[a-z]$/i, '') : '';
+    tbody += '<tr>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9;font-weight:700;color:#64748b;width:40px">#' + (i + 1) + '</td>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9"><span class="badge badge-blue">' + esc(stdParent) + '</span></td>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9;font-size:.85rem;max-width:400px">' + esc(q.text) + '</td>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9;text-align:center">' + q.asked + '</td>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9;text-align:center;color:#dc2626;font-weight:700">' + q.missed + '</td>' +
+      '<td style="padding:10px 14px;border-top:1px solid #f1f5f9;text-align:center"><span class="miss-rate ' + rateCls + '">' + q.missRate + '%</span></td>' +
+      '</tr>';
+  });
+
+  document.getElementById('missed-table').querySelector('tbody').innerHTML = tbody;
 }
 
 /* ══════════════════════════════════════════════
