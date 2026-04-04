@@ -164,6 +164,30 @@ tr:hover td{background:#f8fafc}
 
 /* Student trend chart in modal */
 .trend-container{position:relative;height:200px;margin:16px 0}
+
+/* DSM Mastery Modules */
+.dsm-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-bottom:16px;transition:box-shadow .2s}
+.dsm-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.dsm-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.dsm-card-title{font-weight:700;font-size:1rem;color:#0f2240}
+.dsm-card-meta{font-size:.78rem;color:#64748b;display:flex;gap:12px;flex-wrap:wrap}
+.dsm-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.dsm-q-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:12px}
+.dsm-q-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:#dc2626;letter-spacing:1px;margin-bottom:6px}
+.dsm-q-stem{font-size:.9rem;font-weight:500;color:#0f2240;margin-bottom:10px;line-height:1.6}
+.dsm-q-opts{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.dsm-q-opt{font-size:.84rem;padding:4px 0;color:#374151}
+.dsm-q-opt.correct{color:#16a34a;font-weight:700}
+.dsm-q-exp{font-size:.8rem;color:#64748b;background:#f0fdf4;border-left:3px solid #16a34a;padding:8px 12px;border-radius:0 6px 6px 0;margin-top:6px}
+.dsm-q-diff{font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;display:inline-block}
+.dsm-q-diff.easy{background:#d1fae5;color:#065f46}
+.dsm-q-diff.medium{background:#fef3c7;color:#92400e}
+.dsm-q-diff.hard{background:#fee2e2;color:#991b1b}
+.dsm-q-actions{display:flex;gap:6px;margin-top:8px}
+.dsm-gen-spinner{display:inline-block;width:18px;height:18px;border:3px solid #e2e8f0;border-top-color:#dc2626;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-left:8px}
+.dsm-empty{text-align:center;padding:60px 20px;color:#94a3b8}
+.dsm-empty h3{font-size:1.1rem;color:#64748b;margin-bottom:8px}
+.dsm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 </style>
 </head>
 <body>
@@ -199,6 +223,7 @@ tr:hover td{background:#f8fafc}
   <div class="tab" onclick="showTab('checkpoints',this)">Checkpoints</div>
   <div class="tab" onclick="showTab('activity',this)">Activity / Time</div>
   <div class="tab" onclick="showTab('analytics',this)">Analytics</div>
+  <div class="tab" onclick="showTab('mastery',this)">Mastery Modules</div>
   <div class="tab-sep" id="admin-tab-sep" style="display:none"></div>
   <div class="tab" id="admin-tab" style="display:none" onclick="showTab('admin',this)">Admin</div>
 </div>
@@ -308,6 +333,59 @@ tr:hover td{background:#f8fafc}
         <thead><tr><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Rank</th><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b">Standard</th><th style="background:#f8fafc;padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;color:#64748b">Question</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Times Asked</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Times Missed</th><th style="background:#f8fafc;padding:10px 14px;text-align:center;font-size:.75rem;font-weight:700;color:#64748b">Miss Rate</th></tr></thead>
         <tbody></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- MASTERY MODULES TAB -->
+  <div class="panel" id="tab-mastery">
+    <div class="dsm-stats" id="dsm-stats"></div>
+
+    <!-- Create New Module -->
+    <div class="card" id="dsm-create-section">
+      <h3>Generate Mastery Module <span class="sub">AI creates SOL-aligned questions for student mastery practice</span></h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>SOL Standard</label>
+          <select id="dsm-standard">
+            <option value="">Select standard...</option>
+            <option value="BIO.1">BIO.1 — Scientific Investigation</option>
+            <option value="BIO.2">BIO.2 — Biochemistry & Energy</option>
+            <option value="BIO.3">BIO.3 — Cell Structure & Function</option>
+            <option value="BIO.4">BIO.4 — Bacteria & Viruses</option>
+            <option value="BIO.5">BIO.5 — Genetics & Inheritance</option>
+            <option value="BIO.6">BIO.6 — Classification & Diversity</option>
+            <option value="BIO.7">BIO.7 — Evolution</option>
+            <option value="BIO.8">BIO.8 — Ecology & Ecosystems</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Question Count</label>
+          <input type="number" id="dsm-qcount" value="25" min="5" max="50">
+          <div class="hint">5–50 questions per module</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="dsm-generate-btn" onclick="generateDSM()">Generate Questions with AI</button>
+      <span id="dsm-generate-status" style="margin-left:12px;font-size:.85rem;color:#64748b"></span>
+    </div>
+
+    <!-- Preview Section (hidden until questions generated) -->
+    <div id="dsm-preview-section" style="display:none">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+          <h3 style="margin-bottom:0">Preview Questions <span class="sub" id="dsm-preview-count"></span></h3>
+          <div>
+            <button class="btn btn-secondary btn-sm" onclick="regenerateAllDSM()">Regenerate All</button>
+            <button class="btn btn-primary btn-sm" onclick="saveDSM()" id="dsm-save-btn">Save & Publish</button>
+          </div>
+        </div>
+        <div id="dsm-preview-list"></div>
+      </div>
+    </div>
+
+    <!-- Existing Modules List -->
+    <div class="card">
+      <h3>Published Modules</h3>
+      <div id="dsm-modules-list"><div class="dsm-empty">No mastery modules yet. Generate one above.</div></div>
     </div>
   </div>
 
@@ -553,6 +631,9 @@ async function loadAllData() {
 
   renderAll();
   populateModuleFilters();
+
+  // Load DSM modules for all teachers
+  loadDSMModules();
 
   // Load admin data if admin
   if (teacher.is_admin) {
@@ -1348,6 +1429,337 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+/* ══════════════════════════════════════════════
+   MASTERY MODULES TAB
+   ══════════════════════════════════════════════ */
+var dsmPreviewQuestions = [];
+var dsmPreviewStandard = '';
+var dsmPreviewUnitNumber = 0;
+
+var STD_UNIT_MAP = {
+  'BIO.1': 1, 'BIO.2': 2, 'BIO.3': 3, 'BIO.4': 4,
+  'BIO.5': 5, 'BIO.6': 6, 'BIO.7': 7, 'BIO.8': 8
+};
+
+async function loadDSMModules() {
+  var { data, error } = await sb.from('dsm_modules')
+    .select('*, dsm_questions(count)')
+    .order('unit_number', { ascending: true });
+
+  var modules = data || [];
+
+  // Stats
+  var published = modules.filter(function(m) { return m.status === 'published'; });
+  var draft = modules.filter(function(m) { return m.status === 'draft'; });
+
+  // Load attempt counts
+  var attemptCounts = {};
+  if (published.length > 0) {
+    var modIds = published.map(function(m) { return m.id; });
+    var { data: attempts } = await sb.from('dsm_attempts')
+      .select('module_id, completed')
+      .in('module_id', modIds);
+    (attempts || []).forEach(function(a) {
+      if (!attemptCounts[a.module_id]) attemptCounts[a.module_id] = { total: 0, completed: 0 };
+      attemptCounts[a.module_id].total++;
+      if (a.completed) attemptCounts[a.module_id].completed++;
+    });
+  }
+
+  document.getElementById('dsm-stats').innerHTML =
+    statCard('Published', published.length, 'modules available to students') +
+    statCard('Draft', draft.length, 'modules not yet published') +
+    statCard('Standards Covered', published.map(function(m) { return m.standard; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).length + '/8', 'BIO.1 through BIO.8');
+
+  // Render modules list
+  var list = document.getElementById('dsm-modules-list');
+  if (modules.length === 0) {
+    list.innerHTML = '<div class="dsm-empty">No mastery modules yet. Generate one above.</div>';
+    return;
+  }
+
+  var html = '';
+  modules.forEach(function(m) {
+    var isPub = m.status === 'published';
+    var qCount = m.dsm_questions?.[0]?.count || m.question_count || 0;
+    var ac = attemptCounts[m.id] || { total: 0, completed: 0 };
+
+    html += '<div class="dsm-card">';
+    html += '<div class="dsm-card-header">';
+    html += '<div class="dsm-card-title">' + esc(m.standard) + ' — Unit ' + m.unit_number + (m.title ? ' — ' + esc(m.title) : '') + '</div>';
+    html += '<span class="badge ' + (isPub ? 'badge-green' : 'badge-gray') + '">' + (isPub ? 'Published' : 'Draft') + '</span>';
+    html += '</div>';
+    html += '<div class="dsm-card-meta">';
+    html += '<span>' + qCount + ' questions</span>';
+    if (isPub) {
+      html += '<span>' + ac.total + ' attempt' + (ac.total !== 1 ? 's' : '') + '</span>';
+      html += '<span>' + ac.completed + ' completed</span>';
+    }
+    html += '<span>Created ' + formatTimestamp(m.created_at) + '</span>';
+    html += '</div>';
+    html += '<div class="dsm-card-actions" style="margin-top:12px">';
+    html += '<button class="btn btn-secondary btn-sm" onclick="viewDSMQuestions(\'' + m.id + '\')">View Questions</button>';
+    if (isPub) {
+      html += '<button class="btn btn-secondary btn-sm" onclick="toggleDSMStatus(\'' + m.id + '\',\'draft\')">Unpublish</button>';
+    } else {
+      html += '<button class="btn btn-primary btn-sm" onclick="toggleDSMStatus(\'' + m.id + '\',\'published\')">Publish</button>';
+    }
+    html += '<button class="btn btn-danger btn-sm" onclick="if(confirm(\'Delete this module and all its questions?\'))deleteDSM(\'' + m.id + '\')">Delete</button>';
+    html += '</div></div>';
+  });
+
+  list.innerHTML = html;
+}
+
+async function generateDSM() {
+  var standard = document.getElementById('dsm-standard').value;
+  var qcount = parseInt(document.getElementById('dsm-qcount').value) || 25;
+
+  if (!standard) {
+    showToast('Please select a SOL standard.');
+    return;
+  }
+
+  var btn = document.getElementById('dsm-generate-btn');
+  var status = document.getElementById('dsm-generate-status');
+  btn.disabled = true;
+  status.innerHTML = 'Generating questions with AI...<span class="dsm-gen-spinner"></span>';
+
+  try {
+    var session = await sb.auth.getSession();
+    var token = session.data.session.access_token;
+
+    var res = await fetch('/api/generate-dsm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ standard: standard, questionCount: qcount })
+    });
+
+    var data = await res.json();
+
+    if (!res.ok || !data.success) {
+      status.innerHTML = '<span style="color:#dc2626">Error: ' + esc(data.error || 'Generation failed') + '</span>';
+      btn.disabled = false;
+      return;
+    }
+
+    dsmPreviewQuestions = data.questions;
+    dsmPreviewStandard = standard;
+    dsmPreviewUnitNumber = STD_UNIT_MAP[standard] || 0;
+
+    renderDSMPreview();
+    document.getElementById('dsm-preview-section').style.display = 'block';
+    document.getElementById('dsm-preview-section').scrollIntoView({ behavior: 'smooth' });
+
+    status.innerHTML = '<span style="color:#16a34a">' + data.questionCount + ' questions generated!</span>';
+    btn.disabled = false;
+
+  } catch (e) {
+    status.innerHTML = '<span style="color:#dc2626">Network error: ' + esc(e.message) + '</span>';
+    btn.disabled = false;
+  }
+}
+
+function renderDSMPreview() {
+  document.getElementById('dsm-preview-count').textContent = dsmPreviewQuestions.length + ' questions for ' + dsmPreviewStandard;
+
+  var html = '';
+  dsmPreviewQuestions.forEach(function(q, i) {
+    html += '<div class="dsm-q-card" id="dsm-q-' + i + '">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div class="dsm-q-num">QUESTION ' + (i + 1) + '</div>';
+    html += '<span class="dsm-q-diff ' + (q.difficulty || 'medium') + '">' + (q.difficulty || 'medium') + '</span>';
+    html += '</div>';
+    html += '<div class="dsm-q-stem">' + esc(q.questionText) + '</div>';
+    html += '<div class="dsm-q-opts">';
+    ['A', 'B', 'C', 'D'].forEach(function(letter) {
+      var key = 'option' + letter;
+      var isCorrect = q.correctAnswer === letter.toLowerCase();
+      html += '<div class="dsm-q-opt' + (isCorrect ? ' correct' : '') + '">' +
+        '<strong>' + letter + '.</strong> ' + esc(q[key]) +
+        (isCorrect ? ' ✓' : '') + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="dsm-q-exp">' + esc(q.explanation) + '</div>';
+    html += '<div class="dsm-q-actions">';
+    html += '<button class="btn btn-secondary btn-sm" onclick="editDSMQuestion(' + i + ')">Edit</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="removeDSMQuestion(' + i + ')">Remove</button>';
+    html += '</div></div>';
+  });
+
+  document.getElementById('dsm-preview-list').innerHTML = html;
+}
+
+function editDSMQuestion(idx) {
+  var q = dsmPreviewQuestions[idx];
+  var card = document.getElementById('dsm-q-' + idx);
+
+  card.innerHTML =
+    '<div class="dsm-q-num">EDITING QUESTION ' + (idx + 1) + '</div>' +
+    '<div class="form-group" style="margin-bottom:10px"><label>Question</label><textarea id="dsm-edit-stem" rows="3" style="width:100%;padding:8px;border:2px solid #dde3ef;border-radius:8px;font-family:inherit;font-size:.9rem">' + esc(q.questionText) + '</textarea></div>' +
+    '<div class="form-row">' +
+    '<div class="form-group"><label>A</label><input id="dsm-edit-a" value="' + esc(q.optionA) + '"></div>' +
+    '<div class="form-group"><label>B</label><input id="dsm-edit-b" value="' + esc(q.optionB) + '"></div>' +
+    '</div>' +
+    '<div class="form-row">' +
+    '<div class="form-group"><label>C</label><input id="dsm-edit-c" value="' + esc(q.optionC) + '"></div>' +
+    '<div class="form-group"><label>D</label><input id="dsm-edit-d" value="' + esc(q.optionD) + '"></div>' +
+    '</div>' +
+    '<div class="form-row">' +
+    '<div class="form-group"><label>Correct Answer</label><select id="dsm-edit-correct"><option value="a"' + (q.correctAnswer === 'a' ? ' selected' : '') + '>A</option><option value="b"' + (q.correctAnswer === 'b' ? ' selected' : '') + '>B</option><option value="c"' + (q.correctAnswer === 'c' ? ' selected' : '') + '>C</option><option value="d"' + (q.correctAnswer === 'd' ? ' selected' : '') + '>D</option></select></div>' +
+    '<div class="form-group"><label>Difficulty</label><select id="dsm-edit-diff"><option value="easy"' + (q.difficulty === 'easy' ? ' selected' : '') + '>Easy</option><option value="medium"' + (q.difficulty === 'medium' ? ' selected' : '') + '>Medium</option><option value="hard"' + (q.difficulty === 'hard' ? ' selected' : '') + '>Hard</option></select></div>' +
+    '</div>' +
+    '<div class="form-group" style="margin-bottom:10px"><label>Explanation</label><textarea id="dsm-edit-exp" rows="2" style="width:100%;padding:8px;border:2px solid #dde3ef;border-radius:8px;font-family:inherit;font-size:.88rem">' + esc(q.explanation) + '</textarea></div>' +
+    '<div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" onclick="saveEditDSMQuestion(' + idx + ')">Save</button><button class="btn btn-secondary btn-sm" onclick="renderDSMPreview()">Cancel</button></div>';
+}
+
+function saveEditDSMQuestion(idx) {
+  dsmPreviewQuestions[idx] = {
+    questionText: document.getElementById('dsm-edit-stem').value,
+    optionA: document.getElementById('dsm-edit-a').value,
+    optionB: document.getElementById('dsm-edit-b').value,
+    optionC: document.getElementById('dsm-edit-c').value,
+    optionD: document.getElementById('dsm-edit-d').value,
+    correctAnswer: document.getElementById('dsm-edit-correct').value,
+    explanation: document.getElementById('dsm-edit-exp').value,
+    difficulty: document.getElementById('dsm-edit-diff').value,
+    sortOrder: idx
+  };
+  renderDSMPreview();
+  showToast('Question ' + (idx + 1) + ' updated.');
+}
+
+function removeDSMQuestion(idx) {
+  dsmPreviewQuestions.splice(idx, 1);
+  renderDSMPreview();
+  showToast('Question removed. ' + dsmPreviewQuestions.length + ' remaining.');
+}
+
+async function regenerateAllDSM() {
+  if (!confirm('Regenerate all questions? This will replace the current preview.')) return;
+  await generateDSM();
+}
+
+async function saveDSM() {
+  if (dsmPreviewQuestions.length < 5) {
+    showToast('Need at least 5 questions.');
+    return;
+  }
+
+  var btn = document.getElementById('dsm-save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    // Create the module
+    var { data: modData, error: modErr } = await sb.from('dsm_modules').insert({
+      standard: dsmPreviewStandard,
+      unit_number: dsmPreviewUnitNumber,
+      question_count: dsmPreviewQuestions.length,
+      status: 'published',
+      created_by: teacher.id
+    }).select().single();
+
+    if (modErr) {
+      showToast('Error creating module: ' + modErr.message);
+      btn.disabled = false;
+      btn.textContent = 'Save & Publish';
+      return;
+    }
+
+    // Insert questions
+    var rows = dsmPreviewQuestions.map(function(q, i) {
+      return {
+        module_id: modData.id,
+        question_text: q.questionText,
+        option_a: q.optionA,
+        option_b: q.optionB,
+        option_c: q.optionC,
+        option_d: q.optionD,
+        correct_answer: q.correctAnswer,
+        explanation: q.explanation,
+        difficulty: q.difficulty || 'medium',
+        sort_order: i
+      };
+    });
+
+    var { error: qErr } = await sb.from('dsm_questions').insert(rows);
+
+    if (qErr) {
+      showToast('Error saving questions: ' + qErr.message);
+      btn.disabled = false;
+      btn.textContent = 'Save & Publish';
+      return;
+    }
+
+    showToast('Mastery module published! Students can now access it.');
+    dsmPreviewQuestions = [];
+    document.getElementById('dsm-preview-section').style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+    loadDSMModules();
+
+  } catch (e) {
+    showToast('Error: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+  }
+}
+
+async function viewDSMQuestions(moduleId) {
+  var { data: questions } = await sb.from('dsm_questions')
+    .select('*')
+    .eq('module_id', moduleId)
+    .order('sort_order');
+
+  if (!questions || questions.length === 0) {
+    showToast('No questions found.');
+    return;
+  }
+
+  // Show in the detail modal
+  var html = '<button class="close-btn" onclick="closeDetail()">&times;</button>';
+  html += '<h2>Module Questions (' + questions.length + ')</h2>';
+
+  questions.forEach(function(q, i) {
+    html += '<div class="dsm-q-card">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<div class="dsm-q-num">QUESTION ' + (i + 1) + '</div>';
+    html += '<span class="dsm-q-diff ' + (q.difficulty || 'medium') + '">' + (q.difficulty || 'medium') + '</span>';
+    html += '</div>';
+    html += '<div class="dsm-q-stem">' + esc(q.question_text) + '</div>';
+    html += '<div class="dsm-q-opts">';
+    var opts = { a: q.option_a, b: q.option_b, c: q.option_c, d: q.option_d };
+    ['a', 'b', 'c', 'd'].forEach(function(letter) {
+      var isCorrect = q.correct_answer === letter;
+      html += '<div class="dsm-q-opt' + (isCorrect ? ' correct' : '') + '">' +
+        '<strong>' + letter.toUpperCase() + '.</strong> ' + esc(opts[letter]) +
+        (isCorrect ? ' ✓' : '') + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="dsm-q-exp">' + esc(q.explanation) + '</div>';
+    html += '</div>';
+  });
+
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('detail-modal').classList.add('show');
+}
+
+async function toggleDSMStatus(moduleId, newStatus) {
+  await sb.from('dsm_modules').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', moduleId);
+  showToast('Module ' + (newStatus === 'published' ? 'published' : 'unpublished') + '.');
+  loadDSMModules();
+}
+
+async function deleteDSM(moduleId) {
+  await sb.from('dsm_modules').delete().eq('id', moduleId);
+  showToast('Module deleted.');
+  loadDSMModules();
 }
 
 /* ══════════════════════════════════════════════
