@@ -101,7 +101,8 @@ footer{position:relative;z-index:1;padding:36px clamp(24px,5vw,80px);border-top:
     <h1>Your <em>Learning</em><br>Portal</h1>
     <p class="hero-sub">All of your Biology, A&amp;P, and science courses — organized in one place. Choose a course below to access lessons, quizzes, and practice tests.</p>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-n" id="total-modules">—</div><div class="stat-l">Modules Available</div></div>
+      <div class="stat"><div class="stat-n" id="total-courses">—</div><div class="stat-l">Courses</div></div>
+      <div class="stat"><div class="stat-n" id="total-modules">—</div><div class="stat-l">Modules</div></div>
       <div class="stat"><div class="stat-n" id="total-lessons">—</div><div class="stat-l">Lessons</div></div>
       <div class="stat"><div class="stat-n" id="total-questions">—</div><div class="stat-l">Practice Questions</div></div>
     </div>
@@ -360,10 +361,12 @@ footer{position:relative;z-index:1;padding:36px clamp(24px,5vw,80px);border-top:
 
 <script>
 // Live stat counts — updated for 3 modules (PS&CR + Cell Cycle + Integumentary)
-const stats = { modules: 13, lessons: 111, questions: 843 };
-document.getElementById('total-modules').textContent = stats.modules;
-document.getElementById('total-lessons').textContent = stats.lessons;
-document.getElementById('total-questions').textContent = stats.questions + '+';
+// Portal stats — updated by tools/update_portal_stats.py
+var portalStats = { courses: 5, modules: 62, lessons: 375, questions: 2995 };
+document.getElementById('total-courses').textContent = portalStats.courses;
+document.getElementById('total-modules').textContent = portalStats.modules;
+document.getElementById('total-lessons').textContent = portalStats.lessons;
+document.getElementById('total-questions').textContent = portalStats.questions.toLocaleString() + '+';
 
 function filterCourses(level, btn) {
   document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
