@@ -210,6 +210,53 @@ var solAPI = (function() {
     localStorage.removeItem('sol_class');
   }
 
+  // ── DSM (Dynamic Study Modules) ───────────────────────────────
+  // Fetch published DSM questions for a given standard
+  function getDSMQuestions(standard) {
+    return _rest('GET', 'dsm_modules', {
+      query: 'standard=eq.' + encodeURIComponent(standard) + '&status=eq.published&select=id,question_count,title&limit=1&order=created_at.desc'
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(modules) {
+      if (!modules || modules.length === 0) return { module: null, questions: [] };
+      var mod = modules[0];
+      return _rest('GET', 'dsm_questions', {
+        query: 'module_id=eq.' + mod.id + '&is_active=eq.true&order=sort_order&select=id,question_text,option_a,option_b,option_c,option_d,correct_answer,explanation'
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(questions) {
+        return { module: mod, questions: questions || [] };
+      });
+    })
+    .catch(function() { return { module: null, questions: [] }; });
+  }
+
+  // Create a DSM attempt record
+  function createDSMAttempt(data) {
+    return _rest('POST', 'dsm_attempts', {
+      body: {
+        class_id: _classId,
+        student_name: data.studentName,
+        module_id: data.moduleId,
+        unit_number: data.unitNumber,
+        total_questions: data.totalQuestions,
+        rounds_completed: 0,
+        questions_missed: [],
+        completed: false
+      },
+      prefer: 'return=representation'
+    }).then(function(r) { return r.json(); });
+  }
+
+  // Update a DSM attempt (on completion or quit)
+  function updateDSMAttempt(attemptId, data) {
+    return _rest('PATCH', 'dsm_attempts', {
+      query: 'id=eq.' + attemptId,
+      body: data,
+      prefer: 'return=minimal'
+    }).catch(function(){});
+  }
+
   // ── PUBLIC API ───────────────────────────────────────────────
   return {
     validateCode: validateCode,
@@ -222,7 +269,10 @@ var solAPI = (function() {
     getClassCode: function() { return _classCode; },
     getClassName: function() { return _className; },
     getTeacherName: function() { return _teacherName; },
-    getExamDate: function() { return _examDate ? new Date(_examDate + 'T00:00:00') : null; }
+    getExamDate: function() { return _examDate ? new Date(_examDate + 'T00:00:00') : null; },
+    getDSMQuestions: getDSMQuestions,
+    createDSMAttempt: createDSMAttempt,
+    updateDSMAttempt: updateDSMAttempt
   };
 
 })();
