@@ -173,17 +173,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
         <input type="text" id="sname" placeholder="e.g. Jane Smith" autocomplete="name">
       </div>
       <div class="f-group">
-        <label for="speriod">Class Period</label>
-        <select id="speriod">
-          <option value="">Select period&hellip;</option>
-          <option>1st Period</option>
-          <option>2nd Period</option>
-          <option>3rd Period</option>
-          <option>4th Period</option>
-          <option>5th Period</option>
-          <option>6th Period</option>
-          <option>7th Period</option>
-        </select>
+        <label for="scode">Class Code</label>
+        <input type="text" id="scode" placeholder="e.g. ENG-3B" autocomplete="off">
+        <div id="class-info" style="display:none;font-size:.82rem;color:#16a34a;margin-top:4px"></div>
+        <div id="code-err" style="display:none;font-size:.82rem;color:#dc2626;margin-top:4px"></div>
       </div>
       <button class="modal-go" id="start-btn" disabled onclick="startTest()">Generate Practice Test</button>
     </div>
@@ -226,7 +219,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="std-breakdown" id="std-breakdown"></div>
       <div class="chart-wrap"><canvas id="std-chart"></canvas></div>
       <div class="btn-row">
-        <button class="btn-primary" id="submit-btn" onclick="submitScore()">Submit Score to Mr. England</button>
+        <button class="btn-primary" id="submit-btn" onclick="submitScore()">Submit Score</button>
         <button class="btn-secondary" onclick="newTest()">Generate New Test</button>
         <button class="btn-secondary" onclick="window.location.href='index.html'">Back to SOL Prep</button>
       </div>
@@ -237,13 +230,13 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
 <div class="toast" id="toast"></div>
 
+<script src="sol-api.js"></script>
 <script>
 /* ================================================================
    SOL PRACTICE TEST GENERATOR
    Draws 50 random questions from released VA Biology SOL exams
    ================================================================ */
 
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
 const SOL_DATE = new Date('2026-05-07');
 const TOTAL_Q = 50;
 
@@ -257,33 +250,7 @@ var assignmentData = null;  // { mode, seed, stdTargets, questionCount, allowRet
   var aId = params.get('assignmentId');
   if (!aId) return;
   assignmentId = aId;
-
-  // Fetch assignment details (student-facing, no password needed)
-  fetch(APPS_URL + '?action=assignments&period=')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var assignments = d.data || [];
-      var match = assignments.find(function(a) { return a.assignmentId === aId; });
-      if (match) {
-        assignmentData = match;
-        // Update hero text
-        document.querySelector('.test-hero h1').textContent = match.title || 'Biology SOL Practice Test';
-        document.querySelector('.test-hero p').textContent = 'Assigned practice test — ' +
-          (match.mode === 'fixed' ? 'all students receive the same questions' : 'each student receives a unique set of questions') +
-          '. ' + match.questionCount + ' questions from the Virginia Biology SOL question bank.';
-        // Update hero chips
-        var chips = document.querySelector('.hero-chips');
-        if (chips) {
-          chips.innerHTML =
-            '<div class="hero-chip">' + match.questionCount + ' Questions</div>' +
-            '<div class="hero-chip">' + (match.mode === 'fixed' ? 'Same Test for All' : 'Unique per Student') + '</div>' +
-            '<div class="hero-chip">BIO.1 &ndash; BIO.8</div>' +
-            '<div class="hero-chip">' + (match.allowRetake ? 'Retakes Allowed' : 'One Attempt') + '</div>';
-        }
-        console.log('Assignment loaded:', match.title, '(' + match.mode + ')');
-      }
-    })
-    .catch(function() {});
+  // Assignment fetching will be added in Phase 2
 })();
 
 /* ── SEEDED RANDOM (for fixed-mode assignments) ─── */
@@ -330,7 +297,6 @@ var STD_NAMES = {
 
 /* ── STATE ─── */
 var studentName = '';
-var classPeriod = '';
 var testQuestions = [];
 var answered = 0;
 var correct = 0;
@@ -344,12 +310,49 @@ var submitted = false;
 (function init() {
   // Enable start button when name + period filled
   var nameEl = document.getElementById('sname');
-  var perEl = document.getElementById('speriod');
+  var codeEl = document.getElementById('scode');
   function check() {
-    document.getElementById('start-btn').disabled = !(nameEl.value.trim() && perEl.value);
+    document.getElementById('start-btn').disabled = !(nameEl.value.trim() && codeEl.value.trim());
   }
   nameEl.addEventListener('input', check);
-  perEl.addEventListener('change', check);
+  codeEl.addEventListener('input', check);
+
+  // Validate class code on blur
+  codeEl.addEventListener('blur', function() {
+    var code = codeEl.value.trim();
+    if (!code) return;
+    var stored = solAPI.getStored();
+    if (stored && stored.code === code.toUpperCase()) {
+      var infoEl = document.getElementById('class-info');
+      infoEl.textContent = '\u2713 ' + stored.teacher + ' \u2014 ' + stored.label;
+      infoEl.style.display = 'block';
+      document.getElementById('code-err').style.display = 'none';
+      return;
+    }
+    solAPI.validateCode(code).then(function(result) {
+      if (result.valid) {
+        solAPI.storeClass();
+        var infoEl = document.getElementById('class-info');
+        infoEl.textContent = '\u2713 ' + result.teacher + ' \u2014 ' + result.label;
+        infoEl.style.display = 'block';
+        document.getElementById('code-err').style.display = 'none';
+      } else {
+        document.getElementById('code-err').textContent = 'Invalid class code. Check with your teacher.';
+        document.getElementById('code-err').style.display = 'block';
+        document.getElementById('class-info').style.display = 'none';
+      }
+    });
+  });
+
+  // Restore stored class code
+  var storedClass = solAPI.getStored();
+  if (storedClass) {
+    codeEl.value = storedClass.code;
+    var infoEl = document.getElementById('class-info');
+    infoEl.textContent = '\u2713 ' + storedClass.teacher + ' \u2014 ' + storedClass.label;
+    infoEl.style.display = 'block';
+    check();
+  }
 
   // Enter key on name field
   nameEl.addEventListener('keydown', function(e) {
@@ -383,7 +386,19 @@ function startTest() {
     return;
   }
   studentName = document.getElementById('sname').value.trim();
-  classPeriod = document.getElementById('speriod').value;
+  var codeInput = document.getElementById('scode').value.trim();
+  if (!codeInput) {
+    document.getElementById('code-err').textContent = 'Please enter your class code.';
+    document.getElementById('code-err').style.display = 'block';
+    return;
+  }
+  // Ensure class is validated
+  var stored = solAPI.getStored();
+  if (!stored || stored.code !== codeInput.toUpperCase()) {
+    document.getElementById('code-err').textContent = 'Please validate your class code first.';
+    document.getElementById('code-err').style.display = 'block';
+    return;
+  }
   document.getElementById('name-modal').style.display = 'none';
 
   // Reset state
@@ -397,7 +412,7 @@ function startTest() {
   document.getElementById('results-section').style.display = 'none';
   document.getElementById('prog-bar').style.display = 'flex';
   document.getElementById('submit-btn').disabled = false;
-  document.getElementById('submit-btn').textContent = 'Submit Score to Mr. England';
+  document.getElementById('submit-btn').textContent = 'Submit Score';
 
   // Determine targets and shuffle function based on assignment
   var targets = STD_TARGETS;
@@ -677,13 +692,7 @@ function newTest() {
 function send(payload) {
   payload.student = studentName;
   payload.module = 'SOL Prep \u2014 Practice Test Generator';
-  payload.classPeriod = classPeriod;
-  fetch(APPS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(function(){});
+  solAPI.submit(payload);
 }
 
 /* ── SUBMIT SCORE ─── */
@@ -738,7 +747,7 @@ function submitScore() {
   var btn = document.getElementById('submit-btn');
   btn.textContent = '\u2705 Score Submitted';
   btn.disabled = true;
-  showToast('Score submitted to Mr. England!');
+  showToast('Score submitted!');
 }
 
 /* ── TOAST ─── */

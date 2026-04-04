@@ -281,21 +281,14 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <p class="nm-sub">Unit 1: Scientific Investigation &amp; Data Analysis. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
     <label class="nm-label">YOUR FULL NAME</label>
     <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name" style="margin-bottom:12px">
-    <label class="nm-label">CLASS PERIOD</label>
-    <select class="nm-input" id="class-period" style="margin-bottom:12px">
-      <option value="">Select Period...</option>
-      <option value="Period 1">Period 1</option>
-      <option value="Period 2">Period 2</option>
-      <option value="Period 3">Period 3</option>
-      <option value="Period 4">Period 4</option>
-      <option value="Period 5">Period 5</option>
-      <option value="Period 6">Period 6</option>
-      <option value="Period 7">Period 7</option>
-    </select>
+    <label class="nm-label">CLASS CODE</label>
+    <input class="nm-input" id="class-code" type="text" placeholder="e.g. ENG-3B" autocomplete="off" style="margin-bottom:4px">
+    <div id="class-info" style="display:none;font-size:.8rem;color:var(--green);margin-bottom:8px;padding:2px 0"></div>
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
-    <div class="nm-err" id="period-err">Please select your class period.</div>
+    <div class="nm-err" id="code-err">Please enter your class code.</div>
     <button class="nm-btn" onclick="startUnit()">Start Unit 1 &rarr;</button>
-    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit1_progress');localStorage.removeItem('sol_unit1_vocab');location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <div style="margin-top:8px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit1_progress');localStorage.removeItem('sol_unit1_vocab');solAPI.clearClass();location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <div style="margin-top:4px;text-align:center"><a href="#" onclick="solAPI.clearClass();document.getElementById('class-code').value='';document.getElementById('class-info').style.display='none';return false" style="font-size:.72rem;color:var(--muted);text-decoration:underline">Change class code</a></div>
   </div>
 </div>
 
@@ -2112,6 +2105,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
 </main>
 
+<script src="sol-api.js"></script>
 <script>
 /* ================================================================
    SOL PREP — Unit 1: Scientific Investigation (v2 — 11 panels)
@@ -2120,7 +2114,6 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
 // CONFIG
 const UNIT = 'unit1';
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec';
 const SOL_DATE = new Date('2026-05-07');
 const TOTAL_PANELS = 11;  // panels 0-10
 const TOTAL_SOL_Q = 20;
@@ -2130,7 +2123,6 @@ const TOTAL_CARDS = 18;
 
 // STATE
 let studentName = '';
-let classPeriod = '';
 let currentPanel = 0;
 let panelStartTime = Date.now();
 let sessionStart = Date.now();
@@ -2159,13 +2151,7 @@ function getAnswerText(el) {
 function send(payload) {
   payload.student = studentName;
   payload.module = 'SOL Prep \u2014 Unit 1: Scientific Investigation';
-  payload.classPeriod = classPeriod;
-  fetch(APPS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(function(){});
+  solAPI.submit(payload);
 }
 
 /* ── STREAK & COUNTDOWN ─────────────────────────── */
@@ -2196,7 +2182,7 @@ function saveProgress() {
   }
   var data = {
     studentName: studentName,
-    classPeriod: classPeriod,
+    classCode: solAPI.getClassCode(),
     currentPanel: currentPanel,
     gateAnswered: gateObj,
     graphAnswered: graphAnswered,
@@ -2220,7 +2206,6 @@ function saveProgress() {
 function restoreProgress(data) {
   // Restore state variables
   studentName = data.studentName;
-  classPeriod = data.classPeriod;
   // Restore unlocked panels
   if (data.unlockedPanels) {
     unlockedPanels = new Set(data.unlockedPanels);
@@ -2418,15 +2403,40 @@ function startUnit() {
     document.getElementById('name-err').style.display = 'block';
     return;
   }
-  var periodEl = document.getElementById('class-period');
-  if (periodEl) {
-    classPeriod = periodEl.value;
-    if (!classPeriod) {
-      var periodErr = document.getElementById('period-err');
-      if (periodErr) periodErr.style.display = 'block';
+  var codeInput = document.getElementById('class-code').value.trim();
+  if (!codeInput) {
+    document.getElementById('code-err').style.display = 'block';
+    return;
+  }
+  document.getElementById('name-err').style.display = 'none';
+  document.getElementById('code-err').style.display = 'none';
+
+  // Check if class code is already validated (same code)
+  var stored = solAPI.getStored();
+  if (stored && stored.code === codeInput.toUpperCase()) {
+    proceedStart(nameInput);
+    return;
+  }
+
+  // Validate new class code
+  var btn = document.querySelector('.nm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Validating...';
+
+  solAPI.validateCode(codeInput).then(function(result) {
+    if (!result.valid) {
+      document.getElementById('code-err').textContent = 'Invalid class code. Check with your teacher.';
+      document.getElementById('code-err').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Start Unit 1 \u2192';
       return;
     }
-  }
+    solAPI.storeClass();
+    proceedStart(nameInput);
+  });
+}
+
+function proceedStart(nameInput) {
   studentName = nameInput;
 
   // Check if resuming saved progress
@@ -3046,21 +3056,15 @@ window.addEventListener('beforeunload', function() {
   if (duration > 2) {
     activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
   }
-  var payload = {
+  solAPI.beacon({
     student: studentName,
     module: 'SOL Prep \u2014 Unit 1: Scientific Investigation',
-    classPeriod: classPeriod,
-    action: 'activity',
     event: 'session_end',
+    duration: totalSeconds,
     totalSessionSeconds: totalSeconds,
     panelLog: JSON.stringify(activityLog),
     timestamp: new Date().toISOString()
-  };
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(APPS_URL, JSON.stringify(payload));
-  } else {
-    fetch(APPS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
-  }
+  });
 });
 
 /* ── INIT ON DOM READY ───────────────────────────── */
@@ -3076,15 +3080,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var sb = document.getElementById('sol-practice-box');
     if (sb) sb.style.display = 'block';
   }
+  // Restore stored class code
+  var storedClass = solAPI.getStored();
+  if (storedClass) {
+    var codeEl = document.getElementById('class-code');
+    if (codeEl) codeEl.value = storedClass.code;
+    var infoEl = document.getElementById('class-info');
+    if (infoEl) { infoEl.textContent = '\u2713 ' + storedClass.teacher + ' \u2014 ' + storedClass.label; infoEl.style.display = 'block'; }
+  }
   // Check for saved progress
   var saved = localStorage.getItem('sol_unit1_progress');
   if (saved) {
     var data = JSON.parse(saved);
     if (data.studentName) {
       var nameInput = document.getElementById('student-name');
-      var periodSelect = document.getElementById('class-period');
       nameInput.value = data.studentName;
-      if (periodSelect) periodSelect.value = data.classPeriod || '';
       var modalTitle = document.querySelector('.nm-title');
       if (modalTitle) modalTitle.textContent = 'Welcome Back!';
       var modalSub = document.querySelector('.nm-sub');
