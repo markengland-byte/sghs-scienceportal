@@ -504,7 +504,7 @@ def main():
     script_dir = Path(__file__).parent
     project_root = script_dir.parent
     img_dir = project_root / 'ap' / 'images' / f'ch{ch_num}'
-    output_file = project_root / f'ap-ch{ch_num}-extracted.txt'
+    output_file = project_root / 'ap' / 'extracted' / f'ap-ch{ch_num}-extracted.txt'
 
     # Create image directory
     img_dir.mkdir(parents=True, exist_ok=True)
