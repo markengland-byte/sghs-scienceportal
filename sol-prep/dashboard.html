@@ -209,6 +209,15 @@ tr:hover td{background:#f8fafc}
   <!-- OVERVIEW TAB -->
   <div class="panel active" id="tab-overview">
     <div class="stats" id="overview-stats"></div>
+
+    <!-- Exam Date Setting -->
+    <div style="background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="font-size:.85rem;font-weight:700;color:#0f2240">SOL Exam Date</div>
+      <input type="date" id="exam-date-input" style="padding:8px 12px;border:2px solid #dde3ef;border-radius:8px;font-family:inherit;font-size:.88rem;outline:none" onchange="updateExamDate(this.value)">
+      <div id="exam-date-status" style="font-size:.8rem;color:#94a3b8">Shown as countdown in student units</div>
+      <div style="font-size:.75rem;color:#94a3b8;margin-left:auto">Applies to: <strong id="exam-date-scope">selected class</strong></div>
+    </div>
+
     <div class="tbl-wrap" id="overview-wrap">
       <div class="tbl-header">
         <h3>Student Score Summary</h3>
@@ -453,6 +462,7 @@ var classLabelMap = {};
   document.getElementById('content').style.display = 'block';
 
   await loadAllData();
+  loadExamDate();
 })();
 
 /* ══════════════════════════════════════════════
@@ -470,6 +480,47 @@ function onClassChange() {
   selectedClassId = document.getElementById('class-select').value;
   resetPages();
   loadAllData();
+  loadExamDate();
+}
+
+/* ── EXAM DATE ── */
+function loadExamDate() {
+  var input = document.getElementById('exam-date-input');
+  var scope = document.getElementById('exam-date-scope');
+  if (selectedClassId) {
+    var cls = teacherClasses.find(function(c) { return c.id === selectedClassId; });
+    if (cls) {
+      input.value = cls.exam_date || '';
+      scope.textContent = cls.label || cls.code;
+    }
+  } else {
+    // Show first class date as reference
+    if (teacherClasses.length > 0) {
+      input.value = teacherClasses[0].exam_date || '';
+      scope.textContent = 'all classes';
+    }
+  }
+}
+
+async function updateExamDate(dateStr) {
+  var status = document.getElementById('exam-date-status');
+  if (!dateStr) return;
+
+  var classesToUpdate = selectedClassId ? [selectedClassId] : teacherClasses.map(function(c) { return c.id; });
+
+  status.textContent = 'Saving...';
+  status.style.color = '#ca8a04';
+
+  for (var i = 0; i < classesToUpdate.length; i++) {
+    await sb.from('classes').update({ exam_date: dateStr }).eq('id', classesToUpdate[i]);
+    // Update local cache
+    var cls = teacherClasses.find(function(c) { return c.id === classesToUpdate[i]; });
+    if (cls) cls.exam_date = dateStr;
+  }
+
+  status.textContent = 'Saved! Students will see the updated countdown.';
+  status.style.color = '#16a34a';
+  setTimeout(function() { status.textContent = 'Shown as countdown in student units'; status.style.color = '#94a3b8'; }, 3000);
 }
 
 function resetPages() {

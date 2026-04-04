@@ -1183,9 +1183,14 @@ function initMeta() {
   document.getElementById('streak-val').textContent = streak;
   if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
 
-  var solDate = new Date('2026-05-07');
-  var diff = Math.ceil((solDate - new Date()) / 86400000);
-  document.getElementById('sol-countdown').textContent = diff > 0 ? diff : 0;
+  var examDate = solAPI.getExamDate();
+  if (examDate) {
+    var diff = Math.max(0, Math.ceil((examDate - new Date()) / 86400000));
+    document.getElementById('sol-countdown').textContent = diff;
+    document.getElementById('sol-countdown').style.color = diff <= 14 ? '#fca5a5' : diff <= 21 ? '#fcd34d' : '#fff';
+  } else {
+    document.getElementById('sol-countdown').textContent = '--';
+  }
 }
 
 /* ── TRACKING ────────────────────────────────────── */

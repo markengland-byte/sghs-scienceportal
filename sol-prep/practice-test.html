@@ -237,7 +237,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
    Draws 50 random questions from released VA Biology SOL exams
    ================================================================ */
 
-const SOL_DATE = new Date('2026-05-07');
+// SOL_DATE loaded from solAPI.getExamDate()
 const TOTAL_Q = 50;
 
 /* ── ASSIGNMENT SUPPORT ─── */
@@ -373,9 +373,14 @@ function initMeta() {
   else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
   document.getElementById('streak-val').textContent = streak;
 
-  var days = Math.max(0, Math.ceil((SOL_DATE - new Date()) / (1000 * 60 * 60 * 24)));
-  document.getElementById('sol-countdown').textContent = days;
-  document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
+  var examDate = solAPI.getExamDate();
+  if (examDate) {
+    var days = Math.max(0, Math.ceil((examDate - new Date()) / (1000 * 60 * 60 * 24)));
+    document.getElementById('sol-countdown').textContent = days;
+    document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
+  } else {
+    document.getElementById('sol-countdown').textContent = '--';
+  }
 }
 
 /* ── GENERATE TEST ─── */

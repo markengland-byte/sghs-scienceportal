@@ -17,6 +17,7 @@ var solAPI = (function() {
   var _classCode = '';
   var _className = '';
   var _teacherName = '';
+  var _examDate = null;
 
   // ── SUPABASE REST HELPER ──
   function _rest(method, table, opts) {
@@ -43,7 +44,7 @@ var solAPI = (function() {
   function validateCode(code) {
     code = code.trim().toUpperCase();
     return _rest('GET', 'classes', {
-      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name'
+      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name,exam_date'
     })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
@@ -53,7 +54,8 @@ var solAPI = (function() {
       _classCode = c.code;
       _className = c.label;
       _teacherName = c.teacher_name;
-      return { valid: true, teacher: c.teacher_name, label: c.label };
+      _examDate = c.exam_date || null;
+      return { valid: true, teacher: c.teacher_name, label: c.label, examDate: c.exam_date };
     })
     .catch(function() {
       return { valid: false };
@@ -182,6 +184,7 @@ var solAPI = (function() {
         _classCode = data.code;
         _className = data.label;
         _teacherName = data.teacher;
+        _examDate = data.examDate || null;
         return data;
       }
     } catch(e) {}
@@ -193,7 +196,8 @@ var solAPI = (function() {
       classId: _classId,
       code: _classCode,
       label: _className,
-      teacher: _teacherName
+      teacher: _teacherName,
+      examDate: _examDate
     }));
   }
 
@@ -202,6 +206,7 @@ var solAPI = (function() {
     _classCode = '';
     _className = '';
     _teacherName = '';
+    _examDate = null;
     localStorage.removeItem('sol_class');
   }
 
@@ -216,7 +221,8 @@ var solAPI = (function() {
     getClassId: function() { return _classId; },
     getClassCode: function() { return _classCode; },
     getClassName: function() { return _className; },
-    getTeacherName: function() { return _teacherName; }
+    getTeacherName: function() { return _teacherName; },
+    getExamDate: function() { return _examDate ? new Date(_examDate + 'T00:00:00') : null; }
   };
 
 })();

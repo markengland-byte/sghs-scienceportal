@@ -2114,7 +2114,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
 // CONFIG
 const UNIT = 'unit1';
-const SOL_DATE = new Date('2026-05-07');
+// SOL_DATE loaded from solAPI.getExamDate()
 const TOTAL_PANELS = 11;  // panels 0-10
 const TOTAL_SOL_Q = 20;
 const VQ_TOTAL = 10;
@@ -2169,9 +2169,14 @@ function initMeta() {
     f.style.animation = 'none';
     setTimeout(function(){ f.style.animation = 'flamePop 0.5s ease'; }, 10);
   }
-  var days = Math.max(0, Math.ceil((SOL_DATE - new Date()) / (1000 * 60 * 60 * 24)));
-  document.getElementById('sol-countdown').textContent = days;
-  document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
+  var examDate = solAPI.getExamDate();
+  if (examDate) {
+    var days = Math.max(0, Math.ceil((examDate - new Date()) / (1000 * 60 * 60 * 24)));
+    document.getElementById('sol-countdown').textContent = days;
+    document.getElementById('sol-countdown').style.color = days <= 14 ? '#fca5a5' : days <= 21 ? '#fcd34d' : '#fff';
+  } else {
+    document.getElementById('sol-countdown').textContent = '--';
+  }
 }
 
 /* ── SAVE / RESTORE PROGRESS ─────────────────────── */
