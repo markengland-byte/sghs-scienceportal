@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOL Prep &mdash; Teacher Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',sans-serif;background:#0f2240;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:16px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-hero{background:linear-gradient(135deg,#0f2240,#1e3a6e);padding:36px 32px 28px;text-align:center}
+.login-hero h1{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:6px}
+.login-hero p{font-size:.85rem;color:rgba(255,255,255,.6)}
+.login-body{padding:32px}
+.f-group{margin-bottom:18px}
+.f-group label{display:block;font-size:.78rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.f-group input{width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:.95rem;transition:border-color .2s;outline:none}
+.f-group input:focus{border-color:#dc2626}
+.login-btn{width:100%;padding:14px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:8px}
+.login-btn:hover{background:#b91c1c}
+.login-btn:disabled{opacity:.5;cursor:not-allowed}
+.err-msg{color:#dc2626;font-size:.82rem;margin-top:10px;text-align:center;display:none}
+.back-link{display:block;text-align:center;margin-top:16px;font-size:.82rem;color:#94a3b8;text-decoration:none}
+.back-link:hover{color:#0f2240}
+.loading-spinner{display:none;text-align:center;margin-top:10px}
+.loading-spinner::after{content:'';display:inline-block;width:20px;height:20px;border:3px solid #e2e8f0;border-top-color:#dc2626;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="login-hero">
+    <h1>SOL Prep Dashboard</h1>
+    <p>Teacher login &mdash; view student progress &amp; manage classes</p>
+  </div>
+  <div class="login-body">
+    <div class="f-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="teacher@school.edu" autocomplete="email">
+    </div>
+    <div class="f-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="loading-spinner" id="spinner"></div>
+    <div class="err-msg" id="err-msg"></div>
+    <a class="back-link" href="index.html">&larr; Back to SOL Prep</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// If already logged in, go to dashboard
+sb.auth.getSession().then(function(result) {
+  if (result.data.session) {
+    window.location.href = 'dashboard.html';
+  }
+});
+
+// Enter key submits
+document.getElementById('password').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('email').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('password').focus();
+});
+
+async function doLogin() {
+  var email = document.getElementById('email').value.trim();
+  var password = document.getElementById('password').value;
+  var errEl = document.getElementById('err-msg');
+  var btn = document.getElementById('login-btn');
+  var spinner = document.getElementById('spinner');
+
+  errEl.style.display = 'none';
+
+  if (!email || !password) {
+    errEl.textContent = 'Please enter your email and password.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+  spinner.style.display = 'block';
+
+  try {
+    var { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
+
+    if (error) {
+      errEl.textContent = 'Invalid email or password.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      spinner.style.display = 'none';
+      return;
+    }
+
+    // Check if user has a teacher profile
+    var { data: teacher, error: tErr } = await sb.from('teachers').select('id, display_name').eq('auth_user_id', data.user.id).single();
+
+    if (tErr || !teacher) {
+      errEl.textContent = 'No teacher profile found. Contact your administrator.';
+      errEl.style.display = 'block';
+      await sb.auth.signOut();
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      spinner.style.display = 'none';
+      return;
+    }
+
+    // Success — redirect to dashboard
+    window.location.href = 'dashboard.html';
+
+  } catch (e) {
+    errEl.textContent = 'Connection error. Please try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+    spinner.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
