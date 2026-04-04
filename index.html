@@ -392,14 +392,15 @@ function filterCourses(level, btn) {
 window.addEventListener('load', () => {
   const counters = document.querySelectorAll('.stat-n');
   counters.forEach(el => {
-    const target = parseFloat(el.textContent.replace('+',''));
+    const raw = el.textContent.replace(/,/g, '').replace('+', '');
+    const target = parseFloat(raw);
     if (isNaN(target)) return;
     let cur = 0;
     const plus = el.textContent.includes('+') ? '+' : '';
     const step = Math.ceil(target / 30);
     const timer = setInterval(() => {
       cur = Math.min(cur + step, target);
-      el.textContent = cur + plus;
+      el.textContent = cur.toLocaleString() + plus;
       if (cur >= target) clearInterval(timer);
     }, 40);
   });
