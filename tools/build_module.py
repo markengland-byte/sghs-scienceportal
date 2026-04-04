@@ -256,6 +256,11 @@ def parse_review_questions(raw):
                 else:
                     break
                 i += 1
+            # Filter junk: license text and questions without options
+            if 'is shared under' in q_text or 'license' in q_text[:30]:
+                continue
+            if not options:
+                continue  # Skip fill-in-the-blank or malformed questions
             questions.append({
                 'num': q_num,
                 'text': q_text,
