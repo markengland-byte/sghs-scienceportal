@@ -768,18 +768,57 @@ def build_module(extracted_path, config_path):
     total_panels = total_content_panels + 2  # overview + content + review
     review_panel_idx = total_panels - 1
 
-    # Distribute terms across sections
+    # Distribute terms across sections — smart matching by prose content
     section_terms = config.get('section_terms', {})
-    # If not specified, auto-distribute evenly
+    # If not specified, match each term to the section where it appears in the prose
     if not section_terms:
-        terms_per_section = max(1, len(data['key_terms']) // max(1, len(content_sections)))
-        idx = 0
+        # Build prose text per section for matching
+        section_prose = {}
         for sec in content_sections:
-            section_terms[sec['num']] = data['key_terms'][idx:idx + terms_per_section]
-            idx += terms_per_section
-        # Any remaining terms go to the last section
-        if idx < len(data['key_terms']) and content_sections:
-            section_terms[content_sections[-1]['num']].extend(data['key_terms'][idx:])
+            prose_text = ' '.join(
+                el['text'].lower() for el in sec.get('elements', [])
+                if el['type'] == 'paragraph'
+            )
+            section_prose[sec['num']] = prose_text
+
+        # For each term, find which section mentions it most
+        for sec in content_sections:
+            section_terms[sec['num']] = []
+
+        # Filter junk terms
+        junk_terms = {'page id', 'page', ''}
+        clean_terms = [t for t in data['key_terms'] if t['term'].lower().strip() not in junk_terms and len(t['term']) >= 2 and 'shared under' not in t['term'].lower()]
+
+        unmatched = []
+        for term_obj in clean_terms:
+            term_lower = term_obj['term'].lower()
+            # Also check for partial matches (e.g., "cardiac output" matches "cardiac" and "output")
+            term_words = [w for w in term_lower.split() if len(w) > 3]
+
+            best_section = None
+            best_score = 0
+            for sec in content_sections:
+                prose = section_prose[sec['num']]
+                # Score: exact term match = 10, each word match = 1
+                score = 0
+                if term_lower in prose:
+                    score += 10
+                for w in term_words:
+                    if w in prose:
+                        score += 1
+                if score > best_score:
+                    best_score = score
+                    best_section = sec['num']
+
+            if best_section and best_score > 0:
+                section_terms[best_section].append(term_obj)
+            else:
+                unmatched.append(term_obj)
+
+        # Distribute unmatched terms to sections with fewest terms
+        for term_obj in unmatched:
+            min_sec = min(content_sections, key=lambda s: len(section_terms[s['num']]))
+            section_terms[min_sec['num']].append(term_obj)
     else:
         # Convert term names to term objects
         for sec_num, term_names in section_terms.items():
