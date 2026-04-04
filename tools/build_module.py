@@ -287,8 +287,24 @@ def parse_critical_thinking(raw):
 
 # ─── HTML GENERATION ──────────────────────────────────────────────────
 
+def clean_latex(text):
+    """Remove LaTeX markup from LibreTexts content."""
+    # All variations of PageIndex references
+    text = re.sub(r'\(?\\?\(?\\?PageIndex\{\d+\}\\?\)?\)?[a-z]?\)?', '', text)
+    # Escaped LaTeX expressions \(...\)
+    text = re.sub(r'\\\([^)]{0,80}\\\)', '', text)
+    # Any remaining PageIndex
+    text = re.sub(r'\\?PageIndex\{\d+\}', '', text)
+    # Clean up orphaned "Figure" with dangling punctuation
+    text = re.sub(r'Figure\s*\)', 'Figure)', text)
+    text = re.sub(r'\(\s*\)', '', text)  # empty parens
+    text = re.sub(r'\s{2,}', ' ', text)
+    return text.strip()
+
+
 def esc(text):
-    """HTML-escape text."""
+    """HTML-escape text, also cleaning LaTeX."""
+    text = clean_latex(text)
     return html.escape(text, quote=True)
 
 
@@ -437,14 +453,14 @@ def generate_name_modal(config):
     emoji = config.get('emoji', '📖')
     title = esc(config['title'])
     accent = config.get('accent', '#c0392b')
-    return f'''<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">{emoji}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">{title}</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='{accent}'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning \\u2192</button></div></div>
-<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">\\U0001F4E4</span><span id="toast-msg">Score sent!</span></div>'''
+    return f'''<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">{emoji}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">{title}</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='{accent}'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>'''
 
 
 def generate_topbar(config):
     emoji = config.get('emoji', '📖')
     title = esc(config['title'])
-    return f'''<header class="top-bar"><a class="tb-back" href="../ap/index.html">\\u2190 A&amp;P</a><div class="tb-logo">{emoji}</div><div><div class="tb-name">Southern Gap High School \\u00B7 A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">{title}</div></header>
+    return f'''<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">{emoji}</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">{title}</div></header>
 <div class="prog-wrap"><div id="prog-bar"></div></div>'''
 
 
@@ -506,9 +522,13 @@ def generate_content_elements(elements):
     for el in elements:
         if el['type'] == 'paragraph':
             text = el['text']
+            # Clean LaTeX markup from LibreTexts
+            text = clean_latex(text)
             # Convert **bold** patterns if present
             text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
-            lines.append(f'<p class="prose">{text}</p>')
+            text = text.strip()
+            if text:
+                lines.append(f'<p class="prose">{text}</p>')
 
         elif el['type'] == 'heading':
             if el['level'] == 2:
@@ -576,7 +596,11 @@ def generate_panel(panel_idx, section, vocab_terms, quiz_questions, checkpoint_q
     desc_text = ''
     for el in section.get('elements', []):
         if el['type'] == 'paragraph':
-            desc_text = el['text'][:200] + '...' if len(el['text']) > 200 else el['text']
+            raw_desc = el['text']
+            raw_desc = re.sub(r'\\\(\\PageIndex\{(\d+)\}\\\)', '', raw_desc)
+            raw_desc = re.sub(r'\\\([^)]{0,50}\\\)', '', raw_desc)
+            raw_desc = re.sub(r'\s{2,}', ' ', raw_desc).strip()
+            desc_text = raw_desc[:200] + '...' if len(raw_desc) > 200 else raw_desc
             break
 
     prev_btn = f'<button class="nbtn prev" onclick="goTo({panel_idx - 1})">← Previous</button>' if panel_idx > 0 else '<button class="nbtn prev" disabled>← Previous</button>'
@@ -636,7 +660,12 @@ def generate_overview_panel(config, data, ch_num, total_sections, total_question
         for el in intro_section.get('elements', []):
             if el['type'] == 'paragraph':
                 intro_text += el['text'] + ' '
-        intro_text = intro_text.strip()[:600]
+        intro_text = intro_text.strip()
+        # Clean LaTeX from intro text
+        intro_text = re.sub(r'\\\(\\PageIndex\{(\d+)\}\\\)', '', intro_text)
+        intro_text = re.sub(r'\\\([^)]{0,50}\\\)', '', intro_text)
+        intro_text = re.sub(r'\s{2,}', ' ', intro_text).strip()
+        intro_text = intro_text[:600]
 
     # Get objectives from intro callout or first section
     objectives = []
