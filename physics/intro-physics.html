@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · The Nature of Science and Physics | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🔬</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">The Nature of Science and Physics</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🔬</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">The Nature of Science and Physics</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Introduction</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">1.0</div></a>
+  <a class="sb-link" onclick="goTo(2)" href="#"><div class="sb-num">2</div><div class="sb-txt">1.1: Physics- An Introduction</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Measurement</div>
+  <a class="sb-link" onclick="goTo(3)" href="#"><div class="sb-num">3</div><div class="sb-txt">1.2: Physical Quantities and Units</div></a>
+  <a class="sb-link" onclick="goTo(4)" href="#"><div class="sb-num">4</div><div class="sb-txt">1.3: Accuracy, Precision, and Significant Figures</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Estimation</div>
+  <a class="sb-link" onclick="goTo(5)" href="#"><div class="sb-num">5</div><div class="sb-txt">1.4: Approximation</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(6)" href="#"><div class="sb-num">6</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 1 · <span>Overview</span></div><div class="h-title">The Nature of Science and Physics</div><div class="h-desc">What is your first reaction when you hear the word “physics”? Did you imagine working through difficult equations or memorizing formulas that seem to have no real use in life outside the physics classroom? Many people come to the subject of physics with a bit of fear. But as you begin your exploration of this broad-ranging subject, you may soon come to realize that physics plays a much larger role in your life than you first thought, no matter your life goals or career choice. For example, take a look at the image above. This image is of the Andromeda Galaxy, which contains billions of individ</div>
+    <div class="h-meta"><div class="h-chip">📚 4 Lessons</div><div class="h-chip">🔬 OpenStax College Physics Ch. 1</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 20 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 1</div><div class="cx">All content is from OpenStax College Physics, Chapter 1: The Nature of Science and Physics. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 4</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 1 · <span>Section 1.1</span></div><div class="h-title">1.1: Physics- An Introduction</div><div class="h-desc">The physical universe is enormously complex in its detail. Every day, each of us observes a great variety of objects and phenomena. Over the centuries, the curiosity of the human race has led us colle...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 1.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the difference between a principle and a law.</li>
+      <li>Explain the difference between a model and a theory.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">approximation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">an estimated value based on prior experience and reasoning</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">classical physics</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">physics that was developed from the Renaissance to the end of the 19th century</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 1.1</div>
+<p class="prose">The physical universe is enormously complex in its detail. Every day, each of us observes a great variety of objects and phenomena. Over the centuries, the curiosity of the human race has led us collectively to explore and catalog a tremendous wealth of information. From the flight of birds to the colors of flowers, from lightning to gravity, from quarks to clusters of galaxies, from the flow of time to the mystery of the creation of the universe, we have asked questions and assembled huge arrays of facts. In the face of all these details, we have discovered that a surprisingly small and unified set of physical laws can explain what we observe. As humans, we make generalizations and seek order. We have found that nature is remarkably cooperative—it exhibits theunderlying order and simplicitywe so value.</p>
+<div class="diagram"><img src="images/ch1/fig1-1-two-canada-geese-flying-close-to-each-ot.jpg" alt="Two Canada geese flying close to each other in the sky."><div class="d-cap">Two Canada geese flying close to each other in the sky. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">It is the underlying order of nature that makes science in general, and physics in particular, so enjoyable to study. For example, what do a bag of chips and a car battery have in common? Both contain energy that can be converted to other forms. The law of conservation of energy (which says that energy can change form but is never lost) ties together such topics as food calories, batteries, heat, light, and watch springs. Understanding this law makes it easier to learn about the various forms energy takes and how they relate to one another. Apparently unrelated topics are connected through broadly applicable physical laws, permitting an understanding beyond just the memorization of lists of facts.</p>
+<p class="prose">The unifying aspect of physical laws and the basic simplicity of nature form the underlying themes of this text. In learning to apply these laws, you will, of course, study the most important topics in physics. More importantly, you will gain analytical abilities that will enable you to apply these laws far beyond the scope of what can be included in a single book. These analytical skills will help you to excel academically, and they will also help you to think critically in any professional career you choose to pursue. This module discusses the realm of physics (to define what physics is), some applications of physics (to illustrate its relevance to other disciplines), and more precisely what constitutes a physical law (to illuminate the importance of experimentation to theory).</p>
+<div class="sh2">Science and the Realm of Physics</div>
+<p class="prose">Science consists of the theories and laws that are the general truths of nature as well as the body of knowledge they encompass. Scientists are continually trying to expand this body of knowledge and to perfect the expression of the laws that describe it.Physicsis concerned with describing the interactions of energy, matter, space, and time, and it is especially interested in what fundamental mechanisms underlie every phenomenon. The concern for describing the basic phenomena in nature essentially defines therealm of physics.</p>
+<p class="prose">Physics aims to describe the function of everything around us, from the movement of tiny charged particles to the motion of people, cars, and spaceships. In fact, almost everything around you can be described quite accurately by the laws of physics. Consider a smart phone (Figure . Physics describes how electricity interacts with the various circuits inside the device. This knowledge helps engineers select the appropriate materials and circuit layout when building the smart phone. Next, consider a GPS system. Physics describes the relationship between the speed of an object, the distance over which it travels, and the time it takes to travel that distance. When you use a GPS device in a vehicle, it utilizes these physics equations to determine the travel time from one location to another.</p>
+<div class="diagram"><img src="images/ch1/fig1-2-a-topographical-map-of-a-location-is-sho.jpg" alt="A topographical map of a location is shown on an iPhone with some information about the location using the G P S system."><div class="d-cap">A topographical map of a location is shown on an iPhone with some information about the location using the G P S system. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">#### Applications of Physics</p>
+<p class="prose">You need not be a scientist to use physics. On the contrary, knowledge of physics is useful in everyday situations as well as in nonscientific professions. It can help you understand how microwave ovens work, why metals should not be put into them, and why they might affect pacemakers (Figures and . Physics allows you to understand the hazards of radiation and rationally evaluate these hazards more easily. Physics also explains the reason why a black car radiator helps remove heat in a car engine, and it explains why a white roof helps keep the inside of a house cool. Similarly, the operation of a car’s ignition system as well as the transmission of electrical signals through our body’s nervous system are much easier to understand when you think about them in terms of basic physics.</p>
+<div class="diagram"><img src="images/ch1/fig1-3-a-microwave-oven-is-shown-with-some-food.jpg" alt="A microwave oven is shown with some food on the nonmetal plate inside it."><div class="d-cap">A microwave oven is shown with some food on the nonmetal plate inside it. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-4-m-r-i-scan-of-a-brain-with-specific-tumo.jpg" alt="M R I scan of a brain with specific tumors."><div class="d-cap">M R I scan of a brain with specific tumors. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Physics is the foundation of many important disciplines and contributes directly to others. Chemistry, for example—since it deals with the interactions of atoms and molecules—is rooted in atomic and molecular physics. Most branches of engineering are applied physics. In architecture, physics is at the heart of structural stability, and is involved in the acoustics, heating, lighting, and cooling of buildings. Parts of geology rely heavily on physics, such as radioactive dating of rocks, earthquake analysis, and heat transfer in the Earth. Some disciplines, such as biophysics and geophysics, are hybrids of physics and other disciplines.</p>
+<p class="prose">Physics has many applications in the biological sciences. On the microscopic level, it helps describe the properties of cell walls and cell membranes (Figures and . On the macroscopic level, it can explain the heat, work, and power associated with the human body. Physics is involved in medical diagnostics, such as x-rays, magnetic resonance imaging (MRI), and ultrasonic blood flow measurements. Medical therapy sometimes directly involves physics; for example, cancer radiotherapy uses ionizing radiation. Physics can also explain sensory phenomena, such as how musical instruments make sound, how the eye detects color, and how lasers can transmit information.</p>
+<p class="prose">It is not necessary to formally study all applications of physics. What is most useful is knowledge of the basic laws of physics and a skill in the analytical methods for applying them. The study of physics also can improve your problem-solving skills. Furthermore, physics has retained the most basic aspects of science, so it is used by all of the sciences, and the study of physics makes other sciences easier to understand.</p>
+<div class="diagram"><img src="images/ch1/fig1-5-cell-membranes-of-onion-cells-similar-in.jpg" alt="Cell membranes of onion cells, similar in appearance to a section of a brick wall."><div class="d-cap">Cell membranes of onion cells, similar in appearance to a section of a brick wall. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-6-a-detailed-diagram-of-a-cell-membrane-is.jpg" alt="A detailed diagram of a cell membrane is shown with parts labeled as Protein channel, Globular protein, Glycoprotein, Carbohydrate, Hydrophilic heads, Phospholipid bilayer , Phospholipid molecule, Hydrophobic tails, Alpha-Helix protein, Surface protein, Filaments of cytoskeleton, Integral protein, Peripheral protein, Glycolipid, and Cholesterol."><div class="d-cap">A detailed diagram of a cell membrane is shown with parts labeled as Protein channel, Globular protein, Glycoprotein, Carbohydrate, Hydrophilic heads, Phospholipid bilayer , Phospholipid molecule, Hydrophobic tails, Alpha-Helix protein, Surface protein, Filaments of cytoskeleton, Integral protein, Peripheral protein, Glycolipid, and Cholesterol. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Models, Theories, and Laws; The Role of Experimentation</div>
+<p class="prose">The laws of nature are concise descriptions of the universe around us; they are human statements of the underlying laws or rules that all natural processes follow. Such laws are intrinsic to the universe; humans did not create them and so cannot change them. We can only discover and understand them. Their discovery is a very human endeavor, with all the elements of mystery, imagination, struggle, triumph, and disappointment inherent in any creative effort (Figures and . The cornerstone of discovering natural laws is observation; science must describe the universe as it is, not as we may imagine it to be.</p>
+<div class="diagram"><img src="images/ch1/fig1-7-a-portrait-of-isaac-newton.jpg" alt="A portrait of Isaac Newton."><div class="d-cap">A portrait of Isaac Newton. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-8-a-photograph-of-marie-curie.jpg" alt="A photograph of Marie Curie"><div class="d-cap">A photograph of Marie Curie (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We all are curious to some extent. We look around, make generalizations, and try to understand what we see—for example, we look up and wonder whether one type of cloud signals an oncoming storm. As we become serious about exploring nature, we become more organized and formal in collecting and analyzing data. We attempt greater precision, perform controlled experiments (if we can), and write down ideas about how the data may be organized and unified. We then formulate models, theories, and laws based on the data we have collected and analyzed to generalize and communicate the results of these experiments.</p>
+<p class="prose">Amodelis a representation of something that is often too difficult (or impossible) to display directly. While a model is justified with experimental proof, it is only accurate under limited situations. An example is the planetary model of the atom in which electrons are pictured as orbiting the nucleus, analogous to the way planets orbit the Sun. (See Figure 9.) We cannot observe electron orbits directly, but the mental image helps explain the observations we can make, such as the emission of light from hot gases (atomic spectra). Physicists use models for a variety of purposes. For example, models can help physicists analyze a scenario and perform a calculation, or they can be used to represent a situation in the form of a computer simulation. Atheoryis an explanation for patterns in nature that is supported by scientific evidence and verified multiple times by various groups of researchers. Some theories include models to help visualize phenomena, whereas others do not. Newton’s theory of gravity, for example, does not require a model or mental image, because we can observe the objects directly with our own senses. The kinetic theory of gases, on the other hand, is a model in which a gas is viewed as being composed of atoms and molecules. Atoms and molecules are too small to be observed directly with our senses—thus, we picture them mentally to understand what our instruments tell us about the behavior of gases.</p>
+<p class="prose">Alawuses concise language to describe a generalized pattern in nature that is supported by scientific evidence and repeated experiments. Often, a law can be expressed in the form of a single mathematical equation. Laws and theories are similar in that they are both scientific statements that result from a tested hypothesis and are supported by scientific evidence. However, the designationlawis reserved for a concise and very general statement that describes phenomena in nature, such as the law that energy is conserved during any process, or Newton’s second law of motion, which relates force, mass, and acceleration by the simple equation</p>
+<p class="prose">A theory, in contrast, is a less concise statement of observed phenomena. For example, the Theory of Evolution and the Theory of Relativity cannot be expressed concisely enough to be considered a law. The biggest difference between a law and a theory is that a theory is much more complex and dynamic. A law describes a single action, whereas a theory explains an entire group of related phenomena. And, whereas a law is a postulate that forms the foundation of the scientific method, a theory is the end result of that process.</p>
+<p class="prose">Less broadly applicable statements are usually called principles (such as Pascal’s principle, which is applicable only in fluids), but the distinction between laws and principles often is not carefully made.</p>
+<div class="diagram"><img src="images/ch1/fig1-9-a-planetary-model-of-an-atom-with-a-posi.jpg" alt="A planetary model of an atom with a positively charged nucleus at the center and negatively charged particles moving in orbits around the nucleus."><div class="d-cap">A planetary model of an atom with a positively charged nucleus at the center and negatively charged particles moving in orbits around the nucleus. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">MODELS, THEORIES, AND LAWS</p>
+<p class="prose">Models, theories, and laws are used to help scientists analyze the data they have already collected. However, often after a model, theory, or law has been developed, it points scientists toward new discoveries they would not otherwise have made.</p>
+<p class="prose">The models, theories, and laws we devise sometimesimply the existence of objects or phenomena as yet unobserved.These predictions are remarkable triumphs and tributes to the power of science. It is the underlying order in the universe that enables scientists to make such spectacular predictions. However, ifexperimentdoes not verify our predictions, then the theory or law is wrong, no matter how elegant or convenient it is. Laws can never be known with absolute certainty because it is impossible to perform every imaginable experiment in order to confirm a law in every possible scenario. Physicists operate under the assumption that all scientific laws and theories are valid until a counterexample is observed. If a good-quality, verifiable experiment contradicts a well-established law, then the law must be modified or overthrown completely.</p>
+<p class="prose">The study of science in general and physics in particular is an adventure much like the exploration of uncharted ocean. Discoveries are made; models, theories, and laws are formulated; and the beauty of the physical universe is made more sublime for the insights gained.</p>
+<p class="prose">THE SCIENTIFIC METHOD</p>
+<p class="prose">As scientists inquire and gather information about the world, they follow a process called the scientific method. This process typically begins with an observation and question that the scientist will research. Next, the scientist typically performs some research about the topic and then devises a hypothesis. Then, the scientist will test the hypothesis by performing an experiment. Finally, the scientist analyzes the results of the experiment and draws a conclusion. Note that the scientific method can be applied to many situations that are not limited to science, and this method can be modified to suit the situation.</p>
+<p class="prose">Consider an example. Let us say that you try to turn on your car, but it will not start. You undoubtedly wonder: Why will the car not start? You can follow a scientific method to answer this question. First off, you may perform some research to determine a variety of reasons why the car will not start. Next, you will state a hypothesis. For example, you may believe that the car is not starting because it has no engine oil. To test this, you open the hood of the car and examine the oil level. You observe that the oil is at an acceptable level, and you thus conclude that the oil level is not contributing to your car issue. To troubleshoot the issue further, you may devise a new hypothesis to test and then repeat the process again.</p>
+<div class="sh2">The Evolution of Natural Philosophy into Modern Physics</div>
+<p class="prose">Physics was not always a separate and distinct discipline. It remains connected to other sciences to this day. The wordphysicscomes from Greek, meaning nature. The study of nature came to be called “natural philosophy.” From ancient times through the Renaissance, natural philosophy encompassed many fields, including astronomy, biology, chemistry, physics, mathematics, and medicine. Over the last few centuries, the growth of knowledge has resulted in ever-increasing specialization and branching of natural philosophy into separate fields, with physics retaining the most basic facets (Figures -Figure . Physics as it developed from the Renaissance to the end of the 19th century is calledclassical physics. It was transformed into modern physics by revolutionary discoveries made starting at the beginning of the 20th century.</p>
+<div class="diagram"><img src="images/ch1/fig1-10-a-marble-statue-of-aristotle.jpg" alt="A marble statue of Aristotle."><div class="d-cap">A marble statue of Aristotle. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-11-a-painting-of-galileo-galilei.jpg" alt="A painting of Galileo Galilei."><div class="d-cap">A painting of Galileo Galilei. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-12-a-photograph-of-niels-bohr.jpg" alt="A photograph of Niels Bohr"><div class="d-cap">A photograph of Niels Bohr (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Classical physics is not an exact description of the universe, but it is an excellent approximation under the following conditions: Matter must be moving at speeds less than about 1% of the speed of light, the objects dealt with must be large enough to be seen with a microscope, and only weak gravitational fields, such as the field generated by the Earth, can be involved. Because humans live under such circumstances, classical physics seems intuitively reasonable, while many aspects of modern physics seem bizarre. This is why models are so useful in modern physics—they let us conceptualize phenomena we do not ordinarily experience. We can relate to models in human terms and visualize what happens when objects move at high speeds or imagine what objects too small to observe with our senses might be like. For example, we can understand an atom’s properties because we can picture it in our minds, although we have never seen an atom with our eyes. New tools, of course, allow us to better picture phenomena we cannot see. In fact, new instrumentation has allowed us in recent years to actually “picture” the atom.</p>
+<p class="prose">LIMITS ON THE LAWS OF CLASSICAL PHYSICS</p>
+<p class="prose">For the laws of classical physics to apply, the following criteria must be met: Matter must be moving at speeds less than about 1% of the speed of light, the objects dealt with must be large enough to be seen with a microscope, and only weak gravitational fields (such as the field generated by the Earth) can be involved.</p>
+<div class="diagram"><img src="images/ch1/fig1-13-a-high-resolution-image-of-gold-sheet-ob.jpg" alt="A high-resolution image of gold sheet obtained from S T M."><div class="d-cap">A high-resolution image of gold sheet obtained from S T M. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Some of the most spectacular advances in science have been made in modern physics. Many of the laws of classical physics have been modified or rejected, and revolutionary changes in technology, society, and our view of the universe have resulted. Like science fiction, modern physics is filled with fascinating objects beyond our normal experiences, but it has the advantage over science fiction of being very real. Why, then, is the majority of this text devoted to topics of classical physics? There are two main reasons: Classical physics gives an extremely accurate description of the universe under a wide range of everyday circumstances, and knowledge of classical physics is necessary to understand modern physics.</p>
+<p class="prose">Modern physicsitself consists of the two revolutionary theories, relativity and quantum mechanics. These theories deal with the very fast and the very small, respectively.Relativitymust be used whenever an object is traveling at greater than about 1% of the speed of light or experiences a strong gravitational field such as that near the Sun.Quantum mechanicsmust be used for objects smaller than can be seen with a microscope. The combination of these two theories isrelativistic quantum mechanics,and it describes the behavior of small objects traveling at high speeds or experiencing a strong gravitational field. Relativistic quantum mechanics is the best universally applicable theory we have. Because of its mathematical complexity, it is used only when necessary, and the other theories are used whenever they will produce sufficiently accurate results. We will find, however, that we can do a great deal of modern physics with the algebra and trigonometry used in this text.</p>
+<p class="prose">Exercise</p>
+<p class="prose">A friend tells you he has learned about a new law of nature. What can you know about the information even before your friend describes the law? How would the information be different if your friend told you he had learned about a scientific theory rather than a law?</p>
+<p class="prose">Without knowing the details of the law, you can still infer that the information your friend has learned conforms to the requirements of all laws of nature: it will be a concise description of the universe around us; a statement of the underlying rules that all natural processes follow. If the information had been a theory, you would be able to infer that the information will be a large-scale, broadly applicable generalization.</p>
+<p class="prose">PHET EXPLORATIONS: EQUATION GRAPHER</p>
+<p class="prose">Learn about graphing polynomials. The shape of the curve changes as the constants are adjusted. View the curves for the individual terms (e.g. \(y=bx\)) to see how they add to generate the polynomial curve.</p>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MODELS, THEORIES, AND LAWSModels, theories, and laws are used to help scientists analyze the data they have already collected. However, often after a model, theory, or law has been developed, it points scientists toward new discoveries they would not otherwise have made.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">THE SCIENTIFIC METHODAs scientists inquire and gather information about the world, they follow a process called the scientific method. This process typically begins with an observation and question that the scientist will research. Next, the scientist typically performs some research about the topic and then devises a hypothesis. Then, the scientist will test the hypothesis by performing an experiment. Finally, the scientist analyzes the results of the experiment and draws a conclusion. Note that the scientific method can be applied to many situations that are not limited to science, and this method can be modified to suit the situation.Consider an example. Let us say that you try to turn on your car, but it will not start. You undoubtedly wonder: Why will the car not start? You can follow a scientific method to answer this question. First off, you may perform some research to determine a variety of reasons why the car will not start. Next, you will state a hypothesis. For example, you may believe that the car is not starting because it has no engine oil. To test this, you open the hood of the car and examine the oil level. You observe that the oil is at an acceptable level, and you thus conclude that the oil level is not contributing to your car issue. To troubleshoot the issue further, you may devise a new hypothesis to test and then repeat the process again.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">LIMITS ON THE LAWS OF CLASSICAL PHYSICSFor the laws of classical physics to apply, the following criteria must be met: Matter must be moving at speeds less than about 1% of the speed of light, the objects dealt with must be large enough to be seen with a microscope, and only weak gravitational fields (such as the field generated by the Earth) can be involved.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: EQUATION GRAPHERLearn about graphing polynomials. The shape of the curve changes as the constants are adjusted. View the curves for the individual terms (e.g. \(y=bx\)) to see how they add to generate the polynomial curve.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 1.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Models are particularly useful in relativity and quantum mechanics, where conditions are outside those normally encountered by humans. What is a model?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 1.1 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following best defines the realm of physics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study of living organisms and their interactions with the environment.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The study of the composition, structure, and properties of substances.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The study of the history of the universe and the evolution of natural philosophy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The study of the interactions of energy, matter, space, and time.</li>
+</ul><div class="qexp">Physics is fundamentally concerned with describing the basic mechanisms that underlie every phenomenon through the interactions of energy, matter, space, and time.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the primary difference between a scientific law and a scientific theory?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A law describes a single action using concise language, while a theory is a more complex explanation of a group of phenomena.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A law is a preliminary hypothesis that has not been tested, while a theory is a proven fact of nature.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A law is an explanation for patterns in nature, while a theory is a mathematical equation that cannot be changed.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A law is the end result of the scientific method, while a theory is the initial postulate used to begin an experiment.</li>
+</ul><div class="qexp">Scientific laws use concise language to describe a generalized pattern in nature, whereas theories are much more complex and dynamic explanations for related phenomena.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why do physicists use models, such as the planetary model of the atom?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To provide an exact, 1:1 scale replica of a physical object for direct observation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To replace the need for experimentation when the data is too difficult to collect.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To represent phenomena that are too difficult or impossible to display and observe directly.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To simplify equations so that they no longer require the use of significant figures.</li>
+</ul><div class="qexp">Models are representations of things that are often too fast, too small, or too complex to be observed directly with the senses.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Under which condition is classical physics no longer an excellent approximation of the universe?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>When objects are large enough to be seen with a standard microscope.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>When objects are moving at speeds greater than roughly 1% of the speed of light.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>When objects are moving through weak gravitational fields like that of the Earth.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>When the interactions involve energy being converted from one form to another.</li>
+</ul><div class="qexp">Classical physics is only accurate for objects moving at speeds significantly less than the speed of light, large enough to be seen with a microscope, and in weak gravitational fields.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which branch of modern physics must be used to describe the behavior of objects smaller than what can be seen with a microscope?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Quantum mechanics</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newtonian mechanics</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>General relativity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Classical philosophy</li>
+</ul><div class="qexp">Quantum mechanics is the revolutionary theory used to describe the behavior of the very small, such as atoms and subatomic particles.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 1 · <span>Section 1.2</span></div><div class="h-title">1.2: Physical Quantities and Units</div><div class="h-desc">The range of objects and phenomena studied in physics is immense. From the incredibly short lifetime of a nucleus to the age of the Earth, from the tiny sizes of sub-nuclear particles to the vast dist...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 1.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Perform unit conversions both in the SI and English units.</li>
+      <li>Explain the most common prefixes in the SI units and be able to write them in scientific notation.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">accuracy</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the degree to which a measured value agrees with correct value for that measurement</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">physical quantity</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a characteristic or property of an object that can be measured or calculated from other measurements</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 1.2</div>
+<p class="prose">The range of objects and phenomena studied in physics is immense. From the incredibly short lifetime of a nucleus to the age of the Earth, from the tiny sizes of sub-nuclear particles to the vast distance to the edges of the known universe, from the force exerted by a jumping flea to the force between Earth and the Sun, there are enough factors of \(10\) to challenge the imagination of even the most experienced scientist. Giving numerical values for physical quantities and equations for physical principles allows us to understand nature much more deeply than does qualitative description alone. To comprehend these vast ranges, we must also have accepted units in which to express them. And we shall find that (even in the potentially mundane discussion of meters, kilograms, and seconds) a profound simplicity of nature appears—all physical quantities can be expressed as combinations of only four fundamental physical quantities: length, mass, time, and electric current.</p>
+<div class="diagram"><img src="images/ch1/fig1-14-a-view-of-earth-from-the-moon.jpg" alt="A view of Earth from the Moon."><div class="d-cap">A view of Earth from the Moon. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We define aphysical quantityeither byspecifying how it is measuredor bystating how it is calculatedfrom other measurements. For example, we define distance and time by specifying methods for measuring them, whereas we defineaverage speedby stating that it is calculated as distance traveled divided by time of travel.</p>
+<p class="prose">Measurements of physical quantities are expressed in terms ofunits, which are standardized values. For example, the length of a race, which is a physical quantity, can be expressed in units of meters (for sprinters) or kilometers (for distance runners). Without standardized units, it would be extremely difficult for scientists to express and compare measured values in a meaningful way (Figure .</p>
+<div class="diagram"><img src="https://phys.libretexts.org/@api/deki/files/7349/Figure_01_02_01a.jpg?revision=1" alt="A boy looking at a map and trying to guess distances with unit of length mentioned as cables between two points."><div class="d-cap">A boy looking at a map and trying to guess distances with unit of length mentioned as cables between two points. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">There are two major systems of units used in the world:SI units(also known as the metric system) andEnglish units(also known as the customary or imperial system).English unitswere historically used in nations once ruled by the British Empire and are still widely used in the United States. Virtually every other country in the world now uses SI units as the standard; the metric system is also the standard system agreed upon by scientists and mathematicians. The acronym “SI” is derived from the FrenchSystème International.</p>
+<div class="sh2">SI Units: Fundamental and Derived Units</div>
+<p class="prose">Table gives the fundamental SI units that are used throughout this textbook. This text uses non-SI units in a few applications where they are in very common use, such as the measurement of blood pressure in millimeters of mercury (mm Hg). Whenever non-SI units are discussed, they will be tied to SI units through conversions.</p>
+<table class="dt">
+<tr><th>Length</th><th>Mass</th><th>Time</th><th>Electric Current</th></tr>
+<tr><td>meter (m)</td><td>kilogram (kg)</td><td>second (s)</td><td>ampere (A)</td></tr>
+</table>
+<p class="prose">It is an intriguing fact that some physical quantities are more fundamental than others and that the most fundamental physical quantities can be definedonlyin terms of the procedure used to measure them. The units in which they are measured are thus calledfundamental units. In this textbook, the fundamental physical quantities are taken to be length, mass, time, and electric current. (Note that electric current will not be introduced until much later in this text.) All other physical quantities, such as force and electric charge, can be expressed as algebraic combinations of length, mass, time, and current (for example, speed is length divided by time); these units are calledderived units.</p>
+<div class="sh3">Units of Time, Length, and Mass: The Second, Meter, and Kilogram</div>
+<p class="prose">The SI unit for time, thesecond(abbreviated s), has a long history. For many years it was defined as 1/86,400 of a mean solar day. More recently, a new standard was adopted to gain greater accuracy and to define the second in terms of a non-varying, or constant, physical phenomenon (because the solar day is getting longer due to very gradual slowing of the Earth’s rotation). Cesium atoms can be made to vibrate in a very steady way, and these vibrations can be readily observed and counted. In 1967, the second was redefined as the time required for 9,192,631,770 of these vibrations (Figure . Accuracy in the fundamental units is essential, because all measurements are ultimately expressed in terms of fundamental units and can be no more accurate than are the fundamental units themselves.</p>
+<div class="diagram"><img src="images/ch1/fig1-16-a-top-view-of-an-atomic-fountain-is-show.jpg" alt="A top view of an atomic fountain is shown. It measures time using the vibration of the cesium atom."><div class="d-cap">A top view of an atomic fountain is shown. It measures time using the vibration of the cesium atom. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The SI unit for length is themeter(abbreviated m); its definition has also changed over time to become more accurate and precise. The meter was first defined in 1791 as 1/10,000,000 of the distance from the equator to the North Pole. This measurement was improved in 1889 by redefining the meter to be the distance between two engraved lines on a platinum-iridium bar now kept near Paris. By 1960, it had become possible to define the meter even more accurately in terms of the wavelength of light, so it was again redefined as 1,650,763.73 wavelengths of orange light emitted by krypton atoms. In 1983, the meter was given its present definition (partly for greater accuracy) as the distance light travels in a vacuum in 1/299,792,458 of a second (Figure . This change defines the speed of light to be exactly 299,792,458 meters per second. The length of the meter will change if the speed of light is someday measured with greater accuracy.</p>
+<p class="prose">The SI unit for mass is thekilogram(abbreviated kg); it is defined to be the mass of a platinum-iridium cylinder kept with the old meter standard at the International Bureau of Weights and Measures near Paris. Exact replicas of the standard kilogram are also kept at the United States’ National Institute of Standards and Technology, or NIST, located in Gaithersburg, Maryland outside of Washington D.C., and at other locations around the world. The determination of all other masses can be ultimately traced to a comparison with the standard mass.</p>
+<div class="diagram"><img src="images/ch1/fig1-17-beam-of-light-from-a-flashlight-is-repre.jpg" alt="Beam of light from a flashlight is represented by an arrow pointing right, traveling the length of a meter stick."><div class="d-cap">Beam of light from a flashlight is represented by an arrow pointing right, traveling the length of a meter stick. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Electric current and its accompanying unit, the ampere, will be introduced in Introduction to Electric Current, Resistance, and Ohm's Law when electricity and magnetism are covered. The initial modules in this textbook are concerned with mechanics, fluids, heat, and waves. In these subjects all pertinent physical quantities can be expressed in terms of the fundamental units of length, mass, and time.</p>
+<div class="sh3">Metric Prefixes</div>
+<p class="prose">SI units are part of themetric system. The metric system is convenient for scientific and engineering calculations because the units are categorized by factors of 10. Table 2 gives metric prefixes and symbols used to denote various factors of 10.</p>
+<p class="prose">Metric systems have the advantage that conversions of units involve only powers of 10. There are 100 centimeters in a meter, 1000 meters in a kilometer, and so on. In nonmetric systems, such as the system of U.S. customary units, the relationships are not as simple—there are 12 inches in a foot, 5280 feet in a mile, and so on. Another advantage of the metric system is that the same unit can be used over extremely large ranges of values simply by using an appropriate metric prefix. For example, distances in meters are suitable in construction, while distances in kilometers are appropriate for air travel, and the tiny measure of nanometers are convenient in optical design. With the metric system there is no need to invent new units for particular applications.</p>
+<p class="prose">The term order of magnitude refers to the scale of a value expressed in the metric system. Each power of 1 0 in the metric system represents a different order of magnitude. For example, 10​1, 10​2, 103, and so forth are all different orders of magnitude. All quantities that can be expressed as a product of a specific power of 10 are said to be of the same order of magnitude. For example, the number 800 can be written as 8×102, and the number 450 can be written as 4.5×102. Thus, the numbers 800 and 450 are of the same order of magnitude: 102. Order of magnitude can be thought of as a ballpark estimate for the scale of a value. The diameter of an atom is on the order of 10​-9m, while the diameter of the Sun is on the order of 109m.</p>
+<p class="prose">THE QUEST FOR MICROSCOPIC STANDARDS FOR BASIC UNITS</p>
+<p class="prose">The fundamental units described in this chapter are those that produce the greatest accuracy and precision in measurement. There is a sense among physicists that, because there is an underlying microscopic substructure to matter, it would be most satisfying to base our standards of measurement on microscopic objects and fundamental physical phenomena such as the speed of light. A microscopic standard has been accomplished for the standard of time, which is based on the oscillations of the cesium atom.</p>
+<p class="prose">The standard for length was once based on the wavelength of light (a small-scale length) emitted by a certain type of atom, but it has been supplanted by the more precise measurement of the speed of light. If it becomes possible to measure the mass of atoms or a particular arrangement of atoms such as a silicon sphere to greater precision than the kilogram standard, it may become possible to base mass measurements on the small scale. There are also possibilities that electrical phenomena on the small scale may someday allow us to base a unit of charge on the charge of electrons and protons, but at present current and charge are related to large-scale currents and forces between wires.</p>
+<table class="dt">
+<tr><th>Prefix</th><th>Symbol</th><th>Value</th><th>Examples (some are Approximate)</th><th></th></tr>
+<tr><td>exa</td><td>E</td><td>\(10^18\)</td><td>exameter Em \(10^{18}m\)</td><td>distance light travels in a century</td></tr>
+<tr><td>peta</td><td>P</td><td>\(10^15\)</td><td>petasecond Ps \(10^{15} s\)</td><td>30 million years</td></tr>
+<tr><td>tera</td><td>T</td><td>\(10^12\)</td><td>terawatt TW \(10^{12} W\)</td><td>powerful laser output</td></tr>
+<tr><td>giga</td><td>G</td><td>\(10^9\)</td><td>gigahertz GHz \(10^9 Hz\)</td><td>a microwave frequency</td></tr>
+<tr><td>mega</td><td>M</td><td>\(10^6\)</td><td>megacurie MCi \(10^{6 }Ci\)</td><td>high radioactivity</td></tr>
+<tr><td>kilo</td><td>k</td><td>\(10^3\)</td><td>kilometer km \(10^3 m\)</td><td>about 6/10 mile</td></tr>
+<tr><td>hecto</td><td>h</td><td>\(10^2\)</td><td>hectoliter hL \(10^2 L\)</td><td>26 gallons</td></tr>
+<tr><td>deka</td><td>da</td><td>\(10^1\)</td><td>dekagram dag \(10^g\)</td><td>teaspoon of butter</td></tr>
+<tr><td>—</td><td>—</td><td>\(10^0 (=1)\)</td><td></td><td></td></tr>
+<tr><td>deci</td><td>d</td><td>\(10^{−1}\)</td><td>deciliter dL \(10^{−1} L\)</td><td>less than half a soda</td></tr>
+<tr><td>centi</td><td>c</td><td>\(10^{−2}\)</td><td>centimeter cm \(10^{−2} m\)</td><td>fingertip thickness</td></tr>
+<tr><td>milli</td><td>m</td><td>\(10^{−3}\)</td><td>millimeter mm \(10^{−3} m\)</td><td>flea at its shoulders</td></tr>
+<tr><td>micro</td><td>µ</td><td>\(10^{−6}\)</td><td>micrometer µm \(10^{−6} m\)</td><td>detail in microscope</td></tr>
+<tr><td>nano</td><td>n</td><td>\(10^{−9}\)</td><td>nanogram ng \(10^{−9} g\)</td><td>small speck of dust</td></tr>
+<tr><td>pico</td><td>p</td><td>\(10^{−12}\)</td><td>picofarad pF \(10^{−12} F\)</td><td>small capacitor in radio</td></tr>
+<tr><td>femto</td><td>f</td><td>\(10^{−15}\)</td><td>femtometer fm \(10^{−15} m\)</td><td>size of a proton</td></tr>
+<tr><td>atto</td><td>a</td><td>\(10^{−18}\)</td><td>attosecond as \(10^{−18} s\)</td><td>time light crosses an atom</td></tr>
+</table>
+<div class="sh2">Known Ranges of Length, Mass, and Time</div>
+<p class="prose">The vastness of the universe and the breadth over which physics applies are illustrated by the wide range of examples of known lengths, masses, and times in Table . Examination of this table will give you some feeling for the range of possible topics and numerical values (Figures and .</p>
+<div class="diagram"><img src="images/ch1/fig1-18-a-magnified-image-of-tiny-phytoplankton-.jpg" alt="A magnified image of tiny phytoplankton swimming among the crystal of ice.["><div class="d-cap">A magnified image of tiny phytoplankton swimming among the crystal of ice.[ (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-19-a-view-of-abell-galaxy-with-some-bright-.jpg" alt="A view of Abell Galaxy with some bright stars and some hot gases."><div class="d-cap">A view of Abell Galaxy with some bright stars and some hot gases. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Unit Conversion and Dimensional Analysis</div>
+<p class="prose">It is often necessary to convert from one type of unit to another. For example, if you are reading a European cookbook, some quantities may be expressed in units of liters and you need to convert them to cups. Or, perhaps you are reading walking directions from one location to another and you are interested in how many miles you will be walking. In this case, you will need to convert units of feet to miles. Let us consider a simple example of how to convert units.</p>
+<p class="prose">Let us say that we want to convert 80 meters (\(m\)) to kilometers (\(km\)).</p>
+<p class="prose">ClickAppendix Cfor a more complete list of conversion factors.</p>
+<table class="dt">
+<tr><th>lengths in meters</th><th>Masses in kilograms (more precise values in parentheses)</th><th>Times in seconds (more precise values in parentheses)</th></tr>
+<tr><td>10−18</td><td>Present experimental limit to smallest observable detail</td><td>10−30</td><td>Mass of an electron (9.11×10−31kg)</td><td>10−23</td><td>Time for light to cross a proton</td></tr>
+<tr><td>10−15</td><td>Diameter of a proton</td><td>10−27</td><td>Mass of a hydrogen atom (1.67×10−27kg)</td><td>10−22</td><td>Mean life of an extremely unstable nucleus</td></tr>
+<tr><td>10−14</td><td>Diameter of a uranium nucleus</td><td>10−15</td><td>Mass of a bacterium</td><td>10−15</td><td>Time for one oscillation of visible light</td></tr>
+<tr><td>10−10</td><td>Diameter of a hydrogen atom</td><td>10−5</td><td>Mass of a mosquito</td><td>10−13</td><td>Time for one vibration of an atom in a solid</td></tr>
+<tr><td>10−8</td><td>Thickness of membranes in cells of living organisms</td><td>10−2</td><td>Mass of a hummingbird</td><td>10−8</td><td>Time for one oscillation of an FM radio wave</td></tr>
+<tr><td>10−6</td><td>Wavelength of visible light</td><td>1</td><td>Mass of a liter of water (about a quart)</td><td>10−3</td><td>Duration of a nerve impulse</td></tr>
+<tr><td>10−3</td><td>Size of a grain of sand</td><td>102</td><td>Mass of a person</td><td>1</td><td>Time for one heartbeat</td></tr>
+<tr><td>1</td><td>Height of a 4-year-old child</td><td>103</td><td>Mass of a car</td><td>105</td><td>One day (8.64×104s)</td></tr>
+<tr><td>102</td><td>Length of a football field</td><td>108</td><td>Mass of a large ship</td><td>107</td><td>One year (y) (3.16×107s)</td></tr>
+<tr><td>104</td><td>Greatest ocean depth</td><td>1012</td><td>Mass of a large iceberg</td><td>109</td><td>About half the life expectancy of a human</td></tr>
+<tr><td>107</td><td>Diameter of the Earth</td><td>1015</td><td>Mass of the nucleus of a comet</td><td>1011</td><td>Recorded history</td></tr>
+<tr><td>1011</td><td>Distance from the Earth to the Sun</td><td>1023</td><td>Mass of the Moon (7.35×1022kg)</td><td>1017</td><td>Age of the Earth</td></tr>
+<tr><td>1016</td><td>Distance traveled by light in 1 year (a light year)</td><td>1025</td><td>Mass of the Earth (5.97×1024kg)</td><td>1018</td><td>Age of the universe</td></tr>
+<tr><td>1021</td><td>Diameter of the Milky Way galaxy</td><td>1030</td><td>Mass of the Sun (1.99×1030kg)</td><td></td><td></td></tr>
+<tr><td>1022</td><td>Distance from the Earth to the nearest large galaxy (Andromeda)</td><td>1042</td><td>Mass of the Milky Way galaxy (current upper limit)</td><td></td><td></td></tr>
+<tr><td>1026</td><td>Distance from the Earth to the edges of the known universe</td><td>1053</td><td>Mass of the known universe (current upper limit)</td><td></td><td></td></tr>
+</table>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Unit Conversions: A Short Drive Home</span></div><div class="example-body">
+<p class="prose">Suppose that you drive the 10.0 km from your university to home in 20.0 min. Calculate your average speed (a) in kilometers per hour (km/h) and (b) in meters per second (m/s). (Note: Average speed is distance traveled divided by time of travel.)</p>
+<p class="prose">First we calculate the average speed using the given units. Then we can get the average speed into the desired units by picking the correct conversion factor and multiplying by it. The correct conversion factor is the one that cancels the unwanted unit and leaves the desired unit in its place.</p>
+<p class="prose">(1) Calculate average speed. Average speed is distance traveled divided by time of travel. (Take this definition as a given for now—average speed and other motion concepts will be covered in a later module.) In equation form,</p>
+<div class="math-display">\[\text{average speed} =\dfrac{distance}{time}. \nonumber\]</div>
+<p class="prose">(2) Substitute the given values for distance and time.</p>
+<div class="math-display">\[ \begin{align*} \text{average speed} &=\dfrac{10.0\, km}{20.0\, min} \\[5pt] &=0.500 \dfrac{km}{ min}.\end{align*} \]</div>
+<p class="prose">(3) Convert km/min to km/h: multiply by the conversion factor that will cancel minutes and leave hours. That conversion factor is60 min/hr. Thus,</p>
+<div class="math-display">\[\begin{align*} \text{average speed} &=0.500 \dfrac{km}{ min}×\dfrac{60\, min}{1 \,h} \\[5pt] &=30.0 \dfrac{km}{ h} \end{align*} \]</div>
+<p class="prose">To check your answer, consider the following:</p>
+<p class="prose">(1) Be sure that you have properly cancelled the units in the unit conversion. If you have written the unit conversion factor upside down, the units will not cancel properly in the equation. If you accidentally get the ratio upside down, then the units will not cancel; rather, they will give you the wrong units as follows:</p>
+<div class="math-display">\[\dfrac{km}{min}×\dfrac{1\, hr}{60\, min}=\dfrac{1}{60} \dfrac{km⋅hr}{ min^2}, \nonumber\]</div>
+<p class="prose">which are obviously not the desired units of km/h.</p>
+<p class="prose">(2) Check that the units of the final answer are the desired units. The problem asked us to solve for average speed in units of km/h and we have indeed obtained these units.</p>
+<p class="prose">(3) Check the significant figures. Because each of the values given in the problem has three significant figures, the answer should also have three significant figures. The answer 30.0 km/hr does indeed have three significant figures, so this is appropriate. Note that the significant figures in the conversion factor are not relevant because an hour is defined to be 60 minutes, so the precision of the conversion factor is perfect.</p>
+<p class="prose">(4) Next, check whether the answer is reasonable. Let us consider some information from the problem—if you travel 10 km in a third of an hour (20 min), you would travel three times that far in an hour. The answer does seem reasonable.</p>
+<p class="prose">There are several ways to convert the average speed into meters per second.</p>
+<p class="prose">(1) Start with the answer to (a) and convert km/h to m/s. Two conversion factors are needed—one to convert hours to seconds, and another to convert kilometers to meters.</p>
+<p class="prose">(2) Multiplying by these yields</p>
+<div class="math-display">\[\begin{align*} \text{Average speed} &=30.0\dfrac{\bcancel{km}}{\cancel{h}}×\dfrac{1\,\cancel{h}}{3,600 \,s}×\dfrac{1,000\,m}{1\, \bcancel{km}} \\[5pt] &=8.33 \,m/s \end{align*}\]</div>
+<p class="prose">If we had started with 0.500 km/min, we would have needed different conversion factors, but the answer would have been the same: 8.33 m/s.</p>
+<p class="prose">You may have noted that the answers in the worked example just covered were given to three digits. Why? When do you need to be concerned about the number of digits in something you calculate? Why not write down all the digits your calculator produces? The module Accuracy, Precision, and Significant Figures will help you answer these questions.</p>
+<p class="prose">While there are numerous types of units that we are all familiar with, there are others that are much more obscure. For example, a firkin is a unit of volume that was once used to measure beer. One firkin equals about 34 liters. To learn more about nonstandard units, use a dictionary or encyclopedia to research different “weights and measures.” Take note of any unusual units, such as a barleycorn, that are not listed in the text. Think about how the unit is defined and state its relationship to SI units.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Some hummingbirds beat their wings more than 50 times per second. A scientist is measuring the time it takes for a hummingbird to beat its wings once. Which fundamental unit should the scientist use to describe the measurement? Which factor of 10 is the scientist likely to use to describe the motion precisely? Identify the metric prefix that corresponds to this factor of 10.</p>
+<p class="prose">The scientist will measure the time between each movement using the fundamental unit of seconds. Because the wings beat so fast, the scientist will probably need to measure in milliseconds, or 10−3seconds. (50 beats per second corresponds to 20 milliseconds per beat.)</p>
+<p class="prose">Exercise</p>
+<p class="prose">One cubic centimeter is equal to one milliliter. What does this tell you about the different units in the SI metric system?</p>
+<p class="prose">The fundamental unit of length (meter) is probably used to create the derived unit of volume (liter). The measure of a milliliter is dependent on the measure of a centimeter.</p>
+</div></div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">THE QUEST FOR MICROSCOPIC STANDARDS FOR BASIC UNITSThe fundamental units described in this chapter are those that produce the greatest accuracy and precision in measurement. There is a sense among physicists that, because there is an underlying microscopic substructure to matter, it would be most satisfying to base our standards of measurement on microscopic objects and fundamental physical phenomena such as the speed of light. A microscopic standard has been accomplished for the standard of time, which is based on the oscillations of the cesium atom.The standard for length was once based on the wavelength of light (a small-scale length) emitted by a certain type of atom, but it has been supplanted by the more precise measurement of the speed of light. If it becomes possible to measure the mass of atoms or a particular arrangement of atoms such as a silicon sphere to greater precision than the kilogram standard, it may become possible to base mass measurements on the small scale. There are also possibilities that electrical phenomena on the small scale may someday allow us to base a unit of charge on the charge of electrons and protons, but at present current and charge are related to large-scale currents and forces between wires.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">NONSTANDARD UNITSWhile there are numerous types of units that we are all familiar with, there are others that are much more obscure. For example, a firkin is a unit of volume that was once used to measure beer. One firkin equals about 34 liters. To learn more about nonstandard units, use a dictionary or encyclopedia to research different “weights and measures.” Take note of any unusual units, such as a barleycorn, that are not listed in the text. Think about how the unit is defined and state its relationship to SI units.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 1.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">How does a model differ from a theory?</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 1.2 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following is a fundamental SI unit in the system used by this textbook?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Liter</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Kilometer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ampere</li>
+</ul><div class="qexp">The four fundamental SI units used in this text are the meter, kilogram, second, and ampere.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A length is measured as $10^{-15}$ meters. Using metric prefixes, how should this be expressed?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1 attometer</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1 picometer</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1 femtometer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1 nanometer</li>
+</ul><div class="qexp">The metric prefix "femto-" corresponds to the factor $10^{-15}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">How does a derived unit differ from a fundamental unit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Derived units are only used in the English system, while fundamental units are used in the SI system.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Derived units are algebraic combinations of fundamental units, such as length divided by time.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Derived units are based on constant physical phenomena, while fundamental units are based on human-made artifacts.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Derived units are only used for large-scale measurements, while fundamental units are for microscopic measurements.</li>
+</ul><div class="qexp">Fundamental units are defined by a measurement procedure, while derived units are calculated as combinations of those fundamental units.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A car travels at a constant speed of 72.0 km/h. What is this speed expressed in meters per second (m/s)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>20.0 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>25.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>30.0 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>259 m/s</li>
+</ul><div class="qexp">Multiplying 72.0 km/h by (1000 m / 1 km) and dividing by (3600 s / 1 h) results in 20.0 m/s.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the order of magnitude of the number 800?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$10^1$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$10^3$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$10^4$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$10^2$</li>
+</ul><div class="qexp">800 is written in scientific notation as $8 \times 10^2$, so its order of magnitude is $10^2$.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 1 · <span>Section 1.3</span></div><div class="h-title">1.3: Accuracy, Precision, and Significant Figures</div><div class="h-desc">Science is based on observation and experiment—that is, on measurements.Accuracyis how close a measurement is to the correct value for that measurement. For example, let us say that you are measuring ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 1.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Determine the appropriate number of significant figures in both addition and subtraction, as well as multiplication and division calculations.</li>
+      <li>Calculate the percent uncertainty of a measurement.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 1.3</div>
+<div class="sh2">Accuracy and Precision of a Measurement</div>
+<p class="prose">Science is based on observation and experiment—that is, on measurements.Accuracyis how close a measurement is to the correct value for that measurement. For example, let us say that you are measuring the length of standard computer paper. The packaging in which you purchased the paper states that it is 11.0 inches long. You measure the length of the paper three times and obtain the following measurements: 11.1 in., 11.2 in., and 10.9 in. These measurements are quite accurate because they are very close to the correct value of 11.0 inches. In contrast, if you had obtained a measurement of 12 inches, your measurement would not be very accurate.</p>
+<div class="diagram"><img src="images/ch1/fig1-20-an-old-rusted-double-pan-balance-is-show.jpg" alt="An old rusted double-pan balance is shown with a weighing stone on one pan."><div class="d-cap">An old rusted double-pan balance is shown with a weighing stone on one pan. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Theprecisionof a measurement system refers to how close the agreement is between repeated measurements (which are repeated under the same conditions). Consider the example of the paper measurements. The precision of the measurements refers to the spread of the measured values. One way to analyze the precision of the measurements would be to determine the range, or difference, between the lowest and the highest measured values. In that case, the lowest value was 10.9 in. and the highest value was 11.2 in. Thus, the measured values deviated from each other by at most 0.3 in. These measurements were relatively precise because they did not vary too much in value. However, if the measured values had been 10.9, 11.1, and 11.9, then the measurements would not be very precise because there would be significant variation from one measurement to another.</p>
+<div class="diagram"><img src="images/ch1/fig1-21-a-digital-analytical-balance.jpg" alt="A digital analytical balance."><div class="d-cap">A digital analytical balance. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The measurements in the paper example are both accurate and precise, but in some cases, measurements are accurate but not precise, or they are precise but not accurate. Let us consider an example of a GPS system that is attempting to locate the position of a restaurant in a city. Think of the restaurant location as existing at the center of a bull’s-eye target, and think of each GPS attempt to locate the restaurant as a black dot. In Figure , you can see that the GPS measurements are spread out far apart from each other, but they are all relatively close to the actual location of the restaurant at the center of the target. This indicates a low precision, high accuracy measuring system. However, in Figure 4, the GPS measurements are concentrated quite closely to one another, but they are far away from the target location. This indicates a high precision, low accuracy measuring system.</p>
+<div class="diagram"><img src="images/ch1/fig1-22-a-pattern-similar-to-a-dart-board-with-f.jpg" alt="A pattern similar to a dart board with few concentric circles shown in white color on a red background. In the innermost circle, there are four black points on the circumference showing the positions of a restaurant. They are far apart from each other."><div class="d-cap">A pattern similar to a dart board with few concentric circles shown in white color on a red background. In the innermost circle, there are four black points on the circumference showing the positions of a restaurant. They are far apart from each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch1/fig1-23-a-pattern-similar-to-a-dart-board-with-a.jpg" alt="A pattern similar to a dart board with a few concentric circles shown in white color on a red background. Near the outermost white circles there are four black points showing the positions of a restaurant. The black points are very close to each other."><div class="d-cap">A pattern similar to a dart board with a few concentric circles shown in white color on a red background. Near the outermost white circles there are four black points showing the positions of a restaurant. The black points are very close to each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Accuracy, Precision, and Uncertainty</div>
+<p class="prose">The degree of accuracy and precision of a measuring system are related to the uncertainty in the measurements. Uncertainty is a quantitative measure of how much your measured values deviate from a standard or expected value. If your measurements are not very accurate or precise, then the uncertainty of your values will be very high. In more general terms, uncertainty can be thought of as a disclaimer for your measured values. For example, if someone asked you to provide the mileage on your car, you might say that it is 45,000 miles, plus or minus 500 miles. The plus or minus amount is the uncertainty in your value. That is, you are indicating that the actual mileage of your car might be as low as 44,500 miles or as high as 45,500 miles, or anywhere in between. All measurements contain some amount of uncertainty. In our example of measuring the length of the paper, we might say that the length of the paper is 11 in., plus or minus 0.2 in. The uncertainty in a measurement, A, is often denoted as δA (“delta A”), so the measurement result would be recorded as A ± δA. In our paper example, the length of the paper could be expressed as 11 in.± 0.2.</p>
+<p class="prose">The factors contributing to uncertainty in a measurement include:</p>
+<p class="prose">In our example, such factors contributing to the uncertainty could be the following: the smallest division on the ruler is 0.1 in., the person using the ruler has bad eyesight, or one side of the paper is slightly longer than the other. At any rate, the uncertainty in a measurement must be based on a careful consideration of all the factors that might contribute and their possible effects.</p>
+<p class="prose">MAKING CONNECTIONS: REAL-WORLD CONNECTIONS – FEVERS OR CHILLS?</p>
+<p class="prose">Uncertainty is a critical piece of information, both in physics and in many other real-world applications. Imagine you are caring for a sick child. You suspect the child has a fever, so you check his or her temperature with a thermometer. What if the uncertainty of the thermometer were 3.0ºC? If the child’s temperature reading was 37.0ºC (which is normal body temperature), the “true” temperature could be anywhere from a hypothermic 34.0ºC to a dangerously high 40.0ºC. A thermometer with an uncertainty of 3.0ºC would be useless.</p>
+<p class="prose">#### Percent Uncertainty</p>
+<p class="prose">One method of expressing uncertainty is as a percent of the measured value. If a measurement A is expressed with uncertainty, \(δA\), the percent uncertainty (%uncertainty) is defined to be</p>
+<div class="math-display">\[\% \,\text{unc} =\dfrac {δA}{A} \times 100\%\]</div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Percent Uncertainty: A Bag of Apples</span></div><div class="example-body">
+<p class="prose">A grocery store sells 5-lb bags of apples. You purchase four bags over the course of a month and weigh the apples each time. You obtain the following measurements:</p>
+<p class="prose">Week 1 weight:4.8 lbWeek 2 weight:5.3 lbWeek 3 weight:4.9 lbWeek 4 weight:5.4 lb</p>
+<p class="prose">You determine that the weight of the5-lbbag has an uncertainty of±0.4lb.What is the percent uncertainty of the bag’s weight?</p>
+<p class="prose">First, observe that the expected value of the bag’s weight, \(A\), is 5 lb. The uncertainty in this value, \(δA\), is 0.4 lb. We can use the following equation to determine the percent uncertainty of the weight:</p>
+<p class="prose">Plug the known values into the equation:</p>
+<p class="prose">We can conclude that the weight of the apple bag is \(5lb±8%\). Consider how this percent uncertainty would change if the bag of apples were half as heavy, but the uncertainty in the weight remained the same. Hint for future calculations: when calculating percent uncertainty, always remember that you must multiply the fraction by 100%. If you do not do this, you will have a decimal quantity, not a percent value.</p>
+<p class="prose">#### Uncertainties in Calculations</p>
+<p class="prose">There is an uncertainty in anything calculated from measured quantities. For example, the area of a floor calculated from measurements of its length and width has an uncertainty because the length and width have uncertainties. How big is the uncertainty in something you calculate by multiplication or division? If the measurements going into the calculation have small uncertainties (a few percent or less), then themethod of adding percentscan be used for multiplication or division. This method says thatthe percent uncertainty in a quantity calculated by multiplication or division is the sum of the percent uncertainties in the items used to make the calculation. For example, if a floor has a length of 4.00m and a width of 3.00m, with uncertainties of 2% and 1%, respectively, then the area of the floor is 12.0m2 and has an uncertainty of 3%. (Expressed as an area this is 0.36m2, which we round to \(0.4\,m^2\) since the area of the floor is given to a tenth of a square meter.)</p>
+<p class="prose">Exercise</p>
+<p class="prose">A high school track coach has just purchased a new stopwatch. The stopwatch manual states that the stopwatch has an uncertainty of ±0.05s. Runners on the track coach’s team regularly clock 100-m sprints of 11.49 s to 15.01 s. At the school’s last track meet, the first-place sprinter came in at 12.04 s and the second-place sprinter came in at 12.07 s. Will the coach’s new stopwatch be helpful in timing the sprint team? Why or why not?</p>
+<p class="prose">No, the uncertainty in the stopwatch is too great to effectively differentiate between the sprint times.</p>
+</div></div>
+<div class="sh2">Precision of Measuring Tools and Significant Figures</div>
+<p class="prose">An important factor in the accuracy and precision of measurements involves the precision of the measuring tool. In general, a precise measuring tool is one that can measure values in very small increments. For example, a standard ruler can measure length to the nearest millimeter, while a caliper can measure length to the nearest 0.01 millimeter. The caliper is a more precise measuring tool because it can measure extremely small differences in length. The more precise the measuring tool, the more precise and accurate the measurements can be.</p>
+<p class="prose">When we express measured values, we can only list as many digits as we initially measured with our measuring tool. For example, if you use a standard ruler to measure the length of a stick, you may measure it to be 36.7cm. You could not express this value as 36.71cm because your measuring tool was not precise enough to measure a hundredth of a centimeter. It should be noted that the last digit in a measured value has been estimated in some way by the person performing the measurement. For example, the person measuring the length of a stick with a ruler notices that the stick length seems to be somewhere in between 36.6cm and 36.7cm, and he or she must estimate the value of the last digit. Using the method of significant figures, the rule is thatthe last digit written down in a measurementis the first digit with some uncertainty. In order to determine the number of significant digits in a value, start with the first measured value at the left and count the number of digits through the last digit written on the right. For example, the measured value 36.7cm has three digits, or significant figures. Significant figures indicate the precision of a measuring tool that was used to measure a value.</p>
+<div class="sh3">Zeros</div>
+<p class="prose">Special consideration is given to zeros when counting significant figures. The zeros in 0.053 are not significant, because they are only placekeepers that locate the decimal point. There are two significant figures in 0.053. The zeros in 10.053 are not placekeepers but are significant—this number has five significant figures. The zeros in 1300 may or may not be significant depending on the style of writing numbers. They could mean the number is known to the last digit, or they could be placekeepers. So 1300 could have two, three, or four significant figures. (To avoid this ambiguity, write 1300 in scientific notation.)Zeros are significant except when they serve only as placekeepers.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Determine the number of significant figures in the following measurements:</p>
+<div class="sh3">Significant Figures in Calculations</div>
+<p class="prose">When combining measurements with different degrees of accuracy and precision,the number of significant digits in the final answer can be no greater than the number of significant digits in the least precise measured value. There are two different rules, one for multiplication and division and the other for addition and subtraction, as discussed below.</p>
+<p class="prose">1. For multiplication and division:The result should have the same number of significant figures as the quantity having the least significant figures entering into the calculation.For example, the area of a circle can be calculated from its radius using A=πr2. Let us see how many significant figures the area has if the radius has only two—say, r=1.2m. Then,</p>
+<div class="math-display">\[A=πr2=(3.1415927...)×(1.2m)^2=4.5238934\,m^2\]</div>
+<p class="prose">is what you would get using a calculator that has an eight-digit output. But because the radius has only two significant figures, it limits the calculated quantity to two significant figures or</p>
+<p class="prose">even though it is good to at least eight digits.</p>
+<p class="prose">2. For addition and subtraction:The answer can contain no more decimal places than the least precise measurement.Suppose that you buy 7.56-kg of potatoes in a grocery store as measured with a scale with precision 0.01 kg. Then you drop off 6.052-kg of potatoes at your laboratory as measured by a scale with precision 0.001 kg. Finally, you go home and add 13.7 kg of potatoes as measured by a bathroom scale with precision 0.1 kg. How many kilograms of potatoes do you now have, and how many significant figures are appropriate in the answer? The mass is found by simple addition and subtraction:</p>
+<div class="math-display">\[7.56\,\text{kg} - 6.052\,\text{kg} + 13.7\,\text{kg} = 15.208\,\text{kg} = 15.2\,\text{kg}\]</div>
+<p class="prose">Next, we identify the least precise measurement: 13.7 kg. This measurement is expressed to the 0.1 decimal place, so our final answer must also be expressed to the 0.1 decimal place. Thus, the answer is rounded to the tenths place, giving us 15.2 kg.</p>
+<p class="prose">In this text, most numbers are assumed to have three significant figures. Furthermore, consistent numbers of significant figures are used in all worked examples. You will note that an answer given to three digits is based on input good to at least three digits, for example. If the input has fewer significant figures, the answer will also have fewer significant figures. Care is also taken that the number of significant figures is reasonable for the situation posed. In some topics, particularly in optics, more accurate numbers are needed and more than three significant figures will be used. Finally, if a number isexact, such as the two in the formula for the circumference of a circle, \(=2πr,\) it does not affect the number of significant figures in a calculation.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Perform the following calculations and express your answer using the correct number of significant digits.</p>
+<p class="prose">(a) 37.2 pounds; Because the number of bags is an exact value, it is not considered in the significant figures.</p>
+<p class="prose">(b) 1.4 N; Because the value 55 kg has only two significant figures, the final value must also contain two significant figures.</p>
+<p class="prose">PHET EXPLORATIONS: ESTIMATION</p>
+<p class="prose">Explore size estimation in one, two, and three dimensions! Multiple levels of difficulty allow for progressive skill improvement.</p>
+<div class="diagram"><img src="images/ch1/fig1-24-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="sh2">Contributors and Attributions</div>
+<p class="prose">Paul Peter Urone (Professor Emeritus at California State University, Sacramento) and Roger Hinrichs (State University of New York, College at Oswego) with Contributing Authors: Kim Dirks (University of Auckland) and Manjula Sharma (University of Sydney). This work is licensed by OpenStax University Physics under aCreative Commons Attribution License (by 4.0).</p>
+    <p class="os-credit">📖 OpenStax College Physics, Section 1.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">If two different theories describe experimental observations equally well, can one be said to be more valid than the other (assuming both use accepted rules of logic)?</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 1.3 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">If a GPS system provides locations that are very close to each other but far from the actual destination, how would you describe the measurement?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>High accuracy and high precision</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>High accuracy and low precision</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Low accuracy and high precision</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Low accuracy and low precision</li>
+</ul><div class="qexp">Precision refers to the agreement between repeated measurements, while accuracy refers to how close a measurement is to the true value.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A bag of flour is labeled as 5.0 kg with an uncertainty of $\pm 0.2$ kg. What is the percent uncertainty?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2%</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>4%</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5%</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10%</li>
+</ul><div class="qexp">Percent uncertainty is calculated as (0.2 / 5.0) $\times$ 100%, which equals 4%.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">How many significant figures are in the measurement 0.004050 meters?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>6</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>7</li>
+</ul><div class="qexp">Leading zeros are placeholders, but the non-zero digits and the trailing zero after the decimal point are significant.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A student calculates the area of a circle with a radius of 2.0 m. Using $A = \pi r^2$, the calculator displays 12.56637. What is the correct answer using significant figures?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12.57 $m^2$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12.6 $m^2$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>13 $m^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>13.0 $m^2$</li>
+</ul><div class="qexp">Since the radius (2.0) has only two significant figures, the result of the multiplication must be rounded to two significant figures.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Perform the following addition and choose the answer with the correct precision: 12.1 kg + 0.05 kg + 1.223 kg.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>13.373 kg</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>13.37 kg</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>13.4 kg</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>13 kg</li>
+</ul><div class="qexp">In addition, the result can have no more decimal places than the least precise measurement, which is 12.1 (one decimal place).</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 1 · <span>Section 1.4</span></div><div class="h-title">1.4: Approximation</div><div class="h-desc">On many occasions, physicists, other scientists, and engineers need to makeapproximationsor “guesstimates” for a particular quantity. What is the distance to a certain destination? What is the approxi...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 1.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Make reasonable approximations based on given data.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 1.4</div>
+<p class="prose">On many occasions, physicists, other scientists, and engineers need to makeapproximationsor “guesstimates” for a particular quantity. What is the distance to a certain destination? What is the approximate density of a given item? About how large a current will there be in a circuit? Many approximate numbers are based on formulae in which the input quantities are known only to a limited accuracy. As you develop problem-solving skills (that can be applied to a variety of fields through a study of physics), you will also develop skills at approximating. You will develop these skills through thinking more quantitatively, and by being willing to take risks. As with any endeavor, experience helps, as well as familiarity with units. These approximations allow us to rule out certain scenarios or unrealistic numbers. Approximations also allow us to challenge others and guide us in our approaches to our scientific world. Let us do two examples to illustrate this concept.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Approximate the Height of a Building</span></div><div class="example-body">
+<p class="prose">Can you approximate the height of one of the buildings on your campus, or in your neighborhood? Let us make an approximation based upon the height of a person. In this example, we will calculate the height of a 39-story building.</p>
+<p class="prose">Think about the average height of an adult male. We can approximate the height of the building by scaling up from the height of a person.</p>
+<p class="prose">Based on information in the example, we know there are 39 stories in the building. If we use the fact that the height of one story is approximately equal to about the length of two adult humans (each human is about 2-m tall), then we can estimate the total height of the building to be</p>
+<p class="prose">You can use known quantities to determine an approximate measurement of unknown quantities. If your hand measures 10 cm across, how many hand lengths equal the width of your desk? What other measurements can you approximate besides length?</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Approximating Vast Numbers - a Trillion Dollar</span></div><div class="example-body">
+<p class="prose">The U.S. federal debt in the 2008 fiscal year was a little less than $10 trillion. Most of us do not have any concept of how much even one trillion actually is. Suppose that you were given a trillion dollars in $100 bills. If you made 100-bill stacks and used them to evenly cover a football field (between the end zones), make an approximation of how high the money pile would become. (We will use feet/inches rather than meters here because football fields are measured in yards.) One of your friends says 3 in., while another says 10 ft. What do you think?</p>
+<div class="diagram"><img src="images/ch1/fig1-25-a-bank-stack-containing-one-hundred-hund.png" alt="A bank stack containing one hundred hundred-dollar bills."><div class="d-cap">A bank stack containing one hundred hundred-dollar bills. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">When you imagine the situation, you probably envision thousands of small stacks of 100 wrapped $100 bills, such as you might see in movies or at a bank. Since this is an easy-to-approximate quantity, let us start there. We can find the volume of a stack of 100 bills, find out how many stacks make up one trillion dollars, and then set this volume equal to the area of the football field multiplied by the unknown height.</p>
+<p class="prose">(1) Calculate the volume of a stack of 100 bills. The dimensions of a single bill are approximately 3 in. by 6 in. A stack of 100 of these is about 0.5 in. thick. So the total volume of a stack of 100 bills is:</p>
+<div class="math-display">\[ \begin{align*} \text{volume of stack} &=length×width×height \\[5pt] \text{volume of stack}&=6 \,in.×3 \,in.×0.5 \,in., \\[5pt] \text{volume of stack}&=9 \,in.^3 \end{align*}\]</div>
+<p class="prose">(2) Calculate the number of stacks. Note that a trillion dollars is equal to \(\$1×10^{12}\), and a stack of one-hundred $100 bills is equal to $10,000, or \(\$1×10^4\). The number of stacks you will have is:</p>
+<p class="prose">(3) Calculate the area of a football field in square inches. The area of a football field is \(100\, yd×50\, yd\), which gives \(5,000 \,yd^2\). Because we are working in inches, we need to convert square yards to square inches:</p>
+<div class="math-display">\[ \begin{align*} Area &=5,000\, yd^2 × \frac{3\,ft}{1\,yd}×\frac{3\,ft}{1\, yd}×\frac{12\,in.}{1\, ft}×\frac{12\,in}{1 \,ft} \\[5pt] &=6,480,000\, in.^2, \\[5pt] &≈6×10^6\, in.^2. \end{align*}\]</div>
+<p class="prose">This conversion gives us \(\displaystyle 6×10^6\,in^2\) for the area of the field. (Note that we are using only one significant figure in these calculations.)</p>
+<p class="prose">(4) Calculate the total volume of the bills. The volume of all the $100 -bill stacks is</p>
+<div class="math-display">\[9\, in.^3 /stack \times 10^8\, \text{stacks} =9 \times 10^8 \,in.^3. \nonumber\]</div>
+<p class="prose">(5) Calculate the height. To determine the height of the bills, use the equation:</p>
+<div class="math-display">\[ \begin{align*} \text{volume of bills} &=\text{area of field}×\text{height of money} \\[5pt] \text{Height of money} &=\frac{\text{volume of bills}}{\text{area of field}} \\[5pt] \text{Height of money} &=\frac{9×10^8in.^3}{6×10^6in.^2}=1.33×10^2in \\[5pt] \text{Height of money} &≈1 \times 10^2\,in.=100\, in. \end{align*}\]</div>
+<p class="prose">The height of the money will be about 100 in. high. Converting this value to feet gives</p>
+<p class="prose">The final approximate value is much higher than the early estimate of 3 in., but the other early estimate of 10 ft (120 in.) was roughly correct. How did the approximation measure up to your first guess? What can this exercise tell you in terms of rough “guesstimates” versus carefully calculated approximations?</p>
+<p class="prose">Exercise</p>
+<p class="prose">Using mental math and your understanding of fundamental units, approximate the area of a regulation basketball court. Describe the process you used to arrive at your final approximation</p>
+<p class="prose">An average male is about two meters tall. It would take approximately 15 men laid out end to end to cover the length, and about 7 to cover the width. That gives an approximate area of \(\displaystyle 420 m^2\).</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 1.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What determines the validity of a theory?</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 1.4 Quiz</h3><p>5 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In the context of physics, what is the primary purpose of making an approximation or "guesstimate"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To avoid the need for using any SI units in professional scientific reports.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To rule out unrealistic numbers and determine if a calculated result is reasonable.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To provide an exact value when the measuring tool has zero uncertainty.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To change the laws of physics to suit a specific experimental scenario.</li>
+</ul><div class="qexp">Approximations help scientists develop quantitative thinking and verify if their more detailed calculations are in the right "ballpark."</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A person approximates the area of a basketball court by laying 15 people (each 2 meters tall) end-to-end for the length and 7 people for the width. What is the approximate area?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>420 $m^2$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>210 $m^2$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>44 $m^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>900 $m^2$</li>
+</ul><div class="qexp">The length is 15 $\times$ 2 = 30 m and the width is 7 $\times$ 2 = 14 m; 30 $\times$ 14 = 420 $m^2$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the typical first step in the scientific method?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Devising a hypothesis</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Performing an experiment</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Analyzing the results</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Making an observation and asking a question</li>
+</ul><div class="qexp">The scientific method typically begins with an observation and a question that the scientist will then research.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which of the following is used to define the current SI standard for the meter?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A fraction of the distance from the equator to the North Pole.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The distance light travels in a vacuum in a specific fraction of a second.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The wavelength of orange light emitted by krypton atoms.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The length of a specific platinum-iridium bar kept near Paris.</li>
+</ul><div class="qexp">Since 1983, the meter has been defined by the distance light travels in 1/299,792,458 of a second.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which factor would contribute most directly to the uncertainty of a length measurement taken with a ruler?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed of the object being measured relative to the speed of light.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The number of significant figures in the speed of light constant.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The smallest division or "tick mark" on the ruler itself.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Whether the measurement is being taken in SI units or English units.</li>
+</ul><div class="qexp">Uncertainty is limited by the precision of the measuring tool, which is often determined by its smallest increments.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 1</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 1: The Nature of Science and Physics.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>1.1</strong></td><td>1.1: Physics- An Introduction</td></tr>
+    <tr><td><strong>1.2</strong></td><td>1.2: Physical Quantities and Units</td></tr>
+    <tr><td><strong>1.3</strong></td><td>1.3: Accuracy, Precision, and Significant Figures</td></tr>
+    <tr><td><strong>1.4</strong></td><td>1.4: Approximation</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 100 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 1 Practice Test</h3><p>20 questions · All OpenStax Review Questions</p></div></div><div id="q5">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 20 review questions from OpenStax College Physics, Chapter 1. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following best defines the realm of physics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study of living organisms and their interactions with the environment.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The study of the composition, structure, and properties of substances.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The study of the history of the universe and the evolution of natural philosophy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The study of the interactions of energy, matter, space, and time.</li>
+</ul><div class="qexp">Physics is fundamentally concerned with describing the basic mechanisms that underlie every phenomenon through the interactions of energy, matter, space, and time.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the primary difference between a scientific law and a scientific theory?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A law describes a single action using concise language, while a theory is a more complex explanation of a group of phenomena.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A law is a preliminary hypothesis that has not been tested, while a theory is a proven fact of nature.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A law is an explanation for patterns in nature, while a theory is a mathematical equation that cannot be changed.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A law is the end result of the scientific method, while a theory is the initial postulate used to begin an experiment.</li>
+</ul><div class="qexp">Scientific laws use concise language to describe a generalized pattern in nature, whereas theories are much more complex and dynamic explanations for related phenomena.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why do physicists use models, such as the planetary model of the atom?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To provide an exact, 1:1 scale replica of a physical object for direct observation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To replace the need for experimentation when the data is too difficult to collect.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To represent phenomena that are too difficult or impossible to display and observe directly.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To simplify equations so that they no longer require the use of significant figures.</li>
+</ul><div class="qexp">Models are representations of things that are often too fast, too small, or too complex to be observed directly with the senses.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Under which condition is classical physics no longer an excellent approximation of the universe?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>When objects are large enough to be seen with a standard microscope.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>When objects are moving at speeds greater than roughly 1% of the speed of light.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>When objects are moving through weak gravitational fields like that of the Earth.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>When the interactions involve energy being converted from one form to another.</li>
+</ul><div class="qexp">Classical physics is only accurate for objects moving at speeds significantly less than the speed of light, large enough to be seen with a microscope, and in weak gravitational fields.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which branch of modern physics must be used to describe the behavior of objects smaller than what can be seen with a microscope?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Quantum mechanics</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newtonian mechanics</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>General relativity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Classical philosophy</li>
+</ul><div class="qexp">Quantum mechanics is the revolutionary theory used to describe the behavior of the very small, such as atoms and subatomic particles.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">6</span><span class="qt-inner">Which of the following is a fundamental SI unit in the system used by this textbook?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Liter</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Kilometer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ampere</li>
+</ul><div class="qexp">The four fundamental SI units used in this text are the meter, kilogram, second, and ampere.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">A length is measured as $10^{-15}$ meters. Using metric prefixes, how should this be expressed?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1 attometer</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1 picometer</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1 femtometer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1 nanometer</li>
+</ul><div class="qexp">The metric prefix "femto-" corresponds to the factor $10^{-15}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">8</span><span class="qt-inner">How does a derived unit differ from a fundamental unit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Derived units are only used in the English system, while fundamental units are used in the SI system.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Derived units are algebraic combinations of fundamental units, such as length divided by time.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Derived units are based on constant physical phenomena, while fundamental units are based on human-made artifacts.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Derived units are only used for large-scale measurements, while fundamental units are for microscopic measurements.</li>
+</ul><div class="qexp">Fundamental units are defined by a measurement procedure, while derived units are calculated as combinations of those fundamental units.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">A car travels at a constant speed of 72.0 km/h. What is this speed expressed in meters per second (m/s)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>20.0 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>25.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>30.0 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>259 m/s</li>
+</ul><div class="qexp">Multiplying 72.0 km/h by (1000 m / 1 km) and dividing by (3600 s / 1 h) results in 20.0 m/s.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">10</span><span class="qt-inner">What is the order of magnitude of the number 800?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$10^1$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$10^3$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$10^4$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$10^2$</li>
+</ul><div class="qexp">800 is written in scientific notation as $8 \times 10^2$, so its order of magnitude is $10^2$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">If a GPS system provides locations that are very close to each other but far from the actual destination, how would you describe the measurement?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>High accuracy and high precision</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>High accuracy and low precision</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Low accuracy and high precision</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Low accuracy and low precision</li>
+</ul><div class="qexp">Precision refers to the agreement between repeated measurements, while accuracy refers to how close a measurement is to the true value.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">12</span><span class="qt-inner">A bag of flour is labeled as 5.0 kg with an uncertainty of $\pm 0.2$ kg. What is the percent uncertainty?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2%</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>4%</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5%</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10%</li>
+</ul><div class="qexp">Percent uncertainty is calculated as (0.2 / 5.0) $\times$ 100%, which equals 4%.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">How many significant figures are in the measurement 0.004050 meters?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>6</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>7</li>
+</ul><div class="qexp">Leading zeros are placeholders, but the non-zero digits and the trailing zero after the decimal point are significant.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">14</span><span class="qt-inner">A student calculates the area of a circle with a radius of 2.0 m. Using $A = \pi r^2$, the calculator displays 12.56637. What is the correct answer using significant figures?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12.57 $m^2$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>12.6 $m^2$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>13 $m^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>13.0 $m^2$</li>
+</ul><div class="qexp">Since the radius (2.0) has only two significant figures, the result of the multiplication must be rounded to two significant figures.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">Perform the following addition and choose the answer with the correct precision: 12.1 kg + 0.05 kg + 1.223 kg.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>13.373 kg</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>13.37 kg</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>13.4 kg</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>13 kg</li>
+</ul><div class="qexp">In addition, the result can have no more decimal places than the least precise measurement, which is 12.1 (one decimal place).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">16</span><span class="qt-inner">In the context of physics, what is the primary purpose of making an approximation or "guesstimate"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To avoid the need for using any SI units in professional scientific reports.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To rule out unrealistic numbers and determine if a calculated result is reasonable.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To provide an exact value when the measuring tool has zero uncertainty.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To change the laws of physics to suit a specific experimental scenario.</li>
+</ul><div class="qexp">Approximations help scientists develop quantitative thinking and verify if their more detailed calculations are in the right "ballpark."</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">A person approximates the area of a basketball court by laying 15 people (each 2 meters tall) end-to-end for the length and 7 people for the width. What is the approximate area?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>420 $m^2$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>210 $m^2$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>44 $m^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>900 $m^2$</li>
+</ul><div class="qexp">The length is 15 $\times$ 2 = 30 m and the width is 7 $\times$ 2 = 14 m; 30 $\times$ 14 = 420 $m^2$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">18</span><span class="qt-inner">What is the typical first step in the scientific method?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Devising a hypothesis</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Performing an experiment</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Analyzing the results</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Making an observation and asking a question</li>
+</ul><div class="qexp">The scientific method typically begins with an observation and a question that the scientist will then research.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Which of the following is used to define the current SI standard for the meter?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A fraction of the distance from the equator to the North Pole.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The distance light travels in a vacuum in a specific fraction of a second.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The wavelength of orange light emitted by krypton atoms.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The length of a specific platinum-iridium bar kept near Paris.</li>
+</ul><div class="qexp">Since 1983, the meter has been defined by the distance light travels in 1/299,792,458 of a second.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which factor would contribute most directly to the uncertainty of a length measurement taken with a ruler?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed of the object being measured relative to the speed of light.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The number of significant figures in the speed of light constant.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The smallest division or "tick mark" on the ruler itself.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Whether the measurement is being taken in SI units or English units.</li>
+</ul><div class="qexp">Uncertainty is limited by the precision of the measuring tool, which is often determined by its smallest increments.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 20 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'The Nature of Science and Physics',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:6,lessonCount:5,cpMin:80,lessons:['Overview','1.1 1.1: Physics- An Introduction','1.2 1.2: Physical Quantities and Units','1.3 1.3: Accuracy, Precision, and Significant Figures','1.4 1.4: Approximation','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===5?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

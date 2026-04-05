@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Medical Applications of Nuclear Physics | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🏥</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Medical Applications of Nuclear Physics</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🏥</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Medical Applications of Nuclear Physics</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 32 · <span>Overview</span></div><div class="h-title">Medical Applications of Nuclear Physics</div><div class="h-desc">Applications of nuclear physics have become an integral part of modern life. From the bone scan that detects a cancer to theradioiodinetreatment that cures another, nuclear radiation has diagnostic and therapeutic effects on medicine. From the fission power reactor to the hope of controlled fusion, nuclear energy is now commonplace and is a part of our plans for the future. Yet, the destructive potential of nuclear weapons haunts us, as does the possibility of nuclear reactor accidents. Certainly, several applications of nuclear physics escape our view, as seen in Figure . Not only has nuclear</div>
+    <div class="h-meta"><div class="h-chip">📚 3 Lessons</div><div class="h-chip">🏥 OpenStax College Physics Ch. 32</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 16 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 32</div><div class="cx">All content is from OpenStax College Physics, Chapter 32: Medical Applications of Nuclear Physics. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch32/fig32-1-the-image-shows-a-woman-preparing-for-sc.jpg" alt="The image shows a woman preparing for scanning of a child mummy with a cylindrical instrument."><div class="d-cap">The image shows a woman preparing for scanning of a child mummy with a cylindrical instrument. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 3</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 32 · <span>Section 32.01</span></div><div class="h-title">32.1: Medical Imaging and Diagnostics</div><div class="h-desc">A host of medical imaging techniques employ nuclear radiation. What makes nuclear radiation so useful? First, \(\gamma\) radiation can easily penetrate tissue; hence, it is a useful probe to monitor c...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 32.01</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the working principle behind an anger camera.</li>
+      <li>Describe the SPECT and PET imaging techniques.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Anger camera</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a common medical imaging device that uses a scintillator connected to a series of photomultipliers</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 32.01</div>
+<p class="prose">A host of medical imaging techniques employ nuclear radiation. What makes nuclear radiation so useful? First, \(\gamma\) radiation can easily penetrate tissue; hence, it is a useful probe to monitor conditions inside the body. Second, nuclear radiation depends on the nuclide and not on the chemical compound it is in, so that a radioactive nuclide can be put into a compound designed for specific purposes. The compound is said to betagged. A tagged compound used for medical purposes is called aradiopharmaceutical. Radiation detectors external to the body can determine the location and concentration of a radiopharmaceutical to yield medically useful information. For example, certain drugs are concentrated in inflamed regions of the body, and this information can aid diagnosis and treatment as seen in Figure . Another application utilizes a radiopharmaceutical which the body sends to bone cells, particularly those that are most active, to detect cancerous tumors or healing points. Images can then be produced of such bone scans. Radioisotopes are also used to determine the functioning of body organs, such as blood flow, heart muscle activity, and iodine uptake in the thyroid gland.</p>
+<div class="diagram"><img src="images/ch32/fig32-4-a-brain-scan-different-regions-of-the-br.jpg" alt="A brain scan. Different regions of the brain are shown in different colors."><div class="d-cap">A brain scan. Different regions of the brain are shown in different colors. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">#### Medical Application</p>
+<p class="prose">Table lists certain medical diagnostic uses of radiopharmaceuticals, including isotopes and activities that are typically administered. Many organs can be imaged with a variety of nuclear isotopes replacing a stable element by a radioactive isotope. One common diagnostic employs iodine to image the thyroid, since iodine is concentrated in that organ. The most active thyroid cells, including cancerous cells, concentrate the most iodine and, therefore, emit the most radiation. Conversely, hypothyroidism is indicated by lack of iodine uptake. Note that there is more than one isotope that can be used for several types of scans. Another common nuclear diagnostic is the thallium scan for the cardiovascular system, particularly used to evaluate blockages in the coronary arteries and examine heart activity. The salt TlCl can be used, because it acts like NaCl and follows the blood. Gallium-67 accumulates where there is rapid cell growth, such as in tumors and sites of infection. Hence, it is useful in cancer imaging. Usually, the patient receives the injection one day and has a whole body scan 3 or 4 days later because it can take several days for the gallium to build up.</p>
+<table class="dt">
+<tr><th>Isotope</th><th>Typical activity (mCi), where \(1 \, mCi = 3.7 \times 10^7 \, Bq\)</th></tr>
+<tr><td>Brain scan</td></tr>
+<tr><td>\(^{88m}Tc\)</td><td>7.5</td></tr>
+<tr><td>\(^{113m}In\)</td><td>7.5</td></tr>
+<tr><td>\(^{11}C\space (PET)\)</td><td>20</td></tr>
+<tr><td>\(^{13}N \, (PET)\)</td><td>20</td></tr>
+<tr><td>\(^{15}O \, (PET)\)</td><td>50</td></tr>
+<tr><td>\(^{18}F \, (PET)\)</td><td>10</td></tr>
+<tr><td>Lung scan</td></tr>
+<tr><td>\(^{99m}Tc\)</td><td>2</td></tr>
+<tr><td>\(^{133}Xe\)</td><td>7.5</td></tr>
+<tr><td>Cardiovascular blood pool</td></tr>
+<tr><td>\(^{131}I\)</td><td>0.2</td></tr>
+<tr><td>\(^{99}Tc\)</td><td>2</td></tr>
+<tr><td>Cardiovascular arterial flow</td></tr>
+<tr><td>\(^{201}Tl\)</td><td>3</td></tr>
+<tr><td>\(^{24}Na\)</td><td>7.5</td></tr>
+<tr><td>Thyroid scan</td></tr>
+<tr><td>\(^{131}I\)</td><td>0.05</td></tr>
+<tr><td>\(^{123}I\)</td><td>0.07</td></tr>
+<tr><td>Liver scan</td></tr>
+<tr><td>\(^{198}Au\) (colloid)\(^{99m}Tc\) (colloid)</td><td>0.12</td></tr>
+<tr><td>Bone scan</td></tr>
+<tr><td>\(^{85}Sr\)</td><td>0.1</td></tr>
+<tr><td>\(^{99m}Tc\)</td><td>10</td></tr>
+<tr><td>Kidney scan</td></tr>
+<tr><td>\(^{197}Hg\)</td><td>0.1</td></tr>
+<tr><td>\(^{99m}Tc\)</td><td>1.5</td></tr>
+</table>
+<p class="prose">Note that Table lists many diagnostic uses for \(^{99m}Tc\), where “m” stands for a metastable state of the technetium nucleus. Perhaps 80 percent of all radiopharmaceutical procedures employ \(^{99m}Tc\) because of its many advantages. One is that the decay of its metastable state produces a single, easily identified 0.142-MeV \(\gamma\) ray. Additionally, the radiation dose to the patient is limited by the short 6.0-h half-life of \(^{99m}Tc\). And, although its half-life is short, it is easily and continuously produced on site. The basic process for production is neutron activation of molybdenum, which quickly \(\beta\) decays into \(^{99m}Tc\). Technetium-99m can be attached to many compounds to allow the imaging of the skeleton, heart, lungs, kidneys, etc.</p>
+<p class="prose">Figure shows one of the simpler methods of imaging the concentration of nuclear activity, employing a device called anAnger cameraorgamma camera. A piece of lead with holes bored through it collimates \(\gamma\) rays emerging from the patient, allowing detectors to receive \(\gamma\) rays from specific directions only. The computer analysis of detector signals produces an image. One of the disadvantages of this detection method is that there is no depth information (i.e., it provides a two-dimensional view of the tumor as opposed to a three-dimensional view), because radiation from any location under that detector produces a signal.</p>
+<div class="diagram"><img src="images/ch32/fig32-5-the-image-shows-the-head-of-a-man-scanne.jpg" alt="The image shows the head of a man scanned by an Anger camera. The camera consists of a lead collimator and array of detectors. Gamma rays emerging from the man’s head pass through the lead collimator and produce light flashes in the scintillators. The photomultiplier tubes convert the light output to electrical signals for computer image generation."><div class="d-cap">The image shows the head of a man scanned by an Anger camera. The camera consists of a lead collimator and array of detectors. Gamma rays emerging from the man’s head pass through the lead collimator and produce light flashes in the scintillators. The photomultiplier tubes convert the light output to electrical signals for computer image generation. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Imaging techniques much like those in x-ray computed tomography (CT) scans use nuclear activity in patients to form three-dimensional images. Figure shows a patient in a circular array of detectors that may be stationary or rotated, with detector output used by a computer to construct a detailed image. This technique is calledsingle-photon-emission computed tomography(SPECT)or sometimes simply SPET. The spatial resolution of this technique is poor, about 1 cm, but the contrast (i.e. the difference in visual properties that makes an object distinguishable from other objects and the background) is good.</p>
+<div class="diagram"><img src="images/ch32/fig32-6-a-man-lying-down-going-through-a-cylindr.jpg" alt="A man lying down, going through a cylindrical scanning machine."><div class="d-cap">A man lying down, going through a cylindrical scanning machine. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Images produced by \(\beta^+\) emitters have become important in recent years. When the emitted positron (\(\beta^+\)) encounters an electron, mutual annihilation occurs, producing two \(\gamma\) rays. These \(\gamma\) rays have identical 0.511-MeV energies (the energy comes from the destruction of an electron or positron mass) and they move directly away from one another, allowing detectors to determine their point of origin accurately, as shown in Figure . The system is calledpositron emission tomography (PET). It requires detectors on opposite sides to simultaneously (i.e., at the same time) detect photons of 0.511-MeV energy and utilizes computer imaging techniques similar to those in SPECT and CT scans. Examples of \(\beta^+\)-emitting isotopes used in PET are \(^{11}O\), \(^{13}N\), \(^{15}O\) and \(^{18}F\), as seen in Table . This list includes C, N, and O, and so they have the advantage of being able to function as tags for natural body compounds. Its resolution of 0.5 cm is better than that of SPECT; the accuracy and sensitivity of PET scans make them useful for examining the brain’s anatomy and function. The brain’s use of oxygen and water can be monitored with \(^{15}O\). PET is used extensively for diagnosing brain disorders. It can note decreased metabolism in certain regions prior to a confirmation of Alzheimer’s disease. PET can locate regions in the brain that become active when a person carries out specific activities, such as speaking, closing their eyes, and so on.</p>
+<div class="diagram"><img src="images/ch32/fig32-7-the-figure-shows-a-patient-undergoing-a-.jpg" alt="The figure shows a patient undergoing a scan in a cylindrical device. The P E T system uses two gamma ray photons produced by positron electron annihilation. These gamma rays are emitted in opposite directions."><div class="d-cap">The figure shows a patient undergoing a scan in a cylindrical device. The P E T system uses two gamma ray photons produced by positron electron annihilation. These gamma rays are emitted in opposite directions. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PHET EXPLORATIONS: SIMPLIFIED MRI</p>
+<p class="prose">Is it a tumor? Magnetic Resonance Imaging (MRI) can tell. Your head is full of tiny radio transmitters (the nuclear spins of the hydrogen nuclei of your water molecules). In an MRI unit, these little radios can be made to broadcast their positions, giving a detailed picture of the inside of your head.</p>
+<div class="diagram"><img src="images/ch32/fig32-8-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: SIMPLIFIED MRIIs it a tumor? Magnetic Resonance Imaging (MRI) can tell. Your head is full of tiny radio transmitters (the nuclear spins of the hydrogen nuclei of your water molecules). In an MRI unit, these little radios can be made to broadcast their positions, giving a detailed picture of the inside of your head.Figure : Simplified MRI</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 32.01. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">In terms of radiation dose, what is the major difference between medical diagnostic uses of radiation and medical therapeutic uses?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 32.01 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Gamma radiation is useful for internal medical probes primarily because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It can easily penetrate tissue to reach external detectors</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is visible to the naked eye, allowing for direct observation</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a very high mass that interacts strongly with bones</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It cannot cause ionization, making it perfectly safe for all tissue</li>
+</ul><div class="qexp">Gamma radiation's high penetration power allows it to exit the body and be measured by external radiation detectors.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is a significant advantage of using Technetium-99m in medical diagnostics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It produces a single, easily identified 0.142-MeV gamma ray</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It has an extremely long half-life of 15 years, reducing the need for new doses</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It emits alpha particles that stay localized within a single cell</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is a stable element that does not require nuclear decay</li>
+</ul><div class="qexp">The metastable state of technetium-99 produces a specific, identifiable gamma ray that is ideal for imaging with detectors.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The primary mechanism utilized in Positron Emission Tomography (PET) to locate a radiopharmaceutical is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The mutual annihilation of a positron and an electron producing two gamma rays</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The reflection of x-rays off of high-density bone tissue</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The capture of thermal neutrons by hydrogen nuclei in water</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The detection of alpha particles emitted by heavy nuclei</li>
+</ul><div class="qexp">PET scans detect the two 0.511-MeV gamma rays that move in opposite directions following positron-electron annihilation.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If a 5.0 kg organ absorbs 2.5 J of ionizing energy, what is the radiation dose in Grays (Gy)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12.5 Gy</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2.5 Gy</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.5 Gy</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50 Gy</li>
+</ul><div class="qexp">The dose in Grays is calculated by dividing the energy in Joules by the mass in kilograms (2.5 J / 5.0 kg = 0.5 Gy).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are alpha particles assigned a higher Relative Biological Effectiveness (RBE) than gamma rays?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Alphas are neutral and can pass through lead shielding</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Alphas travel much further through tissue, damaging more cells</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Alphas create more concentrated, dense ionization that is harder for DNA to repair</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Alphas have less mass and higher frequency than gamma rays</li>
+</ul><div class="qexp">Short-range particles like alphas create concentrated damage that is more difficult for biological repair mechanisms to fix than spread-out damage.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 32 · <span>Section 32.02</span></div><div class="h-title">32.2: Biological Effects of Ionizing Radiation</div><div class="h-desc">We hear many seemingly contradictory things about the biological effects of ionizing radiation. It can cause cancer, burns, and hair loss, yet it is used to treat and even cure cancer. How do we under...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 32.02</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define various units of radiation.</li>
+      <li>Describe RBE.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">gray (Gy)</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the SI unit for radiation dose which is defined to be \(1 \, Gy = 1 \, J/kg = 100 \, rad\)</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 32.02</div>
+<p class="prose">We hear many seemingly contradictory things about the biological effects of ionizing radiation. It can cause cancer, burns, and hair loss, yet it is used to treat and even cure cancer. How do we understand these effects? Once again, there is an underlying simplicity in nature, even in complicated biological organisms. All the effects of ionizing radiation on biological tissue can be understood by knowing thationizing radiation affects molecules within cells, particularly DNA molecules.</p>
+<p class="prose">Let us take a brief look at molecules within cells and how cells operate. Cells have long, double-helical DNA molecules containing chemical codes called genetic codes that govern the function and processes undertaken by the cell. It is for unraveling the double-helical structure of DNA that James Watson, Francis Crick, and Maurice Wilkins received the Nobel Prize. Damage to DNA consists of breaks in chemical bonds or other changes in the structural features of the DNA chain, leading to changes in the genetic code. In human cells, we can have as many as a million individual instances of damage to DNA per cell per day. It is remarkable that DNA contains codes that check whether the DNA is damaged or can repair itself. It is like an auto check and repair mechanism. This repair ability of DNA is vital for maintaining the integrity of the genetic code and for the normal functioning of the entire organism. It should be constantly active and needs to respond rapidly. The rate of DNA repair depends on various factors such as the cell type and age of the cell. A cell with a damaged ability to repair DNA, which could have been induced by ionizing radiation, can do one of the following:</p>
+<p class="prose">Since ionizing radiation damages the DNA, which is critical in cell reproduction, it has its greatest effect on cells that rapidly reproduce, including most types of cancer. Thus, cancer cells are more sensitive to radiation than normal cells and can be killed by it easily. Cancer is characterized by a malfunction of cell reproduction, and can also be caused by ionizing radiation. Without contradiction, ionizing radiation can be both a cure and a cause.</p>
+<p class="prose">To discuss quantitatively the biological effects of ionizing radiation, we need a radiation dose unit that is directly related to those effects. All effects of radiation are assumed to be directly proportional to the amount of ionization produced in the biological organism. The amount of ionization is in turn proportional to the amount of deposited energy. Therefore, we define aradiation dose unitcalled therad, as \(1/100\) of a joule of ionizing energy deposited per kilogram of tissue, which is</p>
+<div class="math-display">\[1 \, rad = 0.01 \, J/kg.\]</div>
+<p class="prose">For example, if a 50.0-kg person is exposed to ionizing radiation over her entire body and she absorbs 1.00 J, then her whole-body radiation dose is</p>
+<div class="math-display">\[(1.00 \, J)/(50.0 \, kg) = 0.0200 \, J/kg = 2.00 \, rad.\]</div>
+<p class="prose">If the same 1.00 J of ionizing energy were absorbed in her 2.00-kg forearm alone, then the dose to the forearm would be</p>
+<div class="math-display">\[(1,00 \, J)/(2.00 \, kg) = 0.500 \, J/kg = 50.0 \, rad,\]</div>
+<p class="prose">and the unaffected tissue would have a zero rad dose. While calculating radiation doses, you divide the energy absorbed by the mass of affected tissue. You must specify the affected region, such as the whole body or forearm in addition to giving the numerical dose in rads. The SI unit for radiation dose is thegray (Gy), which is defined to be</p>
+<div class="math-display">\[1 \, Gy = 1 \, J/kg = 100 \, rad.\]</div>
+<p class="prose">However, the rad is still commonly used. Although the energy per kilogram in 1 rad is small, it has significant effects since the energy causes ionization. The energy needed for a single ionization is a few eV, or less than \(10^{-18} \, J\). Thus, 0.01 J of ionizing energy can create a huge number of ion pairs and have an effect at the cellular level.</p>
+<div class="diagram"><img src="images/ch32/fig32-9-the-image-shows-ionization-created-in-ce.jpg" alt="The image shows ionization created in cells by gamma and alpha radiation. Series of cells are shown through which a gamma ray passes causing ionization whose density is low. Another series of cells are shown through which an alpha ray passes causing ionization whose density is high."><div class="d-cap">The image shows ionization created in cells by gamma and alpha radiation. Series of cells are shown through which a gamma ray passes causing ionization whose density is low. Another series of cells are shown through which an alpha ray passes causing ionization whose density is high. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The effects of ionizing radiation may be directly proportional to the dose in rads, but they also depend on the type of radiation and the type of tissue. That is, for a given dose in rads, the effects depend on whether the radiation is \(\alpha\), \(\beta\), \(\gamma\), x-ray, or some other type of ionizing radiation. In the earlier discussion of the range of ionizing radiation, it was noted that energy is deposited in a series of ionizations and not in a single interaction. Each ion pair or ionization requires a certain amount of energy, so that the number of ion pairs is directly proportional to the amount of the deposited ionizing energy. However, if the range of the radiation is small, as it is for \(\alpha\) paticles, then the ionization and the damage created is more concentrated and harder for the organism to repair, as seen in Figure . Concentrated damage is more difficult for biological organisms to repair than damage that is spread out, so short-range particles have greater biological effects. Therelative biological effectiveness(RBE)orquality factor(QF)is given in Table for several types of ionizing radiation—the effect of the radiation is directly proportional to the RBE. A dose unit more closely related to effects in biological tissue is called theroentgen equivalent manor rem and is defined to be the dose in rads multiplied by the relative biological effectiveness.</p>
+<div class="math-display">\[rem = rad \times RBE\]</div>
+<p class="prose">So, if a person had a whole-body dose of 2.00 rad of \(\gamma\) radiation, the dose in rem would be \(2.00 \, rad)(1) = 2.00 \, rem\) whole body. If the person had a whole-body dose of 2.00 rad of \(\alpha\) radiation, then the dose in rem would be \((2.00 \, rad)(20) = 40.0 \, rem\) whole body. The \(\alpha\) s would have 20 times the effect on the person than the \(\gamma\)s for the same deposited energy. The SI equivalent of the rem is thesievert(Sv), defined to be \(Sv = Gy \times RBE\), so that \[1 \, Sv = 1 \, Gy \times RBE = 100 \, rem.\]</p>
+<table class="dt">
+<tr><th>Type and energy of radiation</th><th>RBE1</th></tr>
+<tr><td>X-rays</td><td>1</td></tr>
+<tr><td>\(\gamma\) rays</td><td>1</td></tr>
+<tr><td>\(\beta\) rays greater than 32 keV</td><td>1</td></tr>
+<tr><td>\(\beta\) rays less than 32 keV</td><td>1.7</td></tr>
+<tr><td>Neutrons, thermal to slow (<20 keV)</td><td>2–5</td></tr>
+<tr><td>Neutrons, fast (1–10 MeV)</td><td>10 (body), 32 (eyes)</td></tr>
+<tr><td>Protons (1–10 MeV)</td><td>10 (body), 32 (eyes)</td></tr>
+<tr><td>\(\alpha\) rays from radioactive decay</td><td>10–20</td></tr>
+<tr><td>Heavy ions from accelerators</td><td>10–20</td></tr>
+</table>
+<p class="prose">The RBEs given in Table are approximate, but they yield certain insights. For example, the eyes are more sensitive to radiation, because the cells of the lens do not repair themselves. Neutrons cause more damage than \(\gamma\) rays, although both are neutral and have large ranges, because neutrons often cause secondary radiation when they are captured. Note that the RBEs are 1 for higher-energy \(\beta\)s, \(\gamma\)s, and x-rays, three of the most common types of radiation. For those types of radiation, the numerical values of the dose in rem and rad are identical. For example, 1 rad of \(\gamma\) radiation is also 1 rem. For that reason, rads are still widely quoted rather than rem. Table summarizes the units that are used for radiation.</p>
+<p class="prose">Misconception Alert: Activity vs. Dose</p>
+<p class="prose">“Activity” refers to the radioactive source while “dose” refers to the amount of energy from the radiation that is deposited in a person or object.</p>
+<p class="prose">A high level of activity doesn’t mean much if a person is far away from the source. The activity \(R\) of a source depends upon the quantity of material (kg) as well as the half-life. A short half-life will produce many more disintegrations per second. Recall that \(R = \frac{0.693 N}{t_{1/2}}\). Also, the activity decreases exponentially, which is seen in the equation \(R = R_0e^{-\lambda t}\).</p>
+<table class="dt">
+<tr><th>Quantity</th><th>SI unit name</th><th>Definition</th><th>Former unit</th><th>Conversion</th></tr>
+<tr><td>Activity</td><td>Becquerel (bq)</td><td>decay/sec</td><td>Curie (Ci)</td><td>\(1 \, Bq = 2.7 \times 10^{-11} \, Ci\)</td></tr>
+<tr><td>Absorbed dose</td><td>Gray (Gy)</td><td>1 J/kg</td><td>rad</td><td>\(Gy = 100 \, rad\)</td></tr>
+<tr><td>Dose Equivalent</td><td>Sievert (Sv)</td><td>1 J/kg × RBE</td><td>rem</td><td>\(Sv = 100 \, rem\)</td></tr>
+</table>
+<p class="prose">The large-scale effects of radiation on humans can be divided into two categories: immediate effects and long-term effects.Tablegives the immediate effects of whole-body exposures received in less than one day. If the radiation exposure is spread out over more time, greater doses are needed to cause the effects listed. This is due to the body’s ability to partially repair the damage. Any dose less than 100 mSv (10 rem) is called alow dose, 0.1 Sv to 1 Sv (10 to 100 rem) is called amoderate dose, and anything greater than 1 Sv (100 rem) is called ahigh dose. There is no known way to determine after the fact if a person has been exposed to less than 10 mSv.</p>
+<table class="dt">
+<tr><th>Dose in Sv2</th><th>Effect</th></tr>
+<tr><td>0–0.10</td><td>No observable effect.</td></tr>
+<tr><td>0.1 – 1</td><td>Slight to moderate decrease in white blood cell counts.</td></tr>
+<tr><td>0.5</td><td>Temporary sterility; 0.35 for women, 0.50 for men.</td></tr>
+<tr><td>1 – 2</td><td>Significant reduction in blood cell counts, brief nausea and vomiting. Rarely fatal.</td></tr>
+<tr><td>2 – 5</td><td>Nausea, vomiting, hair loss, severe blood damage, hemorrhage, fatalities.</td></tr>
+<tr><td>4.5</td><td>LD50/32. Lethal to 50% of the population within 32 days after exposure if not treated.</td></tr>
+<tr><td>5 – 20</td><td>Worst effects due to malfunction of small intestine and blood systems. Limited survival.</td></tr>
+<tr><td>>20</td><td>Fatal within hours due to collapse of central nervous system.</td></tr>
+</table>
+<p class="prose">Immediate effects are explained by the effects of radiation on cells and the sensitivity of rapidly reproducing cells to radiation. The first clue that a person has been exposed to radiation is a change in blood count, which is not surprising since blood cells are the most rapidly reproducing cells in the body. At higher doses, nausea and hair loss are observed, which may be due to interference with cell reproduction. Cells in the lining of the digestive system also rapidly reproduce, and their destruction causes nausea. When the growth of hair cells slows, the hair follicles become thin and break off. High doses cause significant cell death in all systems, but the lowest doses that cause fatalities do so by weakening the immune system through the loss of white blood cells.</p>
+<p class="prose">The two known long-term effects of radiation are cancer and genetic defects. Both are directly attributable to the interference of radiation with cell reproduction. For high doses of radiation, the risk of cancer is reasonably well known from studies of exposed groups. Hiroshima and Nagasaki survivors and a smaller number of people exposed by their occupation, such as radium dial painters, have been fully documented. Chernobyl victims will be studied for many decades, with some data already available. For example, a significant increase in childhood thyroid cancer has been observed. The risk of a radiation-induced cancer for low and moderate doses is generallyassumedto be proportional to the risk known for high doses. Under this assumption, any dose of radiation, no matter how small, involves a risk to human health. This is called thelinear hypothesisand it may be prudent, but itiscontroversial. There is some evidence that, unlike the immediate effects of radiation, the long-term effects are cumulative and there is little self-repair. This is analogous to the risk of skin cancer from UV exposure, which is known to be cumulative.</p>
+<p class="prose">There is a latency period for the onset of radiation-induced cancer of about 2 years for leukemia and 15 years for most other forms. The person is at risk for at least 30 years after the latency period. Omitting many details, the overall risk of a radiation-induced cancer death per year per rem of exposure is about 10 in a million, which can be written as \(10/10^6 \, rem \cdot y\).</p>
+<p class="prose">If a person receives a dose of 1 rem, his risk each year of dying from radiation-induced cancer is 10 in a million and that risk continues for about 30 years. The lifetime risk is thus 300 in a million, or 0.03 percent. Since about 20 percent of all worldwide deaths are from cancer, the increase due to a 1 rem exposure is impossible to detect demographically. But 100 rem (1 Sv), which was the dose received by the average Hiroshima and Nagasaki survivor, causes a 3 percent risk, which can be observed in the presence of a 20 percent normal or natural incidence rate.</p>
+<p class="prose">The incidence of genetic defects induced by radiation is about one-third that of cancer deaths, but is much more poorly known. The lifetime risk of a genetic defect due to a 1 rem exposure is about 100 in a million or \(3.3/10^6 \, rem \cdot y\), but the normal incidence is 60,000 in a million. Evidence of such a small increase, tragic as it is, is nearly impossible to obtain. For example, there is no evidence of increased genetic defects among the offspring of Hiroshima and Nagasaki survivors. Animal studies do not seem to correlate well with effects on humans and are not very helpful. For both cancer and genetic defects, the approach to safety has been to use the linear hypothesis, which is likely to be an overestimate of the risks of low doses. Certain researchers even claim that low doses arebeneficial.Hormesisis a term used to describe generally favorable biological responses to low exposures of toxins or radiation. Such low levels may help certain repair mechanisms to develop or enable cells to adapt to the effects of the low exposures. Positive effects may occur at low doses that could be a problem at high doses.</p>
+<p class="prose">Even the linear hypothesis estimates of the risks are relatively small, and the average person is not exposed to large amounts of radiation.Tablelists average annual background radiation doses from natural and artificial sources for Australia, the United States, Germany, and world-wide averages. Cosmic rays are partially shielded by the atmosphere, and the dose depends upon altitude and latitude, but the average is about 0.40 mSv/y. A good example of the variation of cosmic radiation dose with altitude comes from the airline industry. Monitored personnel show an average of 2 mSv/y. A 12-hour flight might give you an exposure of 0.02 to 0.03 mSv.</p>
+<p class="prose">Doses from the Earth itself are mainly due to the isotopes of uranium, thorium, and potassium, and vary greatly by location. Some places have great natural concentrations of uranium and thorium, yielding doses ten times as high as the average value. Internal doses come from foods and liquids that we ingest. Fertilizers containing phosphates have potassium and uranium. So we are all a little radioactive. Carbon-14 has about 66 Bq/kg radioactivity whereas fertilizers may have more than 3000 Bq/kg radioactivity. Medical and dental diagnostic exposures are mostly from x-rays. It should be noted that x-ray doses tend to be localized and are becoming much smaller with improved techniques.Tableshows typical doses received during various diagnostic x-ray examinations. Note the large dose from a CT scan. While CT scans only account for less than 20 percent of the x-ray procedures done today, they account for about 50 percent of the annual dose received.</p>
+<p class="prose">Radon is usually more pronounced underground and in buildings with low air exchange with the outside world. Almost all soil contains some \(^{226}Ra\) and \(^{222}Rn\), but radon is lower in mainly sedimentary soils and higher in granite soils. Thus, the exposure to the public can vary greatly, even within short distances. Radon can diffuse from the soil into homes, especially basements. The estimated exposure for \(^{222}Rn\) is controversial. Recent studies indicate there is more radon in homes than had been realized, and it is speculated that radon may be responsible for 20 percent of lung cancers, being particularly hazardous to those who also smoke. Many countries have introduced limits on allowable radon concentrations in indoor air, often requiring the measurement of radon concentrations in a house prior to its sale. Ironically, it could be argued that the higher levels of radon exposure and their geographic variability, taken with the lack of demographic evidence of any effects, means that low-level radiation islessdangerous than previously thought.</p>
+<div class="sh2">Radiation Protection</div>
+<p class="prose">Laws regulate radiation doses to which people can be exposed. The greatest occupational whole-body dose that is allowed depends upon the country and is about 20 to 50 mSv/y and is rarely reached by medical and nuclear power workers. Higher doses are allowed for the hands. Much lower doses are permitted for the reproductive organs and the fetuses of pregnant women. Inadvertent doses to the public are limited to \(1/10\) of occupational doses, except for those caused by nuclear power, which cannot legally expose the public to more than \(1/1000\) of the occupational limit or 0.05 mSv/y (5 mrem/y). This has been exceeded in the United States only at the time of the Three Mile Island (TMI) accident in 1979. Chernobyl is another story. Extensive monitoring with a variety of radiation detectors is performed to assure radiation safety. Increased ventilation in uranium mines has lowered the dose there to about 1 mSv/y.</p>
+<table class="dt">
+<tr><th>Source</th><th>Dose (mSv/y)3</th><th>Dose (mSv/y)3</th><th>Dose (mSv/y)3</th><th>Dose (mSv/y)3</th></tr>
+<tr><td>Source</td><td>Australia</td><td>Germany</td><td>United States</td><td>World</td></tr>
+<tr><td>Natural Radiation - external</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Cosmic Rays</td><td>0.30</td><td>0.28</td><td>0.30</td><td>0.39</td></tr>
+<tr><td>Soil, building materials</td><td>0.40</td><td>0.40</td><td>0.30</td><td>0.48</td></tr>
+<tr><td>Radon gas</td><td>0.90</td><td>1.1</td><td>2.0</td><td>1.2</td></tr>
+<tr><td>Natural Radiation - internal</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>\(^{40}K\), \(^{14}C\), \(^{226}Ra\)</td><td>0.24</td><td>0.28</td><td>0.40</td><td>0.29</td></tr>
+<tr><td>Medical & Dental</td><td>0.80</td><td>0.90</td><td>0.53</td><td>0.40</td></tr>
+<tr><td>TOTAL</td><td>2.6</td><td>3.0</td><td>3.5</td><td>2.8</td></tr>
+</table>
+<p class="prose">To physically limit radiation doses, we useshielding, increase thedistancefrom a source, and limit thetime of exposure.</p>
+<p class="prose">Figure illustrates how these are used to protect both the patient and the dental technician when an x-ray is taken. Shielding absorbs radiation and can be provided by any material, including sufficient air. The greater the distance from the source, the more the radiation spreads out. The less time a person is exposed to a given source, the smaller is the dose received by the person. Doses from most medical diagnostics have decreased in recent years due to faster films that require less exposure time.</p>
+<div class="diagram"><img src="images/ch32/fig32-10-the-image-shows-a-dental-patient-wearing.jpg" alt="The image shows a dental patient wearing a lead apron sitting in a chair. X-rays emitting from an x-ray tube that is placed on the side of the patient’s jaw are passing through only the affected area of his teeth."><div class="d-cap">The image shows a dental patient wearing a lead apron sitting in a chair. X-rays emitting from an x-ray tube that is placed on the side of the patient’s jaw are passing through only the affected area of his teeth. (OpenStax College Physics, CC BY 4.0)</div></div>
+<table class="dt">
+<tr><th>Procedure</th><th>Effective dose (mSv)</th></tr>
+<tr><td>Chest</td><td>0.02</td></tr>
+<tr><td>Dental</td><td>0.01</td></tr>
+<tr><td>Skull</td><td>0.07</td></tr>
+<tr><td>Leg</td><td>0.02</td></tr>
+<tr><td>Mammogram</td><td>0.40</td></tr>
+<tr><td>Barium enema</td><td>7.0</td></tr>
+<tr><td>Upper GI</td><td>3.0</td></tr>
+<tr><td>CT head</td><td>2.0</td></tr>
+<tr><td>CT abdomen</td><td>10.0</td></tr>
+</table>
+<div class="sh2">Problem-Solving Strategy</div>
+<p class="prose">You need to follow certain steps for dose calculations, which are</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Dose from Inhaled Plutonium</span></div><div class="example-body">
+<p class="prose">Calculate the dose in rem/y for the lungs of a weapons plant employee who inhales and retains an activity of \(1.00 \, \mu Ci\) of \(^{239}Pu\) in an accident. The mass of affected lung tissue is 2.00 kg, the plutonium decays by emission of a 5.23-MeV \(\alpha\) particle, and you may assume the higher value of the RBE for \(\alpha\)s fromTable.</p>
+<p class="prose">Dose in rem is defined by \(1 \, rad = 0.01 \, J/kg\) and \(rem = rad \times RBE\). The energy deposited is divided by the mass of tissue affected and then multiplied by the RBE. The latter two quantities are given, and so the main task in this example will be to find the energy deposited in one year. Since the activity of the source is given, we can calculate the number of decays, multiply by the energy per decay, and convert MeV to joules to get the total energy.</p>
+<p class="prose">The activity \(R = 1.00 \, \mu Ci = 3.70 \times 10^4 \, Bq = 3.70 \times 10^4\) decays/s. So, the number of decays per year is obtained by multiplying by the number of seconds in a year:</p>
+<div class="math-display">\[(3.70 \times 10^4 \, decays/s)(3.16 \times 10^7 \, s) = 1.17 \times 10^{12} \, decays.\]</div>
+<p class="prose">Thus, the ionizing energy deposited per year is</p>
+<div class="math-display">\[E = (1.17 \times 10^{12} \, decays)(5.23 \, MeV/decay) \times \left(\dfrac{1.60 \times 10^{-13} \, J}{MeV}\right) = 0.\]</div>
+<p class="prose">Dividing by the mass of the affected tissue gives</p>
+<div class="math-display">\[\dfrac{E}{mass} = \dfrac{0.978 \, J}{2.00 \, kg} = 0.490 \, J/kg.\]</div>
+<p class="prose">One Gray is 1.00 J/kg, and so the dose in Gy is</p>
+<div class="math-display">\[dose \, in \, Gy = \dfrac{0.489 \, J/kg}{1.00 \, (J/kg)/Gy} = 0.489 \, Gy.\]</div>
+<p class="prose">Now, the dose in Sv is \[dose \, in Sv = Gy \times RBE\]\[= (0.489 \, Gy)(20) = 9.8 \, Sv.\]</p>
+<p class="prose">First note that the dose is given to two digits, because the RBE is (at best) known only to two digits. By any standard, this yearly radiation dose is high and will have a devastating effect on the health of the worker. Worse yet, plutonium has a long radioactive half-life and is not readily eliminated by the body, and so it will remain in the lungs. Being an \(\alpha\) emitter makes the effects 10 to 20 times worse than the same ionization produced by \(\beta\)s, \(\gamma\) rays, or x-rays. An activity of \(1.00 \, \mu Ci\) is created by only \(16 \, \mu g\) of \(^{239}Pu\) (left as an end-of-chapter problem to verify), partly justifying claims that plutonium is the most toxic substance known. Its actual hazard depends on how likely it is to be spread out among a large population and then ingested. The Chernobyl disaster’s deadly legacy, for example, has nothing to do with the plutonium it put into the environment.</p>
+</div></div>
+<div class="sh2">Risk versus Benefit</div>
+<p class="prose">Medical doses of radiation are also limited. Diagnostic doses are generally low and have further lowered with improved techniques and faster films. With the possible exception of routine dental x-rays, radiation is used diagnostically only when needed so that the low risk is justified by the benefit of the diagnosis. Chest x-rays give the lowest doses—about 0.1 mSv to the tissue affected, with less than 5 percent scattering into tissues that are not directly imaged. Other x-ray procedures range upward to about 10 mSv in a CT scan, and about 5 mSv (0.5 rem) per dental x-ray, again both only affecting the tissue imaged. Medical images with radiopharmaceuticals give doses ranging from 1 to 5 mSv, usually localized. One exception is the thyroid scan using \(^{131}I\). Because of its relatively long half-life, it exposes the thyroid to about 0.75 Sv. The isotope \(^{123}I\) is more difficult to produce, but its short half-life limits thyroid exposure to about 15 mSv.</p>
+<p class="prose">PHET EXPLORATIONS: ALPHA DECAY</p>
+<p class="prose">Watch alpha particles escape from a polonium nucleus, causing radioactive alpha decay. See how random decay times relate to the half life.</p>
+<div class="diagram"><img src="images/ch32/fig32-11-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<div class="sh3">Footnotes</div>
+<p class="prose">1Values approximate, difficult to determine.</p>
+<p class="prose">2Multiply by 100 to obtain dose in rem.</p>
+<p class="prose">3Multiply by 100 to obtain dose in mrem/y.</p>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Misconception Alert: Activity vs. Dose“Activity” refers to the radioactive source while “dose” refers to the amount of energy from the radiation that is deposited in a person or object.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: ALPHA DECAYWatch alpha particles escape from a polonium nucleus, causing radioactive alpha decay. See how random decay times relate to the half life.Figure . Alpha Decay</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 32.02. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">One of the methods used to limit radiation dose to the patient in medical imaging is to employ isotopes with short half-lives. How would this limit the dose?</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 32.02 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A patient receives an absorbed dose of 0.10 Gy from alpha radiation which has an RBE of 20. What is the dose equivalent in Sieverts (Sv)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>20 Sv</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.005 Sv</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.10 Sv</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2.0 Sv</li>
+</ul><div class="qexp">The dose equivalent in Sieverts is the product of the absorbed dose in Grays and the RBE (0.10 Gy × 20 = 2.0 Sv).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">All effects of ionizing radiation on biological tissue can ultimately be understood by their impact on which specific cellular component?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA molecules</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Lipid membranes</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Mitochondria</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ribosomes</li>
+</ul><div class="qexp">Ionizing radiation causes breaks in chemical bonds and structural changes in DNA, which governs cell function and reproduction.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which unit of radiation is specifically defined as 0.01 Joules of energy deposited per kilogram of tissue?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Sievert (Sv)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gray (Gy)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Becquerel (Bq)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Rad</li>
+</ul><div class="qexp">The rad is an older unit of absorbed dose defined as 0.01 J/kg, while the SI unit (Gray) is 1 J/kg.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">The "linear hypothesis" used in radiation safety assumes that:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>High doses of radiation are safer than moderate doses</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The risk of cancer is directly proportional to the dose at all levels, no matter how small</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There is a threshold dose below which radiation causes absolutely no biological damage</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The body can perfectly repair all damage if the dose is delivered in a straight line</li>
+</ul><div class="qexp">This hypothesis assumes that any dose of radiation, however small, involves a proportional risk to human health.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which source typically contributes the most to the average annual natural background radiation dose for humans?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cosmic rays from outer space</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Radon gas from the Earth</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Microwave ovens and cell phones</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Fallout from historical nuclear testing</li>
+</ul><div class="qexp">Radon gas diffusing from the soil is the largest natural contributor to background radiation in many countries.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 32 · <span>Section 32.03</span></div><div class="h-title">32.3: Therapeutic Uses of Ionizing Radiation</div><div class="h-desc">Therapeutic applications of ionizing radiation, called radiation therapy orradiotherapy, have existed since the discovery of x-rays and nuclear radioactivity. Today, radiotherapy is used almost exclus...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 32.03</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the concept of radiotherapy and list typical doses for cancer therapy.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">radiotherapy</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the use of ionizing radiation to treat ailments</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 32.03</div>
+<p class="prose">Therapeutic applications of ionizing radiation, called radiation therapy orradiotherapy, have existed since the discovery of x-rays and nuclear radioactivity. Today, radiotherapy is used almost exclusively for cancer therapy, where it saves thousands of lives and improves the quality of life and longevity of many it cannot save. Radiotherapy may be used alone or in combination with surgery and chemotherapy (drug treatment) depending on the type of cancer and the response of the patient. A careful examination of all available data has established that radiotherapy’s beneficial effects far outweigh its long-term risks.</p>
+<div class="sh2">Medical Application</div>
+<p class="prose">The earliest uses of ionizing radiation on humans were mostly harmful, with many at the level of snake oil as seen inFigure. Radium-doped cosmetics that glowed in the dark were used around the time of World War I. As recently as the 1950s, radon mine tours were promoted as healthful and rejuvenating—those who toured were exposed but gained no benefits. Radium salts were sold as health elixirs for many years. The gruesome death of a wealthy industrialist, who became psychologically addicted to the brew, alerted the unsuspecting to the dangers of radium salt elixirs. Most abuses finally ended after the legislation in the 1950s.</p>
+<div class="diagram"><img src="images/ch32/fig32-12-the-image-shows-an-old-advertisement-of-.jpg" alt="The image shows an old advertisement of radium material branded as UNDARK with the tagline “Shines in the Dark.”"><div class="d-cap">The image shows an old advertisement of radium material branded as UNDARK with the tagline “Shines in the Dark.” (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Radiotherapy is effective against cancer because cancer cells reproduce rapidly and, consequently, are more sensitive to radiation. The central problem in radiotherapy is to make the dose for cancer cells as high as possible while limiting the dose for normal cells. The ratio of abnormal cells killed to normal cells killed is called thetherapeutic ratio, and all radiotherapy techniques are designed to enhance this ratio. Radiation can be concentrated in cancerous tissue by a number of techniques. One of the most prevalent techniques for well-defined tumors is a geometric technique shown inFigure. A narrow beam of radiation is passed through the patient from a variety of directions with a common crossing point in the tumor. This concentrates the dose in the tumor while spreading it out over a large volume of normal tissue. The external radiation can be x-rays, \(^{60}Co\) \(\gamma\) rays, or ionizing-particle beams produced by accelerators. Accelerator-produced beams of neutrons, \(\pi -mesons\), and heavy ions such as nitrogen nuclei have been employed, and these can be quite effective. These particles have larger QFs or RBEs and sometimes can be better localized, producing a greater therapeutic ratio. But accelerator radiotherapy is much more expensive and less frequently employed than other forms.</p>
+<div class="diagram"><img src="images/ch32/fig32-13-the-image-shows-a-man-lying-on-a-flat-su.jpg" alt="The image shows a man lying on a flat surface. A gamma ray machine is rotated around the man."><div class="d-cap">The image shows a man lying on a flat surface. A gamma ray machine is rotated around the man. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Another form of radiotherapy uses chemically inert radioactive implants. One use is for prostate cancer. Radioactive seeds (about 40 to 100 and the size of a grain of rice) are placed in the prostate region. The isotopes used are usually \(^{135}I\) (6-month half life) or \(^{103}Pd\) (3-month half life). Alpha emitters have the dual advantages of a large QF and a small range for better localization.</p>
+<p class="prose">Radiopharmaceuticals are used for cancer therapy when they can be localized well enough to produce a favorable therapeutic ratio. Thyroid cancer is commonly treated utilizing radioactive iodine. Thyroid cells concentrate iodine, and cancerous thyroid cells are more aggressive in doing this. An ingenious use of radiopharmaceuticals in cancer therapy tags antibodies with radioisotopes. Antibodies produced by a patient to combat his cancer are extracted, cultured, loaded with a radioisotope, and then returned to the patient. The antibodies are concentrated almost entirely in the tissue they developed to fight, thus localizing the radiation in abnormal tissue. The therapeutic ratio can be quite high for short-range radiation. There is, however, a significant dose for organs that eliminate radiopharmaceuticals from the body, such as the liver, kidneys, and bladder. As with most radiotherapy, the technique is limited by the tolerable amount of damage to the normal tissue.</p>
+<p class="prose">Tablelists typical therapeutic doses of radiation used against certain cancers. The doses are large, but not fatal because they are localized and spread out in time. Protocols for treatment vary with the type of cancer and the condition and response of the patient. Three to five 200-rem treatments per week for a period of several weeks is typical. Time between treatments allows the body to repair normal tissue. This effect occurs because damage is concentrated in the abnormal tissue, and the abnormal tissue is more sensitive to radiation. Damage to normal tissue limits the doses. You will note that the greatest doses are given to any tissue that is not rapidly reproducing, such as in the adult brain. Lung cancer, on the other end of the scale, cannot ordinarily be cured with radiation because of the sensitivity of lung tissue and blood to radiation. But radiotherapy for lung cancer does alleviate symptoms and prolong life and is therefore justified in some cases.</p>
+<table class="dt">
+<tr><th>Type of Cancer</th><th>Typical dose (Sv)</th></tr>
+<tr><td>Lung</td><td>10–20</td></tr>
+<tr><td>Hodgkin’s disease</td><td>40–45</td></tr>
+<tr><td>Skin</td><td>40–50</td></tr>
+<tr><td>Ovarian</td><td>50–75</td></tr>
+<tr><td>Breast</td><td>50–80+</td></tr>
+<tr><td>Brain</td><td>80+</td></tr>
+<tr><td>Neck</td><td>80+</td></tr>
+<tr><td>Bone</td><td>80+</td></tr>
+<tr><td>Soft tissue</td><td>80+</td></tr>
+<tr><td>Thyroid</td><td>80+</td></tr>
+</table>
+<p class="prose">Finally, it is interesting to note that chemotherapy employs drugs that interfere with cell division and is, thus, also effective against cancer. It also has almost the same side effects, such as nausea and hair loss, and risks, such as the inducement of another cancer.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 32.03. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Isotopes that emit \(\displaystyle α\) radiation are relatively safe outside the body and exceptionally hazardous inside. Yet those that emit \(\displaystyle γ\) radiation are hazardous outside and inside. Explain why.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 32.03 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In cancer radiotherapy, the "therapeutic ratio" refers to the ratio of:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Normal cells killed to abnormal cells killed</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Abnormal cells killed to normal cells killed</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Radiation absorbed to radiation reflected</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Treatment cost to patient survival time</li>
+</ul><div class="qexp">Radiotherapy aims to maximize the therapeutic ratio by killing as many cancer cells as possible while minimizing damage to healthy tissue.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Radioactive iodine-131 is an effective treatment for thyroid cancer because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the only isotope that does not cause nausea</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Thyroid cells naturally concentrate iodine, localizing the radiation dose</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a half-life of exactly one hundred years</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It emits visible light that helps surgeons see the tumor</li>
+</ul><div class="qexp">The biological tendency of the thyroid to accumulate iodine allows the radiation to be concentrated specifically in that organ.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following medical imaging techniques provides the best spatial resolution for studying brain anatomy and function?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Simple Anger Camera</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>SPECT scan</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>PET scan</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dental X-ray</li>
+</ul><div class="qexp">PET scans have a resolution of about 0.5 cm, which is better than the 1 cm resolution typical of SPECT.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">What is the primary purpose of passing narrow beams of radiation through a patient from many different angles during radiotherapy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To reduce the total amount of radiation energy required for the procedure</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To increase the radiation dose received by the patient's skin</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To concentrate the dose at the tumor where the beams cross while spreading it out over healthy tissue</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To prevent the radiation from ionizing the air in the treatment room</li>
+</ul><div class="qexp">This geometric technique ensures the tumor receives a high cumulative dose while surrounding healthy tissues receive much lower, spread-out doses.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">5</span><span class="qt-inner">In nuclear medicine, a "tagged" compound is one that has been:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Marked with a physical label for inventory tracking</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Subjected to high-pressure sterilization</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Verified as safe by the government for food use</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Chemically joined with a radioactive nuclide for medical purposes</li>
+</ul><div class="qexp">A tagged compound, or radiopharmaceutical, allows doctors to track the movement or concentration of a specific chemical in the body.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 32</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 32: Medical Applications of Nuclear Physics.</div><div class="h-meta"><div class="h-chip">📝 16 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>32.01</strong></td><td>32.1: Medical Imaging and Diagnostics</td></tr>
+    <tr><td><strong>32.02</strong></td><td>32.2: Biological Effects of Ionizing Radiation</td></tr>
+    <tr><td><strong>32.03</strong></td><td>32.3: Therapeutic Uses of Ionizing Radiation</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 100 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 32 Practice Test</h3><p>16 questions · All OpenStax Review Questions</p></div></div><div id="q4">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 16 review questions from OpenStax College Physics, Chapter 32. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Gamma radiation is useful for internal medical probes primarily because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It can easily penetrate tissue to reach external detectors</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is visible to the naked eye, allowing for direct observation</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a very high mass that interacts strongly with bones</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It cannot cause ionization, making it perfectly safe for all tissue</li>
+</ul><div class="qexp">Gamma radiation's high penetration power allows it to exit the body and be measured by external radiation detectors.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is a significant advantage of using Technetium-99m in medical diagnostics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It produces a single, easily identified 0.142-MeV gamma ray</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It has an extremely long half-life of 15 years, reducing the need for new doses</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It emits alpha particles that stay localized within a single cell</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is a stable element that does not require nuclear decay</li>
+</ul><div class="qexp">The metastable state of technetium-99 produces a specific, identifiable gamma ray that is ideal for imaging with detectors.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">The primary mechanism utilized in Positron Emission Tomography (PET) to locate a radiopharmaceutical is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The mutual annihilation of a positron and an electron producing two gamma rays</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The reflection of x-rays off of high-density bone tissue</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The capture of thermal neutrons by hydrogen nuclei in water</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The detection of alpha particles emitted by heavy nuclei</li>
+</ul><div class="qexp">PET scans detect the two 0.511-MeV gamma rays that move in opposite directions following positron-electron annihilation.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If a 5.0 kg organ absorbs 2.5 J of ionizing energy, what is the radiation dose in Grays (Gy)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12.5 Gy</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2.5 Gy</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.5 Gy</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>50 Gy</li>
+</ul><div class="qexp">The dose in Grays is calculated by dividing the energy in Joules by the mass in kilograms (2.5 J / 5.0 kg = 0.5 Gy).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are alpha particles assigned a higher Relative Biological Effectiveness (RBE) than gamma rays?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Alphas are neutral and can pass through lead shielding</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Alphas travel much further through tissue, damaging more cells</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Alphas create more concentrated, dense ionization that is harder for DNA to repair</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Alphas have less mass and higher frequency than gamma rays</li>
+</ul><div class="qexp">Short-range particles like alphas create concentrated damage that is more difficult for biological repair mechanisms to fix than spread-out damage.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">6</span><span class="qt-inner">A patient receives an absorbed dose of 0.10 Gy from alpha radiation which has an RBE of 20. What is the dose equivalent in Sieverts (Sv)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>20 Sv</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.005 Sv</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.10 Sv</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2.0 Sv</li>
+</ul><div class="qexp">The dose equivalent in Sieverts is the product of the absorbed dose in Grays and the RBE (0.10 Gy × 20 = 2.0 Sv).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">7</span><span class="qt-inner">All effects of ionizing radiation on biological tissue can ultimately be understood by their impact on which specific cellular component?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>DNA molecules</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Lipid membranes</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Mitochondria</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ribosomes</li>
+</ul><div class="qexp">Ionizing radiation causes breaks in chemical bonds and structural changes in DNA, which governs cell function and reproduction.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Which unit of radiation is specifically defined as 0.01 Joules of energy deposited per kilogram of tissue?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Sievert (Sv)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gray (Gy)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Becquerel (Bq)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Rad</li>
+</ul><div class="qexp">The rad is an older unit of absorbed dose defined as 0.01 J/kg, while the SI unit (Gray) is 1 J/kg.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">9</span><span class="qt-inner">The "linear hypothesis" used in radiation safety assumes that:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>High doses of radiation are safer than moderate doses</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The risk of cancer is directly proportional to the dose at all levels, no matter how small</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There is a threshold dose below which radiation causes absolutely no biological damage</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The body can perfectly repair all damage if the dose is delivered in a straight line</li>
+</ul><div class="qexp">This hypothesis assumes that any dose of radiation, however small, involves a proportional risk to human health.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Which source typically contributes the most to the average annual natural background radiation dose for humans?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Cosmic rays from outer space</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Radon gas from the Earth</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Microwave ovens and cell phones</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Fallout from historical nuclear testing</li>
+</ul><div class="qexp">Radon gas diffusing from the soil is the largest natural contributor to background radiation in many countries.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">11</span><span class="qt-inner">In cancer radiotherapy, the "therapeutic ratio" refers to the ratio of:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Normal cells killed to abnormal cells killed</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Abnormal cells killed to normal cells killed</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Radiation absorbed to radiation reflected</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Treatment cost to patient survival time</li>
+</ul><div class="qexp">Radiotherapy aims to maximize the therapeutic ratio by killing as many cancer cells as possible while minimizing damage to healthy tissue.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">12</span><span class="qt-inner">Radioactive iodine-131 is an effective treatment for thyroid cancer because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the only isotope that does not cause nausea</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Thyroid cells naturally concentrate iodine, localizing the radiation dose</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a half-life of exactly one hundred years</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It emits visible light that helps surgeons see the tumor</li>
+</ul><div class="qexp">The biological tendency of the thyroid to accumulate iodine allows the radiation to be concentrated specifically in that organ.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Which of the following medical imaging techniques provides the best spatial resolution for studying brain anatomy and function?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Simple Anger Camera</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>SPECT scan</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>PET scan</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dental X-ray</li>
+</ul><div class="qexp">PET scans have a resolution of about 0.5 cm, which is better than the 1 cm resolution typical of SPECT.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">14</span><span class="qt-inner">What is the primary purpose of passing narrow beams of radiation through a patient from many different angles during radiotherapy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To reduce the total amount of radiation energy required for the procedure</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To increase the radiation dose received by the patient's skin</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To concentrate the dose at the tumor where the beams cross while spreading it out over healthy tissue</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To prevent the radiation from ionizing the air in the treatment room</li>
+</ul><div class="qexp">This geometric technique ensures the tumor receives a high cumulative dose while surrounding healthy tissues receive much lower, spread-out doses.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">15</span><span class="qt-inner">In nuclear medicine, a "tagged" compound is one that has been:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Marked with a physical label for inventory tracking</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Subjected to high-pressure sterilization</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Verified as safe by the government for food use</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Chemically joined with a radioactive nuclide for medical purposes</li>
+</ul><div class="qexp">A tagged compound, or radiopharmaceutical, allows doctors to track the movement or concentration of a specific chemical in the body.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">If an accident results in a person absorbing 0.05 Joules of ionizing energy in 1.0 kg of tissue, what is their dose in rads?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.0005 rad</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.5 rad</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>50 rad</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5 rad</li>
+</ul><div class="qexp">The dose in Gy is 0.05 J/kg; since 1 Gy = 100 rad, the dose is 0.05 × 100 = 5 rad.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 16 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Medical Applications of Nuclear Physics',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:5,lessonCount:4,cpMin:80,lessons:['Overview','32.01 32.1: Medical Imaging and Diagnostics','32.02 32.2: Biological Effects of Ionizing Radiation','32.03 32.3: Therapeutic Uses of Ionizing Radiation','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===4?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

@@ -39,7 +39,7 @@ def main():
     total_questions = 0
 
     # Scan all module folders
-    for folder in ['ap', 'biology', 'sol-prep']:
+    for folder in ['ap', 'biology', 'sol-prep', 'physics']:
         folder_path = project_root / folder
         if not folder_path.is_dir():
             continue

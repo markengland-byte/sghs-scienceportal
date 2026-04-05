@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Circular Motion and Gravitation | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🌍</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Circular Motion and Gravitation</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🌍</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Circular Motion and Gravitation</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 6 · <span>Overview</span></div><div class="h-title">Circular Motion and Gravitation</div><div class="h-desc">Many motions, such as the arc of a bird’s flight or Earth’s path around the Sun, are curved. Recall that Newton’s first law tells us that motion is along a straight line at constant speed unless there is a net external force. We will therefore study not only motion along curves, but also the forces that cause it, including gravitational forces. In some ways, this chapter is a continuation of Dynamics: Newton's Laws of Motion as we study more applications of Newton’s laws of motion. This chapter deals with the simplest form of curved motion,uniform circular motion, motion in a circular path at</div>
+    <div class="h-meta"><div class="h-chip">📚 6 Lessons</div><div class="h-chip">🌍 OpenStax College Physics Ch. 6</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 28 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 6</div><div class="cx">All content is from OpenStax College Physics, Chapter 6: Circular Motion and Gravitation. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 6</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.1</span></div><div class="h-title">6.1: Rotation Angle and Angular Velocity</div><div class="h-desc">InKinematics, we studied motion along a straight line and introduced such concepts as displacement, velocity, and acceleration.Two-Dimensional Kinematicsdealt with motion in two dimensions. Projectile...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define arc length, rotation angle, radius of curvature and angular velocity.</li>
+      <li>Calculate the angular velocity of a car wheel spin.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">arc length</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">Δs, the distance traveled by an object along a circular path</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">gravitational constant,G</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a proportionality factor used in the equation for Newton’s universal law of gravitation; it is a universal constant—that is, it is thought to be the same everywhere in the universe</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">uniform circular motion</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the motion of an object in a circular path at constant speed</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.1</div>
+<p class="prose">InKinematics, we studied motion along a straight line and introduced such concepts as displacement, velocity, and acceleration.Two-Dimensional Kinematicsdealt with motion in two dimensions. Projectile motion is a special case of two-dimensional kinematics in which the object is projected into the air, while being subject to the gravitational force, and lands a distance away. In this chapter, we consider situations where the object does not land but moves in a curve. We begin the study of uniform circular motion by defining two angular quantities needed to describe rotational motion.</p>
+<div class="sh3">Rotation Angle</div>
+<p class="prose">When objects rotate about some axis—for example, when the CD (compact disc) in Figure rotates about its center—each point in the object follows a circular arc. Consider a line from the center of the CD to its edge. Eachpitused to record sound along this line moves through the same angle in the same amount of time. The rotation angle is the amount of rotation and is analogous to linear distance. We define therotation angle \(\Delta \theta\)to be the ratio of the arc length to the radius of curvature:</p>
+<div class="math-display">\[\Delta \theta = \dfrac{\Delta s}{r}. \]</div>
+<div class="diagram"><img src="images/ch6/fig6-1-the-figure-shows-the-back-side-of-a-comp.png" alt="The figure shows the back side of a compact disc. There is a scratched part on the upper right side of the C D, about one-fifth size of the whole area, with inner circular dots clearly visible. Two line segments are drawn enclosing the scratched area from the border of the C D to the middle plastic portion. A curved arrow is drawn between the two line segments near this middle portion and angle delta theta written alongside it."><div class="d-cap">The figure shows the back side of a compact disc. There is a scratched part on the upper right side of the C D, about one-fifth size of the whole area, with inner circular dots clearly visible. Two line segments are drawn enclosing the scratched area from the border of the C D to the middle plastic portion. A curved arrow is drawn between the two line segments near this middle portion and angle delta theta written alongside it. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch6/fig6-2-a-circle-of-radius-r-and-center-o-is-sho.png" alt="A circle of radius r and center O is shown. A radius O-A of the circle is rotated through angle delta theta about the center O to terminate as radius O-B. The arc length A-B is marked as delta s."><div class="d-cap">A circle of radius r and center O is shown. A radius O-A of the circle is rotated through angle delta theta about the center O to terminate as radius O-B. The arc length A-B is marked as delta s. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Thearc length \(\Delta s\)is the distance traveled along a circular path as shown in Figure. Note that is theradius of curvatureof the circular path.We know that for one complete revolution, the arc length is the circumference of a circle of radius \(r\). The circumference of a circle is \(2 \pi r\).</p>
+<p class="prose">Thus for one complete revolution the rotation angle is \[\Delta \theta = \dfrac{2\pi r}{r} = 2\pi. \]</p>
+<p class="prose">This result is the basis for defining the units used to measure rotation angles, \(\Delta \theta \) to beradians(rad), defined so that</p>
+<div class="math-display">\[2 \pi \, radians = 1 \space revolution. \]</div>
+<p class="prose">A comparison of some useful angles expressed in both degrees and radians is shown in Table .</p>
+<table class="dt">
+<tr><th>Degree Measure</th><th>Radian Measure</th></tr>
+<tr><td>\(30^o\)</td><td>\(\dfrac{\pi}{6}\)</td></tr>
+<tr><td>\(60^o\)</td><td>\(\dfrac{\pi}{3}\)</td></tr>
+<tr><td>\(90^o\)</td><td>\(\dfrac{\pi}{2}\)</td></tr>
+<tr><td>\(120^o\)</td><td>\(\dfrac{2\pi}{3}\)</td></tr>
+<tr><td>\(135^o\)</td><td>\(\dfrac{3\pi}{4}\)</td></tr>
+<tr><td>\(180^o\)</td><td>\(\pi\)</td></tr>
+</table>
+<div class="diagram"><img src="images/ch6/fig6-3-a-circle-is-shown-two-radii-of-the-circl.png" alt="A circle is shown. Two radii of the circle, inclined at an acute angle delta theta, are shown. On one of the radii, two points, one and two are marked. The point one is inside the circle through which an arc between the two radii is shown. The point two is on the circumference of the circle. The two arc lengths are delta s one and delta s two respectively for the two points."><div class="d-cap">A circle is shown. Two radii of the circle, inclined at an acute angle delta theta, are shown. On one of the radii, two points, one and two are marked. The point one is inside the circle through which an arc between the two radii is shown. The point two is on the circumference of the circle. The two arc lengths are delta s one and delta s two respectively for the two points. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">If \(\Delta \theta = 2 \pi \, rad \), then the CD has made one complete revolution, and every point on the CD is back at its original position. Because there are \(360^o\) in a circle or one revolution, the relationship between radians and degrees is thus</p>
+<div class="math-display">\[ 2\pi \, rad = 360^o \]</div>
+<div class="math-display">\[ 1 \, rad = \dfrac{360^o}{2\pi} \approx 57.3^o \]</div>
+<div class="sh2">Angular Velocity</div>
+<p class="prose">How fast is an object rotating? We defineangular velocity \(\omega\)as the rate of change of an angle. In symbols, this is</p>
+<div class="math-display">\[\omega = \dfrac{\Delta \theta}{\Delta t}, \]</div>
+<p class="prose">where an angular rotation \(\Delta \theta \) takes place in a time \(\Delta t\). The greater the rotation angle in a given amount of time, the greater the angular velocity. The units for angular velocity are radians per second (rad/s).Angular velocity \(\omega\) is analogous to linear velocity \(v\). To get the precise relationship between angular and linear velocity, we again consider a pit on the rotating CD. This pit moves an arc length \(\Delta s\) in a time \(\Delta t\), and so it has a linear velocity</p>
+<div class="math-display">\[v = \dfrac{\Delta s}{\Delta t}.\]</div>
+<p class="prose">From \(\Delta \theta = \frac{\Delta s}{r} \) we see that \(\Delta s = r\Delta \theta \). Substituting this into the expression for \(v\) gives</p>
+<div class="math-display">\[v = \dfrac{r \Delta \theta}{\Delta t} = r\omega. \]</div>
+<p class="prose">We write this relationship in two different ways and gain two different insights:</p>
+<div class="math-display">\[ v = r \omega, \, or \, \omega = \dfrac{v}{r}.\]</div>
+<p class="prose">The first relationship in \( v = r \omega, \, or \, \omega = \dfrac{v}{r}\) states that the linear velocity \(v\) is proportional to the distance from the center of rotation, thus, it is largest for a point on the rim (largest \(r\)), as you might expect. We can also call this linear speed \(v\) of a point on the rim thetangential speed. The second relationship in \(v = r \omega, \, or \, \omega = \dfrac{v}{r}\) can be illustrated by considering the tire of a moving car. Note that the speed of a point on the rim of the tire is the same as the speed \(v\) of the car. See Figure So the faster the car moves, the faster the tire spins—large \(v\) means a large \(\omega\), because \(v = r\omega\). Similarly, a larger-radius tire rotating at the same angular velocity \((\omega)\) will produce a greater linear speed \((v)\) for the car.</p>
+<div class="diagram"><img src="images/ch6/fig6-4-the-given-figure-shows-the-front-wheel-o.png" alt="The given figure shows the front wheel of a car. The radius of the car wheel, r, is shown as an arrow and the linear velocity, v, is shown with a green horizontal arrow pointing rightward. The angular velocity, omega, is shown with a clockwise-curved arrow over the wheel."><div class="d-cap">The given figure shows the front wheel of a car. The radius of the car wheel, r, is shown as an arrow and the linear velocity, v, is shown with a green horizontal arrow pointing rightward. The angular velocity, omega, is shown with a clockwise-curved arrow over the wheel. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : How Fast Does the Car Tire Spin?</span></div><div class="example-body">
+<p class="prose">Calculate the angular velocity of a 0.300 m radius car tire when the car travels at \(15.0 m/s\) (about \(54 \, km/h\)). See Figure.</p>
+<p class="prose">Because the linear speed of the tire rim is the same as the speed of the car, we have \(v = 15.0 m/s\). The radius of the tire is given to be \(r = 0.300 \, m\). Knowing \(v\) and \(r\), we can use the second relationship in \(v = \omega r\), \(\omega = \frac{v}{r}\) to calculate the angular velocity.</p>
+<p class="prose">To calculate the angular velocity, we will use the following relationship:</p>
+<div class="math-display">\[\omega = \dfrac{v}{r}.\]</div>
+<p class="prose">Substituting the knowns,</p>
+<div class="math-display">\[\omega = \dfrac{15.0 \, m/s}{0.300 \, m} = 50.0 \, rad/s.\]</div>
+<p class="prose">When we cancel units in the above calculation, we get 50.0/s. But the angular velocity must have units of rad/s. Because radians are actually unitless (radians are defined as a ratio of distance), we can simply insert them into the answer for the angular velocity. Also note that if an earth mover with much larger tires, say 1.20 m in radius, were moving at the same speed of 15.0 m/s, its tires would rotate more slowly. They would have an angular velocity</p>
+<div class="math-display">\[ \omega = (15.0 \, m/s)/(1.20 \, m) = 12.5 \, rad/s.\]</div>
+<p class="prose">Both \(\omega\) and \(v\) have directions (hence they are angular and linearvelocities, respectively). Angular velocity has only two directions with respect to the axis of rotation—it is either clockwise or counterclockwise. Linear velocity is tangent to the path, as illustrated in Figure.</p>
+<p class="prose">Tie an object to the end of a string and swing it around in a horizontal circle above your head (swing at your wrist). Maintain uniform speed as the object swings and measure the angular velocity of the motion. What is the approximate speed of the object? Identify a point close to your hand and take appropriate measurements to calculate the linear speed at this point. Identify other circular motions and measure their angular velocities.</p>
+<div class="diagram"><img src="images/ch6/fig6-5-the-given-figure-shows-the-top-view-of-a.png" alt="The given figure shows the top view of an old fashioned vinyl record. Two perpendicular line segments are drawn through the center of the circular record, one vertically upward and one horizontal to the right side. Two flies are shown at the end points of the vertical lines near the borders of the record. Two arrows are also drawn perpendicularly rightward through the end points of these vertical lines depicting linear velocities. A curved arrow is also drawn at the center circular part of the record which shows the angular velocity."><div class="d-cap">The given figure shows the top view of an old fashioned vinyl record. Two perpendicular line segments are drawn through the center of the circular record, one vertically upward and one horizontal to the right side. Two flies are shown at the end points of the vertical lines near the borders of the record. Two arrows are also drawn perpendicularly rightward through the end points of these vertical lines depicting linear velocities. A curved arrow is also drawn at the center circular part of the record which shows the angular velocity. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PHET EXPLORATIONS: LADYBUG REVOLUTION</p>
+<p class="prose">Join the ladybug in an exploration of rotational motion. Rotate the merry-go-round to change its angle, or choose a constant angular velocity or angular acceleration. Explore how circular motion relates to the bug's x,y position, velocity, and acceleration using vectors or graphs.</p>
+</div></div>
+<div class="sh2">Section Summary</div>
+<div class="math-display">\[\Delta \theta = \dfrac{\Delta s}{r} \]</div>
+<p class="prose">where arc length \(\delta s\) is distance traveled along a circular path and \(r\) is the radius of curvature of the circular path. The quantity \( \Delta \theta\) is measured in units of radians (rad), for which</p>
+<div class="math-display">\[2\pi \, rad = 360^o = 1 \, revolution. \]</div>
+<div class="math-display">\[\omega = \dfrac{\Delta \theta}{\Delta t},\]</div>
+<p class="prose">where a rotation \(\Delta \theta \) takes place in a time \(\Delta t\). The units of angular velocity are radians per second (rad/s). Linear velocity \(v\) and angular velocity \(\omega\) are related by</p>
+<div class="math-display">\[v = r\omega, \, or \, \omega = \dfrac{v}{r}. \]</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE-HOME EXPERIMENTTie an object to the end of a string and swing it around in a horizontal circle above your head (swing at your wrist). Maintain uniform speed as the object swings and measure the angular velocity of the motion. What is the approximate speed of the object? Identify a point close to your hand and take appropriate measurements to calculate the linear speed at this point. Identify other circular motions and measure their angular velocities.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: LADYBUG REVOLUTIONJoin the ladybug in an exploration of rotational motion. Rotate the merry-go-round to change its angle, or choose a constant angular velocity or angular acceleration. Explore how circular motion relates to the bug's x,y position, velocity, and acceleration using vectors or graphs.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">There is an analogy between rotational and linear physical quantities. What rotational quantities are analogous to distance and velocity?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.1 Quiz</h3><p>4 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following is the correct definition of the rotation angle Δθ?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of the arc length to the radius of curvature</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The rate of change of the angular velocity</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The linear distance traveled along a circular path</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The product of the radius and the square of the angular velocity</li>
+</ul><div class="qexp">By definition, the rotation angle Δθ is the ratio of the arc length Δs to the radius of curvature r.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A wheel rotates through an angle of 180 degrees. What is this rotation angle expressed in radians?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>π/2 rad</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2π rad</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>π rad</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3π/2 rad</li>
+</ul><div class="qexp">Since 360 degrees equals 2π radians, 180 degrees is exactly half of that, which is π radians.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If a car tire with a radius of 0.40 m is rotating with an angular velocity of 20 rad/s, what is the linear speed of the car?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>50 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>8.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.02 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5.0 m/s</li>
+</ul><div class="qexp">The linear velocity v is calculated by multiplying the radius r by the angular velocity ω (v = rω).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Consider two points on a rotating compact disc: Point A is near the center and Point B is near the outer rim. Which of the following is true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Point A has a greater angular velocity than Point B</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Point A has a greater linear speed than Point B</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both points have the same linear speed</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both points have the same angular velocity</li>
+</ul><div class="qexp">In a rigid rotating object, every point moves through the same angle in the same amount of time, meaning they share the same angular velocity.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.2</span></div><div class="h-title">6.2: Centripetal Acceleration</div><div class="h-desc">We know from kinematics that acceleration is a change in velocity, either in its magnitude or in its direction, or both. In uniform circular motion, the direction of the velocity changes constantly, s...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Establish the expression for centripetal acceleration.</li>
+      <li>Explain the centrifuge.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">centripetal acceleration</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the acceleration of an object moving in a circle, directed toward the center</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">centripetal force</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">any net force causing uniform circular motion</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.2</div>
+<p class="prose">We know from kinematics that acceleration is a change in velocity, either in its magnitude or in its direction, or both. In uniform circular motion, the direction of the velocity changes constantly, so there is always an associated acceleration, even though the magnitude of the velocity might be constant. You experience this acceleration yourself when you turn a corner in your car. (If you hold the wheel steady during a turn and move at constant speed, you are in uniform circular motion.) What you notice is a sideways acceleration because you and the car are changing direction. The sharper the curve and the greater your speed, the more noticeable this acceleration will become. In this section we examine the direction and magnitude of that acceleration.</p>
+<p class="prose">Figure shows an object moving in a circular path at constant speed. The direction of the instantaneous velocity is shown at two points along the path. Acceleration is in the direction of the change in velocity, which points directly toward the center of rotation (the center of the circular path). This pointing is shown with the vector diagram in the figure. We call the acceleration of an object moving in uniform circular motion (resulting from a net external force) thecentripetal acceleration\(a_c\); centripetal means “toward the center” or “center seeking.”</p>
+<div class="diagram"><img src="images/ch6/fig6-6-the-given-figure-shows-a-circle-with-a-t.jpg" alt="The given figure shows a circle, with a triangle having vertices A B C made from the center to the boundry. A is at the center and B and C points are at the circle path. Lines A B and A C act as radii and B C is a chord. Delta theta is shown inside the triangle, and the arc length delta s and the chord length delta r are also given. At point B, velocity of object is shown as v one and at point C, velocity of object is shown as v two. Along the circle an equation is shown as delta v equals v sub 2 minus v sub 1."><div class="d-cap">The given figure shows a circle, with a triangle having vertices A B C made from the center to the boundry. A is at the center and B and C points are at the circle path. Lines A B and A C act as radii and B C is a chord. Delta theta is shown inside the triangle, and the arc length delta s and the chord length delta r are also given. At point B, velocity of object is shown as v one and at point C, velocity of object is shown as v two. Along the circle an equation is shown as delta v equals v sub 2 minus v sub 1. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The direction of centripetal acceleration is toward the center of curvature, but what is its magnitude? Note that the triangle formed by the velocity vectors and the one formed by the radii \(r\) and \(\Delta s\) are similar. Both the triangles ABC and PQR are isosceles triangles (two equal sides). The two equal sides of the velocity vector triangle are the speeds \( v_1 =v_2 = v \) Using the properties of two similar triangles, we obtain</p>
+<div class="math-display">\[ \dfrac{\Delta v}{v} = \dfrac{\Delta s}{r}. \]</div>
+<p class="prose">Acceleration is \(\Delta v/\Delta t \) and so we first solve this expression for \(\delta v \):</p>
+<div class="math-display">\[\delta v = \dfrac{v}{r} \Delta s. \]</div>
+<p class="prose">Then we divide this by \(\Delta t \), yielding</p>
+<div class="math-display">\[\dfrac{\Delta v}{\Delta t} = \dfrac{v}{r} \times \dfrac{\Delta s}{\Delta t}. \]</div>
+<p class="prose">Finally, noting that \( \Delta v/\Delta t = a_c \) and that \(\delta s/\Delta t = v \) the linear or tangential speed, we see that the magnitude of the centripetal acceleration is</p>
+<div class="math-display">\[ a_c = \dfrac{v^2}{r}, \]</div>
+<p class="prose">which is the acceleration of an object in a circle of radius \(r\) at a speed \(v\).</p>
+<p class="prose">So, centripetal acceleration is greater at high speeds and in sharp curves (smaller radius), as you have noticed when driving a car. But it is a bit surprising that \(a_c\) is proportional to speed squared, implying, for example, that it is four times as hard to take a curve at 100 km/h than at 50 km/h. A sharp corner has a small radius, so that \(a_c\) is greater for tighter turns, as you have probably noticed.It is also useful to express \(a_c\) in terms of angular velocity. Substituting \( v = r\omega \) into the above expression, we find \( a_c = (r \omega^2)/r = r \omega^2 \). We can express the magnitude of centripetal acceleration using either of two equations:</p>
+<div class="math-display">\[ a_c = \dfrac{v^2}{r}; \, a_c = r \omega^2 \]</div>
+<p class="prose">Recall that the direction of \(a_c\) is toward the center. You may use whichever expression is more convenient, as illustrated in examples below.</p>
+<p class="prose">Acentrifuge(Figure \(\PageIndex{2b}\)) is a rotating device used to separate specimens of different densities. High centripetal acceleration significantly decreases the time it takes for separation to occur, and makes separation possible with small samples. Centrifuges are used in a variety of applications in science and medicine, including the separation of single cell suspensions such as bacteria, viruses, and blood cells from a liquid medium and the separation of macromolecules, such as DNA and protein, from a solution. Centrifuges are often rated in terms of their centripetal acceleration relative to acceleration due to gravity \((g)\) maximum centripetal acceleration of several hundred thousand \(g\) is possible in a vacuum. Human centrifuges, extremely large centrifuges, have been used to test the tolerance of astronauts to the effects of accelerations larger than that of Earth’s gravity.</p>
+<p class="prose">Example: Centripetal Acceleration vs. Gravity?</p>
+<p class="prose">What is the magnitude of the centripetal acceleration of a car following a curve of radius 500 m at a speed of 25.0 m/s (about 90 km/h)? Compare the acceleration with that due to gravity for this fairly gentle curve taken at highway speed. See Figure \(\PageIndex{2a}\).</p>
+<p class="prose">Because \(v\) and \(r\) are given, the first expression in \( a_c = \frac{v^2}{r}: \, a_c = r \omega^2 \) is the most convenient to use.</p>
+<p class="prose">Entering the given values of \( v = 25.0 \, m/s and r = 500 \, m \) into the first expression for \(a_c\) gives</p>
+<div class="math-display">\[a_c = \dfrac{v^2}{r} = \dfrac{(25.0 m/s)^2}{500 \, m} = 1.25 \, m/s^2. \nonumber \]</div>
+<p class="prose">To compare this with the acceleration due to gravity \( (g = 9.80 \, m/s^2) \), we take the ratio of \(a_c/g = (1.25 \, m/s^2)/(9.80 \, m/s^2) = 0.128. \) Thus, \(a_c = 0.128 g \) and is noticeable especially if you were not wearing a seat belt.</p>
+<div class="diagram"><img src="images/ch6/fig6-7-in-figure-a-a-car-shown-from-top-is-runn.png" alt="In figure a, a car shown from top is running on a circular road around a circular path. The center of the park is termed as the center of this circle and the distance from this point to the car is taken as radius r. The linear velocity is shown in perpendicular direction toward the front of the car, shown as v the centripetal acceleration is shown with an arrow pointed towards the center of rotation. In figure b, a centrifuge is shown an object of mass m is rotating in it at a constant speed. The object is at the distance equal to the radius, r, of the centrifuge. The centripetal acceleration is shown towards the center of rotation, and the velocity, v is shown perpendicular to the object in the clockwise direction."><div class="d-cap">In figure a, a car shown from top is running on a circular road around a circular path. The center of the park is termed as the center of this circle and the distance from this point to the car is taken as radius r. The linear velocity is shown in perpendicular direction toward the front of the car, shown as v the centripetal acceleration is shown with an arrow pointed towards the center of rotation. In figure b, a centrifuge is shown an object of mass m is rotating in it at a constant speed. The object is at the distance equal to the radius, r, of the centrifuge. The centripetal acceleration is shown towards the center of rotation, and the velocity, v is shown perpendicular to the object in the clockwise direction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Example:How Big is the Centripetal Acceleration in an Ultracentrifuge?</p>
+<p class="prose">Calculate the centripetal acceleration of a point 7.50 cm from the axis of anultracentrifugespinning at \(7.4 \times 10^7 \, rev/min.\) Determine the ratio of this acceleration to that due to gravity. See Figure Figure \(\PageIndex{2b}\).</p>
+<p class="prose">The term rev/min stands for revolutions per minute. By converting this to radians per second, we obtain the angular velocity \(\omega\). Because \(r\) is given, we can use the second expression in the equation \(a_c = \frac{v^2}{r}; \, a_c = r\omega^2 \) to calculate the centripetal acceleration.</p>
+<p class="prose">To convert \(7.40 \times 10^4 \, rev/min \) to radians per second, we use the facts that one revolution is \(2\pi \, rad\) and one minute is 60.0 s. Thus,</p>
+<div class="math-display">\[\omega = 7.40 \times 10^4 \dfrac{rev}{min} \times \dfrac{2 \pi \, rad}{1 \, rev} \times \dfrac{1 \, min}{60 \, sec} = 7745 \, rad/sec. \nonumber \]</div>
+<p class="prose">Now the centripetal acceleration is given by the second expression in \( a_c = \frac{v^2}{r}; \, a_c = r\omega^2\) as</p>
+<div class="math-display">\[ a_c = r\omega^2. \nonumber\]</div>
+<p class="prose">Converting 7.50 cm to meters and substituting known values gives</p>
+<div class="math-display">\[a_c = (0.0750 \, m)(7854 \, rad/sec)^2 = 4.50 \times 10^6 \, m/s^2. \nonumber\]</div>
+<p class="prose">Note that the unitless radians are discarded in order to get the correct units for centripetal acceleration. Taking the ratio of \(a_c\) to \(g\) yields</p>
+<div class="math-display">\[\dfrac{a_c}{g} = \dfrac{4.63 \times 10^6}{9.80} = 4.59 \times 10^5. \nonumber\]</div>
+<p class="prose">This last result means that the centripetal acceleration is 472,000 times as strong as \(g\). It is no wonder that such high \(\omega\) centrifuges are called ultracentrifuges. The extremely large accelerations involved greatly decrease the time needed to cause the sedimentation of blood cells or other materials.</p>
+<p class="prose">Of course, a net external force is needed to cause any acceleration, just as Newton proposed in his second law of motion. So a net external force is needed to cause a centripetal acceleration. In the section onCentripetal Force, we will consider the forces involved in circular motion.</p>
+<p class="prose">PHET EXPLORATIONS: LADYBUG MOTION 2D</p>
+<p class="prose">Learn about position, velocity and acceleration vectors.Move the ladybugby setting the position, velocity or acceleration, and see how the vectors change. Choose linear, circular or elliptical motion, and record and playback the motion to analyze the behavior.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: LADYBUG MOTION 2DLearn about position, velocity and acceleration vectors.Move the ladybugby setting the position, velocity or acceleration, and see how the vectors change. Choose linear, circular or elliptical motion, and record and playback the motion to analyze the behavior.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Can centripetal acceleration change the speed of circular motion? Explain.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.2 Quiz</h3><p>4 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">An object travels 6.28 meters along a circular path with a radius of 2.0 meters. What is the rotation angle in radians?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3.14 rad</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.00 rad</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>12.56 rad</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.32 rad</li>
+</ul><div class="qexp">Using Δθ = Δs/r, we divide the arc length of 6.28 m by the radius of 2.0 m to get 3.14 rad.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In uniform circular motion, what is the direction of the centripetal acceleration vector?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Tangent to the circular path</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Toward the center of the circle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Away from the center of the circle</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Opposite to the direction of the velocity vector</li>
+</ul><div class="qexp">Centripetal means "center-seeking," and the acceleration in uniform circular motion always points directly toward the center of curvature.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If the speed of an object in uniform circular motion is doubled while the radius remains constant, by what factor does the centripetal acceleration change?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is halved</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It doubles</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It remains the same</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It quadruples</li>
+</ul><div class="qexp">According to the formula a_c = v²/r, centripetal acceleration is proportional to the square of the velocity.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A car rounds a curve with a radius of 100 m at a constant speed of 20 m/s. What is the magnitude of its centripetal acceleration?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.2 m/s²</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2.0 m/s²</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>4.0 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>400 m/s²</li>
+</ul><div class="qexp">The centripetal acceleration is calculated as v²/r, which is (20 m/s)² / 100 m = 4 m/s².</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.3</span></div><div class="h-title">6.3: Centripetal Force</div><div class="h-desc">Any force or combination of forces can cause a centripetal or radial acceleration. Just a few examples are the tension in the rope on a tether ball, the force of Earth’s gravity on the Moon, friction ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate coefficient of friction on a car tire.</li>
+      <li>Calculate ideal speed and angle of a car on a turn.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.3</div>
+<p class="prose">Any force or combination of forces can cause a centripetal or radial acceleration. Just a few examples are the tension in the rope on a tether ball, the force of Earth’s gravity on the Moon, friction between roller skates and a rink floor, a banked roadway’s force on a car, and forces on the tube of a spinning centrifuge.</p>
+<p class="prose">Any net force causing uniform circular motion is called acentripetal force. The direction of a centripetal force is toward the center of curvature, the same as the direction of centripetal acceleration. According to Newton’s second law of motion, net force is mass times acceleration: net \(F = ma \). For uniform circular motion, the acceleration is the centripetal acceleration - \(a = a_c\). Thus, the magnitude of centripetal force \(F_c\) is \[ F_c = ma_c.\]</p>
+<p class="prose">By using the expressions for centripetal acceleration \(a_c\) from \( a_c = \frac{v^2}{r}; \, a_c = r\omega^2\), we get two expressions for the centripetal force \(F_c\) in terms of mass, velocity, angular velocity, and radius of curvature:</p>
+<div class="math-display">\[F_c = m \dfrac{v^2}{r}; \, F_c = mr\omega^2.\]</div>
+<p class="prose">You may use whichever expression for centripetal force is more convenient. Centripetal force \(F_c\) is always perpendicular to the path and pointing to the center of curvature, because \(a_c\) is perpendicular to the velocity and pointing to the center of curvature.Note that if you solve the first expression for \(r\), you get \[r = \dfrac{mv^2}{F_c}.\]</p>
+<p class="prose">This implies that for a given mass and velocity, a large centripetal force causes a small radius of curvature—that is, a tight curve.</p>
+<p class="prose">Example: What Coefficient of Friction Do Car Tires Need on a Flat Curve?</p>
+<p class="prose">Strategy and Solution for (a)</p>
+<p class="prose">We know that \(F_c = \frac{mv^2}{r}.\) Thus, \[F_c = \dfrac{mv^2}{r} = \dfrac{(900\, kg)(25.0 \, m/s)^2}{500 \, m)} = 1125 \, N. \nonumber\]</p>
+<p class="prose">Figure shows the forces acting on the car on an unbanked (level ground) curve.</p>
+<p class="prose">Friction is to the left, keeping the car from slipping, and because it is the only horizontal force acting on the car, the friction is the centripetal force in this case. We know that the maximum static friction (at which the tires roll but do not slip) is \(\mu_s N,\) where \(\mu_s\) is the static coefficient of friction and N is the normal force. The normal force equals the car’s weight on level ground,)so that \( N = mg\). Thus the centripetal force in this situation is</p>
+<div class="math-display">\[F_c = f = \mu_sN = \mu_s mg. \nonumber\]</div>
+<p class="prose">Now we have a relationship between centripetal force and the coefficient of friction. Using the first expression for \(F_c\) from the equation</p>
+<div class="math-display">\[\begin{align*} F_c = m\dfrac{v^2}{r} \\[5pt] &= mr\omega^2 \end{align*} \]</div>
+<div class="math-display">\[m\dfrac{v^2}{r} = \mu_smg. \nonumber\]</div>
+<p class="prose">We solve this for \(\mu_s\), noting that mass cancels, and obtain</p>
+<div class="math-display">\[\mu_s = \dfrac{v^2}{rg}. \nonumber\]</div>
+<p class="prose">Substituting the knowns,</p>
+<div class="math-display">\[\mu_s = \dfrac{(25.0 \, m/s)^2}{(500 \, m)(9.80 \, m/s^2)} = 0.13. \nonumber\]</div>
+<p class="prose">(Because coefficients of friction are approximate, the answer is given to only two digits.)</p>
+<p class="prose">We could also solve part (a) using the first expression in</p>
+<div class="math-display">\[\begin{align*} F_c &= m\dfrac{v^2}{r} \\[4pt] &= mr\omega^2 \end{align*}\]</div>
+<p class="prose">because \(m\), \(v\) and \(r\) are given. The coefficient of friction found in part (b) is much smaller than is typically found between tires and roads. The car will still negotiate the curve if the coefficient is greater than 0.13, because static friction is a responsive force, being able to assume a value less than but no more than \(\mu_sN\). A higher coefficient would also allow the car to negotiate the curve at a higher speed, but if the coefficient of friction is less, the safe speed would be less than 25 m/s. Note that mass cancels, implying that in this example, it does not matter how heavily loaded the car is to negotiate the turn. Mass cancels because friction is assumed proportional to the normal force, which in turn is proportional to mass. If the surface of the road were banked, the normal force would be less as will be discussed below.</p>
+<p class="prose">Let us now considerbanked curves, where the slope of the road helps you negotiate the curve. See Figure. The greater the angle \(\theta\), the faster you can take the curve. Race tracks for bikes as well as cars, for example, often have steeply banked curves. In an “ideally banked curve,” the angle \(\theta\) is such that you can negotiate the curve at a certain speed without the aid of friction between the tires and the road. We will derive an expression for \(\theta\) for an ideally banked curve and consider an example related to it.</p>
+<p class="prose">Forideal banking, the net external force equals the horizontal centripetal force in the absence of friction. The components of the normal force N in the horizontal and vertical directions must equal the centripetal force and the weight of the car, respectively. In cases in which forces are not parallel, it is most convenient to consider components along perpendicular axes—in this case, the vertical and horizontal directions.</p>
+<p class="prose">Figure shows a free body diagram for a car on a frictionless banked curve. If the angle \(\theta\) is ideal for the speed and radius, then the net external force will equal the necessary centripetal force. The only two external forces acting on the car are its weight \(w\) and the normal force of the road \(N\). (A frictionless surface can only exert a force perpendicular to the surface—that is, a normal force.) These two forces must add to give a net external force that is horizontal toward the center of curvature and has magnitude \(mv^2/r\). Because this is the crucial force and it is horizontal, we use a coordinate system with vertical and horizontal axes. Only the normal force has a horizontal component, and so this must equal the centripetal force—that is,</p>
+<div class="math-display">\[N\, \sin \, \theta = \dfrac{mv^2}{r}.\]</div>
+<p class="prose">Because the car does not leave the surface of the road, the net vertical force must be zero, meaning that the vertical components of the two external forces must be equal in magnitude and opposite in direction. From the figure, we see that the vertical component of the normal force is \(N\, cos \, \theta\), and the only other vertical force is the car’s weight. These must be equal in magnitude; thus,</p>
+<div class="math-display">\[N\, \cos \, \theta = mg.\]</div>
+<p class="prose">Now we can combine the last two equations to eliminate \(N\) and get an expression for \(\theta\), as desired. Solving the second equation for \(N = mg/(cos \, \theta) \), and substituting this into the first yields</p>
+<div class="math-display">\[mg\dfrac{\sin\, \theta}{\cos \, \theta} = \dfrac{mv^2}{r}\]</div>
+<div class="math-display">\[ mg \, tan \, \theta = \dfrac{mv^2}{r}\]</div>
+<div class="math-display">\[\tan \, \theta = \dfrac{v^2}{rg}\]</div>
+<p class="prose">Taking the inverse tangent gives</p>
+<div class="math-display">\[\theta = \tan^{-1} \left( \dfrac{v^2}{rg} \right) \, (ideally \, banked \, curve, \, no \, friction). \]</div>
+<p class="prose">This expression can be understood by considering how \(\theta\) depends on \(v\) and \(r\). A large \(\theta\) will be obtained for a large \(v\) and a small \(r\). That is, roads must be steeply banked for high speeds and sharp curves. Friction helps, because it allows you to take the curve at greater or lower speed than if the curve is frictionless. Note that \(\theta\) does not depend on the mass of the vehicle.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : What is the Ideal Speed to Take a Steeply Banked Tight Curve?</span></div><div class="example-body">
+<p class="prose">Curves on some test tracks and race courses, such as the Daytona International Speedway in Florida, are very steeply banked. This banking, with the aid of tire friction and very stable car configurations, allows the curves to be taken at very high speed. To illustrate, calculate the speed at which a 100 m radius curve banked at 65.0° should be driven if the road is frictionless.</p>
+<p class="prose">We first note that all terms in the expression for the ideal angle of a banked curve except for speed are known; thus, we need only rearrange it so that speed appears on the left-hand side and then substitute known quantities.</p>
+<div class="math-display">\[\tan \, \theta = \dfrac{v^2}{rg} \nonumber\]</div>
+<div class="math-display">\[v = (rg \, tan \, \theta)^{\frac{1}{2}}. \nonumber\]</div>
+<p class="prose">Noting that tan 65.0º = 2.14, we obtain</p>
+<div class="math-display">\[ \begin{align*} v &= [(100 \, m)(9.80 \, m/s^2)(2.14)]^{\frac{1}{2}} \\[4pt] &= 45.8 \, m/s \end{align*} \]</div>
+<p class="prose">This is just about 165 km/h, consistent with a very steeply banked and rather sharp curve. Tire friction enables a vehicle to take the curve at significantly higher speeds.</p>
+<p class="prose">Calculations similar to those in the preceding examples can be performed for a host of interesting situations in which centripetal force is involved—a number of these are presented in this chapter’s Problems and Exercises.</p>
+<p class="prose">Ask a friend or relative to swing a golf club or a tennis racquet. Take appropriate measurements to estimate the centripetal acceleration of the end of the club or racquet. You may choose to do this in slow motion.</p>
+<p class="prose">PHET EXPLORATIONS: GRAVITY AND ORBITS</p>
+<p class="prose">Move the sun, earth, moon and space station to see how it affects their gravitational forces and orbital paths. Visualize the sizes and distances between different heavenly bodies, and turn off gravity to see what would happen without it!</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE-HOME EXPERIMENTAsk a friend or relative to swing a golf club or a tennis racquet. Take appropriate measurements to estimate the centripetal acceleration of the end of the club or racquet. You may choose to do this in slow motion.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: GRAVITY AND ORBITSMove the sun, earth, moon and space station to see how it affects their gravitational forces and orbital paths. Visualize the sizes and distances between different heavenly bodies, and turn off gravity to see what would happen without it!</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">If you wish to reduce the stress (which is related to centripetal force) on high-speed tires, would you use large- or small-diameter tires? Explain.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.3 Quiz</h3><p>4 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A centrifuge has a radius of 0.10 m and rotates at an angular velocity of 100 rad/s. What is the centripetal acceleration at the edge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1,000 m/s²</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>100 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10,000 m/s²</li>
+</ul><div class="qexp">Using the formula a_c = rω², we multiply 0.10 m by (100 rad/s)² to get 1,000 m/s².</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why do you feel a "sideways" push when your car turns a sharp corner at high speed?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because a real force is pushing you away from the center</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because your inertia tends to keep you moving in a straight line</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because the centripetal acceleration is directed away from the center</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because the tires lose all friction during the turn</li>
+</ul><div class="qexp">Your body attempts to continue moving in a straight line according to Newton's first law while the car accelerates toward the center of the turn.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What provides the centripetal force for a car traveling around an unbanked, level curve?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gravity</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Normal force</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Static friction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Tension</li>
+</ul><div class="qexp">On a flat surface, the only horizontal force available to change the car's direction toward the center of the curve is friction between the tires and the road.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A 1000 kg car negotiates a flat curve of radius 50 m at 10 m/s. What is the magnitude of the centripetal force acting on the car?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>500 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10,000 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5,000 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2,000 N</li>
+</ul><div class="qexp">The centripetal force F_c = mv²/r, so (1000 kg * (10 m/s)²) / 50 m = 2,000 N.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.4</span></div><div class="h-title">6.4: Fictitious Forces and Non-inertial Frames - The Coriolis Force</div><div class="h-desc">What do taking off in a jet airplane, turning a corner in a car, riding a merry-go-round, and the circular motion of a tropical cyclone have in common? Each exhibits fictitious forces—unreal forces th...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the inertial frame of reference.</li>
+      <li>Discuss the non-inertial frame of reference.</li>
+      <li>Describe the effects of the Coriolis force.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">fictitious force</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a force having no physical origin</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.4</div>
+<p class="prose">What do taking off in a jet airplane, turning a corner in a car, riding a merry-go-round, and the circular motion of a tropical cyclone have in common? Each exhibits fictitious forces—unreal forces that arise from motion and mayseemreal, because the observer’s frame of reference is accelerating or rotating.</p>
+<p class="prose">When taking off in a jet, most people would agree it feels as if you are being pushed back into the seat as the airplane accelerates down the runway. Yet a physicist would say thatyoutend to remain stationary while theseatpushes forward on you, and there is no real force backward on you. An even more common experience occurs when you make a tight curve in your car—say, to the right. You feel as if you are thrown (that is,forced) toward the left relative to the car. Again, a physicist would say thatyouare going in a straight line but thecarmoves to the right, and there is no real force on you to the left. Recall Newton’s first law.</p>
+<p class="prose">We can reconcile these points of view by examining the frames of reference used. Let us concentrate on people in a car. Passengers instinctively use the car as a frame of reference, while a physicist uses Earth. The physicist chooses Earth because it is very nearly an inertial frame of reference—one in which all forces are real (that is, in which all forces have an identifiable physical origin). In such a frame of reference, Newton’s laws of motion take the form given in Dynamics: Newton's Laws of Motion. The car is anon-inertial frame of referencebecause it is accelerated to the side. The force to the left sensed by car passengers is afictitiousforcehaving no physical origin. There is nothing real pushing them left—the car, as well as the driver, is actually accelerating to the right.</p>
+<p class="prose">Let us now take a mental ride on a merry-go-round—specifically, a rapidly rotating playground merry-go-round. You take the merry-go-round to be your frame of reference because you rotate together. In that non-inertial frame, you feel a fictitious force, namedcentrifugal force(not to be confused with centripetal force), trying to throw you off. You must hang on tightly to counteract the centrifugal force. In Earth’s frame of reference, there is no force trying to throw you off. Rather you must hang on to make yourself go in a circle because otherwise you would go in a straight line, right off the merry-go-round.</p>
+<p class="prose">This inertial effect, carrying you away from the center of rotation if there is no centripetal force to cause circular motion, is put to good use in centrifuges (see Figure). A centrifuge spins a sample very rapidly, as mentioned earlier in this chapter. Viewed from the rotating frame of reference, the fictitious centrifugal force throws particles outward, hastening their sedimentation. The greater the angular velocity, the greater the centrifugal force. But what really happens is that the inertia of the particles carries them along a line tangent to the circle while the test tube is forced in a circular path by a centripetal force.</p>
+<p class="prose">Let us now consider what happens if something moves in a frame of reference that rotates. For example, what if you slide a ball directly away from the center of the merry-go-round, as shown in Figure? The ball follows a straight path relative to Earth (assuming negligible friction) and a path curved to the right on the merry-go-round’s surface. A person standing next to the merry-go-round sees the ball moving straight and the merry-go-round rotating underneath it. In the merry-go-round’s frame of reference, we explain the apparent curve to the right by using a fictitious force, called theCoriolisforce, that causes the ball to curve to the right. The fictitious Coriolis force can be used by anyone in that frame of reference to explain why objects follow curved paths and allows us to apply Newton’s Laws in non-inertial frames of reference.</p>
+<p class="prose">Up until now, we have considered Earth to be an inertial frame of reference with little or no worry about effects due to its rotation. Yet such effectsdoexist—in the rotation of weather systems, for example. Most consequences of Earth’s rotation can be qualitatively understood by analogy with the merry-go-round. Viewed from above the North Pole, Earth rotates counterclockwise, as does the merry-go-round in Figure. As on the merry-go-round, any motion in Earth’s northern hemisphere experiences a Coriolis force to the right. Just the opposite occurs in the southern hemisphere; there, the force is to the left. Because Earth’s angular velocity is small, the Coriolis force is usually negligible, but for large-scale motions, such as wind patterns, it has substantial effects.</p>
+<p class="prose">The Coriolis force causes hurricanes in the northern hemisphere to rotate in the counterclockwise direction, while the tropical cyclones (what hurricanes are called below the equator) in the southern hemisphere rotate in the clockwise direction. The terms hurricane, typhoon, and tropical storm are regionally-specific names for tropical cyclones, storm systems characterized by low pressure centers, strong winds, and heavy rains. Figure helps show how these rotations take place. Air flows toward any region of low pressure, and tropical cyclones contain particularly low pressures. Thus winds flow toward the center of a tropical cyclone or a low-pressure weather system at the surface. In the northern hemisphere, these inward winds are deflected to the right, as shown in the figure, producing a counterclockwise circulation at the surface for low-pressure zones of any type. Low pressure at the surface is associated with rising air, which also produces cooling and cloud formation, making low-pressure patterns quite visible from space. Conversely, wind circulation around high-pressure zones is clockwise in the northern hemisphere but is less visible because high pressure is associated with sinking air, producing clear skies.</p>
+<p class="prose">The rotation of tropical cyclones and the path of a ball on a merry-go-round can just as well be explained by inertia and the rotation of the system underneath. When non-inertial frames are used, fictitious forces, such as the Coriolis force, must be invented to explain the curved path. There is no identifiable physical source for these fictitious forces. In an inertial frame, inertia explains the path, and no force is found to be without an identifiable source. Either view allows us to describe nature, but a view in an inertial frame is the simplest and truest, in the sense that all forces have real origins and explanations.</p>
+<div class="sh2">Section Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Define centripetal force. Can any type of force (for example, tension, gravitational force, friction, and so on) be a centripetal force? Can any combination of forces be a centripetal force?</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.4 Quiz</h3><p>4 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In an "ideally banked curve," what is the primary purpose of the banking angle?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To allow the car to negotiate the curve without relying on friction</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To increase the force of gravity acting on the car</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To decrease the normal force exerted by the road</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To ensure the car remains at a constant angular velocity regardless of speed</li>
+</ul><div class="qexp">Ideal banking uses the horizontal component of the normal force to provide the necessary centripetal force, making friction unnecessary at a specific speed.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following factors does the ideal banking angle θ NOT depend on?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed of the vehicle</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The mass of the vehicle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The radius of the curve</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The acceleration due to gravity</li>
+</ul><div class="qexp">The formula tan θ = v²/rg shows that the angle is independent of the mass of the object.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">At the very top of a vertical roller coaster loop, what forces can contribute to the centripetal force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only the normal force</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only gravity</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both gravity and the normal force</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only the fictitious centrifugal force</li>
+</ul><div class="qexp">At the top of the loop, both the weight of the car and the downward normal force from the track point toward the center, providing the centripetal force.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why is centrifugal force referred to as a "fictitious force" by physicists?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It only exists when an object is at rest</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It has a real physical origin from gravitational attraction</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is a type of electromagnetic force</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It arises only because the observer's frame of reference is accelerating</li>
+</ul><div class="qexp">Centrifugal force is an effect of inertia viewed from a non-inertial (accelerating) frame and has no identifiable physical source.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.5</span></div><div class="h-title">6.5: Newton’s Universal Law of Gravitation</div><div class="h-desc">What do aching feet, a falling apple, and the orbit of the Moon have in common? Each is caused by the gravitational force. Our feet are strained by supporting our weight—the force of Earth’s gravity o...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain Earth’s gravitational force.</li>
+      <li>Describe the gravitational effect of the Moon on Earth.</li>
+      <li>Discuss weightlessness in space.</li>
+      <li>Examine the Cavendish experiment</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.5</div>
+<p class="prose">What do aching feet, a falling apple, and the orbit of the Moon have in common? Each is caused by the gravitational force. Our feet are strained by supporting our weight—the force of Earth’s gravity on us. An apple falls from a tree because of the same force acting a few meters above Earth’s surface. And the Moon orbits Earth because gravity is able to supply the necessary centripetal force at a distance of hundreds of millions of meters. In fact, the same force causes planets to orbit the Sun, stars to orbit the center of the galaxy, and galaxies to cluster together. Gravity is another example of underlying simplicity in nature. It is the weakest of the four basic forces found in nature, and in some ways the least understood. It is a force that acts at a distance, without physical contact, and is expressed by a formula that is valid everywhere in the universe, for masses and distances that vary from the tiny to the immense.</p>
+<p class="prose">Sir Isaac Newton was the first scientist to precisely define the gravitational force, and to show that it could explain both falling bodies and astronomical motions. See Figure. But Newton was not the first to suspect that the same force caused both our weight and the motion of planets. His forerunner Galileo Galilei had contended that falling bodies and planetary motions had the same cause. Some of Newton’s contemporaries, such as Robert Hooke, Christopher Wren, and Edmund Halley, had also made some progress toward understanding gravitation. But Newton was the first to propose an exact mathematical form and to use that form to show that the motion of heavenly bodies should be conic sections—circles, ellipses, parabolas, and hyperbolas. This theoretical prediction was a major triumph—it had been known for some time that moons, planets, and comets follow such paths, but no one had been able to propose a mechanism that caused them to follow these paths and not others.</p>
+<p class="prose">The gravitational force is relatively simple. It is always attractive, and it depends only on the masses involved and the distance between them. Stated in modern language,Newton’s universal law of gravitationstates that every particle in the universe attracts every other particle with a force along a line joining them. The force is directly proportional to the product of their masses and inversely proportional to the square of the distance between them.</p>
+<p class="prose">The magnitude of the force on each object (one has larger mass than the other) is the same, consistent with Newton’s third law.</p>
+<p class="prose">The bodies we are dealing with tend to be large. To simplify the situation we assume that the body acts as if its entire mass is concentrated at one specific point called thecenter of mass(CM), which will be further explored in Linear Momentum and Collisions. For two bodies having masses \(m\) and \(M\) with a distance \(r\) between their centers of mass, the equation for Newton’s universal law of gravitation is \[ F = G\dfrac{mM}{r^2},\] where \(F\) is the magnitude of the gravitational force and \(G\) is a proportionality factor called thegravitational constant. \(G\) is a universal gravitational constant—that is, it is thought to be the same everywhere in the universe. It has been measured experimentally to be</p>
+<div class="math-display">\[G = 6.673 \times 10^{-11} \dfrac{N \cdot m^2}{kg^2}\]</div>
+<p class="prose">in SI units. Note that the units of \(G\) are such that a force in newtons is obtained from \(F = G\frac{mM}{r^2} \), when considering masses in kilograms and distance in meters. For example, two 1.000 kg masses separated by 1.000 m will experience a gravitational attraction of \(6.673 \times 10^{-11} \, N\).</p>
+<p class="prose">This is an extraordinarily small force. The small magnitude of the gravitational force is consistent with everyday experience. We are unaware that even large objects like mountains exert gravitational forces on us. In fact, our body weight is the force of attraction of theentire Earthon us with a mass of \(6 \times 10^{24} \, kg\).</p>
+<p class="prose">Recall that the acceleration due to gravity \(g\) is about \(9.80 \, m/s^2\) on Earth. We can now determine why this is so. The weight of an objectmgis the gravitational force between it and Earth. Substitutingmgfor \(F\) in Newton’s universal law of gravitation gives</p>
+<p class="prose">\[mg = G\dfrac{mM}{r^2}, \] where \(m\) is the mass of the object, \(M\) is the mass of Earth, and \(r\) is the distance to the center of Earth (the distance between the centers of mass of the object and Earth). See Figure. The mass \(m\) of the object cancels, leaving an equation for \(g\):</p>
+<div class="math-display">\[g = G\dfrac{M}{r^2}. \]</div>
+<p class="prose">Substituting known values for Earth’s mass and radius (to three significant figures),</p>
+<div class="math-display">\[g = \left(6.673 \times 10^{-11} \, \dfrac{N \cdot m^2}{kg^2} \right) \times \dfrac{5.98 \times 10^{24} \, kg}{(6.38 \times 10^6 \, m)^2},\]</div>
+<p class="prose">and we obtain a value for the acceleration of a falling body: \[g = 9.80 \, m/s^2.\]</p>
+<p class="prose">This is the expected valueand is independent of the body’s mass. Newton’s law of gravitation takes Galileo’s observation that all masses fall with the same acceleration a step further, explaining the observation in terms of a force that causes objects to fall—in fact, in terms of a universally existing force of attraction between masses.</p>
+<p class="prose">Take a marble, a ball, and a spoon and drop them from the same height. Do they hit the floor at the same time? If you drop a piece of paper as well, does it behave like the other objects? Explain your observations.</p>
+<p class="prose">Attempts are still being made to understand the gravitational force. As we shall see inParticle Physics, modern physics is exploring the connections of gravity to other forces, space, and time. General relativity alters our view of gravitation, leading us to think of gravitation as bending space and time.</p>
+<p class="prose">In the following example, we make a comparison similar to one made by Newton himself. He noted that if the gravitational force caused the Moon to orbit Earth, then the acceleration due to gravity should equal the centripetal acceleration of the Moon in its orbit. Newton found that the two accelerations agreed “pretty nearly.”</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Earth’s Gravitational Force Is the Centripetal Force Making the Moon Move in a Curved Path</span></div><div class="example-body">
+<p class="prose">This calculation is the same as the one finding the acceleration due to gravity at Earth’s surface, except that \(r\) is the distance from the center of Earth to the center of the Moon. The radius of the Moon’s nearly circular orbit is \(3.84 \times 10^8 \, m\).</p>
+<p class="prose">Substituting known values into the expression for \(g\) found above, remembering that \(M\) is the mass of Earth not the Moon, yields</p>
+<div class="math-display">\[g = G\dfrac{M}{r^2} = \left(6.67 \times 10^{-11} \dfrac{N \cdot m^2}{kg^2} \right) \times \dfrac{5.98 \times 10^{24} \, kg}{3.84 \times 10^8 \, m)^2} \]</div>
+<div class="math-display">\[= 2.70 \times 10^{-3} \, m/s^2.\]</div>
+<p class="prose">Centripetal acceleration can be calculated using either form of</p>
+<div class="math-display">\[a_c = \dfrac{v^2}{r}\]</div>
+<p class="prose">We choose to use the second form:</p>
+<p class="prose">where \(\omega\) is the angular velocity of the Moon about Earth.</p>
+<p class="prose">Given that the period (the time it takes to make one complete rotation) of the Moon’s orbit is 27.3 days, (d) and using</p>
+<div class="math-display">\[1 \, d \times 24 \dfrac{hr}{d} \times 60 \dfrac{min}{hr} \times 60 \dfrac{s}{min} = 86,400 \, s\]</div>
+<div class="math-display">\[a_c = r\omega^2 = (3.84 \times 10^8 \, m)(2.66 \times 10^{-6} \, rad/s^2) \]</div>
+<div class="math-display">\[ = 2.72 \times 10^{-3} \, m/s^2. \]</div>
+<p class="prose">The direction of the acceleration is toward the center of the Earth.</p>
+<p class="prose">The centripetal acceleration of the Moon found in (b) differs by less than 1% from the acceleration due to Earth’s gravity found in (a). This agreement is approximate because the Moon’s orbit is slightly elliptical, and Earth is not stationary (rather the Earth-Moon system rotates about its center of mass, which is located some 1700 km below Earth’s surface). The clear implication is that Earth’s gravitational force causes the Moon to orbit Earth.</p>
+<p class="prose">Why does Earth not remain stationary as the Moon orbits it? This is because, as expected from Newton’s third law, if Earth exerts a force on the Moon, then the Moon should exert an equal and opposite force on Earth (see Figure). We do not sense the Moon’s effect on Earth’s motion, because the Moon’s gravity moves our bodies right along with Earth but there are other signs on Earth that clearly show the effect of the Moon’s gravitational force as discussed in Satellites and Kepler's Laws: An Argument for Simplicity.</p>
+</div></div>
+<div class="sh2">Tides</div>
+<p class="prose">Ocean tides are one very observable result of the Moon’s gravity acting on Earth. Figure is a simplified drawing of the Moon’s position relative to the tides. Because water easily flows on Earth’s surface, a high tide is created on the side of Earth nearest to the Moon, where the Moon’s gravitational pull is strongest. Why is there also a high tide on the opposite side of Earth? The answer is that Earth is pulled toward the Moon more than the water on the far side, because Earth is closer to the Moon. So the water on the side of Earth closest to the Moon is pulled away from Earth, and Earth is pulled away from water on the far side. As Earth rotates, the tidal bulge (an effect of the tidal forces between an orbiting natural satellite and the primary planet that it orbits) keeps its orientation with the Moon. Thus there are two tides per day (the actual tidal period is about 12 hours and 25.2 minutes), because the Moon moves in its orbit each day as well).</p>
+<p class="prose">The Sun also affects tides, although it has about half the effect of the Moon. However, the largest tides, called spring tides, occur when Earth, the Moon, and the Sun are aligned. The smallest tides, called neap tides, occur when the Sun is at a \(90^o\) angle to the Earth-Moon alignment.</p>
+<p class="prose">Tides are not unique to Earth but occur in many astronomical systems. The most extreme tides occur where the gravitational force is the strongest and varies most rapidly, such as near black holes (see Figure). A few likely candidates for black holes have been observed in our galaxy. These have masses greater than the Sun but have diameters only a few kilometers across. The tidal forces near them are so great that they can actually tear matter from a companion star.</p>
+<div class="sh2">”Weightlessness” and Microgravity</div>
+<p class="prose">In contrast to the tremendous gravitational force near black holes is the apparent gravitational field experienced by astronauts orbiting Earth. What is the effect of “weightlessness” upon an astronaut who is in orbit for months? Or what about the effect of weightlessness upon plant growth? Weightlessness doesn’t mean that an astronaut is not being acted upon by the gravitational force. There is no “zero gravity” in an astronaut’s orbit. The term just means that the astronaut is in free-fall, accelerating with the acceleration due to gravity. If an elevator cable breaks, the passengers inside will be in free fall and will experience weightlessness. You can experience short periods of weightlessness in some rides in amusement parks.</p>
+<p class="prose">Microgravityrefers to an environment in which the apparent net acceleration of a body is small compared with that produced by Earth at its surface. Many interesting biology and physics topics have been studied over the past three decades in the presence of microgravity. Of immediate concern is the effect on astronauts of extended times in outer space, such as at the International Space Station. Researchers have observed that muscles will atrophy (waste away) in this environment. There is also a corresponding loss of bone mass. Study continues on cardiovascular adaptation to space flight. On Earth, blood pressure is usually higher in the feet than in the head, because the higher column of blood exerts a downward force on it, due to gravity. When standing, 70% of your blood is below the level of the heart, while in a horizontal position, just the opposite occurs. What difference does the absence of this pressure differential have upon the heart?</p>
+<p class="prose">Some findings in human physiology in space can be clinically important to the management of diseases back on Earth. On a somewhat negative note, spaceflight is known to affect the human immune system, possibly making the crew members more vulnerable to infectious diseases. Experiments flown in space also have shown that some bacteria grow faster in microgravity than they do on Earth. However, on a positive note, studies indicate that microbial antibiotic production can increase by a factor of two in space-grown cultures. One hopes to be able to understand these mechanisms so that similar successes can be achieved on the ground. In another area of physics space research, inorganic crystals and protein crystals have been grown in outer space that have much higher quality than any grown on Earth, so crystallography studies on their structure can yield much better results.</p>
+<p class="prose">Plants have evolved with the stimulus of gravity and with gravity sensors. Roots grow downward and shoots grow upward. Plants might be able to provide a life support system for long duration space missions by regenerating the atmosphere, purifying water, and producing food. Some studies have indicated that plant growth and development are not affected by gravity, but there is still uncertainty about structural changes in plants grown in a microgravity environment.</p>
+<div class="sh2">The Cavendish Experiment: Then and Now</div>
+<p class="prose">As previously noted, the universal gravitational constant \(G\) is determined experimentally. This definition was first done accurately by Henry Cavendish (1731–1810), an English scientist, in 1798, more than 100 years after Newton published his universal law of gravitation. The measurement of \(G\) is very basic and important because it determines the strength of one of the four forces in nature. Cavendish’s experiment was very difficult because he measured the tiny gravitational attraction between two ordinary-sized masses (tens of kilograms at most), using apparatus like that in Figure. Remarkably, his value for \(G\) differs by less than 1% from the best modern value.One important consequence of knowing \(G\) was that an accurate value for Earth’s mass could finally be obtained. This was done by measuring the acceleration due to gravity as accurately as possible and then calculating the mass of Earth \(M\) from the relationship Newton’s universal law of gravitation gives</p>
+<div class="math-display">\[mg = G\dfrac{mM}{r^2},\]</div>
+<p class="prose">where \(m\) is the mass of the object, \(M\) is the mass of Earth, and \(r\) is the distance to the center of Earth (the distance between the centers of mass of the object and Earth). See Figure. The mass \(m\) of the object cancels, leaving an equation for \(g\):</p>
+<div class="math-display">\[g = G\dfrac{M}{r^2}. \]</div>
+<p class="prose">Rearranging to solve for \(M\) yields</p>
+<div class="math-display">\[M = \dfrac{gr^2}{G}.\]</div>
+<p class="prose">so \(M\) can be calculated because all quantities on the right, including the radius of Earth \(r\), are known from direct measurements. We shall see inSatellites and Kepler's Laws: An Argument for Simplicitythat knowing \(G\) also allows for the determination of astronomical masses. Interestingly, of all the fundamental constants in physics, \(G\) is by far the least well determined.</p>
+<p class="prose">The Cavendish experiment is also used to explore other aspects of gravity. One of the most interesting questions is whether the gravitational force depends on substance as well as mass—for example, whether one kilogram of lead exerts the same gravitational pull as one kilogram of water. A Hungarian scientist named Roland von Eötvös pioneered this inquiry early in the 20th century. He found, with an accuracy of five parts per billion, that the gravitational force does not depend on the substance. Such experiments continue today, and have improved upon Eötvös’ measurements. Cavendish-type experiments such as those of Eric Adelberger and others at the University of Washington, have also put severe limits on the possibility of a fifth force and have verified a major prediction of general relativity—that gravitational energy contributes to rest mass. Ongoing measurements there use a torsion balance and a parallel plate (not spheres, as Cavendish used) to examine how Newton’s law of gravitation works over sub-millimeter distances. On this small-scale, do gravitational effects depart from the inverse square law? So far, no deviation has been observed.</p>
+<div class="sh2">Summary</div>
+<div class="math-display">\[F = G\dfrac{mM}{r^2} \]</div>
+<p class="prose">where F is the magnitude of the gravitational force. \(G\) is the gravitational constant, given by \(G = 6.63 \times 10^{-11} \, N \cdot m^2/kg^2\).</p>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MISCONCEPT ALERTThe magnitude of the force on each object (one has larger mass than the other) is the same, consistent with Newton’s third law.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE HOME EXPERIMENTTake a marble, a ball, and a spoon and drop them from the same height. Do they hit the floor at the same time? If you drop a piece of paper as well, does it behave like the other objects? Explain your observations.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MAKING CONNECTIONSAttempts are still being made to understand the gravitational force. As we shall see inParticle Physics, modern physics is exploring the connections of gravity to other forces, space, and time. General relativity alters our view of gravitation, leading us to think of gravitation as bending space and time.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.5. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">If centripetal force is directed toward the center, why do you feel that you are ‘thrown’ away from the center as a car goes around a curve? Explain.</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.5 Quiz</h3><p>4 questions</p></div></div><div id="q5">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In the Northern Hemisphere, the Coriolis force causes wind to be deflected in which direction?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To the right of its path of motion</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To the left of its path of motion</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Directly toward the North Pole</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Directly toward the center of the Earth</li>
+</ul><div class="qexp">Due to Earth's counterclockwise rotation (when viewed from above the North Pole), all moving objects in the Northern Hemisphere experience a deflection to the right.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which frame of reference is one in which all forces are real and have an identifiable physical origin?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Non-inertial frame</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Inertial frame</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Rotating frame</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Accelerated frame</li>
+</ul><div class="qexp">An inertial frame of reference is defined as one where Newton's laws hold true without the need for fictitious forces.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the direction of rotation for low-pressure weather systems (hurricanes) in the Southern Hemisphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Counterclockwise</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Toward the equator</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Clockwise</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Directly upward</li>
+</ul><div class="qexp">In the Southern Hemisphere, the Coriolis force deflects air to the left, which creates a clockwise circulation around low-pressure centers.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">According to Newton's universal law of gravitation, if the distance between two objects is tripled, the gravitational force between them:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Decreases by a factor of 9</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Decreases by a factor of 3</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Increases by a factor of 3</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Increases by a factor of 9</li>
+</ul><div class="qexp">Gravity follows an inverse square law, so increasing distance by a factor of 3 results in a force of 1/3², or 1/9 of the original.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Next →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 6 · <span>Section 6.6</span></div><div class="h-title">6.6: Satellites and Kepler’s Laws- An Argument for Simplicity</div><div class="h-desc">Examples of gravitational orbits abound. Hundreds of artificial satellites orbit Earth together with thousands of pieces of debris. The Moon’s orbit about Earth has intrigued humans from time immemori...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 6.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State Kepler’s laws of planetary motion.</li>
+      <li>Derive the third Kepler’s law for circular orbits.</li>
+      <li>Discuss the Ptolemaic model of the universe.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 6.6</div>
+<p class="prose">Examples of gravitational orbits abound. Hundreds of artificial satellites orbit Earth together with thousands of pieces of debris. The Moon’s orbit about Earth has intrigued humans from time immemorial. The orbits of planets, asteroids, meteors, and comets about the Sun are no less interesting. If we look further, we see almost unimaginable numbers of stars, galaxies, and other celestial objects orbiting one another and interacting through gravity.</p>
+<p class="prose">All these motions are governed by gravitational force, and it is possible to describe them to various degrees of precision. Precise descriptions of complex systems must be made with large computers. However, we can describe an important class of orbits without the use of computers, and we shall find it instructive to study them. These orbits have the following characteristics:</p>
+<p class="prose">The conditions are satisfied, to good approximation, by Earth’s satellites (including the Moon), by objects orbiting the Sun, and by the satellites of other planets. Historically, planets were studied first, and there is a classical set of three laws, called Kepler’s laws of planetary motion, that describe the orbits of all bodies satisfying the two previous conditions (not just planets in our solar system). These descriptive laws are named for the German astronomer Johannes Kepler (1571–1630), who devised them after careful study (over some 20 years) of a large amount of meticulously recorded observations of planetary motion done by Tycho Brahe (1546–1601). Such careful collection and detailed recording of methods and data are hallmarks of good science. Data constitute the evidence from which new interpretations and meanings can be constructed.</p>
+<div class="sh2">Kepler’s Laws of Planetary Motion</div>
+<p class="prose">The orbit of each planet about the Sun is an ellipse with the Sun at one focus.</p>
+<p class="prose">Each planet moves so that an imaginary line drawn from the Sun to the planet sweeps out equal areas in equal times (see Figure).</p>
+<p class="prose">The ratio of the squares of the periods of any two planets about the Sun is equal to the ratio of the cubes of their average distances from the Sun. In equation form, this is \[ \dfrac{T_1^2}{T_2^2} =\dfrac{r_1^3}{r_2^3}\]</p>
+<p class="prose">where \(T\) is the period (time for one orbit) and \(r\) is the average radius. This equation is valid only for comparing two small masses orbiting the same large one. Most importantly, this is a descriptive equation only, giving no information as to the cause of the equality.</p>
+<p class="prose">Note again that while, for historical reasons, Kepler’s laws are stated for planets orbiting the Sun, they are actually valid for all bodies satisfying the two previously stated conditions.</p>
+<p class="prose">Example: Find the Time for One Orbit of an Earth Satellite</p>
+<p class="prose">Given that the Moon orbits Earth each 27.3 d and that it is an average distance of \(3.84 \times 10^8 \, m\) from the center of Earth, calculate the period of an artificial satellite orbiting at an average altitude of 1500 km above Earth’s surface.</p>
+<p class="prose">The period, or time for one orbit, is related to the radius of the orbit by Kepler’s third law, given in mathematical form in \(\frac{T_1^2}{T_2^2} =\frac{r_1^3}{r_2^3}\). Let us use the subscript 1 for the Moon and the subscript 2 for the satellite. We are asked to find \(T_2\). The given information tells us that the orbital radius of the Moon is \(r_1 = 3.84 \times 10^8 \, m\), and that the period of the Moon is \(T_1 = 27.3 \, d\).</p>
+<p class="prose">The height of the artificial satellite above Earth’s surface is given, and so we must add the radius of Earth (6380 km) to get \(r_2 = (1500 +6380) km = 7880 \, km\). Now all quantities are known, and so \(T_2\) can be found.</p>
+<p class="prose">Kepler’s third law is \[ \dfrac{T_1^2}{T_2^2} =\dfrac{r_1^3}{r_2^3}.\]</p>
+<p class="prose">To solve for \(T_2\), we cross-multiply and take the square root, yielding</p>
+<div class="math-display">\[T_2^2 = T_1^2 \left(\dfrac{r_2}{r_1} \right)^3 \]</div>
+<div class="math-display">\[T_2 = T_1 \left(\dfrac{r_2}{r_1} \right)^{\frac{3}{2}}. \]</div>
+<p class="prose">Substituting known values yields</p>
+<div class="math-display">\[T_2 = 27.3 \, d \times \dfrac {24 \, h}{d} \times \left( \dfrac {7880 \, km}{3.84 \times 10^5 km} \right )^{ \frac{3}{2}} \]</div>
+<p class="prose">DiscussionThis is a reasonable period for a satellite in a fairly low orbit. It is interesting that any satellite at this altitude will orbit in the same amount of time. This fact is related to the condition that the satellite’s mass is small compared with that of Earth.</p>
+<p class="prose">People immediately search for deeper meaning when broadly applicable laws, like Kepler’s, are discovered. It was Newton who took the next giant step when he proposed the law of universal gravitation. While Kepler was able to discoverwhatwas happening, Newton discovered that gravitational force was the cause.</p>
+<div class="sh2">Derivation of Kepler’s Third Law for Circular Orbits</div>
+<p class="prose">We shall derive Kepler’s third law, starting with Newton’s laws of motion and his universal law of gravitation. The point is to demonstrate that the force of gravity is the cause for Kepler’s laws (although we will only derive the third one).</p>
+<p class="prose">Let us consider a circular orbit of a small mass \(m\) around a large mass \(M\), satisfying the two conditions stated at the beginning of this section. Gravity supplies the centripetal force to mass \(m\). Starting with Newton’s second law applied to circular motion,</p>
+<div class="math-display">\[ F_{net} = ma_c = m\dfrac{v^2}{r}. \]</div>
+<p class="prose">The net external force on mass \(m\) is gravity, and so we substitute the force of gravity for \(F_{net}\):</p>
+<div class="math-display">\[ G\dfrac{mM}{r^2} = m\dfrac{v^2}{r}. \]</div>
+<p class="prose">The mass \(m\) cancels, yielding</p>
+<div class="math-display">\[G\dfrac{M}{r} = v^2. \]</div>
+<p class="prose">The fact that \(m\) cancels out is another aspect of the oft-noted fact that at a given location all masses fall with the same acceleration. Here we see that at a given orbital radius \(r\), all masses orbit at the same speed. (This was implied by the result of the preceding worked example.) Now, to get at Kepler’s third law, we must get the period \(T\) into the equation. By definition, period \(T\) is the time for one complete orbit. Now the average speed \(v\) is the circumference divided by the period—that is,</p>
+<div class="math-display">\[v = \dfrac{2\pi r}{T}. \]</div>
+<p class="prose">Substituting this into the previous equation gives \[G\dfrac{M}{r} = \dfrac{4\pi^2 r^2}{T^2}.\]</p>
+<p class="prose">Solving for \(T^2\) yields \[T^2 = \dfrac{4\pi^2}{GM}r^3. \]</p>
+<p class="prose">Using subscripts 1 and 2 to denote two different satellites, and taking the ratio of the last equation for satellite 1 to satellite 2 yields</p>
+<div class="math-display">\[\dfrac{T_1^2}{T_2^2} = \dfrac{r_1^3}{r_2^3}. \]</div>
+<p class="prose">This is Kepler’s third law. Note that Kepler’s third law is valid only for comparing satellites of the same parent body, because only then does the mass of the parent body \(M\) cancel.</p>
+<p class="prose">Now consider what we get if we solve \(T^2 = \frac{4\pi^2}{GM}r^3\) for the ratio \(r^3/T^2\). We obtain a relationship that can be used to determine the mass \(M\) of a parent body from the orbits of its satellites:</p>
+<div class="math-display">\[\dfrac{r^3}{T^2} = \dfrac{G}{4\pi^2}M.\]</div>
+<p class="prose">If \(r\) and \(T\) are known for a satellite, then the mass \(M\) of the parent can be calculated. This principle has been used extensively to find the masses of heavenly bodies that have satellites. Furthermore, the ratio \(r^3/T^2\) should be a constant for all satellites of the same parent body (because \(r^3/T^2 = GM/4\pi\). (See Table).</p>
+<p class="prose">It is clear from Table that the ratio of \(r^3/T^2\) is constant, at least to the third digit, for all listed satellites of the Sun, and for those of Jupiter. Small variations in that ratio have two causes—uncertainties in the \(r\) and \(T\) data, and perturbations of the orbits due to other bodies. Interestingly, those perturbations can be—and have been—used to predict the location of new planets and moons. This is another verification of Newton’s universal law of gravitation.</p>
+<p class="prose">Newton’s universal law of gravitation is modified by Einstein’s general theory of relativity, as we shall see in Particle Physics. Newton’s gravity is not seriously in error—it was and still is an extremely good approximation for most situations. Einstein’s modification is most noticeable in extremely large gravitational fields, such as near black holes. However, general relativity also explains such phenomena as small but long-known deviations of the orbit of the planet Mercury from classical predictions.</p>
+<div class="sh2">The Case for Simplicity</div>
+<p class="prose">The development of the universal law of gravitation by Newton played a pivotal role in the history of ideas. While it is beyond the scope of this text to cover that history in any detail, we note some important points. The definition of planet set in 2006 by the International Astronomical Union (IAU) states that in the solar system, a planet is a celestial body that:</p>
+<p class="prose">A non-satellite body fulfilling only the first two of the above criteria is classified as “dwarf planet.”</p>
+<p class="prose">In 2006, Pluto was demoted to a ‘dwarf planet’ after scientists revised their definition of what constitutes a “true” planet.</p>
+<table class="dt">
+<tr><th>Parent</th><th>Satellite</th><th>Average orbital radiusr(km)</th><th>PeriodT(y)</th><th>\(r^3/T^2 (km^3/y^2)\)</th></tr>
+<tr><td>Earth</td><td>Moon</td><td>\(3.84 \times 10^5\)×105</td><td>0.07481</td><td>\(1.01 \times 10^{19}\).01×1019</td></tr>
+<tr><td>Sun</td><td>Mercury</td><td>\(5.79 \times 10^7\).79</td><td>0.2409</td><td>\( 3,34 \times 10^{24}\).34×1024</td></tr>
+<tr><td></td><td>Venus</td><td>\(1.082 \times 10^8\).082×108</td><td>0.6150</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Earth</td><td>\(1.496 \times 10^8\).496×108</td><td>1.000</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Mars</td><td>\(2.279 \times 10^8\).279×108</td><td>1.881</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Jupiter</td><td>\(7.783 \times 10^8\).783×108</td><td>11.86</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Saturn</td><td>\(1.427 \times 10^9\).427×109</td><td>29.46</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Neptune</td><td>\(4.497 \times 10^9\).497×109</td><td>164.8</td><td>\(3.35 \times 10^{24}\).35×1024</td></tr>
+<tr><td></td><td>Pluto</td><td>\(5.90 \times 10^9\).90×109</td><td>248.3</td><td>\(3.33 \times 10^{24}\).33×1024</td></tr>
+<tr><td>Jupiter</td><td>Io</td><td>\(4.22 \times 10^5\).22×105</td><td>0.00485 (1.77 d)</td><td>\(3.19 \times 10^{21}\).19×1021</td></tr>
+<tr><td></td><td>Europa</td><td>\(6.71 \times 10^5\).71×105</td><td>0.00972 (3.55 d)</td><td>\(3.20 \times 10^{21}\).20×1021</td></tr>
+<tr><td></td><td>Ganymede</td><td>\(1.07 \times 10^6\).07×106</td><td>0.0196 (7.16 d)</td><td>\(3.19 \times 10^{21}\).19×1021</td></tr>
+<tr><td></td><td>Callisto</td><td>\(1.88 \times 10^6\).88×106</td><td>0.0457 (16.19 d)</td><td>\(3.20 \times 10^{21}\).20×1021</td></tr>
+</table>
+<p class="prose">The universal law of gravitation is a good example of a physical principle that is very broadly applicable. That single equation for the gravitational force describes all situations in which gravity acts. It gives a cause for a vast number of effects, such as the orbits of the planets and moons in the solar system. It epitomizes the underlying unity and simplicity of physics.</p>
+<p class="prose">Before the discoveries of Kepler, Copernicus, Galileo, Newton, and others, the solar system was thought to revolve around Earth as shown in Figure (a). This is called the Ptolemaic view, for the Greek philosopher who lived in the second century AD. This model is characterized by a list of facts for the motions of planets with no cause and effect explanation. There tended to be a different rule for each heavenly body and a general lack of simplicity.</p>
+<p class="prose">Figure (b) represents the modern or Copernican model. In this model, a small set of rules and a single underlying force explain not only all motions in the solar system, but all other situations involving gravity. The breadth and simplicity of the laws of physics are compelling. As our knowledge of nature has grown, the basic simplicity of its laws has become ever more evident.</p>
+<div class="sh2">Summary</div>
+<p class="prose">The orbit of each planet about the Sun is an ellipse with the Sun at one focus.</p>
+<p class="prose">Each planet moves so that an imaginary line drawn from the Sun to the planet sweeps out equal areas in equal times.</p>
+<p class="prose">The ratio of the squares of the periods of any two planets about the Sun is equal to the ratio of the cubes of their average distances from the Sun:</p>
+<div class="math-display">\[ \dfrac{T_1^2}{T_2^2} =\dfrac{r_1^3}{r_2^3},\]</div>
+<p class="prose">where T is the period (time for one orbit) and \(r\) is the average radius of the orbit.</p>
+<div class="math-display">\[T^2=\frac{4π^2}{GM}r^3\] or \[\dfrac{r^3}{T^2} = \dfrac{G}{4\pi^2}M.\]</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MAKING CONNECTIONSNewton’s universal law of gravitation is modified by Einstein’s general theory of relativity, as we shall see in Particle Physics. Newton’s gravity is not seriously in error—it was and still is an extremely good approximation for most situations. Einstein’s modification is most noticeable in extremely large gravitational fields, such as near black holes. However, general relativity also explains such phenomena as small but long-known deviations of the orbit of the planet Mercury from classical predictions.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 6.6. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Race car drivers routinely cut corners as shown in Figure. Explain how this allows the curve to be taken at the greatest speed.</div><textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div><div class="cp-done" id="cpd6">✅ Unlocked!</div></div>
+    <div id="quiz-wrap6" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 6.6 Quiz</h3><p>4 questions</p></div></div><div id="q6">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the magnitude of the gravitational force between two 1.0 kg masses separated by 1.0 m?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>9.8 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.0 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>6.38 x 10^6 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>6.67 x 10^-11 N</li>
+</ul><div class="qexp">Plugging these values into F = GmM/r² yields the value of the gravitational constant G.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">If a planet has twice the mass of Earth and twice the radius of Earth, how would the acceleration due to gravity (g) at its surface compare to Earth's?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It would be 2g</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It would be 0.5g</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It would be g</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It would be 4g</li>
+</ul><div class="qexp">Since g = GM/r², doubling mass (x2) and doubling radius (x4 in the denominator) results in 2/4 = 0.5 times the original g.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Earth exerts a gravitational force on the Moon. According to Newton’s third law, the Moon exerts a force on Earth that is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Much smaller because the Moon has less mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Much larger because the Moon is smaller</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Equal in magnitude and opposite in direction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Zero because Earth is the primary body</li>
+</ul><div class="qexp">Newton's third law states that for every action force, there is an equal and opposite reaction force, regardless of the masses involved.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">What is the primary cause of the twice-daily tides observed in Earth's oceans?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The difference in the Moon's gravitational pull on different parts of Earth</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The Sun's magnetic field interacting with the oceans</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Earth's crust expanding and contracting due to heat</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The centrifugal force of Earth's orbit around the Sun</li>
+</ul><div class="qexp">Tides are caused by the gradient of the Moon's gravitational pull, which is stronger on the side of Earth facing the Moon and weaker on the far side.</div></div>
+    </div><div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Previous</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Next →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 6</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 6: Circular Motion and Gravitation.</div><div class="h-meta"><div class="h-chip">📝 28 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>6.1</strong></td><td>6.1: Rotation Angle and Angular Velocity</td></tr>
+    <tr><td><strong>6.2</strong></td><td>6.2: Centripetal Acceleration</td></tr>
+    <tr><td><strong>6.3</strong></td><td>6.3: Centripetal Force</td></tr>
+    <tr><td><strong>6.4</strong></td><td>6.4: Fictitious Forces and Non-inertial Frames - The Coriolis Force</td></tr>
+    <tr><td><strong>6.5</strong></td><td>6.5: Newton’s Universal Law of Gravitation</td></tr>
+    <tr><td><strong>6.6</strong></td><td>6.6: Satellites and Kepler’s Laws- An Argument for Simplicity</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 100 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd7">✅ Unlocked!</div></div>
+    <div id="quiz-wrap7" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 6 Practice Test</h3><p>28 questions · All OpenStax Review Questions</p></div></div><div id="q7">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 28 review questions from OpenStax College Physics, Chapter 6. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following is the correct definition of the rotation angle Δθ?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of the arc length to the radius of curvature</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The rate of change of the angular velocity</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The linear distance traveled along a circular path</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The product of the radius and the square of the angular velocity</li>
+</ul><div class="qexp">By definition, the rotation angle Δθ is the ratio of the arc length Δs to the radius of curvature r.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A wheel rotates through an angle of 180 degrees. What is this rotation angle expressed in radians?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>π/2 rad</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2π rad</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>π rad</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3π/2 rad</li>
+</ul><div class="qexp">Since 360 degrees equals 2π radians, 180 degrees is exactly half of that, which is π radians.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If a car tire with a radius of 0.40 m is rotating with an angular velocity of 20 rad/s, what is the linear speed of the car?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>50 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>8.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.02 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5.0 m/s</li>
+</ul><div class="qexp">The linear velocity v is calculated by multiplying the radius r by the angular velocity ω (v = rω).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Consider two points on a rotating compact disc: Point A is near the center and Point B is near the outer rim. Which of the following is true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Point A has a greater angular velocity than Point B</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Point A has a greater linear speed than Point B</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both points have the same linear speed</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both points have the same angular velocity</li>
+</ul><div class="qexp">In a rigid rotating object, every point moves through the same angle in the same amount of time, meaning they share the same angular velocity.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">An object travels 6.28 meters along a circular path with a radius of 2.0 meters. What is the rotation angle in radians?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>3.14 rad</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.00 rad</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>12.56 rad</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.32 rad</li>
+</ul><div class="qexp">Using Δθ = Δs/r, we divide the arc length of 6.28 m by the radius of 2.0 m to get 3.14 rad.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">In uniform circular motion, what is the direction of the centripetal acceleration vector?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Tangent to the circular path</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Toward the center of the circle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Away from the center of the circle</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Opposite to the direction of the velocity vector</li>
+</ul><div class="qexp">Centripetal means "center-seeking," and the acceleration in uniform circular motion always points directly toward the center of curvature.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">If the speed of an object in uniform circular motion is doubled while the radius remains constant, by what factor does the centripetal acceleration change?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is halved</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It doubles</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It remains the same</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It quadruples</li>
+</ul><div class="qexp">According to the formula a_c = v²/r, centripetal acceleration is proportional to the square of the velocity.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">8</span><span class="qt-inner">A car rounds a curve with a radius of 100 m at a constant speed of 20 m/s. What is the magnitude of its centripetal acceleration?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.2 m/s²</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2.0 m/s²</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>4.0 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>400 m/s²</li>
+</ul><div class="qexp">The centripetal acceleration is calculated as v²/r, which is (20 m/s)² / 100 m = 4 m/s².</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">A centrifuge has a radius of 0.10 m and rotates at an angular velocity of 100 rad/s. What is the centripetal acceleration at the edge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1,000 m/s²</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>100 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10 m/s²</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>10,000 m/s²</li>
+</ul><div class="qexp">Using the formula a_c = rω², we multiply 0.10 m by (100 rad/s)² to get 1,000 m/s².</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Why do you feel a "sideways" push when your car turns a sharp corner at high speed?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because a real force is pushing you away from the center</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because your inertia tends to keep you moving in a straight line</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because the centripetal acceleration is directed away from the center</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because the tires lose all friction during the turn</li>
+</ul><div class="qexp">Your body attempts to continue moving in a straight line according to Newton's first law while the car accelerates toward the center of the turn.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">What provides the centripetal force for a car traveling around an unbanked, level curve?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gravity</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Normal force</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Static friction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Tension</li>
+</ul><div class="qexp">On a flat surface, the only horizontal force available to change the car's direction toward the center of the curve is friction between the tires and the road.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">A 1000 kg car negotiates a flat curve of radius 50 m at 10 m/s. What is the magnitude of the centripetal force acting on the car?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>500 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10,000 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5,000 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2,000 N</li>
+</ul><div class="qexp">The centripetal force F_c = mv²/r, so (1000 kg * (10 m/s)²) / 50 m = 2,000 N.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">In an "ideally banked curve," what is the primary purpose of the banking angle?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To allow the car to negotiate the curve without relying on friction</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To increase the force of gravity acting on the car</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To decrease the normal force exerted by the road</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To ensure the car remains at a constant angular velocity regardless of speed</li>
+</ul><div class="qexp">Ideal banking uses the horizontal component of the normal force to provide the necessary centripetal force, making friction unnecessary at a specific speed.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">Which of the following factors does the ideal banking angle θ NOT depend on?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed of the vehicle</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The mass of the vehicle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The radius of the curve</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The acceleration due to gravity</li>
+</ul><div class="qexp">The formula tan θ = v²/rg shows that the angle is independent of the mass of the object.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">At the very top of a vertical roller coaster loop, what forces can contribute to the centripetal force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only the normal force</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only gravity</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Both gravity and the normal force</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Only the fictitious centrifugal force</li>
+</ul><div class="qexp">At the top of the loop, both the weight of the car and the downward normal force from the track point toward the center, providing the centripetal force.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">Why is centrifugal force referred to as a "fictitious force" by physicists?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It only exists when an object is at rest</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It has a real physical origin from gravitational attraction</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is a type of electromagnetic force</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It arises only because the observer's frame of reference is accelerating</li>
+</ul><div class="qexp">Centrifugal force is an effect of inertia viewed from a non-inertial (accelerating) frame and has no identifiable physical source.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">In the Northern Hemisphere, the Coriolis force causes wind to be deflected in which direction?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To the right of its path of motion</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To the left of its path of motion</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Directly toward the North Pole</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Directly toward the center of the Earth</li>
+</ul><div class="qexp">Due to Earth's counterclockwise rotation (when viewed from above the North Pole), all moving objects in the Northern Hemisphere experience a deflection to the right.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">Which frame of reference is one in which all forces are real and have an identifiable physical origin?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Non-inertial frame</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Inertial frame</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Rotating frame</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Accelerated frame</li>
+</ul><div class="qexp">An inertial frame of reference is defined as one where Newton's laws hold true without the need for fictitious forces.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">19</span><span class="qt-inner">What is the direction of rotation for low-pressure weather systems (hurricanes) in the Southern Hemisphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Counterclockwise</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Toward the equator</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Clockwise</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Directly upward</li>
+</ul><div class="qexp">In the Southern Hemisphere, the Coriolis force deflects air to the left, which creates a clockwise circulation around low-pressure centers.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">20</span><span class="qt-inner">According to Newton's universal law of gravitation, if the distance between two objects is tripled, the gravitational force between them:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Decreases by a factor of 9</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Decreases by a factor of 3</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Increases by a factor of 3</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Increases by a factor of 9</li>
+</ul><div class="qexp">Gravity follows an inverse square law, so increasing distance by a factor of 3 results in a force of 1/3², or 1/9 of the original.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">21</span><span class="qt-inner">What is the magnitude of the gravitational force between two 1.0 kg masses separated by 1.0 m?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>9.8 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.0 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>6.38 x 10^6 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>6.67 x 10^-11 N</li>
+</ul><div class="qexp">Plugging these values into F = GmM/r² yields the value of the gravitational constant G.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">22</span><span class="qt-inner">If a planet has twice the mass of Earth and twice the radius of Earth, how would the acceleration due to gravity (g) at its surface compare to Earth's?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It would be 2g</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It would be 0.5g</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It would be g</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It would be 4g</li>
+</ul><div class="qexp">Since g = GM/r², doubling mass (x2) and doubling radius (x4 in the denominator) results in 2/4 = 0.5 times the original g.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">23</span><span class="qt-inner">Earth exerts a gravitational force on the Moon. According to Newton’s third law, the Moon exerts a force on Earth that is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Much smaller because the Moon has less mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Much larger because the Moon is smaller</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Equal in magnitude and opposite in direction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Zero because Earth is the primary body</li>
+</ul><div class="qexp">Newton's third law states that for every action force, there is an equal and opposite reaction force, regardless of the masses involved.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">24</span><span class="qt-inner">What is the primary cause of the twice-daily tides observed in Earth's oceans?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The difference in the Moon's gravitational pull on different parts of Earth</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The Sun's magnetic field interacting with the oceans</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Earth's crust expanding and contracting due to heat</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The centrifugal force of Earth's orbit around the Sun</li>
+</ul><div class="qexp">Tides are caused by the gradient of the Moon's gravitational pull, which is stronger on the side of Earth facing the Moon and weaker on the far side.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">25</span><span class="qt-inner">Kepler’s Second Law states that a line drawn from the Sun to a planet sweeps out:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Greater areas when the planet is closer to the Sun</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Smaller areas when the planet is closer to the Sun</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Areas proportional to the planet's mass</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Equal areas in equal times</li>
+</ul><div class="qexp">This law describes the observation that planets move faster when they are closer to the Sun and slower when they are further away.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">26</span><span class="qt-inner">A satellite orbits a star at a distance r with a period T. If another satellite orbits the same star at a distance of 4r, what will be its orbital period?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4T</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>64T</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>8T</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>16T</li>
+</ul><div class="qexp">According to Kepler's Third Law (T² ∝ r³), if r increases by a factor of 4, T² increases by 4³ (64), so T increases by the square root of 64, which is 8.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">27</span><span class="qt-inner">How does the orbital speed of a satellite depend on its own mass?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The orbital speed is independent of the satellite's mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Heavier satellites must move faster to stay in orbit</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Lighter satellites must move faster to stay in orbit</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed is proportional to the square of the satellite's mass</li>
+</ul><div class="qexp">In the derivation of orbital speed (v = √(GM/r)), the mass of the satellite cancels out, meaning only the mass of the parent body matters.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">28</span><span class="qt-inner">Which model of the solar system, characterized by planets orbiting the Sun, was supported by the work of Copernicus and Newton?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ptolemaic model</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Copernican model</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Aristotelian model</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Geocentric model</li>
+</ul><div class="qexp">The Copernican or heliocentric model correctly identifies the Sun as the center of the planetary orbits, a view later proven by Newton's laws.</div></div>
+    </div><div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 28 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Previous</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Circular Motion and Gravitation',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:8,lessonCount:7,cpMin:80,lessons:['Overview','6.1 6.1: Rotation Angle and Angular Velocity','6.2 6.2: Centripetal Acceleration','6.3 6.3: Centripetal Force','6.4 6.4: Fictitious Forces and Non-inertial Frames - The Coriolis Force','6.5 6.5: Newton’s Universal Law of Gravitation','6.6 6.6: Satellites and Kepler’s Laws- An Argument for Simplicity','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===7?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

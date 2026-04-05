@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Fluid Dynamics | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🌊</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Fluid Dynamics</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🌊</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Fluid Dynamics</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 12 · <span>Overview</span></div><div class="h-title">Fluid Dynamics</div><div class="h-desc">We have dealt with many situations in which fluids are static. But by their very definition, fluids flow. Examples come easily—a column of smoke rises from a camp fire, water streams from a fire hose, blood courses through your veins. Why does rising smoke curl and twist? How does a nozzle increase the speed of water emerging from a hose? How does the body regulate blood flow? The physics of fluids in motion—fluid dynamics—allows us to answer these and many other questions.</div>
+    <div class="h-meta"><div class="h-chip">📚 4 Lessons</div><div class="h-chip">🌊 OpenStax College Physics Ch. 12</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 20 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 12</div><div class="cx">All content is from OpenStax College Physics, Chapter 12: Fluid Dynamics. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch12/fig12-1-photograph-shows-a-group-of-firefighters.jpg" alt="Photograph shows a group of firefighters in uniform using a hose to put out a fire that is consuming two cars."><div class="d-cap">Photograph shows a group of firefighters in uniform using a hose to put out a fire that is consuming two cars. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 4</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 12 · <span>Section 12.01</span></div><div class="h-title">12.1: Flow Rate and Its Relation to Velocity</div><div class="h-desc">Flow rate \(Q\) is defined to be the volume of fluid passing by some location through an area during a period of time, as seen in Figure . In symbols, this can be written as</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 12.01</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate flow rate.</li>
+      <li>Define units of volume.</li>
+      <li>Describe incompressible fluids.</li>
+      <li>Explain the consequences of the equation of continuity.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">flow rate</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">abbreviatedQ, it is the volumeVthat flows past a particular point during a timet, orQ = V/t</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">fluid dynamics</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the physics of fluids in motion</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 12.01</div>
+<p class="prose">Flow rate \(Q\) is defined to be the volume of fluid passing by some location through an area during a period of time, as seen in Figure . In symbols, this can be written as</p>
+<div class="math-display">\[Q = \dfrac{V}{t},\]</div>
+<p class="prose">where \(V\) is the volume ant \(t\) is the elapsed time.</p>
+<p class="prose">The SI unit for flow rate is \(m^3/s\), but a number of other units for \(Q\) are in common use. For example, the heart of a resting adult pumps blood at a rate of 5.00 liters per minute (L/min). Note that aliter(L) is 1/1000 of a cubic meter or 1000 cubic centimeters (\(10^{-3} \, m^3\) or \(10^3 \, cm\)). In this text we shall use whatever metric units are most convenient for a given situation.</p>
+<div class="diagram"><img src="images/ch12/fig12-2-the-figure-shows-a-fluid-flowing-through.jpg" alt="The figure shows a fluid flowing through a cylindrical pipe open at both ends. A portion of the cylindrical pipe with the fluid is shaded for a length d. The velocity of the fluid in the shaded region is shown by v toward the right. The cross sections of the shaded cylinder are marked as A. This cylinder of fluid flows past a point P on the cylindrical pipe. The velocity v is equal to d over t."><div class="d-cap">The figure shows a fluid flowing through a cylindrical pipe open at both ends. A portion of the cylindrical pipe with the fluid is shaded for a length d. The velocity of the fluid in the shaded region is shown by v toward the right. The cross sections of the shaded cylinder are marked as A. This cylinder of fluid flows past a point P on the cylindrical pipe. The velocity v is equal to d over t. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Volume from Flow Rate: The Heart Pumps a Lot of Blood in a Lifetime</span></div><div class="example-body">
+<p class="prose">How many cubic meters of blood does the heart pump in a 75-year lifetime, assuming the average flow rate is 5.00 L/min?</p>
+<p class="prose">Time and flow rate \(Q\) are given, and so the volume \(V\) can be calculated from the definition of flow rate.</p>
+<p class="prose">Solving \(Q = V/t\) for volume gives</p>
+<div class="math-display">\[V = Qt. \nonumber \]</div>
+<p class="prose">Substituting known values yields</p>
+<div class="math-display">\[\begin{align*}V &= \left(\dfrac{5.00 \, L}{1 \, min}\right)(75 \, y)\left(\dfrac{1 \, m^3}{10^3 \, L}\right)(5.26 \times 10^5 \, \left(\dfrac{min}{y}\right) \\[5pt] &= 2.0 \times 10^5 \, m^3 \end{align*}\]</div>
+<p class="prose">This amount is about 200,000 tons of blood. For comparison, this value is equivalent to about 200 times the volume of water contained in a 6-lane 50-m lap pool.</p>
+<p class="prose">Flow rate and velocity are related, but quite different, physical quantities. To make the distinction clear, think about the flow rate of a river. The greater the velocity of the water, the greater the flow rate of the river. But flow rate also depends on the size of the river. A rapid mountain stream carries far less water than the Amazon River in Brazil, for example. The precise relationship between flow rate \(Q\) and velocity \(\overline{v}\) is</p>
+<div class="math-display">\[Q = A \overline{v},\]</div>
+<p class="prose">where \(A\) is the cross-sectional area and \( \overline{v}\) is the average velocity. This equation seems logical enough. The relationship tells us that flow rate is directly proportional to both the magnitude of the average velocity (hereafter referred to as the speed) and the size of a river, pipe, or other conduit. The larger the conduit, the greater its cross-sectional area. Figure illustrates how this relationship is obtained. The shaded cylinder has a volume</p>
+<p class="prose">which flows past the point \(P\) in a time \(t\). Dividing both sides of this relationship by \(t\) gives</p>
+<div class="math-display">\[\dfrac{V}{t} = \dfrac{Ad}{t}.\]</div>
+<p class="prose">We note that \(Q = V\t\) and the average speed is \(\overline{v} = d/t\). Thus the equation becomes \(Q = A\overline{v}\).</p>
+<p class="prose">Figure shows an incompressible fluid flowing along a pipe of decreasing radius. Because the fluid is incompressible, the same amount of fluid must flow past any point in the tube in a given time to ensure continuity of flow. In this case, because the cross-sectional area of the pipe decreases, the velocity must necessarily increase. This logic can be extended to say that the flow rate must be the same at all points along the pipe. In particular, for points 1 and 2,</p>
+<div class="math-display">\[A_1\overline{v}_1 = A_2\overline{v}_2\]</div>
+<p class="prose">This is called the equation of continuity and is valid for any incompressible fluid. The consequences of the equation of continuity can be observed when water flows from a hose into a narrow spray nozzle: it emerges with a large speed—that is the purpose of the nozzle. Conversely, when a river empties into one end of a reservoir, the water slows considerably, perhaps picking up speed again when it leaves the other end of the reservoir. In other words, speed increases when cross-sectional area decreases, and speed decreases when cross-sectional area increases.</p>
+<div class="diagram"><img src="images/ch12/fig12-3-the-figure-shows-a-cylindrical-tube-broa.jpg" alt="The figure shows a cylindrical tube broad at the left and narrow at the right. The fluid is shown to flow through the cylindrical tube toward right along the axis of the tube. A shaded area is marked on the broader cylinder on the left. A cross section is marked on it as A one. A point one is marked on this cross section. The velocity of the fluid through the shaded area on narrow tube is marked by v one as an arrow toward right. Another shaded area is marked on the narrow cylindrical on the right. The shaded area on narrow tube is longer than the one on broader tube to show that when a tube narrows, the same volume occupies a greater length. A cross section is marked on the narrow cylindrical tube as A two. A point two is marked on this cross section. The velocity of fluid through the shaded area on narrow tube is marked v two toward right. The arrow depicting v two is longer than for v one showing v two to be greater in value than v one."><div class="d-cap">The figure shows a cylindrical tube broad at the left and narrow at the right. The fluid is shown to flow through the cylindrical tube toward right along the axis of the tube. A shaded area is marked on the broader cylinder on the left. A cross section is marked on it as A one. A point one is marked on this cross section. The velocity of the fluid through the shaded area on narrow tube is marked by v one as an arrow toward right. Another shaded area is marked on the narrow cylindrical on the right. The shaded area on narrow tube is longer than the one on broader tube to show that when a tube narrows, the same volume occupies a greater length. A cross section is marked on the narrow cylindrical tube as A two. A point two is marked on this cross section. The velocity of fluid through the shaded area on narrow tube is marked v two toward right. The arrow depicting v two is longer than for v one showing v two to be greater in value than v one. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Since liquids are essentially incompressible, the equation of continuity is valid for all liquids. However, gases are compressible, and so the equation must be applied with caution to gases if they are subjected to compression or expansion.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Fluid Speed: Speed Increases When a Tube Narrows</span></div><div class="example-body">
+<p class="prose">A nozzle with a radius of 0.250 cm is attached to a garden hose with a radius of 0.900 cm. The flow rate through hose and nozzle is 0.500 L/s. Calculate the speed of the water (a) in the hose and (b) in the nozzle.</p>
+<p class="prose">We can use the relationship between flow rate and speed to find both velocities. We will use the subscript 1 for the hose and 2 for the nozzle.</p>
+<p class="prose">First, we solve \(Q = A\overline{v}\) for \(v_1\) and note that the cross-sectional area is \(A = \pi r^2\), yielding</p>
+<div class="math-display">\[\overline{v}_1 = \dfrac{Q}{A_1} = \dfrac{Q}{\pi r_1^2}, \nonumber \]</div>
+<p class="prose">Substituting known values and making appropriate unit conversions yields</p>
+<div class="math-display">\[\overline{v}_1 = \dfrac {(0.500 \, L/s)(10^{-3} m^3/L)}{\pi (9.00 \times 10^{-3}m)^2} = 1.96 \, m/s. \nonumber \]</div>
+<p class="prose">We could repeat this calculation to find the speed in the nozzle \(\overline{v}_2\), but we will use the equation of continuity to give a somewhat different insight. Using the equation which states</p>
+<div class="math-display">\[A_1\overline{v}_1 = A_2\overline{v}_2 \nonumber \]</div>
+<p class="prose">solving for \(\overline{v}_2\) and substituting \(\pi r^2\) for the cross-sectional area yields</p>
+<div class="math-display">\[\overline{v}_2 = \dfrac{A_1}{A_2}\overline{v}_1 = \dfrac{\pi r_1^2}{\pi r_2^2}\overline{v}_1 = \dfrac{r_1^2}{r_2^2}\overline{v}_1. \nonumber \]</div>
+<p class="prose">Substituting known values,</p>
+<div class="math-display">\[\overline{v}_2 = \dfrac{ (0.900 \, cm)^2}{(0.250 \, cm)^2} 1.96 \, m/s = 25.5 \, m/s. \nonumber \]</div>
+<p class="prose">A speed of 1.96 m/s is about right for water emerging from a nozzleless hose. The nozzle produces a considerably faster stream merely by constricting the flow to a narrower tube.</p>
+<p class="prose">The solution to the last part of the example shows that speed is inversely proportional to the square of the radius of the tube, making for large effects when radius varies. We can blow out a candle at quite a distance, for example, by pursing our lips, whereas blowing on a candle with our mouth wide open is quite ineffective.</p>
+<p class="prose">In many situations, including in the cardiovascular system, branching of the flow occurs. The blood is pumped from the heart into arteries that subdivide into smaller arteries (arterioles) which branch into very fine vessels called capillaries. In this situation, continuity of flow is maintained but it is the sum of the flow rates in each of the branches in any portion along the tube that is maintained. The equation of continuity in a more general form becomes</p>
+<div class="math-display">\[n_1A_1\overline{v}_1 = n_2A_2\overline{v}_2,\]</div>
+<p class="prose">where \(n_1\) and \(n_2\) are the number of branches in each of the sections along the tube.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Flow Speed and Vessel Diameter: Branching in the Cardiovascular System</span></div><div class="example-body">
+<p class="prose">The aorta is the principal blood vessel through which blood leaves the heart in order to circulate around the body. (a) Calculate the average speed of the blood in the aorta if the flow rate is 5.0 L/min. The aorta has a radius of 10 mm. (b) Blood also flows through smaller blood vessels known as capillaries. When the rate of blood flow in the aorta is 5.0 L/min, the speed of blood in the capillaries is about 0.33 mm/s. Given that the average diameter of a capillary is \(8.0 \, \mu m\), calculate the number of capillaries in the blood circulatory system.</p>
+<p class="prose">We can use \(Q = A\overline{v}\) to calculate the speed of flow in the aorta and then use the general form of the equation of continuity to calculate the number of capillaries as all of the other variables are known.</p>
+<p class="prose">The flow rate is given by \(Q = A\overline{v}\) or \(\overline{v} = \frac{Q}{\pi r^2} \) for a cylindrical vessel.</p>
+<p class="prose">Substituting the known values (converted to units of meters and seconds) gives</p>
+<div class="math-display">\[\begin{align*} \overline{v} &= \dfrac{(5.0 \, L/min)(10^{-3} \, m^3/L)(1 \, min/60 \, s)}{\pi(0.010 \, m)^2} \\[5pt] &= 0.27 \, m/s. \end{align*}\]</div>
+<p class="prose">Using \(n_1A_1\overline{v}_1 = n_2A_2\overline{v}_1\), assigning the subscript 1 to the aorta and 2 to the capillaries, and solving for \(n_2\) (the number of capillaries) gives \(n_2 = \frac{n_1A_1\overline{v}_1}{A-2\overline{v}_2}.\) Converting all quantities to units of meters and seconds and substituting into the equation above gives</p>
+<div class="math-display">\[\begin{align*} n_2 &= \dfrac{(1)(\pi)(10 \times 10^{-3} m)^2(0.27 \, m/s)}{(\pi)(4.0 \times 10^{-6} m)(0.33 \times 10^{-3} m/s)} \\[5pt] &= 5.0 \times 10^9 \, capillaries.\end{align*}\]</div>
+<p class="prose">Note that the speed of flow in the capillaries is considerably reduced relative to the speed in the aorta due to the significant increase in the total cross-sectional area at the capillaries. This low speed is to allow sufficient time for effective exchange to occur although it is equally important for the flow not to become stationary in order to avoid the possibility of clotting. Does this large number of capillaries in the body seem reasonable? In active muscle, one finds about 200 capillaries per \(mm^3\), or about \(200 \times 10^6\) per 1 kg of muscle. For 20 kg of muscle, this amounts to about \(4 \times 10^9\) capillaries.×109</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="math-display">\[A_1\overline{v}_1 = A_2\overline{v}_2\]</div>
+<div class="math-display">\[n_1A_1\overline{v}_1 = n_2A_2\overline{v}_2\]</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 12.01. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">In the cardiovascular system, why does blood velocity decrease significantly as it moves from the large aorta into the tiny capillaries, and how does this change in speed facilitate the primary function of the capillary beds?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 12.01 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the standard SI unit for flow rate (Q)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$m^3/s$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$L/min$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$cm^3/s$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$m/s$</li>
+</ul><div class="qexp">Flow rate is defined as volume per unit time, so its SI unit is cubic meters per second.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A garden hose with a radius of 0.900 cm has a flow rate of 0.500 L/s. What is the average speed of the water in the hose?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.50 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.96 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25.5 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>196 m/s</li>
+</ul><div class="qexp">Using $v = Q/A$, where $Q = 5.00 \times 10^{-4} m^3/s$ and $A = \pi(0.009 m)^2$, the velocity is approximately 1.96 m/s.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">According to the equation of continuity, what happens to the speed of an incompressible fluid when it flows from a narrow pipe into a wider reservoir?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The speed remains constant.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The speed decreases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed becomes zero.</li>
+</ul><div class="qexp">Since the product of area and velocity must remain constant ($A_1v_1 = A_2v_2$), increasing the cross-sectional area causes the speed to decrease.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why is blowing out a candle more effective when you purse your lips compared to when your mouth is wide open?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pursing your lips increases the pressure of the air.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Pursing your lips increases the volume of air delivered.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pursing your lips decreases the viscosity of the air.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Pursing your lips decreases the exit area, which significantly increases the air speed.</li>
+</ul><div class="qexp">By the equation of continuity, reducing the cross-sectional area of the opening causes the fluid velocity to increase significantly.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Bernoulli’s principle is a special case of Bernoulli’s equation that specifically applies to fluids at:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Constant depth</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Constant pressure</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Zero velocity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Constant temperature</li>
+</ul><div class="qexp">Bernoulli’s principle refers to the relationship where pressure drops as speed increases for a fluid at a constant height ($h_1 = h_2$).</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 12 · <span>Section 12.02</span></div><div class="h-title">12.2: Bernoulli’s Equation</div><div class="h-desc">When a fluid flows into a narrower channel, its speed increases. That means its kinetic energy also increases. Where does that change in kinetic energy come from? The increased kinetic energy comes fr...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 12.02</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the terms in Bernoulli’s equation.</li>
+      <li>Explain how Bernoulli’s equation is related to conservation of energy.</li>
+      <li>Explain how to derive Bernoulli’s principle from Bernoulli’s equation.</li>
+      <li>Calculate with Bernoulli’s principle.</li>
+      <li>List some applications of Bernoulli’s principle.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Bernoulli’s equation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the equation resulting from applying conservation of energy to an incompressible frictionless fluid:P+ 1/2pv2+pgh= constant , through the fluid</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 12.02</div>
+<p class="prose">When a fluid flows into a narrower channel, its speed increases. That means its kinetic energy also increases. Where does that change in kinetic energy come from? The increased kinetic energy comes from the net work done on the fluid to push it into the channel and the work done on the fluid by the gravitational force, if the fluid changes vertical position. Recall the work-energy theorem,</p>
+<div class="math-display">\[W_{net} = \dfrac{1}{2} mv^2 - \dfrac{1}{2}mv_0^2.\]</div>
+<p class="prose">There is a pressure difference when the channel narrows. This pressure difference results in a net force on the fluid: recall that pressure times area equals force. The net work done increases the fluid’s kinetic energy. As a result, thepressure will drop in a rapidly-moving fluid, whether or not the fluid is confined to a tube.</p>
+<p class="prose">There are a number of common examples of pressure dropping in rapidly-moving fluids. Shower curtains have a disagreeable habit of bulging into the shower stall when the shower is on. The high-velocity stream of water and air creates a region of lower pressure inside the shower, and standard atmospheric pressure on the other side. The pressure difference results in a net force inward pushing the curtain in. You may also have noticed that when passing a truck on the highway, your car tends to veer toward it. The reason is the same—the high velocity of the air between the car and the truck creates a region of lower pressure, and the vehicles are pushed together by greater pressure on the outside (Figure This effect was observed as far back as the mid-1800s, when it was found that trains passing in opposite directions tipped precariously toward one another.</p>
+<div class="diagram"><img src="images/ch12/fig12-4-an-overhead-view-of-a-car-passing-by-a-t.jpg" alt="An overhead view of a car passing by a truck on a highway toward left is shown. The air passing through the vehicles is shown using lines along the length of both the vehicles. The lines representing the air movement has a velocity v one outside the area between the vehicles and velocity v two between the vehicles. v two is shown to be greater than v one with the help of a longer arrow toward right. The pressure between the car and the truck is represented by P i and the pressure at the other ends of both the vehicles is represented as P zero. The pressure P i is shown to be less than P zero by shorter length of the arrow. The direction of P i is shown as pushing the car and truck apart, and the direction of P zero is shown as pushing the car and truck toward each other."><div class="d-cap">An overhead view of a car passing by a truck on a highway toward left is shown. The air passing through the vehicles is shown using lines along the length of both the vehicles. The lines representing the air movement has a velocity v one outside the area between the vehicles and velocity v two between the vehicles. v two is shown to be greater than v one with the help of a longer arrow toward right. The pressure between the car and the truck is represented by P i and the pressure at the other ends of both the vehicles is represented as P zero. The pressure P i is shown to be less than P zero by shorter length of the arrow. The direction of P i is shown as pushing the car and truck apart, and the direction of P zero is shown as pushing the car and truck toward each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Making Connections: Take Home Investigation with a Sheet of Paper:</p>
+<p class="prose">Hold the short edge of a sheet of paper parallel to your mouth with one hand on each side of your mouth. The page should slant downward over your hands. Blow over the top of the page. Describe what happens and explain the reason for this behavior.</p>
+<div class="sh2">Bernoulli’s Equation</div>
+<p class="prose">The relationship between pressure and velocity in fluids is described quantitatively byBernoulli’s equation, named after its discoverer, the Swiss scientist Daniel Bernoulli (1700–1782). Bernoulli’s equation states that for an incompressible, frictionless fluid, the following sum is constant:</p>
+<div class="math-display">\[P + \dfrac{1}{2}\rho v^2 + \rho gh = constant \label{eq1}\]</div>
+<p class="prose">where \(P\) is the absolute pressure, \(\rho\) is the fluid density, \(v\) is the velocity of the fluid, \(h\) is the height above some reference point, and \(g\) is the acceleration due to gravity. If we follow a small volume of fluid along its path, various quantities in the sum may change, but the total remains constant. Let the subscripts 1 and 2 refer to any two points along the path that the bit of fluid follows; Bernoulli’s equation becomes:</p>
+<div class="math-display">\[P_1 + \underbrace{\dfrac{1}{2}\rho v_1^2}_{\text{kinetic energy}} + \underbrace{\rho gh_1}_{\text{potential energy}} = P_2 + \underbrace{\dfrac{1}{2}\rho v_2^2}_{\text{kinetic energy}} + \underbrace{\rho gh_2. \label{eq2}}_{\text{potential energy}} \]</div>
+<p class="prose">Bernoulli’s equation is a form of the conservation of energy principle. Note that the second and third terms are the kinetic and potential energy with \(m\) replaced by \(\rho\). In fact, each term in the equation has units of energy per unit volume. We can prove this for the second term by substituting \(\rho = m/V\) into it and gathering terms:</p>
+<div class="math-display">\[\dfrac{1}{2}\rho v^2 = \dfrac{\frac{1}{2}mv^2}{V} = \dfrac{KE}{V}. \label{eq3}\]</div>
+<p class="prose">So \(\frac{1}{2}\rho v^2\) is the kinetic energy per unit volume. Making the same substitution into the third term of Equation \ref{eq3}, we find</p>
+<div class="math-display">\[\rho gh = \dfrac{mgh}{V} = \dfrac{PE_g}{V}, \label{eq4}\]</div>
+<p class="prose">so \(\rho gh\) is the gravitational potential energy per unit volume. Note that pressure \(P\) has units of energy per unit volume, too. Since \(P = F/A\), its units are \(N/m^2\). If we multiply these by m/m, we obtain \(N \cdot m/m^3 = J/m^3\), or energy per unit volume. Bernoulli’s equation is, in fact, just a convenient statement ofconservation of energy for an incompressible fluid in the absence of friction.</p>
+<p class="prose">Making Connections: Conservation of Energy</p>
+<p class="prose">Conservation of energy applied to fluid flow produces Bernoulli’s equation. The net work done by the fluid’s pressure results in changes in the fluid’s \(KE\) and \(PE_g\) per unit volume. If other forms of energy are involved in fluid flow, Bernoulli’s equation can be modified to take these forms into account. Such forms of energy include thermal energy dissipated because of fluid viscosity.</p>
+<p class="prose">The general form of Bernoulli’s equation has three terms in it (Equation \ref{eq1}), and it is broadly applicable. To understand it better, we will look at a number of specific situations that simplify and illustrate its use and meaning.</p>
+<div class="sh2">Bernoulli’s Equation for Static Fluids</div>
+<p class="prose">Let us first consider the very simple situation where the fluid is static—that is, \(v_1 = v_2 = 0\). Bernoulli’s equation in that case is</p>
+<div class="math-display">\[P_1 + \rho gh_1 = P_2 + \rho gh_2.\]</div>
+<p class="prose">We can further simplify the equation by taking \(h_2 = 0\) (we can always choose some height to be zero, just as we often have done for other situations involving the gravitational force, and take all other heights to be relative to this). In that case, we get</p>
+<div class="math-display">\[P_2 = P_1 + \rho gh_1.\]</div>
+<p class="prose">This equation tells us that, in static fluids, pressure increases with depth. As we go from point 1 to point 2 in the fluid, the depth increases by \(h_1\), and consequently, \(P_2\) is greater than \(P_1\) by an amount \(\rho gh_1\). In the very simplest case, \(P_1\) is zero at the top of the fluid, and we get the familiar relationship \(P = \rho gh\). (Recall that \(P = \rho gh\) and \(\Delta PE_g = mgh\).) Bernoulli’s equation includes the fact that the pressure due to the weight of a fluid is \(\rho gh\). Although we introduce Bernoulli’s equation for fluid flow, it includes much of what we studied for static fluids in the preceding chapter.</p>
+<div class="sh2">Bernoulli’s Principle—Bernoulli’s Equation at Constant Depth</div>
+<p class="prose">Another important situation is one in which the fluid moves but its depth is constant—that is, \(h_1 = h_2\). Under that condition, Bernoulli’s equation becomes</p>
+<div class="math-display">\[P_1 + \dfrac{1}{2}\rho v_1^2 = P_2 + \dfrac{1}{2}\rho v_2^2.\]</div>
+<p class="prose">Situations in which fluid flows at a constant depth are so important that this equation is often calledBernoulli’s principle. It is Bernoulli’s equation for fluids at constant depth. (Note again that this applies to a small volume of fluid as we follow it along its path.) As we have just discussed, pressure drops as speed increases in a moving fluid. We can see this from Bernoulli’s principle. For example, if \(v_2\) is greater than \(v_1\) in the equation, then \(P_2\) must be less than \(P_1\) for the equality to hold.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Pressure: Pressure Drops as a Fluid Speeds Up</span></div><div class="example-body">
+<p class="prose">Previously, we found that the speed of water in a hose increased from 1.96 m/s to 25.5 m/s going from the hose to the nozzle. Calculate the pressure in the hose, given that the absolute pressure in the nozzle is \(1.01 \times 10^5 \, N/m^2\) (atmospheric, as it must be) and assuming level, frictionless flow.</p>
+<p class="prose">Level flow means constant depth, so Bernoulli’s principle applies. We use the subscript 1 for values in the hose and 2 for those in the nozzle. We are thus asked to find \(P_1\).</p>
+<p class="prose">Solving Bernoulli’s principle for \(P_1\) yields</p>
+<div class="math-display">\[\begin{align*} P_1 &= P_2 + \dfrac{1}{2}\rho v_2^2 - \dfrac{1}{2}\rho v_1^2 \\[5pt] &= \dfrac{1}{2}\rho(v_2^2 - v_1^2).\end{align*}\]</div>
+<p class="prose">Substituting known values,</p>
+<div class="math-display">\[\begin{align*} P_1 &= 1.01 \times 10^5 \, N/m^2 + \dfrac{1}{2}(10^3 \, kg/m^3)[(25.5 m/s)^2 - (1.96 m/s)^2] \\[5pt] &= 4.24 \times 10^5 \, N/m^2.\end{align*}\]</div>
+<p class="prose">This absolute pressure in the hose is greater than in the nozzle, as expected since \(v\) is greater in the nozzle. The pressure \(P_2\) in the nozzle must be atmospheric since it emerges into the atmosphere without other changes in conditions.</p>
+</div></div>
+<div class="sh3">Applications of Bernoulli’s Principle</div>
+<p class="prose">There are a number of devices and situations in which fluid flows at a constant height and, thus, can be analyzed with Bernoulli’s principle.</p>
+<p class="prose">#### Application: Entrainment</p>
+<p class="prose">People have long put the Bernoulli principle to work by using reduced pressure in high-velocity fluids to move things about. With a higher pressure on the outside, the high-velocity fluid forces other fluids into the stream. This process is calledentrainment. Entrainment devices have been in use since ancient times, particularly as pumps to raise water small heights, as in draining swamps, fields, or other low-lying areas. Some other devices that use the concept of entrainment are shown in Figure .</p>
+<div class="diagram"><img src="images/ch12/fig12-5-part-a-of-the-figure-shows-a-rectangular.jpg" alt="Part a of the figure shows a rectangular section of a cylindrical Bunsen burner as a vertical column. The natural gas is shown to enter the rectangular column from the bottom upward. The air is shown to enter though a nozzle at the left side near the bottom part of the rectangular column and rise upward. Both air and natural gas are shown to rise up together along the length of the column, shown as vertical arrows along the length pointing upward. Part b of the figure shows an atomizer that uses a squeeze bulb in the shape of a small sphere to create a jet of air that entrains drops of perfume contained in a spherical bottomed container. The air is shown to come out of the squeeze bulb and the perfume is shown to rise up from the spherical bottomed container. Part c of the figure shows a common aspirator which contains a cylindrical tube held vertically. The tube is broader on the top and narrow at the bottom. Water is shown to enter the tube from the broader region and flow toward the narrow region. Air is shown to enter the cylindrical tube from the bottom part of the broader side and also flow toward the narrow tube. Part d of the figure shows the chimney of a water heater. Water heater is shown as a rectangular box at the bottom having a cylindrical section in the middle. The cylindrical section is broader at the bottom and narrow toward the top. Hot air is shown to rise up along the vertical section of the cylindrical tube. The chimney is conical at the bottom and rectangular upward and is shown above the rectangular water heater. The hot air enters the chimney at the conical end and rises upward. Cool air is shown to enter the chimney through the area between the rectangular section of heater and chimney from the two sides and rise up along the chimney with the hot air as shown by vertical arrows."><div class="d-cap">Part a of the figure shows a rectangular section of a cylindrical Bunsen burner as a vertical column. The natural gas is shown to enter the rectangular column from the bottom upward. The air is shown to enter though a nozzle at the left side near the bottom part of the rectangular column and rise upward. Both air and natural gas are shown to rise up together along the length of the column, shown as vertical arrows along the length pointing upward. Part b of the figure shows an atomizer that uses a squeeze bulb in the shape of a small sphere to create a jet of air that entrains drops of perfume contained in a spherical bottomed container. The air is shown to come out of the squeeze bulb and the perfume is shown to rise up from the spherical bottomed container. Part c of the figure shows a common aspirator which contains a cylindrical tube held vertically. The tube is broader on the top and narrow at the bottom. Water is shown to enter the tube from the broader region and flow toward the narrow region. Air is shown to enter the cylindrical tube from the bottom part of the broader side and also flow toward the narrow tube. Part d of the figure shows the chimney of a water heater. Water heater is shown as a rectangular box at the bottom having a cylindrical section in the middle. The cylindrical section is broader at the bottom and narrow toward the top. Hot air is shown to rise up along the vertical section of the cylindrical tube. The chimney is conical at the bottom and rectangular upward and is shown above the rectangular water heater. The hot air enters the chimney at the conical end and rises upward. Cool air is shown to enter the chimney through the area between the rectangular section of heater and chimney from the two sides and rise up along the chimney with the hot air as shown by vertical arrows. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">#### Application: Wings and Sails</p>
+<p class="prose">The airplane wing is a beautiful example of Bernoulli’s principle in action. Figure \(\PageIndex{1a}\) shows the characteristic shape of a wing. The wing is tilted upward at a small angle and the upper surface is longer, causing air to flow faster over it. The pressure on top of the wing is therefore reduced, creating a net upward force or lift. (Wings can also gain lift by pushing air downward, utilizing the conservation of momentum principle. The deflected air molecules result in an upward force on the wing — Newton’s third law.) Sails also have the characteristic shape of a wing. (See Figure \(\PageIndex{1b}\).) The pressure on the front side of the sail, \(P_{front}\) is lower than the pressure on the back of the sail, \(P_{back}\). This results in a forward force and even allows you to sail into the wind.</p>
+<div class="diagram"><img src="images/ch12/fig12-6-part-a-of-the-figure-shows-a-picture-of-.jpg" alt="Part a of the figure shows a picture of a wing. It is in the form of an aerofoil. One side of the wing is broader and the other end tapers. The direction of the air is shown as lines along the length of the wing. The direction of the air below the wing is shown as flowing along the length of the wing. The pressure exerted by the air given by P b is upward. The direction of the air on the top or front part of the wing is shown as flowing along the length of the wing. The pressure exerted by the air is given by P f, and it acts downward. Part b of the figure shows a boat with a sail. The direction of the sail is almost across the boat. The direction of the air in the sail is shown by lines on the front and back sides of the sail. The air currents on the front exert a pressure P front toward the sail, and air currents on the back sides of sail exert a pressure P back again toward the sail."><div class="d-cap">Part a of the figure shows a picture of a wing. It is in the form of an aerofoil. One side of the wing is broader and the other end tapers. The direction of the air is shown as lines along the length of the wing. The direction of the air below the wing is shown as flowing along the length of the wing. The pressure exerted by the air given by P b is upward. The direction of the air on the top or front part of the wing is shown as flowing along the length of the wing. The pressure exerted by the air is given by P f, and it acts downward. Part b of the figure shows a boat with a sail. The direction of the sail is almost across the boat. The direction of the air in the sail is shown by lines on the front and back sides of the sail. The air currents on the front exert a pressure P front toward the sail, and air currents on the back sides of sail exert a pressure P back again toward the sail. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Making Connections: Take Home Investigation with Two Strips of Paper</p>
+<p class="prose">For a good illustration of Bernoulli’s principle, make two strips of paper, each about 15 cm long and 4 cm wide. Hold the small end of one strip up to your lips and let it drape over your finger. Blow across the paper. What happens? Now hold two strips of paper up to your lips, separated by your fingers. Blow between the strips. What happens?</p>
+<p class="prose">#### Application: Velocity Measurement</p>
+<p class="prose">Figure shows two devices that measure fluid velocity based on Bernoulli’s principle. The manometer in Figure \(\PageIndex{1a}\) is connected to two tubes that are small enough not to appreciably disturb the flow. The tube facing the oncoming fluid creates a dead spot having zero velocity (\(v_1 = 0\)) in front of it, while fluid passing the other tube has velocity \(v_2\). This means that Bernoulli’s principle as stated in</p>
+<div class="math-display">\[P_1 + \dfrac{1}{2}\rho v_1^2 = P_2 + \dfrac{1}{2}\rho v_2^2\]</div>
+<div class="math-display">\[P_1 = P_2 + \dfrac{1}{2}\rho v_2^2.\]</div>
+<p class="prose">Thus pressure \(P_2\) over the second opening is reduced by \(\frac{1}{2}\rho v_2^2\), and so the fluid in the manometer rises by \(h\) on the side connected to the second opening, where</p>
+<div class="math-display">\[h \propto \dfrac{1}{2} \rho v_2^2.\]</div>
+<p class="prose">(Recall that the symbol \(\propto\) means “proportional to.”) Solving for \(v_2\), we see that</p>
+<div class="math-display">\[v_2 \propto \sqrt{h}.\]</div>
+<p class="prose">Figure \(\PageIndex{1b}\) shows a version of this device that is in common use for measuring various fluid velocities; such devices are frequently used as air speed indicators in aircraft.</p>
+<div class="diagram"><img src="images/ch12/fig12-7-part-a-shows-a-u-shaped-manometer-tube-c.jpg" alt="Part a shows a U-shaped manometer tube connected to ends of two tubes which are placed close together. Tube one is open on the end and shows a velocity v one equals zero at the end. Tube two has an opening on the side and shows a velocity v two across the opening. The level of fluid in the U-shaped tube is more on the right side than on the left. The difference in height is shown by h. Part b of the figure shows a velocity measuring device a pitot tube. Two coaxial tubes, one broader outside and other narrow inside are connected to a U-shaped tube. The U-shaped tube is also narrow at one end and broader at the other. The narrow end of the U-shaped tube is connected to the narrow inner tube and the broader end of the U-shaped tube is connected to the broader outer tube. The tube one has an opening at one of its edges and the velocity of the fluid at the end is v one equals zero. Tube two has an opening on the side and shows a velocity v two across the opening. The level of fluid in the U-shaped tube is more on the right side than on the left. The difference in height is shown by h."><div class="d-cap">Part a shows a U-shaped manometer tube connected to ends of two tubes which are placed close together. Tube one is open on the end and shows a velocity v one equals zero at the end. Tube two has an opening on the side and shows a velocity v two across the opening. The level of fluid in the U-shaped tube is more on the right side than on the left. The difference in height is shown by h. Part b of the figure shows a velocity measuring device a pitot tube. Two coaxial tubes, one broader outside and other narrow inside are connected to a U-shaped tube. The U-shaped tube is also narrow at one end and broader at the other. The narrow end of the U-shaped tube is connected to the narrow inner tube and the broader end of the U-shaped tube is connected to the broader outer tube. The tube one has an opening at one of its edges and the velocity of the fluid at the end is v one equals zero. Tube two has an opening on the side and shows a velocity v two across the opening. The level of fluid in the U-shaped tube is more on the right side than on the left. The difference in height is shown by h. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Take Home Investigation with a Sheet of Paper:Hold the short edge of a sheet of paper parallel to your mouth with one hand on each side of your mouth. The page should slant downward over your hands. Blow over the top of the page. Describe what happens and explain the reason for this behavior.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Conservation of EnergyConservation of energy applied to fluid flow produces Bernoulli’s equation. The net work done by the fluid’s pressure results in changes in the fluid’s \(KE\) and \(PE_g\) per unit volume. If other forms of energy are involved in fluid flow, Bernoulli’s equation can be modified to take these forms into account. Such forms of energy include thermal energy dissipated because of fluid viscosity.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Take Home Investigation with Two Strips of PaperFor a good illustration of Bernoulli’s principle, make two strips of paper, each about 15 cm long and 4 cm wide. Hold the small end of one strip up to your lips and let it drape over your finger. Blow across the paper. What happens? Now hold two strips of paper up to your lips, separated by your fingers. Blow between the strips. What happens?</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 12.02. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Using Bernoulli’s principle, explain why the absolute pressure within a constricted region of an artery is lower than in the wider regions, and discuss why this might lead to the collapse of a weakened vessel during high-velocity blood flow.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 12.02 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In Bernoulli's equation, every term in the sum ($P + \frac{1}{2}\rho v^2 + \rho gh$) can be expressed in which of the following units?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Force per unit mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Energy per unit volume</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Power per unit area</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Momentum per unit time</li>
+</ul><div class="qexp">All terms in Bernoulli's equation have units of pressure ($N/m^2$), which is dimensionally equivalent to energy per unit volume ($J/m^3$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">When a car passes a large truck on the highway, why does the car tend to veer toward the truck?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The air between them is compressed, increasing the pressure.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The air between them moves slower, increasing the pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The air between them moves faster, creating a region of lower pressure.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The truck’s mass creates a gravitational pull on the car.</li>
+</ul><div class="qexp">High-velocity air between the vehicles creates a region of lower pressure compared to the outside, resulting in a net force pushing the vehicles together.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following describes "entrainment"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The process of layers mixing in turbulent flow.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The conservation of mass in a branching tube.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The resistance to flow caused by fluid friction.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Using reduced pressure in high-velocity fluids to move other fluids into the stream.</li>
+</ul><div class="qexp">Entrainment occurs when a high-velocity fluid creates a low-pressure area that draws another fluid into the stream, as seen in Bunsen burners or atomizers.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">According to Torricelli’s theorem, how does the size of an opening in a dam affect the speed at which water emerges?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The emerging speed is independent of the size of the opening.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Larger openings result in higher emerging speeds.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Smaller openings result in higher emerging speeds.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed is proportional to the square of the opening's radius.</li>
+</ul><div class="qexp">If resistance is negligible, the speed $v = \sqrt{2gh}$ depends only on the depth of the opening below the surface, not the size of the opening itself.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">In the study of power in fluid flow, what does the product of pressure and flow rate ($PQ$) represent?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Power supplied to overcome gravity.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Power supplied to a fluid to give it its pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Power lost due to viscosity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Power supplied to increase kinetic energy.</li>
+</ul><div class="qexp">Multiplying the pressure (energy per unit volume) by the flow rate (volume per unit time) gives the power associated with the pressure of the fluid.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 12 · <span>Section 12.03</span></div><div class="h-title">12.3: The Most General Applications of Bernoulli’s Equation</div><div class="h-desc">Figure shows water gushing from a large tube through a dam. What is its speed as it emerges? Interestingly, if resistance is negligible, the speed is just what it would be if the water fell a distance...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 12.03</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate using Torricelli’s theorem.</li>
+      <li>Calculate power in fluid flow.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 12.03</div>
+<div class="sh2">Torricelli’s Theorem</div>
+<p class="prose">Figure shows water gushing from a large tube through a dam. What is its speed as it emerges? Interestingly, if resistance is negligible, the speed is just what it would be if the water fell a distance \(h\) from the surface of the reservoir; the water’s speed is independent of the size of the opening. Let us check this out.</p>
+<div class="diagram"><img src="images/ch12/fig12-8-part-a-of-the-figure-shows-a-photograph-.jpg" alt="Part a of the figure shows a photograph of a dam with water gushing from a large tube at the base of a dam. Part b shows the schematic diagram for the flow of water in a reservoir. The reservoir is shown in the form of a triangular section with a horizontal opening along the base little near to the base. The water is shown to flow through the horizontal opening near the base. The height which it falls is shown as h two. The pressure and velocity of water at this point are P two and v two. The height to which the water can fall if it falls from a height h above the opening is given by h 2. The pressure and velocity of water at this point are P one and v one."><div class="d-cap">Part a of the figure shows a photograph of a dam with water gushing from a large tube at the base of a dam. Part b shows the schematic diagram for the flow of water in a reservoir. The reservoir is shown in the form of a triangular section with a horizontal opening along the base little near to the base. The water is shown to flow through the horizontal opening near the base. The height which it falls is shown as h two. The pressure and velocity of water at this point are P two and v two. The height to which the water can fall if it falls from a height h above the opening is given by h 2. The pressure and velocity of water at this point are P one and v one. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Bernoulli’s equation must be used since the depth is not constant. We consider water flowing from the surface (point 1) to the tube’s outlet (point 2). Bernoulli’s equation as stated in previously is</p>
+<div class="math-display">\[P_1 + \dfrac{1}{2}\rho v_1^2 + \rho gh_1 = P_2 + \dfrac{1}{2}\rho v_2^2 + \rho gh_2.\]</div>
+<p class="prose">Both \(P_1\) and \(P_2\) equal atmospheric pressure (\(P_1\) is atmospheric pressure because it is the pressure at the top of the reservoir. \(P_2\) must be atmospheric pressure, since the emerging water is surrounded by the atmosphere and cannot have a pressure different from atmospheric pressure.) and subtract out of the equation, leaving</p>
+<div class="math-display">\[\dfrac{1}{2}\rho v_1^2 + \rho gh_1 = \dfrac{1}{2}\rho v_2^2 + \rho gh_2.\]</div>
+<p class="prose">Solving this equation for \(v_2^2\) noting that the density \(\rho\) cancels (because the fluid is incompressible), yields</p>
+<div class="math-display">\[v_2^2 = v_1^2 + 2g(h_1 - h_2).\]</div>
+<p class="prose">We let \(h = h_1 - h_2\), the equation then becomes</p>
+<div class="math-display">\[v_2^2 = v_1^2 + 2gh\]</div>
+<p class="prose">where \(h\) is the height dropped by the water. This is simply a kinematic equation for any object falling a distance \(h\) with negligible resistance. In fluids, this last equation is calledTorricelli’s theorem. Note that the result is independent of the velocity’s direction, just as we found when applying conservation of energy to falling objects.</p>
+<div class="diagram"><img src="images/ch12/fig12-9-figure-shows-a-fire-engine-that-is-stati.jpg" alt="Figure shows a fire engine that is stationed next to a tall building. A floor of the building ten meters above the ground has caught fire. The flames are shown coming out. A fire man has reached close to the fire caught area using a ladder and is spraying water on the fire using a hose attached to the fire engine."><div class="d-cap">Figure shows a fire engine that is stationed next to a tall building. A floor of the building ten meters above the ground has caught fire. The flames are shown coming out. A fire man has reached close to the fire caught area using a ladder and is spraying water on the fire using a hose attached to the fire engine. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">All preceding applications of Bernoulli’s equation involved simplifying conditions, such as constant height or constant pressure. The next example is a more general application of Bernoulli’s equation in which pressure, velocity, and height all change. (SeeFigure.)</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Pressure: A Fire Hose Nozzle</span></div><div class="example-body">
+<p class="prose">Fire hoses used in major structure fires have inside diameters of 6.40 cm. Suppose such a hose carries a flow of 40.0 L/s starting at a gauge pressure of \( 1.62 \times 10^6 \, N/m^2\). The hose goes 10.0 m up a ladder to a nozzle having an inside diameter of 3.00 cm. Assuming negligible resistance, what is the pressure in the nozzle?</p>
+<p class="prose">Here we must use Bernoulli’s equation to solve for the pressure, since depth is not constant.</p>
+<p class="prose">Bernoulli’s equation states</p>
+<div class="math-display">\[P_1 + \dfrac{1}{2}\rho v_1^2 + \rho gh_1 = P_2 + \dfrac{1}{2}\rho v_2^2 + \rho gh_2,\nonumber\]</div>
+<p class="prose">where the subscripts 1 and 2 refer to the initial conditions at ground level and the final conditions inside the nozzle, respectively. We must first find the speeds \(v_1\) and \(v_2\). Since \(Q = A_1v_1\), we get</p>
+<div class="math-display">\[\begin{align*}v_1 &= \dfrac{Q}{A_1} \\[5pt] &= \dfrac{40.0 \times 10^{-3} m^3/s}{\pi(3.20 \times 10^{-2} m)^2} \\[5pt] &= 12.4 \, m/s. \end{align*}\]</div>
+<div class="math-display">\[v_2 = 56.6 \, m/s.\nonumber\]</div>
+<p class="prose">(This rather large speed is helpful in reaching the fire.) Now, taking \(h_1\) to be zero, we solve Bernoulli’s equation for \(P_2\):</p>
+<div class="math-display">\[P_2 = P_1 + \dfrac{1}{2}\rho(v_1^2 - v_2^2) - \rho gh_2. \nonumber\]</div>
+<p class="prose">Substituting known values yields</p>
+<div class="math-display">\[\begin{align*} P_2 &= 1.62 \times 10^6 N/m^2 + \dfrac{1}{2}(1000 \, kg/m^3)[(12.4 \, m/s)^2 - (56.6 \, m/s)^2] - (1000 \, kg/m^3)(9.80 m/s^2)(10.0 \, m) \\[5pt] &= 0 \end{align*}\]</div>
+<p class="prose">This value is a gauge pressure, since the initial pressure was given as a gauge pressure. Thus the nozzle pressure equals atmospheric pressure, as it must because the water exits into the atmosphere without changes in its conditions.</p>
+</div></div>
+<div class="sh2">Power in Fluid Flow</div>
+<p class="prose">Power is therateat which work is done or energy in any form is used or supplied. To see the relationship of power to fluid flow, consider Bernoulli’s equation:</p>
+<div class="math-display">\[P + \dfrac{1}{2}\rho v^2 + \rho gh = constant.\]</div>
+<p class="prose">All three terms have units of energy per unit volume, as discussed in the previous section. Now, considering units, if we multiply energy per unit volume by flow rate (volume per unit time), we get units of power. That is \((E/V)(V/t) = E/t\). This means that if we multiply Bernoulli’s equation by flow rate \(Q\), we get power. In equation form, this is</p>
+<div class="math-display">\[\left(P + \dfrac{1}{2}\rho v^2 + \rho gh \right)Q = power.\]</div>
+<p class="prose">Each term has a clear physical meaning. For example, \(PQ\) is the power supplied to a fluid, perhaps by a pump, to give it its pressure \(P\). Similarly, \(\frac{1}{2}\rho v^2Q\) is the power supplied to a fluid to give it its kinetic energy. And \(\rho ghQ\) is the power going to gravitational potential energy.</p>
+<p class="prose">Making Connections: Power</p>
+<p class="prose">Power is defined as the rate of energy transferred, or \(E/t\). Fluid flow involves several types of power. Each type of power is identified with a specific type of energy being expended or changed in form.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Power in a Moving Fluid</span></div><div class="example-body">
+<p class="prose">Suppose the fire hose in the previous example is fed by a pump that receives water through a hose with a 6.40-cm diameter coming from a hydrant with a pressure of \(0.700 \times 10^6 \, N/m^2\). What power does the pump supply to the water?</p>
+<p class="prose">Here we must consider energy forms as well as how they relate to fluid flow. Since the input and output hoses have the same diameters and are at the same height, the pump does not change the speed of the water nor its height, and so the water’s kinetic energy and gravitational potential energy are unchanged. That means the pump only supplies power to increase water pressure by \(0.92 \times 10^6 \, N/m^2\) (from \(0.700 \times 10^6 \, N/m^2 \) to \(1.62 \times 10^6 \, N/m^2)\).</p>
+<p class="prose">As discussed above, the power associated with pressure is</p>
+<div class="math-display">\[\begin{align*} power &= PQ \\[5pt] &= (0.920 \times 10^6 \, N/m^2)(40.0 \times 10^{-3} m^3/s).\\[5pt] &= 3.68 \times 10^4 \, W \\[5pt] &= 36.8 \, kW \end{align*} \]</div>
+<p class="prose">Such a substantial amount of power requires a large pump, such as is found on some fire trucks. (This kilowatt value converts to about 50 hp.) The pump in this example increases only the water’s pressure. If a pump—such as the heart—directly increases velocity and height as well as pressure, we would have to calculate all three terms to find the power it supplies.</p>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: PowerPower is defined as the rate of energy transferred, or \(E/t\). Fluid flow involves several types of power. Each type of power is identified with a specific type of energy being expended or changed in form.</div></div></div>
+</div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 12.03. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Based on Poiseuille’s law, explain why a relatively small amount of plaque buildup in a coronary artery has such a disproportionately large impact on the heart's ability to receive oxygenated blood compared to a similar reduction in vessel length.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 12.03 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">If water falls from a height of 5.0 meters through a pipe at the bottom of a reservoir, what is its emerging speed, assuming negligible resistance?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5.0 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>7.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>9.9 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>49 m/s</li>
+</ul><div class="qexp">Using Torricelli’s theorem, $v = \sqrt{2gh} = \sqrt{2 \cdot 9.8 \cdot 5.0} \approx 9.9 m/s$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">When water exits a fire hose nozzle into the atmosphere, what must the absolute pressure of the water be at the exact point of exit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Zero</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Double the gauge pressure</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Dependent on the nozzle's radius</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Equal to atmospheric pressure</li>
+</ul><div class="qexp">Once the fluid emerges into the atmosphere, it is surrounded by the atmosphere and its absolute pressure must equal atmospheric pressure.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What term is used to describe smooth fluid flow in layers that do not mix?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Laminar flow</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Turbulent flow</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Viscous flow</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Entrained flow</li>
+</ul><div class="qexp">Laminar flow is characterized by smooth, non-mixing layers of fluid following continuous streamlines.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">According to Poiseuille's law, if the radius of a tube is doubled while all other factors remain constant, the resistance to flow (R) will:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Decrease by a factor of 2</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Decrease by a factor of 16</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Decrease by a factor of 4</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Increase by a factor of 16</li>
+</ul><div class="qexp">Resistance is inversely proportional to the fourth power of the radius ($1/r^4$), so doubling $r$ decreases resistance by $2^4 = 16$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the SI unit of the coefficient of viscosity ($\eta$)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$Pa/s$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$N \cdot m$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$Pa \cdot s$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$kg/m^3$</li>
+</ul><div class="qexp">The SI unit for viscosity is Pascal-seconds ($Pa \cdot s$), which can also be written as $N \cdot s/m^2$.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 12 · <span>Section 12.04</span></div><div class="h-title">12.4: Viscosity and Laminar Flow; Poiseuille’s Law</div><div class="h-desc">When you pour yourself a glass of juice, the liquid flows freely and quickly. But when you pour syrup on your pancakes, that liquid flows slowly and sticks to the pitcher. The difference is fluid fric...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 12.04</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define laminar flow and turbulent flow.</li>
+      <li>Explain what viscosity is.</li>
+      <li>Calculate flow and resistance with Poiseuille’s law.</li>
+      <li>Explain how pressure drops due to resistance.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">laminar</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a type of fluid flow in which layers do not mix</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 12.04</div>
+<div class="sh2">Laminar Flow and Viscosity</div>
+<p class="prose">When you pour yourself a glass of juice, the liquid flows freely and quickly. But when you pour syrup on your pancakes, that liquid flows slowly and sticks to the pitcher. The difference is fluid friction, both within the fluid itself and between the fluid and its surroundings. We call this property of fluidsviscosity. Juice has low viscosity, whereas syrup has high viscosity. In the previous sections we have considered ideal fluids with little or no viscosity. In this section, we will investigate what factors, including viscosity, affect the rate of fluid flow.</p>
+<p class="prose">The precise definition of viscosity is based onlaminar, or nonturbulent, flow. Before we can define viscosity, then, we need to define laminar flow and turbulent flow.Figureshows both types of flow.Laminarflow is characterized by the smooth flow of the fluid in layers that do not mix. Turbulent flow, orturbulence, is characterized by eddies and swirls that mix layers of fluid together.</p>
+<div class="diagram"><img src="images/ch12/fig12-10-photograph-of-smoke-rising-smoothly-for-.jpg" alt="Photograph of smoke rising smoothly for a while and then beginning to form swirls and eddies."><div class="d-cap">Photograph of smoke rising smoothly for a while and then beginning to form swirls and eddies. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Figureshows schematically how laminar and turbulent flow differ. Layers flow without mixing when flow is laminar. When there is turbulence, the layers mix, and there are significant velocities in directions other than the overall direction of flow. The lines that are shown in many illustrations are the paths followed by small volumes of fluids. These are calledstreamlines. Streamlines are smooth and continuous when flow is laminar, but break up and mix when flow is turbulent. Turbulence has two main causes. First, any obstruction or sharp corner, such as in a faucet, creates turbulence by imparting velocities perpendicular to the flow. Second, high speeds cause turbulence. The drag both between adjacent layers of fluid and between the fluid and its surroundings forms swirls and eddies, if the speed is great enough. We shall concentrate on laminar flow for the remainder of this section, leaving certain aspects of turbulence for later sections.</p>
+<div class="diagram"><img src="images/ch12/fig12-11-part-a-of-the-figure-shows-a-laminar-flo.jpg" alt="Part a of the figure shows a laminar flow on a fixed smooth surface. The different layers of the liquid are shown as different colored bands along the horizontal surface. The friction is shown to act all along the line separating two layers. The direction of flow of the fluid is toward right and the velocity is shown as v b for layers at the bottom and v t for layers on top. Part b of the figure shows turbulent flow on a surface with some obstruction. The fluid directions are horizontal on smooth path and irregular near the area of the obstruction. The velocity is v on top as well as at the bottom of the fluid."><div class="d-cap">Part a of the figure shows a laminar flow on a fixed smooth surface. The different layers of the liquid are shown as different colored bands along the horizontal surface. The friction is shown to act all along the line separating two layers. The direction of flow of the fluid is toward right and the velocity is shown as v b for layers at the bottom and v t for layers on top. Part b of the figure shows turbulent flow on a surface with some obstruction. The fluid directions are horizontal on smooth path and irregular near the area of the obstruction. The velocity is v on top as well as at the bottom of the fluid. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Making Connections: Take-Home Experiment: Go Down to the River</p>
+<p class="prose">Try dropping simultaneously two sticks into a flowing river, one near the edge of the river and one near the middle. Which one travels faster? Why?</p>
+<p class="prose">Figureshows how viscosity is measured for a fluid. Two parallel plates have the specific fluid between them. The bottom plate is held fixed, while the top plate is moved to the right, dragging fluid with it. The layer (or lamina) of fluid in contact with either plate does not move relative to the plate, and so the top layer moves at while the bottom layer remains at rest. Each successive layer from the top down exerts a force on the one below it, trying to drag it along, producing a continuous variation in speed from to 0 as shown. Care is taken to insure that the flow is laminar; that is, the layers do not mix. The motion inFigureis like a continuous shearing motion. Fluids have zero shear strength, but therateat which they are sheared is related to the same geometrical factors \(A\) and \(L\) as is shear deformation for solids.</p>
+<div class="diagram"><img src="images/ch12/fig12-12-the-figure-shows-the-laminar-flow-of-flu.jpg" alt="The figure shows the laminar flow of fluid between two rectangular plates each of area A. The bottom plate is shown as fixed. The distance between the plates is L. The top plate is shown to be pushed to right with a force F. The direction of movement of the layer of fluid in contact with the top plate is also toward right with velocity v. The fluid in contact with the plate in the bottom is shown to be in rest with v equals zero. As we see through the layers above the one on the bottom plate, each show a small displacement toward right in increasing order of value with the topmost layer showing the maximum."><div class="d-cap">The figure shows the laminar flow of fluid between two rectangular plates each of area A. The bottom plate is shown as fixed. The distance between the plates is L. The top plate is shown to be pushed to right with a force F. The direction of movement of the layer of fluid in contact with the top plate is also toward right with velocity v. The fluid in contact with the plate in the bottom is shown to be in rest with v equals zero. As we see through the layers above the one on the bottom plate, each show a small displacement toward right in increasing order of value with the topmost layer showing the maximum. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A force \(F\) is required to keep the top plate inFiguremoving at a constant velocity \(v\), and experiments have shown that this force depends on four factors. First, \(F\) is directly proportional to \(v\) (until the speed is so high that turbulence occurs—then a much larger force is needed, and it has a more complicated dependence on \(v\)). Second, \(F\) is proportional to the area \(A\) of the plate. This relationship seems reasonable, since \(A\) is directly proportional to the amount of fluid being moved. Third, \(F\) is inversely proportional to the distance between the plates \(L\). This relationship is also reasonable, \(L\) is like a lever arm, and the greater the lever arm, the less force that is needed. Fourth, \(F\) is directly proportional tothe coefficient of viscosity, \(\eta\). The greater the viscosity, the greater the force required. These dependencies are combined into the equation</p>
+<div class="math-display">\[F = \eta \dfrac{\nu A}{L},\]</div>
+<p class="prose">which gives us a working definition of fluidviscosity \(\eta\). Solving for \(\eta\) gives</p>
+<div class="math-display">\[\eta = \dfrac{FL}{\nu A},\]</div>
+<p class="prose">which defines viscosity in terms of how it is measured. The SI unit of viscosity is</p>
+<p class="prose">\[N \cdot m/[(m/s)m^2] = (N/m^2)s \, or \, Pa \cdot s\),Tablelists the coefficients of viscosity for various fluids.</p>
+<p class="prose">Viscosity varies from one fluid to another by several orders of magnitude. As you might expect, the viscosities of gases are much less than those of liquids, and these viscosities are often temperature dependent. The viscosity of blood can be reduced by aspirin consumption, allowing it to flow more easily around the body. (When used over the long term in low doses, aspirin can help prevent heart attacks, and reduce the risk of blood clotting.)</p>
+<div class="sh2">Laminar Flow Confined to Tubes—Poiseuille’s Law</div>
+<p class="prose">What causes flow? The answer, not surprisingly, is pressure difference. In fact, there is a very simple relationship between horizontal flow and pressure. Flow rate \(Q\) is in the direction from high to low pressure. The greater the pressure differential between two points, the greater the flow rate. This relationship can be stated as</p>
+<div class="math-display">\[Q = \dfrac{P_2 - P_1}{R},\]</div>
+<p class="prose">where \(P_1\) and \(P_2\) are the pressures at two points, such as at either end of a tube, and \(R\) is the resistance to flow. The resistance \(R\) includes everything, except pressure, that affects flow rate. For example, \(R\) is greater for a long tube than for a short one. The greater the viscosity of a fluid, the greater the value of \(R\). Turbulence greatly increases \(R\), whereas increasing the diameter of a tube decreases \(R\).</p>
+<p class="prose">If viscosity is zero, the fluid is frictionless and the resistance to flow is also zero. Comparing frictionless flow in a tube to viscous flow, as inFigure, we see that for a viscous fluid, speed is greatest at midstream because of drag at the boundaries. We can see the effect of viscosity in a Bunsen burner flame, even though the viscosity of natural gas is small.</p>
+<p class="prose">The resistance \(R\) to laminar flow of an incompressible fluid having viscosity \(\eta\) through a horizontal tube of uniform radius \(r\) and length \(l\) such as the one inFigure, is given by</p>
+<div class="math-display">\[R = \dfrac{8\eta l}{\pi r^4}.\]</div>
+<p class="prose">This equation is calledPoiseuille’s law for resistanceafter the French scientist J. L. Poiseuille (1799–1869), who derived it in an attempt to understand the flow of blood, an often turbulent fluid.</p>
+<div class="diagram"><img src="images/ch12/fig12-13-part-a-of-the-diagram-shows-a-fluid-flow.jpg" alt="Part a of the diagram shows a fluid flow across a rectangular non viscous medium. The speed of the fluid is shown to be same across the tube represented as same length of vertical rising arrows. Part b of the diagram shows a fluid flow across a rectangular viscous medium. The speed of the fluid speed at the walls is zero, increasing steadily to its maximum at the center of the tube represented as wave like variation for length of vertical rising arrows. Part c of the figure shows a burning Bunsen burner."><div class="d-cap">Part a of the diagram shows a fluid flow across a rectangular non viscous medium. The speed of the fluid is shown to be same across the tube represented as same length of vertical rising arrows. Part b of the diagram shows a fluid flow across a rectangular viscous medium. The speed of the fluid speed at the walls is zero, increasing steadily to its maximum at the center of the tube represented as wave like variation for length of vertical rising arrows. Part c of the figure shows a burning Bunsen burner. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Let us examine Poiseuille’s expression for \(R\) to see if it makes good intuitive sense. We see that resistance is directly proportional to both fluid viscosity \(\eta\) and the length \(l\) of a tube. After all, both of these directly affect the amount of friction encountered—the greater either is, the greater the resistance and the smaller the flow. The radius \(r\) of a tube affects the resistance, which again makes sense, because the greater the radius, the greater the flow (all other factors remaining the same). But it is surprising that \(r\) is raised to thefourthpower in Poiseuille’s law. This exponent means that any change in the radius of a tube has a very large effect on resistance. For example, doubling the radius of a tube decreases resistance by a factor of \(2^4 = 16\).</p>
+<p class="prose">Taken together, \(Q = \frac{P_2 - P_1}{R}\) and \(R = \frac{8\eta l}{\pi r^4}\) give the following expression for flow rate:</p>
+<div class="math-display">\[Q = \dfrac{(P_2 - P_1)\pi r^4}{8\eta l}.\]</div>
+<p class="prose">This equation describes laminar flow through a tube. It is sometimes called Poiseuille’s law for laminar flow, or simplyPoiseuille’s law.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Using Flow Rate: Plaque Deposits Reduce Blood Flow</span></div><div class="example-body">
+<p class="prose">Suppose the flow rate of blood in a coronary artery has been reduced to half its normal value by plaque deposits. By what factor has the radius of the artery been reduced, assuming no turbulence occurs?</p>
+<p class="prose">Assuming laminar flow, Poiseuille’s law states that</p>
+<div class="math-display">\[Q = \dfrac{(P_2 - P_1)\pi r^4}{8\eta l}.\]</div>
+<p class="prose">We need to compare the artery radius before and after the flow rate reduction.</p>
+<p class="prose">With a constant pressure difference assumed and the same length and viscosity, along the artery we have</p>
+<div class="math-display">\[\dfrac{Q_1}{r_1^4} = \dfrac{Q_2}{r_2^4}\]</div>
+<p class="prose">So, given that \(Q_2 = 0.5Q_1\), we find that \(r_2^4 = 0.5r_1^4\).</p>
+<p class="prose">Therefore, \(r_2 = (0.5)^{0.25}r_1\) a decrease in the artery radius of 16%.</p>
+<p class="prose">This decrease in radius is surprisingly small for this situation. To restore the blood flow in spite of this buildup would require an increase in the pressure difference \((P_2 - P_1)\) of a factor of two, with subsequent strain on the heart.</p>
+<table class="dt">
+<tr><th>Fluid</th><th>Temperature (ºC)</th><th>Viscosity(mPa⋅s)</th></tr>
+<tr><td>Gases</td><td></td><td></td></tr>
+<tr><td>Air</td><td>0</td><td>0.0171</td></tr>
+<tr><td></td><td>20</td><td>0.0181</td></tr>
+<tr><td></td><td>40</td><td>0.0190</td></tr>
+<tr><td></td><td>100</td><td>0.0218</td></tr>
+<tr><td>Ammonia</td><td>20</td><td>0.00974</td></tr>
+<tr><td>Carbon dioxide</td><td>20</td><td>0.0147</td></tr>
+<tr><td>Helium</td><td>20</td><td>0.0196</td></tr>
+<tr><td>Hydrogen</td><td>0</td><td>0.0090</td></tr>
+<tr><td>Mercury</td><td>20</td><td>0.0450</td></tr>
+<tr><td>Oxygen</td><td>20</td><td>0.0203</td></tr>
+<tr><td>Steam</td><td>100</td><td>0.0130</td></tr>
+<tr><td>Liquids</td><td></td><td></td></tr>
+<tr><td>Water</td><td>0</td><td>1.792</td></tr>
+<tr><td></td><td>20</td><td>1.002</td></tr>
+<tr><td></td><td>37</td><td>0.6947</td></tr>
+<tr><td></td><td>40</td><td>0.653</td></tr>
+<tr><td></td><td>100</td><td>0.282</td></tr>
+<tr><td>Whole blood1</td><td>20</td><td>3.015</td></tr>
+<tr><td></td><td>37</td><td>2.084</td></tr>
+<tr><td>Blood plasma2</td><td>20</td><td>1.810</td></tr>
+<tr><td></td><td>37</td><td>1.257</td></tr>
+<tr><td>Ethyl alcohol</td><td>20</td><td>1.20</td></tr>
+<tr><td>Methanol</td><td>20</td><td>0.584</td></tr>
+<tr><td>Oil (heavy machine)</td><td>20</td><td>660</td></tr>
+<tr><td>Oil (motor, SAE 10)</td><td>30</td><td>200</td></tr>
+<tr><td>Oil (olive)</td><td>20</td><td>138</td></tr>
+<tr><td>Glycerin</td><td>20</td><td>1500</td></tr>
+<tr><td>Honey</td><td>20</td><td>2000–10000</td></tr>
+<tr><td>Maple Syrup</td><td>20</td><td>2000–3000</td></tr>
+<tr><td>Milk</td><td>20</td><td>3.0</td></tr>
+<tr><td>Oil (Corn)</td><td>20</td><td>65</td></tr>
+</table>
+<p class="prose">The circulatory system provides many examples of Poiseuille’s law in action—with blood flow regulated by changes in vessel size and blood pressure. Blood vessels are not rigid but elastic. Adjustments to blood flow are primarily made by varying the size of the vessels, since the resistance is so sensitive to the radius. During vigorous exercise, blood vessels are selectively dilated to important muscles and organs and blood pressure increases. This creates both greater overall blood flow and increased flow to specific areas. Conversely, decreases in vessel radii, perhaps from plaques in the arteries, can greatly reduce blood flow. If a vessel’s radius is reduced by only 5% (to 0.95 of its original value), the flow rate is reduced to about \((0.95)^4 = 0.81\) of its original value. A 19% decrease in flow is caused by a 5% decrease in radius. The body may compensate by increasing blood pressure by 19%, but this presents hazards to the heart and any vessel that has weakened walls. Another example comes from automobile engine oil. If you have a car with an oil pressure gauge, you may notice that oil pressure is high when the engine is cold. Motor oil has greater viscosity when cold than when warm, and so pressure must be greater to pump the same amount of cold oil.</p>
+<div class="diagram"><img src="images/ch12/fig12-14-the-figure-shows-a-section-of-a-cylindri.jpg" alt="The figure shows a section of a cylindrical tube of length l. The two end cross section are shown to have pressure P two and P one respectively. The radius of the cylindrical tube is given by r. The direction of flow is shown by horizontal arrows toward right end of the tube. The flow rate is marked as Q."><div class="d-cap">The figure shows a section of a cylindrical tube of length l. The two end cross section are shown to have pressure P two and P one respectively. The radius of the cylindrical tube is given by r. The direction of flow is shown by horizontal arrows toward right end of the tube. The flow rate is marked as Q. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : What Pressure Produces This Flow Rate?</span></div><div class="example-body">
+<p class="prose">An intravenous (IV) system is supplying saline solution to a patient at the rate of \(0.120 \, cm^3/s\) through a needle of radius 0.150 mm and length 2.50 cm. What pressure is needed at the entrance of the needle to cause this flow, assuming the viscosity of the saline solution to be the same as that of water? The gauge pressure of the blood in the patient’s vein is 8.00 mm Hg. (Assume that the temperature is \(20^o \, C\).</p>
+<p class="prose">Assuming laminar flow, Poiseuille’s law applies. This is given by</p>
+<div class="math-display">\[Q = \dfrac{(P_2 - P_1)\pi r^4}{8\eta l},\]</div>
+<p class="prose">where \(P_2\) is the pressure at the entrance of the needle and \(P_1\) is the pressure in the vein. The only unknown is \(P_2\).</p>
+<p class="prose">Solving for \(P_2\) yields</p>
+<div class="math-display">\[P_2 = \dfrac{8\eta l}{\pi r^4}Q + P_1\]</div>
+<div class="math-display">\[ P_2 = \left[ \dfrac{8(1.00 \times 10^{-3} N\cdot s/m^2)(2.50 \times 10^{-2}m)}{\pi (0.150 \times 10^{-3} \, m^4)} \right] (1.20 \times 10^{-7} \, m^3/s) + 1.066 \times 10^3 \, N/m^2 \]</div>
+<div class="math-display">\[= 1.62 \times 10^4 \, N/m^2\]</div>
+<p class="prose">This pressure could be supplied by an IV bottle with the surface of the saline solution 1.61 m above the entrance to the needle (this is left for you to solve in this chapter’s Problems and Exercises), assuming that there is negligible pressure drop in the tubing leading to the needle.</p>
+</div></div>
+<div class="sh2">Flow and Resistance as Causes of Pressure Drops</div>
+<p class="prose">You may have noticed that water pressure in your home might be lower than normal on hot summer days when there is more use. This pressure drop occurs in the water main before it reaches your home. Let us consider flow through the water main as illustrated in Figure . We can understand why the pressure \(P_1\) to the home drops during times of heavy use by rearranging</p>
+<p class="prose">\[ Q = \dfrac{P_2 - P_1}{R}\] to</p>
+<p class="prose">where, in this case, \(P_2\) is the pressure at the water works and \(R\) is the resistance of the water main. During times of heavy use, the flow rate \(Q\) is large. This means that \(P_2 - P_1 = RQ\) is valid for both laminar and turbulent flows.</p>
+<div class="diagram"><img src="images/ch12/fig12-15-figure-shows-the-water-distribution-syst.jpg" alt="Figure shows the water distribution system from a water works to homes around that area. The pressure at the pipeline near the water works is shown to have a pressure P two and the pressure at the dividing point were the pipe line splits to corresponding houses the pressure is shown as P one."><div class="d-cap">Figure shows the water distribution system from a water works to homes around that area. The pressure at the pipeline near the water works is shown to have a pressure P two and the pressure at the dividing point were the pipe line splits to corresponding houses the pressure is shown as P one. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We can use \(P_2 - P_1 = RQ\) to analyze pressure drops occurring in more complex systems in which the tube radius is not the same everywhere. Resistance will be much greater in narrow places, such as an obstructed coronary artery. For a given flow rate \(Q\), the pressure drop will be greatest where the tube is most narrow. This is how water faucets control flow. Additionally, \(R\) is greatly increased by turbulence, and a constriction that creates turbulence greatly reduces the pressure downstream. Plaque in an artery reduces pressure and hence flow, both by its resistance and by the turbulence it creates.</p>
+<p class="prose">Figure is a schematic of the human circulatory system, showing average blood pressures in its major parts for an adult at rest. Pressure created by the heart’s two pumps, the right and left ventricles, is reduced by the resistance of the blood vessels as the blood flows through them. The left ventricle increases arterial blood pressure that drives the flow of blood through all parts of the body except the lungs. The right ventricle receives the lower pressure blood from two major veins and pumps it through the lungs for gas exchange with atmospheric gases – the disposal of carbon dioxide from the blood and the replenishment of oxygen. Only one major organ is shown schematically, with typical branching of arteries to ever smaller vessels, the smallest of which are the capillaries, and rejoining of small veins into larger ones. Similar branching takes place in a variety of organs in the body, and the circulatory system has considerable flexibility in flow regulation to these organs by the dilation and constriction of the arteries leading to them and the capillaries within them. The sensitivity of flow to tube radius makes this flexibility possible over a large range of flow rates.</p>
+<div class="diagram"><img src="images/ch12/fig12-16-figure-is-a-schematic-diagram-of-the-cir.jpg" alt="Figure is a schematic diagram of the circulatory system. The lungs, heart, arteries and vein systems are shown. The blood is shown to flow from the left atrium through the arteries, then through the veins and back to the right atrium. The flow is also shown from right atrium to the lungs and from lungs back to left atrium. All parts of the system are labeled. Pressure various points of the system all along the movement of blood across various parts are also marked."><div class="d-cap">Figure is a schematic diagram of the circulatory system. The lungs, heart, arteries and vein systems are shown. The blood is shown to flow from the left atrium through the arteries, then through the veins and back to the right atrium. The flow is also shown from right atrium to the lungs and from lungs back to left atrium. All parts of the system are labeled. Pressure various points of the system all along the movement of blood across various parts are also marked. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Each branching of larger vessels into smaller vessels increases the total cross-sectional area of the tubes through which the blood flows. For example, an artery with a cross section of \(1 \, cm^2\) may branch into 20 smaller arteries, each with cross sections of \(0.5 \, cm^2\), with a total of \(10 \, cm^2\) In that manner, the resistance of the branchings is reduced so that pressure is not entirely lost. Moreover, because \(Q = A \overline{v}\) and \(A\) increases through branching, the average velocity of the blood in the smaller vessels is reduced. The blood velocity in the aorta \((diameter = 1 \, cm)\) is about 25 cm/s, while in the capillaries (\(20 \, \mu m\) in diameter) the velocity is about 1 mm/s. This reduced velocity allows the blood to exchange substances with the cells in the capillaries and alveoli in particular.</p>
+<div class="sh2">Section Summary</div>
+<div class="sh3">Footnotes</div>
+<p class="prose">1 The ratios of the viscosities of blood to water are nearly constant between 0°C and 37°</p>
+<p class="prose">2. See note on Whole Blood.</p>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Take-Home Experiment: Go Down to the RiverTry dropping simultaneously two sticks into a flowing river, one near the edge of the river and one near the middle. Which one travels faster? Why?</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 12.04. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">During vigorous exercise, the body selectively dilates blood vessels leading to active skeletal muscles; explain the relationship between vessel radius, resistance, and flow rate that allows the body to prioritize blood delivery to these specific tissues.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 12.04 Quiz</h3><p>5 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In both laminar and turbulent flow, the pressure drop ($P_2 - P_1$) across a pipe is equal to the product of the resistance (R) and what other quantity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Fluid density</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Vessel length</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Velocity squared</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Flow rate (Q)</li>
+</ul><div class="qexp">The relationship $P_2 - P_1 = RQ$ describes how pressure drops due to resistance and flow rate.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">If a blood vessel's radius is reduced by 5% due to plaque (to 0.95 of its original value), by what percentage is the flow rate reduced, assuming constant pressure?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>19%</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5%</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25%</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>95%</li>
+</ul><div class="qexp">Flow rate is proportional to $r^4$; since $(0.95)^4 \approx 0.81$, the flow is 81% of original, which is a 19% reduction.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why is the average velocity of blood in the capillaries much lower (about 1 mm/s) than in the aorta (about 25 cm/s)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Capillaries are much longer than the aorta.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The total cross-sectional area of all capillaries is much larger than that of the aorta.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Blood is more viscous in the capillaries.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The pressure is higher in the capillaries.</li>
+</ul><div class="qexp">Although individual capillaries are tiny, the massive number of them creates a huge total cross-sectional area, which decreases velocity via $Q = Av$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">How do airplane wings generate lift according to Bernoulli's principle?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The wing pushes air upward, creating a reaction force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Air flows slower over the top, increasing pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Air flows faster over the longer top surface, reducing pressure.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The wing creates turbulence that pulls it upward.</li>
+</ul><div class="qexp">The characteristic aerofoil shape causes air to move faster over the top surface than the bottom, leading to lower pressure on top and a net upward lift.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which term in the expanded power equation $(P + \frac{1}{2}\rho v^2 + \rho gh)Q$ represents the power supplied to give the fluid its kinetic energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$PQ$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$\rho ghQ$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$\frac{1}{2}mv^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$\frac{1}{2}\rho v^2 Q$</li>
+</ul><div class="qexp">This term represents the kinetic energy per unit volume multiplied by the volume flow rate, yielding power.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 12</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 12: Fluid Dynamics.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>12.01</strong></td><td>12.1: Flow Rate and Its Relation to Velocity</td></tr>
+    <tr><td><strong>12.02</strong></td><td>12.2: Bernoulli’s Equation</td></tr>
+    <tr><td><strong>12.03</strong></td><td>12.3: The Most General Applications of Bernoulli’s Equation</td></tr>
+    <tr><td><strong>12.04</strong></td><td>12.4: Viscosity and Laminar Flow; Poiseuille’s Law</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 100 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 12 Practice Test</h3><p>20 questions · All OpenStax Review Questions</p></div></div><div id="q5">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 20 review questions from OpenStax College Physics, Chapter 12. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the standard SI unit for flow rate (Q)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$m^3/s$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$L/min$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$cm^3/s$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$m/s$</li>
+</ul><div class="qexp">Flow rate is defined as volume per unit time, so its SI unit is cubic meters per second.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A garden hose with a radius of 0.900 cm has a flow rate of 0.500 L/s. What is the average speed of the water in the hose?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.50 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.96 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25.5 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>196 m/s</li>
+</ul><div class="qexp">Using $v = Q/A$, where $Q = 5.00 \times 10^{-4} m^3/s$ and $A = \pi(0.009 m)^2$, the velocity is approximately 1.96 m/s.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">According to the equation of continuity, what happens to the speed of an incompressible fluid when it flows from a narrow pipe into a wider reservoir?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The speed increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The speed remains constant.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The speed decreases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed becomes zero.</li>
+</ul><div class="qexp">Since the product of area and velocity must remain constant ($A_1v_1 = A_2v_2$), increasing the cross-sectional area causes the speed to decrease.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why is blowing out a candle more effective when you purse your lips compared to when your mouth is wide open?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pursing your lips increases the pressure of the air.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Pursing your lips increases the volume of air delivered.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pursing your lips decreases the viscosity of the air.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Pursing your lips decreases the exit area, which significantly increases the air speed.</li>
+</ul><div class="qexp">By the equation of continuity, reducing the cross-sectional area of the opening causes the fluid velocity to increase significantly.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Bernoulli’s principle is a special case of Bernoulli’s equation that specifically applies to fluids at:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Constant depth</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Constant pressure</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Zero velocity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Constant temperature</li>
+</ul><div class="qexp">Bernoulli’s principle refers to the relationship where pressure drops as speed increases for a fluid at a constant height ($h_1 = h_2$).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">In Bernoulli's equation, every term in the sum ($P + \frac{1}{2}\rho v^2 + \rho gh$) can be expressed in which of the following units?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Force per unit mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Energy per unit volume</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Power per unit area</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Momentum per unit time</li>
+</ul><div class="qexp">All terms in Bernoulli's equation have units of pressure ($N/m^2$), which is dimensionally equivalent to energy per unit volume ($J/m^3$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">When a car passes a large truck on the highway, why does the car tend to veer toward the truck?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The air between them is compressed, increasing the pressure.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The air between them moves slower, increasing the pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The air between them moves faster, creating a region of lower pressure.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The truck’s mass creates a gravitational pull on the car.</li>
+</ul><div class="qexp">High-velocity air between the vehicles creates a region of lower pressure compared to the outside, resulting in a net force pushing the vehicles together.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Which of the following describes "entrainment"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The process of layers mixing in turbulent flow.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The conservation of mass in a branching tube.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The resistance to flow caused by fluid friction.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Using reduced pressure in high-velocity fluids to move other fluids into the stream.</li>
+</ul><div class="qexp">Entrainment occurs when a high-velocity fluid creates a low-pressure area that draws another fluid into the stream, as seen in Bunsen burners or atomizers.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">According to Torricelli’s theorem, how does the size of an opening in a dam affect the speed at which water emerges?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The emerging speed is independent of the size of the opening.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Larger openings result in higher emerging speeds.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Smaller openings result in higher emerging speeds.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed is proportional to the square of the opening's radius.</li>
+</ul><div class="qexp">If resistance is negligible, the speed $v = \sqrt{2gh}$ depends only on the depth of the opening below the surface, not the size of the opening itself.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">In the study of power in fluid flow, what does the product of pressure and flow rate ($PQ$) represent?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Power supplied to overcome gravity.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Power supplied to a fluid to give it its pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Power lost due to viscosity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Power supplied to increase kinetic energy.</li>
+</ul><div class="qexp">Multiplying the pressure (energy per unit volume) by the flow rate (volume per unit time) gives the power associated with the pressure of the fluid.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">If water falls from a height of 5.0 meters through a pipe at the bottom of a reservoir, what is its emerging speed, assuming negligible resistance?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5.0 m/s</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>7.0 m/s</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>9.9 m/s</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>49 m/s</li>
+</ul><div class="qexp">Using Torricelli’s theorem, $v = \sqrt{2gh} = \sqrt{2 \cdot 9.8 \cdot 5.0} \approx 9.9 m/s$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">When water exits a fire hose nozzle into the atmosphere, what must the absolute pressure of the water be at the exact point of exit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Zero</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Double the gauge pressure</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Dependent on the nozzle's radius</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Equal to atmospheric pressure</li>
+</ul><div class="qexp">Once the fluid emerges into the atmosphere, it is surrounded by the atmosphere and its absolute pressure must equal atmospheric pressure.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">What term is used to describe smooth fluid flow in layers that do not mix?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Laminar flow</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Turbulent flow</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Viscous flow</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Entrained flow</li>
+</ul><div class="qexp">Laminar flow is characterized by smooth, non-mixing layers of fluid following continuous streamlines.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">According to Poiseuille's law, if the radius of a tube is doubled while all other factors remain constant, the resistance to flow (R) will:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Decrease by a factor of 2</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Decrease by a factor of 16</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Decrease by a factor of 4</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Increase by a factor of 16</li>
+</ul><div class="qexp">Resistance is inversely proportional to the fourth power of the radius ($1/r^4$), so doubling $r$ decreases resistance by $2^4 = 16$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">What is the SI unit of the coefficient of viscosity ($\eta$)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$Pa/s$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$N \cdot m$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$Pa \cdot s$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$kg/m^3$</li>
+</ul><div class="qexp">The SI unit for viscosity is Pascal-seconds ($Pa \cdot s$), which can also be written as $N \cdot s/m^2$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">In both laminar and turbulent flow, the pressure drop ($P_2 - P_1$) across a pipe is equal to the product of the resistance (R) and what other quantity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Fluid density</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Vessel length</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Velocity squared</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Flow rate (Q)</li>
+</ul><div class="qexp">The relationship $P_2 - P_1 = RQ$ describes how pressure drops due to resistance and flow rate.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">If a blood vessel's radius is reduced by 5% due to plaque (to 0.95 of its original value), by what percentage is the flow rate reduced, assuming constant pressure?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>19%</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>5%</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>25%</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>95%</li>
+</ul><div class="qexp">Flow rate is proportional to $r^4$; since $(0.95)^4 \approx 0.81$, the flow is 81% of original, which is a 19% reduction.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">Why is the average velocity of blood in the capillaries much lower (about 1 mm/s) than in the aorta (about 25 cm/s)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Capillaries are much longer than the aorta.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The total cross-sectional area of all capillaries is much larger than that of the aorta.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Blood is more viscous in the capillaries.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The pressure is higher in the capillaries.</li>
+</ul><div class="qexp">Although individual capillaries are tiny, the massive number of them creates a huge total cross-sectional area, which decreases velocity via $Q = Av$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">19</span><span class="qt-inner">How do airplane wings generate lift according to Bernoulli's principle?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The wing pushes air upward, creating a reaction force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Air flows slower over the top, increasing pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Air flows faster over the longer top surface, reducing pressure.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The wing creates turbulence that pulls it upward.</li>
+</ul><div class="qexp">The characteristic aerofoil shape causes air to move faster over the top surface than the bottom, leading to lower pressure on top and a net upward lift.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which term in the expanded power equation $(P + \frac{1}{2}\rho v^2 + \rho gh)Q$ represents the power supplied to give the fluid its kinetic energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$PQ$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$\rho ghQ$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$\frac{1}{2}mv^2$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$\frac{1}{2}\rho v^2 Q$</li>
+</ul><div class="qexp">This term represents the kinetic energy per unit volume multiplied by the volume flow rate, yielding power.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 20 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Fluid Dynamics',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:6,lessonCount:5,cpMin:80,lessons:['Overview','12.01 12.1: Flow Rate and Its Relation to Velocity','12.02 12.2: Bernoulli’s Equation','12.03 12.3: The Most General Applications of Bernoulli’s Equation','12.04 12.4: Viscosity and Laminar Flow; Poiseuille’s Law','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===5?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

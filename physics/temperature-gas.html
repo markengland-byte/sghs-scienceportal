@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Temperature, Kinetic Theory, and Gas Laws | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🌡️</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Temperature, Kinetic Theory, and Gas Laws</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🌡️</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Temperature, Kinetic Theory, and Gas Laws</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 13 · <span>Overview</span></div><div class="h-title">Temperature, Kinetic Theory, and Gas Laws</div><div class="h-desc">Heat is something familiar to each of us. We feel the warmth of the summer Sun, the chill of a clear summer night, the heat of coffee after a winter stroll, and the cooling effect of our sweat. Heat transfer is maintained by temperature differences. Manifestations ofheat transfer—the movement of heat energy from one place or material to another—are apparent throughout the universe. Heat from beneath Earth’s surface is brought to the surface in flows of incandescent lava. The Sun warms Earth’s surface and is the source of much of the energy we find on it. Rising levels of atmospheric carbon dio</div>
+    <div class="h-meta"><div class="h-chip">📚 3 Lessons</div><div class="h-chip">🌡️ OpenStax College Physics Ch. 13</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 16 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 13</div><div class="cx">All content is from OpenStax College Physics, Chapter 13: Temperature, Kinetic Theory, and Gas Laws. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch13/fig13-1-photograph-of-a-welder-wearing-protectiv.jpg" alt="Photograph of a welder wearing protective gloves and helmet, engaged in the task of welding."><div class="d-cap">Photograph of a welder wearing protective gloves and helmet, engaged in the task of welding. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 3</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 13 · <span>Section 13.01</span></div><div class="h-title">13.1: Temperature</div><div class="h-desc">The concept of temperature has evolved from the common concepts of hot and cold. Human perception of what feels hot or cold is a relative one. For example, if you place one hand in hot water and the o...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 13.01</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define temperature.</li>
+      <li>Convert temperatures between the Celsius, Fahrenheit, and Kelvin scales.</li>
+      <li>Define thermal equilibrium.</li>
+      <li>State the zeroth law of thermodynamics.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">temperature</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the quantity measured by a thermometer</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 13.01</div>
+<p class="prose">The concept of temperature has evolved from the common concepts of hot and cold. Human perception of what feels hot or cold is a relative one. For example, if you place one hand in hot water and the other in cold water, and then place both hands in tepid water, the tepid water will feel cool to the hand that was in hot water, and warm to the one that was in cold water. The scientific definition of temperature is less ambiguous than your senses of hot and cold.Temperatureis operationally defined to be what we measure with a thermometer. (Many physical quantities are defined solely in terms of how they are measured. We shall see later how temperature is related to the kinetic energies of atoms and molecules, a more physical explanation.) Two accurate thermometers, one placed in hot water and the other in cold water, will show the hot water to have a higher temperature. If they are then placed in the tepid water, both will give identical readings (within measurement uncertainties). In this section, we discuss temperature, its measurement by thermometers, and its relationship to thermal equilibrium. Again, temperature is the quantity measured by a thermometer.</p>
+<p class="prose">Misconception Alert: Human Perception vs. Reality</p>
+<p class="prose">On a cold winter morning, the wood on a porch feels warmer than the metal of your bike. The wood and bicycle are in thermal equilibrium with the outside air, and are thus the same temperature. Theyfeeldifferent because of the difference in the way that they conduct heat away from your skin. The metal conducts heat away from your body faster than the wood does (see more about conductivity inConduction). This is just one example demonstrating that the human sense of hot and cold is not determined by temperature alone.</p>
+<p class="prose">Another factor that affects our perception of temperature is humidity. Most people feel much hotter on hot, humid days than on hot, dry days. This is because on humid days, sweat does not evaporate from the skin as efficiently as it does on dry days. It is the evaporation of sweat (or water from a sprinkler or pool) that cools us off.</p>
+<p class="prose">Any physical property that depends on temperature, and whose response to temperature is reproducible, can be used as the basis of a thermometer. Because many physical properties depend on temperature, the variety of thermometers is remarkable. For example, volume increases with temperature for most substances. This property is the basis for the common alcohol thermometer, the old mercury thermometer, and the bimetallic strip (Figure). Other properties used to measure temperature include electrical resistance and color, as shown inFigure, and the emission of infrared radiation, as shown inFigure.</p>
+<div class="diagram"><img src="images/ch13/fig13-3-this-figure-has-two-parts-each-of-which-.jpg" alt="This figure has two parts, each of which shows a blue metallic strip attached lengthwise to a yellow metallic strip, thus forming a bimetallic strip. In part a, the bimetallic strip is straight and oriented vertically, and its temperature is given as T sub 0. In part b, the bimetallic strip is curving rightward away from the vertical, and its temperature is given as T, which is greater than T sub 0."><div class="d-cap">This figure has two parts, each of which shows a blue metallic strip attached lengthwise to a yellow metallic strip, thus forming a bimetallic strip. In part a, the bimetallic strip is straight and oriented vertically, and its temperature is given as T sub 0. In part b, the bimetallic strip is curving rightward away from the vertical, and its temperature is given as T, which is greater than T sub 0. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch13/fig13-4-a-flat-plastic-thermometer-used-to-measu.jpg" alt="A flat plastic thermometer used to measure forehead temperature; the thermometer can measure between ninety-five and one-hundred four degrees Fahrenheit, or between thirty-five and forty degrees Celsius."><div class="d-cap">A flat plastic thermometer used to measure forehead temperature; the thermometer can measure between ninety-five and one-hundred four degrees Fahrenheit, or between thirty-five and forty degrees Celsius. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch13/fig13-5-a-man-holds-a-device-that-looks-like-a-g.jpg" alt="A man holds a device that looks like a gun or a check-out scanner up toward an air vent. A red light emanates from the device and shines on the vent."><div class="d-cap">A man holds a device that looks like a gun or a check-out scanner up toward an air vent. A red light emanates from the device and shines on the vent. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Temperature Scales</div>
+<p class="prose">Thermometers are used to measure temperature according to well-defined scales of measurement, which use pre-defined reference points to help compare quantities. The three most common temperature scales are the Fahrenheit, Celsius, and Kelvin scales. A temperature scale can be created by identifying two easily reproducible temperatures. The freezing and boiling temperatures of water at standard atmospheric pressure are commonly used.</p>
+<p class="prose">TheCelsiusscale (which replaced the slightly differentcentigradescale) has the freezing point of water at \(0^o \, C\) and the boiling point at \(100^o \, C\). Its unit is thedegree Celsius\((^oC)\). On theFahrenheitscale (still the most frequently used in the United States), the freezing point of water is at \(37^o \, F\) and the boiling point is at \(212^o \, F\). The unit of temperature on this scale is thedegree Fahrenheit \((^oF)\).Note that a temperature difference of one degree Celsius is greater than a temperature difference of one degree Fahrenheit. Only 100 Celsius degrees span the same range as 180 Fahrenheit degrees, thus one degree on the Celsius scale is 1.8 times larger than one degree on the Fahrenheit scale \(180/100 = 9/5\).</p>
+<p class="prose">TheKelvinscale is the temperature scale that is commonly used in science. It is anabsolute temperaturescale defined to have 0 K at the lowest possible temperature, calledabsolute zero. The official temperature unit on this scale is thekelvin, which is abbreviated K, and is not accompanied by a degree sign. The freezing and boiling points of water are 273.15 K and 373.15 K, respectively. Thus, the magnitude of temperature differences is the same in units of kelvins and degrees Celsius. Unlike other temperature scales, the Kelvin scale is an absolute scale. It is used extensively in scientific work because a number of physical quantities, such as the volume of an ideal gas, are directly related to absolute temperature. The kelvin is the SI unit used in scientific work.</p>
+<div class="diagram"><img src="images/ch13/fig13-6-three-temperature-scalesfahrenheit-celsi.jpg" alt="Three temperature scales—Fahrenheit, Celsius, and Kelvin—are oriented horizontally, one below the other, and aligned to show how they relate to each other. Absolute zero is at negative four hundred fifty nine point six seven degrees F, negative two hundred seventy three point one five degrees C, and 0 K. Water freezes at thirty two degrees F, 0 degrees C, and two hundred seventy three point one five K. Water boils at two hundred twelve degrees F, one hundred degrees C, and three hundred seventy three point one five K. A temperature difference of 9 degrees F is the same as a temperature difference of 5 degrees C and 5 K."><div class="d-cap">Three temperature scales—Fahrenheit, Celsius, and Kelvin—are oriented horizontally, one below the other, and aligned to show how they relate to each other. Absolute zero is at negative four hundred fifty nine point six seven degrees F, negative two hundred seventy three point one five degrees C, and 0 K. Water freezes at thirty two degrees F, 0 degrees C, and two hundred seventy three point one five K. Water boils at two hundred twelve degrees F, one hundred degrees C, and three hundred seventy three point one five K. A temperature difference of 9 degrees F is the same as a temperature difference of 5 degrees C and 5 K. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The relationships between the three common temperature scales is shown inFigure. Temperatures on these scales can be converted using the equations inTable.</p>
+<table class="dt">
+<tr><th>To convert from . . .</th><th>Use this equation . . .</th><th>Also written as . . .</th></tr>
+<tr><td>Celsius to Fahrenheit</td><td>\(T(^oF) = \frac{9}{5}T(C^o) +32\)</td><td>\(T_{^oF} = \frac{9}{5}T_{^oC} +32\)</td></tr>
+<tr><td>Fahrenheit to Celsius</td><td>\(T(^oC) = \frac{9}{5}(T(F^o) -32)\)</td><td>\(T_{^oC} = \frac{5}{9}(T_{^oF} - 32)\)</td></tr>
+<tr><td>Celsius to Kelvin</td><td>\(T(K) = T(^oC) + 273.15\)</td><td>\(T_K = T_{^oC} + 273.15\)</td></tr>
+<tr><td>Kelvin to Celsius</td><td>\(T^oC) = T(K) - 273.15\)</td><td>\(T_{^oC} = T_K - 273.15\)</td></tr>
+<tr><td>Fahrenheit to Kelvin</td><td>\(T(K) = \frac{5}{9}(T(^oF) - 32) + 273.15\)</td><td>\(T_K = \frac{5}{9}(T_{^oF} - 32) + 273.15\)</td></tr>
+<tr><td>Kelvin to Fahrenheit</td><td>\(T(^oF) = \frac{9}{5}(T(K) - 273.15) + 32\)</td><td>\(T_{^oF} = \frac{9}{5}(T_K - 273.15) + 32\)</td></tr>
+</table>
+<p class="prose">Celsius to Fahrenheit</p>
+<p class="prose">Fahrenheit to Celsius</p>
+<p class="prose">Notice that the conversions between Fahrenheit and Kelvin look quite complicated. In fact, they are simple combinations of the conversions between Fahrenheit and Celsius, and the conversions between Celsius and Kelvin.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Converting between Temperature Scales: Room Temperature</span></div><div class="example-body">
+<p class="prose">“Room temperature” is generally defined to be \(25^oC\) (a) What is room temperature in \(^oF\)? (b) What is it in K?</p>
+<p class="prose">To answer these questions, all we need to do is choose the correct conversion equations and plug in the known values.</p>
+<p class="prose">1. Choose the right equation. To convert from \(^oC\) to \(^oF\), use this equation</p>
+<div class="math-display">\[T_{^oF} = \dfrac{9}{5}T_{^oC} + 32.\]</div>
+<p class="prose">2. Plug the known value into the equation and solve:</p>
+<div class="math-display">\[T_{^oF} = \dfrac{9}{5}25^oC + 32 = 77^oF.\]</div>
+<p class="prose">1. Choose the right equation. To convert from \(^oC\) to \(K\), use this equation</p>
+<div class="math-display">\[T_K = T_{^oC} + 273.15.\]</div>
+<p class="prose">2. Plug the known value into the equation and solve:</p>
+<div class="math-display">\[T_K = 25^oC + 273.15 = 298 \, K.\]</div>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Plug the known value into the equation and solve:</span></div><div class="example-body">
+<p class="prose">The Reaumur scale is a temperature scale that was used widely in Europe in the 18th and 19th centuries. On the Reaumur temperature scale, the freezing point of water is \(0^oR\) and the boiling temperature is \(80^oR\). If “room temperature” is \(25^oC\)</p>
+<p class="prose">on the Celsius scale, what is it on the Reaumur scale?</p>
+<p class="prose">To answer this question, we must compare the Reaumur scale to the Celsius scale. The difference between the freezing point and boiling point of water on the Reaumur scale is \(80^oR.\) On the Celsius scale it is \(100^oC\). Therefore \(100^oC = 80^oR\). Both scales start at \(0^o\) for freezing, so we can derive a simple formula to convert between temperatures on the two scales.</p>
+<p class="prose">1. Derive a formula to convert from one scale to the other:</p>
+<div class="math-display">\[T_{^oR} = \dfrac{0.8^oR}{^oC} \times T_{^oC}.\]</div>
+<p class="prose">2. Plug the known value into the equation and solve:</p>
+<div class="math-display">\[T_{^oR} = \dfrac{0.8^oR}{^oC} \times 25^oC = 20^oR.\]</div>
+</div></div>
+<div class="sh2">Temperature Ranges in the Universe</div>
+<p class="prose">Figureshows the wide range of temperatures found in the universe. Human beings have been known to survive with body temperatures within a small range, from \(24^oC\) to \(44^oC \, (75^oF\) to \(111^oF)\). The average normal body temperature is usually given as \(37.0^oC \, (98.6^oF)\), and variations in this temperature can indicate a medical condition: a fever, an infection, a tumor, or circulatory problems (seeFigure).</p>
+<div class="diagram"><img src="images/ch13/fig13-7-this-figure-consists-of-four-different-i.jpg" alt="This figure consists of four different infrared thermographs of a person's head and neck, taken when the person's head was positioned at four different angles. The person's face and neck are mostly red and orange, with patches of white, green, and yellow. The red and white colors correspond to hot areas. The person's hair ranges in color from green to light blue to dark blue. The blue color corresponds to cold areas."><div class="d-cap">This figure consists of four different infrared thermographs of a person's head and neck, taken when the person's head was positioned at four different angles. The person's face and neck are mostly red and orange, with patches of white, green, and yellow. The red and white colors correspond to hot areas. The person's hair ranges in color from green to light blue to dark blue. The blue color corresponds to cold areas. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The lowest temperatures ever recorded have been measured during laboratory experiments: \(4.5 \times 10^{-10} K\) at the Massachusetts Institute of Technology (USA), and \(1.0 \times 10^{-10} K\) at Helsinki University of Technology (Finland). In comparison, the coldest recorded place on Earth’s surface is Vostok, Antarctica at 183 K \((-89^oC)\) and the coldest place (outside the lab) known in the universe is the Boomerang Nebula, with a temperature of 1 K.</p>
+<div class="diagram"><img src="images/ch13/fig13-8-the-figure-is-a-single-vertical-axis-sho.jpg" alt="The figure is a single vertical axis showing a wide range of temperatures on a logarithmic scale, measured in kelvin. The temperature range goes from the lowest temperature achieved at ten to the power of negative ten kelvin up to the temperature in experiments at the Relativistic Heavy Ion Collider at ten to the power of positive twelve kelvin."><div class="d-cap">The figure is a single vertical axis showing a wide range of temperatures on a logarithmic scale, measured in kelvin. The temperature range goes from the lowest temperature achieved at ten to the power of negative ten kelvin up to the temperature in experiments at the Relativistic Heavy Ion Collider at ten to the power of positive twelve kelvin. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Making Connections: Absolute Zero</p>
+<p class="prose">What is absolute zero? Absolute zero is the temperature at which all molecular motion has ceased. The concept of absolute zero arises from the behavior of gases.Figureshows how the pressure of gases at a constant volume decreases as temperature decreases. Various scientists have noted that the pressures of gases extrapolate to zero at the same temperature, \(-273.15^oC.\) This extrapolation implies that there is a lowest temperature. This temperature is calledabsolute zero. Today we know that most gases first liquefy and then freeze, and it is not actually possible to reach absolute zero. The numerical value of absolute zero temperature is \(-273.15^oC\) or 0K.</p>
+<div class="diagram"><img src="images/ch13/fig13-9-line-graph-of-pressure-versus-temperatur.jpg" alt="Line graph of pressure versus temperature of five gases. Each graph is linear with a positive slope. Each line extrapolates to a pressure of zero at a temperature of negative two hundred seventy three point one five degrees Celsius."><div class="d-cap">Line graph of pressure versus temperature of five gases. Each graph is linear with a positive slope. Each line extrapolates to a pressure of zero at a temperature of negative two hundred seventy three point one five degrees Celsius. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh3">Thermal Equilibrium and the Zeroth Law of Thermodynamics</div>
+<p class="prose">Thermometers actually take theirowntemperature, not the temperature of the object they are measuring. This raises the question of how we can be certain that a thermometer measures the temperature of the object with which it is in contact. It is based on the fact that any two systems placed inthermal contact(meaning heat transfer can occur between them) will reach the same temperature. That is, heat will flow from the hotter object to the cooler one until they have exactly the same temperature. The objects are then inthermal equilibrium, and no further changes will occur. The systems interact and change because their temperatures differ, and the changes stop once their temperatures are the same. Thus, if enough time is allowed for this transfer of heat to run its course, the temperature a thermometer registersdoesrepresent the system with which it is in thermal equilibrium. Thermal equilibrium is established when two bodies are in contact with each other and can freely exchange energy.</p>
+<p class="prose">Furthermore, experimentation has shown that if two systems, A and B, are in thermal equilibrium with each another, and B is in thermal equilibrium with a third system C, then A is also in thermal equilibrium with C. This conclusion may seem obvious, because all three have the same temperature, but it is basic to thermodynamics. It is called thezerothlaw of thermodynamics.</p>
+<p class="prose">The Zeroth Law of Thermodynamics</p>
+<p class="prose">If two systems, A and B, are in thermal equilibrium with each other, and B is in thermal equilibrium with a third system, C, then A is also in thermal equilibrium with C.</p>
+<p class="prose">This law was postulated in the 1930s, after the first and second laws of thermodynamics had been developed and named. It is called thezeroth lawbecause it comes logically before the first and second laws (discussed inThermodynamics). An example of this law in action is seen in babies in incubators: babies in incubators normally have very few clothes on, so to an observer they look as if they may not be warm enough. However, the temperature of the air, the cot, and the baby is the same, because they are in thermal equilibrium, which is accomplished by maintaining air temperature to keep the baby comfortable.</p>
+<p class="prose">Check Your Understanding</p>
+<p class="prose">Does the temperature of a body depend on its size</p>
+<p class="prose">No, the system can be divided into smaller parts each of which is at the same temperature. We say that the temperature is anintensivequantity. Intensive quantities are independent of size.</p>
+<div class="sh3">Section Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Misconception Alert: Human Perception vs. RealityOn a cold winter morning, the wood on a porch feels warmer than the metal of your bike. The wood and bicycle are in thermal equilibrium with the outside air, and are thus the same temperature. Theyfeeldifferent because of the difference in the way that they conduct heat away from your skin. The metal conducts heat away from your body faster than the wood does (see more about conductivity inConduction). This is just one example demonstrating that the human sense of hot and cold is not determined by temperature alone.Another factor that affects our perception of temperature is humidity. Most people feel much hotter on hot, humid days than on hot, dry days. This is because on humid days, sweat does not evaporate from the skin as efficiently as it does on dry days. It is the evaporation of sweat (or water from a sprinkler or pool) that cools us off.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Absolute ZeroWhat is absolute zero? Absolute zero is the temperature at which all molecular motion has ceased. The concept of absolute zero arises from the behavior of gases.Figureshows how the pressure of gases at a constant volume decreases as temperature decreases. Various scientists have noted that the pressures of gases extrapolate to zero at the same temperature, \(-273.15^oC.\) This extrapolation implies that there is a lowest temperature. This temperature is calledabsolute zero. Today we know that most gases first liquefy and then freeze, and it is not actually possible to reach absolute zero. The numerical value of absolute zero temperature is \(-273.15^oC\) or 0K.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 13.01. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What does it mean to say that two systems are in thermal equilibrium?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 13.01 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">If system A is in thermal equilibrium with system B, and system B is in thermal equilibrium with system C, what does the zeroth law of thermodynamics conclude about systems A and C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>System A and system C are in thermal equilibrium with each other.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>System A must be at a higher temperature than system C.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Heat will flow from system A to system C if they are placed in contact.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Systems A and C cannot be in thermal equilibrium unless B is removed.</li>
+</ul><div class="qexp">The zeroth law of thermodynamics states that if two systems are in thermal equilibrium with a third system, they are in thermal equilibrium with each other.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">On a mild day, a thermometer reads 20.0°C. What is the equivalent temperature on the Fahrenheit scale?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>36.0°F</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>68.0°F</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>52.0°F</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>93.6°F</li>
+</ul><div class="qexp">Using the formula T(°F) = (9/5)T(°C) + 32, we calculate (1.8 × 20) + 32 = 68.0°F.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why does a metal handrail feel much colder than a wooden porch post even though both are in thermal equilibrium with the outside air at 5.0°C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The metal handrail is actually at a lower temperature than the wood.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Wood has a higher coefficient of linear expansion than metal.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Metal conducts heat away from the skin much faster than wood does.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The wood has reached thermal equilibrium, but the metal has not.</li>
+</ul><div class="qexp">Human perception of temperature is influenced by heat transfer rates; metals are better conductors and remove heat from the body more efficiently than wood.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Scientific definitions describe "absolute zero" as the temperature at which:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water reaches its maximum density.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nitrogen gas liquifies at standard pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The Celsius and Fahrenheit scales provide the same numerical reading.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All molecular motion has ceased.</li>
+</ul><div class="qexp">Absolute zero (0 K or -273.15°C) is the theoretical temperature where all molecular kinetic energy and motion stop.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A patient has a body temperature of 310.15 K. What is this temperature in degrees Celsius?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>37.0°C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>98.6°C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>32.0°C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>42.0°C</li>
+</ul><div class="qexp">To convert from Kelvin to Celsius, subtract 273.15 from the Kelvin temperature (310.15 - 273.15 = 37.0°C).</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 13 · <span>Section 13.02</span></div><div class="h-title">13.2: Thermal Expansion of Solids and Liquids</div><div class="h-desc">The expansion of alcohol in a thermometer is one of many commonly encountered examples ofthermal expansion, the change in size or volume of a given mass with temperature. Hot air rises because its vol...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 13.02</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define and describe thermal expansion.</li>
+      <li>Calculate the linear expansion of an object given its initial length, change in temperature, and coefficient of linear expansion.</li>
+      <li>Calculate the volume expansion of an object given its initial volume, change in temperature, and coefficient of volume expansion.</li>
+      <li>Calculate thermal stress on an object given its original volume, temperature change, volume change, and bulk modulus.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">thermal expansion</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the change in size or volume of an object with change in temperature</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 13.02</div>
+<p class="prose">The expansion of alcohol in a thermometer is one of many commonly encountered examples ofthermal expansion, the change in size or volume of a given mass with temperature. Hot air rises because its volume increases, which causes the hot air’s density to be smaller than the density of surrounding air, causing a buoyant (upward) force on the hot air. The same happens in all liquids and gases, driving natural heat transfer upwards in homes, oceans, and weather systems. Solids also undergo thermal expansion. Railroad tracks and bridges, for example, have expansion joints to allow them to freely expand and contract with temperature changes.</p>
+<div class="diagram"><img src="images/ch13/fig13-10-figure-14-02-01jpg.jpg" alt="Figure_14_02_01.jpg"><div class="d-cap">Figure_14_02_01.jpg (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">What are the basic properties of thermal expansion? First, thermal expansion is clearly related to temperature change. The greater the temperature change, the more a bimetallic strip will bend. Second, it depends on the material. In a thermometer, for example, the expansion of alcohol is much greater than the expansion of the glass containing it.</p>
+<p class="prose">What is the underlying cause of thermal expansion? As is discussed inKinetic Theory: Atomic and Molecular Explanation of Pressure and Temperature, an increase in temperature implies an increase in the kinetic energy of the individual atoms. In a solid, unlike in a gas, the atoms or molecules are closely packed together, but their kinetic energy (in the form of small, rapid vibrations) pushes neighboring atoms or molecules apart from each other. This neighbor-to-neighbor pushing results in a slightly greater distance, on average, between neighbors, and adds up to a larger size for the whole body. For most substances under ordinary conditions, there is no preferred direction, and an increase in temperature will increase the solid’s size by a certain fraction in each dimension.</p>
+<p class="prose">Linear Thermal Expansion—Thermal Expansion in One Dimension</p>
+<p class="prose">The change in length \(\Delta L\) is proportional to length \(L\). The dependence of thermal expansion on temperature, substance, and length is summarized in the equation</p>
+<div class="math-display">\[\Delta L = \alpha L \Delta T, \label{linear}\]</div>
+<p class="prose">where \(\Delta L\) is the change in length \(L\), \(\Delta T\) is the change in temperature, and \(\alpha\) is thecoefficient of linear expansion, which varies slightly with temperature.</p>
+<p class="prose">Table lists representative values of the coefficient of linear expansion, which may have units of \(1/^oC\) or 1/K. Because the size of a kelvin and a degree Celsius are the same, both \(\alpha\) and \(\Delta T\) can be expressed in units of kelvins or degrees Celsius. The equation \(\Delta L = \alpha L \Delta T\) is accurate for small changes in temperature and can be used for large changes in temperature if an average value of \(\alpha\) is used.</p>
+<table class="dt">
+<tr><th>Material</th><th>Coefficient of linear expansion (\(\alpha (1/^oC)\))</th><th>Coefficient of volume expansion (\(\beta (1/^oC)\))</th></tr>
+<tr><td>Solids</td></tr>
+<tr><td>Aluminum</td><td>\(25 \times 10^{-6}\)</td><td>\(75 \times 10^{-6}\)</td></tr>
+<tr><td>Brass</td><td>\(19 \times 10^{-6}\)</td><td>\(56 \times 10^{-6}\)</td></tr>
+<tr><td>Copper</td><td>\(17 \times 10^{-6}\)</td><td>\(51 \times 10^{-6}\)</td></tr>
+<tr><td>Gold</td><td>\(14 \times 10^{-6}\)</td><td>\(42 \times 10^{-6}\)</td></tr>
+<tr><td>Iron or Steel</td><td>\(12 \times 10^{-6}\)</td><td>\(35 \times 10^{-6}\)</td></tr>
+<tr><td>Invar (Nickel-Iron alloy)</td><td>\(0.9 \times 10^{-6}\)</td><td>\(2.7 \times 10^{-6}\)</td></tr>
+<tr><td>Lead</td><td>\(29 \times 10^{-6}\)</td><td>\(87 \times 10^{-6}\)</td></tr>
+<tr><td>Silver</td><td>\(18 \times 10^{-6}\)</td><td>\(54 \times 10^{-6}\)</td></tr>
+<tr><td>Glass (ordinary)</td><td>\(9 \times 10^{-6}\)</td><td>\(27 \times 10^{-6}\)</td></tr>
+<tr><td>Glass (Pyrex)</td><td>\(3 \times 10^{-6}\)</td><td>\(9 \times 10^{-6}\)</td></tr>
+<tr><td>Quartz</td><td>\(0.4 \times 10^{-6}\)</td><td>\(1 \times 10^{-6}\)</td></tr>
+<tr><td>Concrete, Brick</td><td>\(\approx 12 \times 10^{-6}\)</td><td>\(\approx 36 \times 10^{-6}\)</td></tr>
+<tr><td>Marble (average)</td><td>\(7 \times 10^{-6}\)</td><td></td></tr>
+<tr><td>Liquids</td></tr>
+<tr><td>Ether</td><td>N/A</td><td>\(1650 \times 10^{-6}\)</td></tr>
+<tr><td>Ethyl alcohol</td><td>N/A</td><td>\(1100 \times 10^{-6}\)</td></tr>
+<tr><td>Petrol</td><td>N/A</td><td>\(950 \times 10^{-6}\)</td></tr>
+<tr><td>Glycerin</td><td>N/A</td><td>\(500 \times 10^{-6}\)</td></tr>
+<tr><td>Mercury</td><td>N/A</td><td>\(180 \times 10^{-6}\)</td></tr>
+<tr><td>Water</td><td>N/A</td><td>\(210 \times 10^{-6}\)</td></tr>
+<tr><td>Gases</td></tr>
+<tr><td>Air and most other gases at atm</td><td>N/A</td><td>\(3400 \times 10^{-6}\)</td></tr>
+</table>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Linear Thermal Expansion of The Golden Gate Bridge</span></div><div class="example-body">
+<p class="prose">The main span of San Francisco’s Golden Gate Bridge is 1275 m long at its coldest. The bridge is exposed to temperatures ranging from \(-15^oC\) to \(40^oC\). What is its change in length between these temperatures? Assume that the bridge is made entirely of steel.</p>
+<p class="prose">Use the equation for linear thermal expansion (Equation \ref{linear}) to calculate the change in length, \(\Delta L\). Use the coefficient of linear expansion, \(\alpha\), for steel from Table , and note that the change in temperature, \(\Delta T\), is \(55^oC\).</p>
+<p class="prose">Plug all of the known values into the equation to solve for \(\Delta L\).</p>
+<div class="math-display">\[ \begin{align*} \Delta L &= \alpha L \Delta T \\[5pt] &= \left(\dfrac{12 \times 10^{-6}}{^oC}\right) (1275 \, m)(55^oC) \\[5pt] &= 0.84 \, m \end{align*} \]</div>
+<p class="prose">Although not large compared with the length of the bridge, this change in length is observable. It is generally spread over many expansion joints so that the expansion at each joint is small.</p>
+</div></div>
+<div class="sh2">Thermal Expansion in Two and Three Dimensions</div>
+<p class="prose">Objects expand in all dimensions, as illustrated in Figure . That is, their areas and volumes, as well as their lengths, increase with temperature. Holes also get larger with temperature. If you cut a hole in a metal plate, the remaining material will expand exactly as it would if the plug was still in place. The plug would get bigger, and so the hole must get bigger too. (Think of the ring of neighboring atoms or molecules on the wall of the hole as pushing each other farther apart as temperature increases. Obviously, the ring of neighbors must get slightly larger, so the hole gets slightly larger).</p>
+<p class="prose">Thermal Expansion in Two Dimensions</p>
+<p class="prose">For small temperature changes, the change in area \(\Delta A\) is given by</p>
+<div class="math-display">\[\Delta A = 2 \alpha A \Delta T,\]</div>
+<p class="prose">where \(\Delta A\) is the change in area \(A\), \(\Delta T\) is the change in temperature, and \(\alpha\) is the coefficient of linear expansion, which varies slightly with temperature.</p>
+<div class="diagram"><img src="images/ch13/fig13-11-part-a-shows-the-outline-of-a-flat-metal.jpg" alt="Part a shows the outline of a flat metal plate before and after expansion. After expansion, it has the same shape and ratio of dimensions as before, but it takes up a greater area. Part b shows the outline of a flat metal plate with a hole in it, before and after expansion. The hole expands. Part c shows the outline of a rectangular box before and after expansion. After expansion, the box has the same proportions as before expansion, but it has a greater volume."><div class="d-cap">Part a shows the outline of a flat metal plate before and after expansion. After expansion, it has the same shape and ratio of dimensions as before, but it takes up a greater area. Part b shows the outline of a flat metal plate with a hole in it, before and after expansion. The hole expands. Part c shows the outline of a rectangular box before and after expansion. After expansion, the box has the same proportions as before expansion, but it has a greater volume. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Thermal Expansion in Three Dimensions</p>
+<p class="prose">The change in volume \(\Delta V\) is very nearly \(\Delta V = 3\alpha V \Delta T\). This equation is usually written as</p>
+<div class="math-display">\[\Delta V = \beta V \Delta T, \label{volume}\]</div>
+<p class="prose">where \(\beta\) is thecoefficient of volume expansionand \(\beta \approx 3\alpha\). Note that the values of \(\beta\) in Table are almost exactly equal to \(3\alpha\).</p>
+<p class="prose">In general, objects will expand with increasing temperature. Water is the most important exception to this rule. Water expands with increasing temperature (its densitydecreases) when it is at temperatures greater than \(4^oC(40^oF)\). However, it expands withdecreasingtemperature when it is between \(+4^oC\) and \(0^oC(40^oF\) to \(32^oF)\). Water is densest at \(+4^oC\) (Figure . Perhaps the most striking effect of this phenomenon is the freezing of water in a pond. When water near the surface cools down to \(4^oC\) it is denser than the remaining water and thus will sink to the bottom. This “turnover” results in a layer of warmer water near the surface, which is then cooled. Eventually the pond has a uniform temperature of \(4^oC\). If the temperature in the surface layer drops below \(4^oC\), the water is less dense than the water below, and thus stays near the top. As a result, the pond surface can completely freeze over. The ice on top of liquid water provides an insulating layer from winter’s harsh exterior air temperatures. Fish and other aquatic life can survive in \(4^oC\) water beneath ice, due to this unusual characteristic of water. It also produces circulation of water in the pond that is necessary for a healthy ecosystem of the body of water.</p>
+<div class="diagram"><img src="images/ch13/fig13-12-a-graph-of-density-of-freshwater-in-gram.png" alt="A graph of density of freshwater in grams per cubic centimeter versus temperature in degrees Celsius. The line is convex up. At zero degrees C, the density is just under zero point nine nine nine five grams per cubic centimeter. The density then increases at a decreasing rate until it hits a peak of about zero point nine nine nine nine seven grams per cubic centimeter at about four degrees C. Above four degrees C, the density decreases with increasing temperature."><div class="d-cap">A graph of density of freshwater in grams per cubic centimeter versus temperature in degrees Celsius. The line is convex up. At zero degrees C, the density is just under zero point nine nine nine five grams per cubic centimeter. The density then increases at a decreasing rate until it hits a peak of about zero point nine nine nine nine seven grams per cubic centimeter at about four degrees C. Above four degrees C, the density decreases with increasing temperature. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Real-World Connections - Filling the Tank</p>
+<p class="prose">Differences in the thermal expansion of materials can lead to interesting effects at the gas station. One example is the dripping of gasoline from a freshly filled tank on a hot day. Gasoline starts out at the temperature of the ground under the gas station, which is cooler than the air temperature above. The gasoline cools the steel tank when it is filled. Both gasoline and steel tank expand as they warm to air temperature, but gasoline expands much more than steel, and so it may overflow.</p>
+<p class="prose">This difference in expansion can also cause problems when interpreting the gasoline gauge. The actual amount (mass) of gasoline left in the tank when the gauge hits “empty” is a lot less in the summer than in the winter. The gasoline has the same volume as it does in the winter when the “add fuel” light goes on, but because the gasoline has expanded, there is less mass. If you are used to getting another 40 miles on “empty” in the winter, beware—you will probably run out much more quickly in the summer.</p>
+<div class="diagram"><img src="images/ch13/fig13-13-fuel-gauge-pointing-to-empty.jpg" alt="Fuel gauge pointing to empty."><div class="d-cap">Fuel gauge pointing to empty. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Thermal Expansion: Gas vs. Gas Tank</span></div><div class="example-body">
+<p class="prose">Suppose your 60.0-L (15.9-gal) steel gasoline tank is full of gas, so both the tank and the gasoline have a temperature of \(15^oC\). How much gasoline has spilled by the time they warm to \(35.0^oC\)?</p>
+<p class="prose">The tank and gasoline increase in volume, but the gasoline increases more, so the amount spilled is the difference in their volume changes. (The gasoline tank can be treated as solid steel.) We can use the equation for volume expansion to calculate the change in volume of the gasoline and of the tank.</p>
+<p class="prose">1. Use the equation for volume expansion (Equation \ref{volume}) to calculate the increase in volume of the steel tank:</p>
+<div class="math-display">\[\Delta V_s = \beta_s V_s \Delta T. \nonumber\]</div>
+<p class="prose">2. The increase in volume of the gasoline is given by this equation:</p>
+<div class="math-display">\[\Delta V_{gas} = \beta_{gas} V_{gas} \Delta T. \nonumber\]</div>
+<p class="prose">3. Find the difference in volume to determine the amount spilled as</p>
+<div class="math-display">\[V_{spill} = \Delta V_{gas} - \Delta V_S. \nonumber\]</div>
+<p class="prose">Alternatively, we can combine these three equations into a single equation. (Note that the original volumes are equal.)</p>
+<div class="math-display">\[ \begin{align*} V_{spill} &= (\beta_{gas} - \beta_s)V \Delta T \\[5pt] &= [(950 - 35) \times 10^{-6} /^oC] (60.0 \, L)(20.0^oC) \\[5pt] &= 1.10 \, L. \end{align*} \]</div>
+<p class="prose">This amount is significant, particularly for a 60.0-L tank. The effect is so striking because the gasoline and steel expand quickly. The rate of change in thermal properties is discussed inHeat and Heat Transfer Methods.</p>
+<p class="prose">If you try to cap the tank tightly to prevent overflow, you will find that it leaks anyway, either around the cap or by bursting the tank. Tightly constricting the expanding gas is equivalent to compressing it, and both liquids and solids resist being compressed with extremely large forces. To avoid rupturing rigid containers, these containers have air gaps, which allow them to expand and contract without stressing them.</p>
+</div></div>
+<div class="sh2">Thermal Stress</div>
+<p class="prose">Thermal stressis created by thermal expansion or contraction (seeElasticity: Stress and Strainfor a discussion of stress and strain). Thermal stress can be destructive, such as when expanding gasoline ruptures a tank. It can also be useful, for example, when two parts are joined together by heating one in manufacturing, then slipping it over the other and allowing the combination to cool. Thermal stress can explain many phenomena, such as the weathering of rocks and pavement by the expansion of ice when it freezes.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Thermal Stress - Gas Pressure</span></div><div class="example-body">
+<p class="prose">What pressure would be created in the gasoline tank considered in Example , if the gasoline increases in temperature from \(15.0^oC\) to \(35.0^oC\) without being allowed to expand? Assume that the bulk modulus \(B\) for gasoline is \(1.00 \times 10^9 \, N/m^2\). (For more on bulk modulus, seeElasticity: Stress and Strain.)</p>
+<p class="prose">To solve this problem, we must use the following equation, which relates a change in volume \(\Delta V\) to pressure:</p>
+<div class="math-display">\[\Delta V = \dfrac{1}{B}\dfrac{F}{A}V_0, \nonumber \]</div>
+<p class="prose">where \(F/A\) is pressure, \(V_0\) is the original volume, and \(B\) is the bulk modulus of the material involved. We will use the amount spilled in Example as the change in volume, \(\Delta V\).</p>
+<p class="prose">1. Rearrange the equation for calculating pressure: \[P = \dfrac{F}{A} = \dfrac{\Delta V}{V_0}B. \nonumber\]</p>
+<p class="prose">2. Insert the known values. The bulk modulus for gasoline is \(B = 1.00 \times 10^9 \, N/m^2\). In the previous example, the change in volume \(\Delta V = 1.10 \, L\) is the amount that would spill. Here, \(V_0 = 60.0 \, L\) is the original volume of the gasoline. Substituting these values into the equation, we obtain</p>
+<div class="math-display">\[P = \dfrac{1.10 \, L}{60.0 \, L}(1.00 \times 10^9 Pa) = 1.83 \times 10^7 \, Pa. \nonumber\]</div>
+<p class="prose">This pressure is about \(2500 \, lb/in^2\),muchmore than a gasoline tank can handle.</p>
+<p class="prose">Forces and pressures created by thermal stress are typically as great as that in the example above. Railroad tracks and roadways can buckle on hot days if they lack sufficient expansion joints. (Figure . Power lines sag more in the summer than in the winter, and will snap in cold weather if there is insufficient slack. Cracks open and close in plaster walls as a house warms and cools. Glass cooking pans will crack if cooled rapidly or unevenly, because of differential contraction and the stresses it creates. (Pyrex is less susceptible because of its small coefficient of thermal expansion.) Nuclear reactor pressure vessels are threatened by overly rapid cooling, and although none have failed, several have been cooled faster than considered desirable. Biological cells are ruptured when foods are frozen, detracting from their taste. Repeated thawing and freezing accentuate the damage. Even the oceans can be affected. A significant portion of the rise in sea level that is resulting from global warming is due to the thermal expansion of sea water.</p>
+<div class="diagram"><img src="images/ch13/fig13-14-a-cracked-asphalt-road-with-a-pothole.jpg" alt="A cracked asphalt road with a pothole."><div class="d-cap">A cracked asphalt road with a pothole. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Metal is regularly used in the human body for hip and knee implants. Most implants need to be replaced over time because, among other things, metal does not bond with bone. Researchers are trying to find better metal coatings that would allow metal-to-bone bonding. One challenge is to find a coating that has an expansion coefficient similar to that of metal. If the expansion coefficients are too different, the thermal stresses during the manufacturing process lead to cracks at the coating-metal interface.</p>
+<p class="prose">Another example of thermal stress is found in the mouth. Dental fillings can expand differently from tooth enamel. It can give pain when eating ice cream or having a hot drink. Cracks might occur in the filling. Metal fillings (gold, silver, etc.) are being replaced by composite fillings (porcelain), which have smaller coefficients of expansion, and are closer to those of teeth.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Two blocks, A and B, are made of the same material. Block A has dimensions \(l \times w \times h = L \times 2L \times L\) and Block B has dimensions \(2L \times 2L \times 2L\). If the temperature changes, what is</p>
+<div class="diagram"><img src="images/ch13/fig13-15-there-are-two-rectangular-blocks-block-a.png" alt="There are two rectangular blocks. Block A has its dimensions labeled length equals L, width equals two times L, height equals L. Block B has its dimensions labeled length, width, and height all equal to two times L."><div class="d-cap">There are two rectangular blocks. Block A has its dimensions labeled length equals L, width equals two times L, height equals L. Block B has its dimensions labeled length, width, and height all equal to two times L. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The change in volume is proportional to the original volume. Block A has a volume of \(L \times 2L \times L = 2L^3\). Block B has a volume of \(2L \times 2L \times 2L = 8L^3\),</p>
+<p class="prose">which is 4 times that of Block A. Thus the change in volume of Block B should be 4 times the change in volume of Block A.</p>
+<p class="prose">The change in area is proportional to the area. The cross-sectional area of Block A is \(L \times 2L = 2L^2\), while that of Block B is \(2L \times 2L = 4L^2\).</p>
+<p class="prose">Because cross-sectional area of Block B is twice that of Block A, the change in the cross-sectional area of Block B is twice that of Block A.</p>
+<p class="prose">The change in height is proportional to the original height. Because the original height of Block B is twice that of A, the change in the height of Block B is twice that of Block A.</p>
+</div></div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Real-World Connections - Filling the TankDifferences in the thermal expansion of materials can lead to interesting effects at the gas station. One example is the dripping of gasoline from a freshly filled tank on a hot day. Gasoline starts out at the temperature of the ground under the gas station, which is cooler than the air temperature above. The gasoline cools the steel tank when it is filled. Both gasoline and steel tank expand as they warm to air temperature, but gasoline expands much more than steel, and so it may overflow.This difference in expansion can also cause problems when interpreting the gasoline gauge. The actual amount (mass) of gasoline left in the tank when the gauge hits “empty” is a lot less in the summer than in the winter. The gasoline has the same volume as it does in the winter when the “add fuel” light goes on, but because the gasoline has expanded, there is less mass. If you are used to getting another 40 miles on “empty” in the winter, beware—you will probably run out much more quickly in the summer.Figure : Because the gas expands more than the gas tank with increasing temperature, you can’t drive as many miles on “empty” in the summer as you can in the winter. (credit: Hector Alejandro, Flickr)</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 13.02. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Give an example of a physical property that varies with temperature and describe how it is used to measure temperature.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 13.02 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the underlying microscopic cause of thermal expansion in a solid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The addition of more atoms to the crystal lattice as energy increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Increased kinetic energy causes atoms to vibrate and push each other further apart.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Atoms expand in size individually as they absorb thermal energy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The atoms lose electrons, causing the remaining ions to repel each other more.</li>
+</ul><div class="qexp">Increased temperature increases the kinetic energy of atoms, and their more vigorous vibrations result in a greater average distance between neighbors.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A steel railroad rail is 10.000 m long at 0°C. If the coefficient of linear expansion for steel is 12 × 10⁻⁶/°C, how much will the rail expand when the temperature reaches 30°C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.0012 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.0120 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.0036 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.3600 m</li>
+</ul><div class="qexp">Using ΔL = αLΔT, we get (12 × 10⁻⁶/°C)(10.0 m)(30°C) = 0.0036 m.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If you heat a metal plate that has a circular hole cut out of its center, what happens to the size of the hole?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The hole gets smaller as the surrounding metal expands into it.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The hole stays the same size because expansion only occurs outward.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The hole size remains constant while the thickness of the plate increases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hole gets larger because the ring of metal expands outward just like a solid disk.</li>
+</ul><div class="qexp">Holes in materials expand exactly as if the missing material were still there; as the atoms move apart, the circumference of the hole increases.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Freshwater is unique because it reaches its maximum density at which of the following temperatures?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4°C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0°C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-4°C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>100°C</li>
+</ul><div class="qexp">Water is densest at 4°C; above or below this temperature, its density decreases, which is why ice floats and pond bottoms remain at 4°C.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A steel tank is filled to the brim with 60.0 L of gasoline at 15°C. When the temperature rises to 35°C, why does the gasoline overflow?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steel contracts when heated while gasoline expands.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gasoline has a much larger coefficient of volume expansion than steel.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The gasoline reacts chemically with the steel at higher temperatures.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The air pressure in the tank decreases, allowing the liquid to rise.</li>
+</ul><div class="qexp">While both expand, the coefficient of volume expansion for gasoline is significantly higher than that of steel, causing the volume of liquid to exceed the tank capacity.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 13 · <span>Section 13.03</span></div><div class="h-title">13.3: The Ideal Gas Law</div><div class="h-desc">In this section, we continue to explore the thermal behavior of gases. In particular, we examine the characteristics of atoms and molecules that compose gases. (Most gases, for example nitrogen, \(N_2...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 13.03</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State the ideal gas law in terms of molecules and in terms of moles.</li>
+      <li>Use the ideal gas law to calculate pressure change, temperature change, volume change, or the number of molecules or moles in a given volume.</li>
+      <li>Use Avogadro’s number to convert between number of molecules and number of moles.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">ideal gas law</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the physical law that relates the pressure and volume of a gas to the number of gas molecules or number of moles of gas and the temperature of the gas</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 13.03</div>
+<p class="prose">In this section, we continue to explore the thermal behavior of gases. In particular, we examine the characteristics of atoms and molecules that compose gases. (Most gases, for example nitrogen, \(N_2\) and oxygen, \(O_2\) are composed of two or more atoms. We will primarily use the term “molecule” in discussing a gas because the term can also be applied to monatomic gases, such as helium.)</p>
+<div class="diagram"><img src="images/ch13/fig13-16-1920px-aibf-mass-ascent-2007jpg.jpg" alt="1920px-AIBF_Mass_Ascent,_2007.jpg"><div class="d-cap">1920px-AIBF_Mass_Ascent,_2007.jpg (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Gases are easily compressed. We can see evidence of thiselsewhere, where you will note that gases have thelargestcoefficients of volume expansion. The large coefficients mean that gases expand and contract very rapidly with temperature changes. In addition, you will note that most gases expand at the same rate, or have the same \( \beta\). This raises the question as to why gases should all act in nearly the same way, when liquids and solids have widely varying expansion rates.</p>
+<p class="prose">The answer lies in the large separation of atoms and molecules in gases, compared to their sizes, as illustrated in Figure . Because atoms and molecules have large separations, forces between them can be ignored, except when they collide with each other during collisions. The motion of atoms and molecules (at temperatures well above the boiling temperature) is fast, such that the gas occupies all of the accessible volume and the expansion of gases is rapid. In contrast, in liquids and solids, atoms and molecules are closer together and are quite sensitive to the forces between them.</p>
+<div class="diagram"><img src="images/ch13/fig13-17-spheres-representing-atoms-and-molecules.jpg" alt="Spheres representing atoms and molecules; the spheres are relatively far apart and are distributed randomly."><div class="d-cap">Spheres representing atoms and molecules; the spheres are relatively far apart and are distributed randomly. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">To get some idea of how pressure, temperature, and volume of a gas are related to one another, consider what happens when you pump air into an initially deflated tire. The tire’s volume first increases in direct proportion to the amount of air injected, without much increase in the tire pressure. Once the tire has expanded to nearly its full size, the walls limit volume expansion. If we continue to pump air into it, the pressure increases. The pressure will further increase when the car is driven and the tires move. Most manufacturers specify optimal tire pressure for cold tires (Figure .</p>
+<div class="diagram"><img src="images/ch13/fig13-18-the-figure-has-three-parts-each-part-sho.jpg" alt="The figure has three parts, each part showing a pair of tires, and each tire connected to a pressure gauge. Each pair of tires represents the before and after images of a single tire, along with a change in pressure in that tire. In part a, the tire pressure is initially zero. After some air is added, represented by an arrow labeled Add air, the pressure rises to slightly above zero. In part b, the tire pressure is initially at the half-way mark. After some air is added, represented by an arrow labeled Add air, the pressure rises to the three-fourths mark. In part c, the tire pressure is initially at the three-fourths mark. After the temperature is raised, represented by an arrow labeled Increase temperature, the pressure rises to nearly the full mark."><div class="d-cap">The figure has three parts, each part showing a pair of tires, and each tire connected to a pressure gauge. Each pair of tires represents the before and after images of a single tire, along with a change in pressure in that tire. In part a, the tire pressure is initially zero. After some air is added, represented by an arrow labeled Add air, the pressure rises to slightly above zero. In part b, the tire pressure is initially at the half-way mark. After some air is added, represented by an arrow labeled Add air, the pressure rises to the three-fourths mark. In part c, the tire pressure is initially at the three-fourths mark. After the temperature is raised, represented by an arrow labeled Increase temperature, the pressure rises to nearly the full mark. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">At room temperatures, collisions between atoms and molecules can be ignored. In this case, the gas is called an ideal gas, in which case the relationship between the pressure, volume, and temperature is given by the equation of state called the ideal gas law.</p>
+<p class="prose">Definition: Ideal Gas Law</p>
+<p class="prose">Theideal gas lawstates that</p>
+<div class="math-display">\[PV = NkT, \label{igl}\]</div>
+<p class="prose">where \(P\) is the absolute pressure of a gas, \(V\) is the volume it occupies, \(N\) is the number of atoms and molecules in the gas, and and \(T\) is its absolute temperature. The constant \(k\) is called theBoltzmann constantdiscussed below.</p>
+<p class="prose">Definition:Boltzmann constant</p>
+<p class="prose">TheBoltzmann constant\(k\) is named in honor of Austrian physicist Ludwig Boltzmann (1844–1906) and has the value</p>
+<div class="math-display">\[k = 1.38 \times 10^{-23} \, J/K.\]</div>
+<p class="prose">The ideal gas law can be derived from basic principles, but was originally deduced from experimental measurements ofCharles’ law(that volume occupied by a gas is proportional to temperature at a fixed pressure) and fromBoyle’s law(that for a fixed temperature, the product \(PV\) is a constant). In the ideal gas model, the volume occupied by its atoms and molecules is a negligible fraction of \(V\). The ideal gas law describes the behavior of real gases under most conditions. (Note, for example, that \(N\) is the total number of atoms and molecules, independent of the type of gas.)</p>
+<p class="prose">Let us see how the ideal gas law is consistent with the behavior of filling the tire when it is pumped slowly and the temperature is constant. At first, the pressure \(P\) is essentially equal to atmospheric pressure, and the volume \(V\) increases in direct proportion to the number of atoms and molecules \(N\) put into the tire. Once the volume of the tire is constant, Equation \ref{igl} predicts that the pressure should increase in proportion tothe number N of atoms and molecules.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Pressure Changes Due to Temperature Changes - Tire Pressure</span></div><div class="example-body">
+<p class="prose">Suppose your bicycle tire is fully inflated, with an absolute pressure of \(7.00 \times 10^5 \, Pa\) (a gauge pressure of just under \(90.0 \, lb/in^2\)) at a temperature of \(18.0^oC\). What is the pressure after its temperature has risen to \(35.0^oC\)? Assume that there are no appreciable leaks or changes in volume.</p>
+<p class="prose">The pressure in the tire is changing only because of changes in temperature. First we need to identify what we know and what we want to know, and then identify an equation to solve for the unknown.</p>
+<p class="prose">We know the initial pressure \(P_0 = 7.00 \times 10^5 \, Pa\), the initial temperature \(T_0 = 18.0^oC\), and the final temperature \(T_F = 35.0^oC\). We must find the final pressure \(P_f\). How can we use Equation \ref{igl}? At first, it may seem that not enough information is given, because the volume \(V\) and number of atoms \(N\) are not specified. What we can do is use the equation twice:</p>
+<div class="math-display">\[P_0V_0 = NkT_0 \nonumber\]</div>
+<div class="math-display">\[P_fV_f = NkT_f \nonumber.\]</div>
+<p class="prose">If we divide \(P_fV_f\) by \(P_0V_0\), we can come up with an equation that allows us to solve for \(P_f\)</p>
+<div class="math-display">\[\dfrac{P_fV_f}{P_0V_0} = \dfrac{N_fkT_f}{N_0kT_0} \nonumber\]</div>
+<p class="prose">Since the volume is constant, \(V_f\) and \(V_0\) are the same and they cancel out. The same is true for \(N_f\) and \(N_0\), and \(k\), which is a constant. Therefore,</p>
+<div class="math-display">\[\dfrac{P_f}{P_0} = \dfrac{T_f}{T_0}. \nonumber\]</div>
+<p class="prose">We can then rearrange this to solve for \(P_f\):</p>
+<div class="math-display">\[P_f = P_0\dfrac{T_f}{T_0},\label{ex1a}\]</div>
+<p class="prose">where the temperature must be in units of kelvins, because \(T_0\) and \(T_f\) are absolute temperatures.</p>
+<p class="prose">1. Convert temperatures from Celsius to Kelvin.</p>
+<div class="math-display">\[T_0 = (18.0 +273)K = 291 \, K \nonumber\]</div>
+<div class="math-display">\[T_f = (35.0 + 273)K = 308 \, K \nonumber\]</div>
+<p class="prose">2. Substitute the known values into Equation \ref{ex1a}.</p>
+<div class="math-display">\[\begin{align*} P_f &= P_0\dfrac{T_f}{T_0} \\[5pt] &= 7.00 \times 10^5 \, Pa \left(\dfrac{308 \, K)}{291 \, K}\right) \\[5pt] &= 7.41 \times 10^5 \, Pa \end{align*} \]</div>
+<p class="prose">The final temperature is about 6% greater than the original temperature, so the final pressure is about 6% greater as well. Note thatabsolutepressure andabsolutetemperature must be used in the ideal gas law.</p>
+<p class="prose">Take-Home Experiment - Refrigerating a Balloon</p>
+<p class="prose">The Inflate a balloon at room temperature. Leave the inflated balloon in the refrigerator overnight. What happens to the balloon, and why?</p>
+<p class="prose">We left a balloon in a the freezer for a bit then I pulled it out to see what would happen</p>
+<p class="prose">How many molecules are in a typical object, such as gas in a tire or water in a drink? We can use the ideal gas law (Equation \ref{igl}) to give us an idea of how large \(N\) typically is.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating the Number of Molecules in a Cubic Meter of Gas</span></div><div class="example-body">
+<p class="prose">Calculate the number of molecules in a cubic meter of gas at standard temperature and pressure (STP), which is defined to be \(0^oC\) and atmospheric pressure.</p>
+<p class="prose">Because pressure, volume, and temperature are all specified, we can use the ideal gas law (Equation \ref{igl}) to find \(N\).</p>
+<p class="prose">1. Identify the knowns.</p>
+<p class="prose">2. Identify the unknown: number of molecules, \(N\).</p>
+<p class="prose">3. Rearrange the ideal gas law to solve for \(N\).</p>
+<div class="math-display">\[\begin{align*} N &= \dfrac{PV}{kT} \\[5pt] &= \dfrac{(1.01 \times 10^5\, Pa)(1.00 \, m^3)}{(1.38 \times 10^{-23} \, J/K)(273 \, K)} \\[5pt] &= 2.68 \times 10^{25} \, molecules \end{align*}\]</div>
+<p class="prose">This number is undeniably large, considering that a gas is mostly empty space. \(N\) is huge, even in small volumes. For example, \(1\, cm^3\) of a gas at STP has \(2.68 \times 10^{10}\) molecules in it. Once again, note that \(N\) is the same for all types or mixtures of gases.</p>
+</div></div>
+<div class="sh2">Moles and Avogadro’s Number</div>
+<p class="prose">It is sometimes convenient to work with a unit other than molecules when measuring the amount of substance. Amole(abbreviated mol) is defined to be the amount of a substance that contains as many atoms or molecules as there are atoms in exactly 12 grams (0.012 kg) of carbon-12. The actual number of atoms or molecules in one mole is calledAvogadro’s number\((N_A)\),in recognition of Italian scientist Amedeo Avogadro (1776–1856). He developed the concept of the mole, based on the hypothesis that equal volumes of gas, at the same pressure and temperature, contain equal numbers of molecules. That is, the number is independent of the type of gas. This hypothesis has been confirmed with an estimate of the value of Avogadro’s number.</p>
+<p class="prose">Definition: Avogadro’s Number</p>
+<p class="prose">One mole always contains \(6.02 \times 10^{23}\) particles (atoms or molecules), independent of the element or substance. A mole of any substance has a mass in grams equal to its molecular mass, which can be calculated from the atomic masses given in the periodic table of elements.</p>
+<div class="math-display">\[N_A = 6.02 \times 10^{23} \, mol^{-1}\]</div>
+<div class="diagram"><img src="images/ch13/fig13-19-the-illustration-shows-relatively-flat-l.jpg" alt="The illustration shows relatively flat land with a solitary mountain, labeled Mt. Everest, and blue sky above. A double-headed vertical arrow stretches between the land and a point in the sky that is well above the peak of the mountain. The arrow, labeled table tennis balls, serves to indicate that a column of one mole of table tennis balls would reach a point in the sky that is much higher than the peak of Mt. Everest."><div class="d-cap">The illustration shows relatively flat land with a solitary mountain, labeled Mt. Everest, and blue sky above. A double-headed vertical arrow stretches between the land and a point in the sky that is well above the peak of the mountain. The arrow, labeled table tennis balls, serves to indicate that a column of one mole of table tennis balls would reach a point in the sky that is much higher than the peak of Mt. Everest. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Exercise</p>
+<p class="prose">We first need to calculate the molar mass (the mass of one mole) of acetaminophen. To do this, we need to multiply the number of atoms of each element by the element’s atomic mass.</p>
+<p class="prose">(8 moles of Carbon)(12 grams/mole) + (9 moles hydrogen)(1 gram/mole) + (1 mole of nitrogen)(14 grams/mole) + (2 moles oxygen)(16 grams/mole) = 151 grams.</p>
+<p class="prose">Then we need to calculate the number of moles in 325 mg.</p>
+<div class="math-display">\[ \left ( \frac{325 \, mg}{151 \, grams/mole} \right) \left( \frac{1 \, gram}{1000 \, mg}\right) = 2.15 \times 10^{-3} \, moles \nonumber\]</div>
+<p class="prose">Then use Avogadro’s number to calculate the number of molecules.</p>
+<div class="math-display">\[N = (2.15 \times 10^{-3} \, moles)(6.02 \times 10^{23} \, molecules/mole)\]\[ = 1.30 \times 10^{21} \, molecules \nonumber\]</div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Moles per Cubic Meter and Liters per Mole</span></div><div class="example-body">
+<p class="prose">Strategy and Solution</p>
+<p class="prose">(a) We are asked to find the number of moles per cubic meter, and we know fromExamplethat the number of molecules per cubic meter at STP is \(2.68 \times 10^{25}\). The number of moles can be found by dividing the number of molecules by Avogadro’s number. We let \(n\) stand for the number of moles,</p>
+<div class="math-display">\[n \, mole/m^3 = \dfrac{N \, molecules/m^3}{6.02 \times 10^{23} \, molecules/mol} = \dfrac{2.68 \times 10^{25} \, molecules/m^3}{6.02 \times 10^{23} \, molecules/mol} = 44.5 \, mol/m^3\]</div>
+<p class="prose">(b) Using the value obtained for the number of moles in a cubic meter, and converting cubic meters to liters, we obtain</p>
+<div class="math-display">\[\dfrac{(10^3 \, L/m^3)}{44.5 \, mol/m^3} = 22.5 \, L/mol.\]</div>
+<p class="prose">This value is very close to the accepted value of 22.4 L/mol. The slight difference is due to rounding errors caused by using three-digit input. Again this number is the same for all gases. In other words, it is independent of the gas.</p>
+<p class="prose">The (average) molar weight of air (approximately 80% \(N_2\) and 20% \(O_2\) is \(M = 28.8 \, g\). Thus the mass of one cubic meter of air is 1.28 kg. If a living room has dimensions \(5 \, m \times 5 \, m \times 3 \, m\), the mass of air inside the room is 96 kg, which is the typical mass of a human.</p>
+<p class="prose">Exercise</p>
+<p class="prose">The density of air at standard conditions \((P = 1 \, atm\) and \(T = 20^oC)\) is \(1.28 \, kg/m^3\). At what pressure is the density \(0.64 \, kg/m^3\) if the temperature and number of molecules are kept constant?</p>
+<p class="prose">The best way to approach this question is to think about what is happening. If the density drops to half its original value and no molecules are lost, then the volume must double. If we look at the equation \(PV = NkT\), we see that when the temperature is constant, the pressure is inversely proportional to volume. Therefore, if the volume doubles, the pressure must drop to half its original value, and \(P_f = 0.50 \, atm\).</p>
+</div></div>
+<div class="sh2">The Ideal Gas Law Restated Using Moles</div>
+<p class="prose">A very common expression of the ideal gas law uses the number of moles, \(n\), rather than the number of atoms and molecules (\(N\)). We start from the ideal gas law, \[PV = NkT,\] and multiply and divide the equation by Avogadro’s number \(N_A\). This gives</p>
+<div class="math-display">\[PV = \dfrac{N}{N_A}N_AkT.\]</div>
+<p class="prose">Note that \(n = N/N_A\) is the number of moles. We define the universal gas constant \(R = N_Ak\), and obtain the ideal gas law in terms of moles.</p>
+<p class="prose">Definition: Ideal Gas Law (in terms of moles)</p>
+<p class="prose">The ideal gas law (in terms of moles) is</p>
+<div class="math-display">\[PV = nRT. \label{iglmoles}\]</div>
+<p class="prose">where \(P\) is the absolute pressure of a gas, \(V\) is the volume it occupies, \(n\) is the number of moles of atoms and molecules in the gas, and and \(T\) is its absolute temperature. The constant \(R\) is called the gas constant and varies depending on the units of the pressure and volume used.</p>
+<p class="prose">Definition: Gas Constant</p>
+<p class="prose">The numerical value of \(R\) in SI units is</p>
+<div class="math-display">\[ \begin{align*} R &= N_Ak \\[5pt] &= (6.02 \times 10^{23} \, mol^{-1}) (1.38 \times 10^{-23} \, J/K) \\[5pt] &= 8.31 \, J/mol \cdot K. \end{align*}\]</div>
+<p class="prose">You can use whichever value of \(R\) is most convenient for a particular problem.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Number of Moles - Gas in a Bike Tire</span></div><div class="example-body">
+<p class="prose">How many moles of gas are in a bike tire with a volume of \(2.00 \times 10^{-3} \,m^3(2.00 \, L)\), a pressure of \(7.00 \times 10^5 \, Pa\) (a gauge pressure of just under \(90.0 \, lb/in^2\)), and at a temperature of \(18.0^oC\)?</p>
+<p class="prose">Identify the knowns and unknowns, and choose an equation to solve for the unknown. In this case, we solve the ideal gas law (Equation \ref{iglmoles}) for the number of moles \(n\).</p>
+<p class="prose">1. Identify the knowns.</p>
+<p class="prose">2. Rearrange Equation \ref{iglmoles} to solve for \(n\) and substitute known values.</p>
+<div class="math-display">\[\begin{align*} n &= \dfrac{PV}{RT} \\[5pt] &= \dfrac{(7.00 \times 10^5 Pa)(2.00 \times 10^{-3} m^3)}{(8.31 \, J/mol\cdot K)(291 \, K)} \\[5pt] &= 0.579 \, mol \end{align*}\]</div>
+<p class="prose">The most convenient choice for \(R\) in this case is \(8.31 \, J/mol \cdot K\), because our known quantities are in SI units. The pressure and temperature are obtained from the initial conditions in Example , but we would get the same answer if we used the final values.</p>
+<p class="prose">The ideal gas law can be considered to be another manifestation of theLaw of Conservation of Energy. Work done on a gas results in an increase in its energy, increasing pressure and/or temperature, or decreasing volume. This increased energy can also be viewed as increased internal kinetic energy, given the gas’s atoms and molecules.</p>
+</div></div>
+<div class="sh2">The Ideal Gas Law and Energy</div>
+<p class="prose">Let us now examine the role of energy in the behavior of gases. When you inflate a bike tire by hand, you do work by repeatedly exerting a force through a distance. This energy goes into increasing the pressure of air inside the tire and increasing the temperature of the pump and the air.</p>
+<p class="prose">The ideal gas law is closely related to energy: the units on both sides are joules. The right-hand side of the ideal gas law in \(PV = NkT\) is \(NkT\). This term is roughly the amount of translational kinetic energy of \(N\) atoms or molecules at an absolute temperature \(T\), as we shall see formally inKinetic Theory: Atomic and Molecular Explanation of Pressure and Temperature. The left-hand side of the ideal gas law is \(PV\) which also has the units of joules. We know from our study of fluids that pressure is one type of potential energy per unit volume, so pressure multiplied by volume is energy. The important point is that there is energy in a gas related to both its pressure and its volume. The energy can be changed when the gas is doing work as it expands—something we explore inHeat and Heat Transfer Methods—similar to what occurs in gasoline or steam engines and turbines.</p>
+<p class="prose">Problem-Solving Strategy: The Ideal Gas Law</p>
+<p class="prose">Exercise</p>
+<p class="prose">Liquids and solids have densities about 1000 times greater than gases. Explain how this implies that the distances between atoms and molecules in gases are about 10 times greater than the size of their atoms and molecules.</p>
+<p class="prose">Atoms and molecules are close together in solids and liquids. In gases they are separated by empty space. Thus gases have lower densities than liquids and solids. Density is mass per unit volume, and volume is related to the size of a body (such as a sphere) cubed. So if the distance between atoms and molecules increases by a factor of 10, then the volume occupied increases by a factor of 1000, and the density decreases by a factor of 1000.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Take-Home Experiment - Refrigerating a BalloonThe Inflate a balloon at room temperature. Leave the inflated balloon in the refrigerator overnight. What happens to the balloon, and why?We left a balloon in a the freezer for a bit then I pulled it out to see what would happen</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Step 1</div><div class="cx">Problem-Solving Strategy: The Ideal Gas LawExamine the situation to determine that an ideal gas is involved. Most gases are nearly ideal.Step 2Make a list of what quantities are given, or can be inferred from the problem as stated (identify the known quantities). Convert known values into proper SI units (K for temperature, Pa for pressure, \(m^3\) for volume, molecules for \(N\), and moles for \(n\).Step 3Identify exactly what needs to be determined in the problem (identify the unknown quantities). A written list is useful.Step 4Determine whether the number of molecules or the number of moles is known, in order to decide which form of the ideal gas law to use. The first form is \(PV = NkT\) and involves \(N\), the number of atoms or molecules. The second form is \(PV = nRT\) and involves \(n\), the number of moles.Step 5Solve the ideal gas law for the quantity to be determined (the unknown quantity). You may need to take a ratio of final states to initial states to eliminate the unknown quantities that are kept fixed.Step 6Substitute the known quantities, along with their units, into the appropriate equation, and obtain numerical solutions complete with units. Be certain to use absolute temperature and absolute pressure.Step 7Check the answer to see if it is reasonable: Does it make sense?</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 13.03. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">When a cold alcohol thermometer is placed in a hot liquid, the column of alcohol goes down slightly before going up. Explain why.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 13.03 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Why do most gases have nearly the same coefficient of volume expansion, while solids and liquids vary greatly?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All gases are composed of the exact same type of molecules.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas molecules are more massive than those of solids and liquids.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The large separation between gas molecules makes their individual forces negligible.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gases cannot reach thermal equilibrium as quickly as solids.</li>
+</ul><div class="qexp">In a gas, molecules are far apart and forces between them can be ignored, meaning the specific material properties matter less than they do in tightly-packed solids.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A constant-volume gas tank has an absolute pressure of 200 kPa at 283 K (10°C). If the temperature is increased to 313 K (40°C), what is the new absolute pressure?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>181 kPa</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>200 kPa</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>255 kPa</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>221 kPa</li>
+</ul><div class="qexp">Using the ideal gas law (P1/T1 = P2/T2 for constant V and N), P2 = 200 kPa × (313 K / 283 K) = 221 kPa.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">How many molecules are contained in 2.00 moles of an ideal gas?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.20 × 10²⁴ molecules</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.02 × 10²³ molecules</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3.01 × 10²³ molecules</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2.40 × 10²⁵ molecules</li>
+</ul><div class="qexp">The number of molecules is calculated by multiplying the number of moles by Avogadro’s number (2.00 mol × 6.02 × 10²³ molecules/mol).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">In the ideal gas law equation PV = nRT, what are the standard SI units for the universal gas constant R?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>J/K</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>J/(mol · K)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>(Pa · m³)/mol</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>mol · K/J</li>
+</ul><div class="qexp">The constant R is 8.31 J/(mol · K), which ensures that both sides of the ideal gas law have units of energy (Joules).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">According to the textbook, what is the approximate volume occupied by one mole of any ideal gas at standard temperature and pressure (STP)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.00 L</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>44.5 L</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>22.4 L</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1000 L</li>
+</ul><div class="qexp">At STP (0°C and 1 atm), one mole of an ideal gas occupies approximately 22.4 liters.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 13</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 13: Temperature, Kinetic Theory, and Gas Laws.</div><div class="h-meta"><div class="h-chip">📝 16 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>13.01</strong></td><td>13.1: Temperature</td></tr>
+    <tr><td><strong>13.02</strong></td><td>13.2: Thermal Expansion of Solids and Liquids</td></tr>
+    <tr><td><strong>13.03</strong></td><td>13.3: The Ideal Gas Law</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 100 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 13 Practice Test</h3><p>16 questions · All OpenStax Review Questions</p></div></div><div id="q4">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 16 review questions from OpenStax College Physics, Chapter 13. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">If system A is in thermal equilibrium with system B, and system B is in thermal equilibrium with system C, what does the zeroth law of thermodynamics conclude about systems A and C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>System A and system C are in thermal equilibrium with each other.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>System A must be at a higher temperature than system C.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Heat will flow from system A to system C if they are placed in contact.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Systems A and C cannot be in thermal equilibrium unless B is removed.</li>
+</ul><div class="qexp">The zeroth law of thermodynamics states that if two systems are in thermal equilibrium with a third system, they are in thermal equilibrium with each other.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">On a mild day, a thermometer reads 20.0°C. What is the equivalent temperature on the Fahrenheit scale?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>36.0°F</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>68.0°F</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>52.0°F</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>93.6°F</li>
+</ul><div class="qexp">Using the formula T(°F) = (9/5)T(°C) + 32, we calculate (1.8 × 20) + 32 = 68.0°F.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why does a metal handrail feel much colder than a wooden porch post even though both are in thermal equilibrium with the outside air at 5.0°C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The metal handrail is actually at a lower temperature than the wood.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Wood has a higher coefficient of linear expansion than metal.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Metal conducts heat away from the skin much faster than wood does.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The wood has reached thermal equilibrium, but the metal has not.</li>
+</ul><div class="qexp">Human perception of temperature is influenced by heat transfer rates; metals are better conductors and remove heat from the body more efficiently than wood.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Scientific definitions describe "absolute zero" as the temperature at which:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Water reaches its maximum density.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Nitrogen gas liquifies at standard pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The Celsius and Fahrenheit scales provide the same numerical reading.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>All molecular motion has ceased.</li>
+</ul><div class="qexp">Absolute zero (0 K or -273.15°C) is the theoretical temperature where all molecular kinetic energy and motion stop.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A patient has a body temperature of 310.15 K. What is this temperature in degrees Celsius?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>37.0°C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>98.6°C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>32.0°C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>42.0°C</li>
+</ul><div class="qexp">To convert from Kelvin to Celsius, subtract 273.15 from the Kelvin temperature (310.15 - 273.15 = 37.0°C).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">What is the underlying microscopic cause of thermal expansion in a solid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The addition of more atoms to the crystal lattice as energy increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Increased kinetic energy causes atoms to vibrate and push each other further apart.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Atoms expand in size individually as they absorb thermal energy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The atoms lose electrons, causing the remaining ions to repel each other more.</li>
+</ul><div class="qexp">Increased temperature increases the kinetic energy of atoms, and their more vigorous vibrations result in a greater average distance between neighbors.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">A steel railroad rail is 10.000 m long at 0°C. If the coefficient of linear expansion for steel is 12 × 10⁻⁶/°C, how much will the rail expand when the temperature reaches 30°C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.0012 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.0120 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.0036 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.3600 m</li>
+</ul><div class="qexp">Using ΔL = αLΔT, we get (12 × 10⁻⁶/°C)(10.0 m)(30°C) = 0.0036 m.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">If you heat a metal plate that has a circular hole cut out of its center, what happens to the size of the hole?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The hole gets smaller as the surrounding metal expands into it.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The hole stays the same size because expansion only occurs outward.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The hole size remains constant while the thickness of the plate increases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hole gets larger because the ring of metal expands outward just like a solid disk.</li>
+</ul><div class="qexp">Holes in materials expand exactly as if the missing material were still there; as the atoms move apart, the circumference of the hole increases.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">Freshwater is unique because it reaches its maximum density at which of the following temperatures?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4°C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0°C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-4°C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>100°C</li>
+</ul><div class="qexp">Water is densest at 4°C; above or below this temperature, its density decreases, which is why ice floats and pond bottoms remain at 4°C.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">A steel tank is filled to the brim with 60.0 L of gasoline at 15°C. When the temperature rises to 35°C, why does the gasoline overflow?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Steel contracts when heated while gasoline expands.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gasoline has a much larger coefficient of volume expansion than steel.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The gasoline reacts chemically with the steel at higher temperatures.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The air pressure in the tank decreases, allowing the liquid to rise.</li>
+</ul><div class="qexp">While both expand, the coefficient of volume expansion for gasoline is significantly higher than that of steel, causing the volume of liquid to exceed the tank capacity.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">Why do most gases have nearly the same coefficient of volume expansion, while solids and liquids vary greatly?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>All gases are composed of the exact same type of molecules.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas molecules are more massive than those of solids and liquids.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The large separation between gas molecules makes their individual forces negligible.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gases cannot reach thermal equilibrium as quickly as solids.</li>
+</ul><div class="qexp">In a gas, molecules are far apart and forces between them can be ignored, meaning the specific material properties matter less than they do in tightly-packed solids.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">A constant-volume gas tank has an absolute pressure of 200 kPa at 283 K (10°C). If the temperature is increased to 313 K (40°C), what is the new absolute pressure?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>181 kPa</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>200 kPa</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>255 kPa</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>221 kPa</li>
+</ul><div class="qexp">Using the ideal gas law (P1/T1 = P2/T2 for constant V and N), P2 = 200 kPa × (313 K / 283 K) = 221 kPa.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">How many molecules are contained in 2.00 moles of an ideal gas?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.20 × 10²⁴ molecules</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.02 × 10²³ molecules</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3.01 × 10²³ molecules</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2.40 × 10²⁵ molecules</li>
+</ul><div class="qexp">The number of molecules is calculated by multiplying the number of moles by Avogadro’s number (2.00 mol × 6.02 × 10²³ molecules/mol).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">In the ideal gas law equation PV = nRT, what are the standard SI units for the universal gas constant R?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>J/K</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>J/(mol · K)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>(Pa · m³)/mol</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>mol · K/J</li>
+</ul><div class="qexp">The constant R is 8.31 J/(mol · K), which ensures that both sides of the ideal gas law have units of energy (Joules).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">According to the textbook, what is the approximate volume occupied by one mole of any ideal gas at standard temperature and pressure (STP)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.00 L</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>44.5 L</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>22.4 L</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1000 L</li>
+</ul><div class="qexp">At STP (0°C and 1 atm), one mole of an ideal gas occupies approximately 22.4 liters.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">Which of the following is the official definition of a "mole" as used in physics and chemistry?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The volume occupied by 1 kg of oxygen gas at room temperature.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The number of atoms required to exert 1 Pascal of pressure in a 1 cubic meter container.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The total number of molecules found in 1 liter of pure water.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The amount of substance containing as many particles as there are atoms in 12 grams of carbon-12.</li>
+</ul><div class="qexp">A mole is defined based on the number of atoms in exactly 0.012 kg (12 grams) of carbon-12, which is Avogadro's number.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 16 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Temperature, Kinetic Theory, and Gas Laws',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:5,lessonCount:4,cpMin:80,lessons:['Overview','13.01 13.1: Temperature','13.02 13.2: Thermal Expansion of Solids and Liquids','13.03 13.3: The Ideal Gas Law','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===4?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

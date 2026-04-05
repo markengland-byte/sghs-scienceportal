@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Friction, Drag, and Elasticity | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🧊</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Friction, Drag, and Elasticity</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🧊</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Friction, Drag, and Elasticity</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 5 · <span>Overview</span></div><div class="h-title">Friction, Drag, and Elasticity</div><div class="h-desc">Describe the forces on the hip joint. What means are taken to ensure that this will be a good movable joint? From the photograph (for an adult) inFigure, estimate the dimensions of the artificial device. It is difficult to categorize forces into various types (aside from the four basic forces discussed in previous chapter). We know that a net force affects the motion, position, and shape of an object. It is useful at this point to look at some particularly interesting and common forces that will provide further applications of Newton’s laws of motion. We have in mind the forces of friction, ai</div>
+    <div class="h-meta"><div class="h-chip">📚 3 Lessons</div><div class="h-chip">🧊 OpenStax College Physics Ch. 5</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 16 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 5</div><div class="cx">All content is from OpenStax College Physics, Chapter 5: Friction, Drag, and Elasticity. CC BY 4.0. Access free at openstax.org.</div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 3</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 5 · <span>Section 5.1</span></div><div class="h-title">5.1: Friction</div><div class="h-desc">Frictionis a force that is around us all the time that opposes relative motion between systems in contact but also allows us to move (which you have discovered if you have ever tried to walk on ice). ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 5.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the general characteristics of friction.</li>
+      <li>Describe the various types of friction.</li>
+      <li>Calculate the magnitude of static and kinetic friction.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 5.1</div>
+<p class="prose">Frictionis a force that is around us all the time that opposes relative motion between systems in contact but also allows us to move (which you have discovered if you have ever tried to walk on ice). While a common force, the behavior of friction is actually very complicated and is still not completely understood. We have to rely heavily on observations for whatever understandings we can gain. However, we can still deal with its more elementary general characteristics and understand the circumstances in which it behaves.</p>
+<p class="prose">Friction is a force that opposes relative motion between systems in contact.</p>
+<p class="prose">One of the simpler characteristics of friction is that it is parallel to the contact surface between systems and always in a direction that opposes motion or attempted motion of the systems relative to each other. If two systems are in contact and moving relative to one another, then the friction between them is calledkinetic friction. For example, friction slows a hockey puck sliding on ice. But when objects are stationary,static frictioncan act between them; the static friction is usually greater than the kinetic friction between the objects.</p>
+<p class="prose">If two systems are in contact and moving relative to one another, then the friction between them is called kinetic friction.</p>
+<p class="prose">Imagine, for example, trying to slide a heavy crate across a concrete floor—you may push harder and harder on the crate and not move it at all. This means that the static friction responds to what you do—it increases to be equal to and in the opposite direction of your push. But if you finally push hard enough, the crate seems to slip suddenly and starts to move. Once in motion it is easier to keep it in motion than it was to get it started, indicating that the kinetic friction force is less than the static friction force. If you add mass to the crate, say by placing a box on top of it, you need to push even harder to get it started and also to keep it moving. Furthermore, if you oiled the concrete you would find it to be easier to get the crate started and keep it going (as you might expect).</p>
+<p class="prose">Figure is a crude pictorial representation of how friction occurs at the interface between two objects. Close-up inspection of these surfaces shows them to be rough. So when you push to get an object moving (in this case, a crate), you must raise the object until it can skip along with just the tips of the surface hitting, break off the points, or do both. A considerable force can be resisted by friction with no apparent motion. The harder the surfaces are pushed together (such as if another box is placed on the crate), the more force is nearly independent of speed.</p>
+<div class="diagram"><img src="images/ch5/fig5-1-the-figure-shows-a-crate-on-a-flat-surfa.jpg" alt="The figure shows a crate on a flat surface, and a magnified view of a bottom corner of the crate and the supporting surface. The magnified view shows that there is roughness in the two surfaces in contact with each other. A black arrow points toward the right, away from the crate, and it is labeled as the direction of motion or attempted motion. A red arrow pointing toward the left is located near the bottom left corner of the crate, at the interface between that corner and the supporting surface. The red arrow is labeled as f, representing friction between the two surfaces in contact with each other."><div class="d-cap">The figure shows a crate on a flat surface, and a magnified view of a bottom corner of the crate and the supporting surface. The magnified view shows that there is roughness in the two surfaces in contact with each other. A black arrow points toward the right, away from the crate, and it is labeled as the direction of motion or attempted motion. A red arrow pointing toward the left is located near the bottom left corner of the crate, at the interface between that corner and the supporting surface. The red arrow is labeled as f, representing friction between the two surfaces in contact with each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The magnitude of the frictional force has two forms: one for static situations (static friction), the other for when there is motion (kinetic friction).</p>
+<p class="prose">When there is no motion between the objects, themagnitude of static friction\(\displaystyle f_s\) is</p>
+<p class="prose">where \(\displaystyle μ_s\) is the coefficient of static friction and \(\displaystyle N\) is the magnitude of the normal force (the force perpendicular to the surface).</p>
+<p class="prose">MAGNITUDE OF STATIC FRICTION</p>
+<p class="prose">Magnitude of static friction \(\displaystyle f_s\) is</p>
+<p class="prose">where \(\displaystyle μ_s\) is the coefficient of static friction and \(\displaystyle N\) is the magnitude of the normal force.</p>
+<p class="prose">The symbol \(\displaystyle ≤\) meansless than or equal to, implying that static friction can have a minimum and a maximum value of μsN. Static friction is a responsive force that increases to be equal and opposite to whatever force is exerted, up to its maximum limit. Once the applied force exceeds fs(max), the object will move. Thus</p>
+<p class="prose">Once an object is moving, themagnitude of kinetic friction\(\displaystyle f_k\) is given by</p>
+<p class="prose">where \(\displaystyle μ_k\) is the coefficient of kinetic friction. A system in which \(\displaystyle f_k=μ_kN\) is described as a system in whichfriction behaves simply.</p>
+<p class="prose">MAGNITUDE OF KINETIC FRICTION</p>
+<p class="prose">The magnitude of kinetic friction \(\displaystyle f_k\) is given by</p>
+<p class="prose">where \(\displaystyle μ_k\) is the coefficient of kinetic friction.</p>
+<p class="prose">As seen in Table, the coefficients of kinetic friction are less than their static counterparts. That values of \(\displaystyle μ\) in Table are stated to only one or, at most, two digits is an indication of the approximate description of friction given by the above two equations.</p>
+<table class="dt">
+<tr><th></th><th>Static Friction</th><th>Kinetic Friction</th></tr>
+<tr><td>System</td><td>\(\displaystyle μ_s\)</td><td>\(\displaystyle μ_k\)</td></tr>
+<tr><td>Rubber on dry concrete</td><td>1.0</td><td>0.7</td></tr>
+<tr><td>Rubber on wet concrete</td><td>0.7</td><td>0.5</td></tr>
+<tr><td>Wood on wood</td><td>0.5</td><td>0.3</td></tr>
+<tr><td>Waxed wood on wet snow</td><td>0.14</td><td>0.1</td></tr>
+<tr><td>Metal on wood</td><td>0.5</td><td>0.3</td></tr>
+<tr><td>Steel on steel (dry)</td><td>0.6</td><td>0.3</td></tr>
+<tr><td>Steel on steel (oiled)</td><td>0.05</td><td>0.063</td></tr>
+<tr><td>Teflon on steel</td><td>0.04</td><td>0.04</td></tr>
+<tr><td>Bone lubricated by synovial fluid</td><td>0.016</td><td>0.015</td></tr>
+<tr><td>Shoes on wood</td><td>0.9</td><td>0.7</td></tr>
+<tr><td>Shoes on ice</td><td>0.1</td><td>0.05</td></tr>
+<tr><td>Ice on ice</td><td>0.1</td><td>0.03</td></tr>
+<tr><td>Steel on ice</td><td>0.04</td><td>0.02</td></tr>
+</table>
+<p class="prose">Coefficients of Static and Kinetic Friction</p>
+<p class="prose">The equations given earlier include the dependence of friction on materials and the normal force. The direction of friction is always opposite that of motion, parallel to the surface between objects, and perpendicular to the normal force. For example, if the crate you try to push (with a force parallel to the floor) has a mass of 100 kg, then the normal force would be equal to its weight, \(\displaystyle W=mg=(100 kg)(9.80m/s^2)=980 N\), perpendicular to the floor. If the coefficient of static friction is 0.45, you would have to exert a force parallel to the floor greater than \(\displaystyle f_{s(max)}=μ_sN=(0.45)(980N)=440N\) to move the crate. Once there is motion, friction is less and the coefficient of kinetic friction might be 0.30, so that a force of only 290 N \(\displaystyle (f_k=μ_kN=(0.30)(980N)=290N)\) would keep it moving at a constant speed. If the floor is lubricated, both coefficients are considerably less than they would be without lubrication. Coefficient of friction is a unit less quantity with a magnitude usually between 0 and 1.0. The coefficient of the friction depends on the two surfaces that are in contact.</p>
+<p class="prose">Find a small plastic object (such as a food container) and slide it on a kitchen table by giving it a gentle tap. Now spray water on the table, simulating a light shower of rain. What happens now when you give the object the same-sized tap? Now add a few drops of (vegetable or olive) oil on the surface of the water and give the same tap. What happens now? This latter situation is particularly important for drivers to note, especially after a light rain shower. Why?</p>
+<p class="prose">Many people have experienced the slipperiness of walking on ice. However, many parts of the body, especially the joints, have much smaller coefficients of friction—often three or four times less than ice. A joint is formed by the ends of two bones, which are connected by thick tissues. The knee joint is formed by the lower leg bone (the tibia) and the thighbone (the femur). The hip is a ball (at the end of the femur) and socket (part of the pelvis) joint. The ends of the bones in the joint are covered by cartilage, which provides a smooth, almost glassy surface. The joints also produce a fluid (synovial fluid) that reduces friction and wear. A damaged or arthritic joint can be replaced by an artificial joint (Figure). These replacements can be made of metals (stainless steel or titanium) or plastic (polyethylene), also with very small coefficients of friction.</p>
+<div class="diagram"><img src="images/ch5/fig5-2-two-x-x-rays-of-an-artificial-knee-repla.jpg" alt="Two X-x rays of an artificial knee replacement are shown."><div class="d-cap">Two X-x rays of an artificial knee replacement are shown. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Other natural lubricants include saliva produced in our mouths to aid in the swallowing process, and the slippery mucus found between organs in the body, allowing them to move freely past each other during heartbeats, during breathing, and when a person moves. Artificial lubricants are also common in hospitals and doctor’s clinics. For example, when ultrasonic imaging is carried out, the gel that couples the transducer to the skin also serves to lubricate the surface between the transducer and the skin—thereby reducing the coefficient of friction between the two surfaces. This allows the transducer to move freely over the skin.</p>
+<p class="prose">Exercise \(\displaystyle : Skiing Exercise</p>
+<p class="prose">A skier with a mass of 62 kg is sliding down a snowy slope. Find the coefficient of kinetic friction for the skier if friction is known to be 45.0 N.</p>
+<p class="prose">The magnitude of kinetic friction was given in to be 45.0 N. Kinetic friction is related to the normal force \(\displaystyle N\) as \(\displaystyle f_k=μ_kN\); thus, the coefficient of kinetic friction can be found if we can find the normal force of the skier on a slope. The normal force is always perpendicular to the surface, and since there is no motion perpendicular to the surface, the normal force should equal the component of the skier’s weight perpendicular to the slope. (See the skier and free-body diagram in Figure.)</p>
+<div class="diagram"><img src="images/ch5/fig5-3-the-figure-shows-a-skier-going-down-a-sl.jpg" alt="The figure shows a skier going down a slope that forms an angle of 25 degrees with the horizontal. The weight of the skier, labeled w, is represented by a red arrow pointing vertically downward. This weight is divided into two components, w perpendicular is perpendicular to the slope, and w parallel is parallel to the slope. The normal force, labeled N, is also perpendicular to the slope, equal in magnitude but opposite in direction to w perpendicular. The friction, f, is represented by a red arrow pointing upslope. In addition, the figure shows a free body diagram that shows the relative magnitudes and directions of w, f, and N."><div class="d-cap">The figure shows a skier going down a slope that forms an angle of 25 degrees with the horizontal. The weight of the skier, labeled w, is represented by a red arrow pointing vertically downward. This weight is divided into two components, w perpendicular is perpendicular to the slope, and w parallel is parallel to the slope. The normal force, labeled N, is also perpendicular to the slope, equal in magnitude but opposite in direction to w perpendicular. The friction, f, is represented by a red arrow pointing upslope. In addition, the figure shows a free body diagram that shows the relative magnitudes and directions of w, f, and N. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Substituting this into our expression for kinetic friction, we get</p>
+<p class="prose">which can now be solved for the coefficient of kinetic friction \(\displaystyle μ_k\).</p>
+<p class="prose">Solving for \(\displaystyle μ_k\) gives</p>
+<p class="prose">Substituting known values on the right-hand side of the equation,</p>
+<p class="prose">This result is a little smaller than the coefficient listed in Table for waxed wood on snow, but it is still reasonable since values of the coefficients of friction can vary greatly. In situations like this, where an object of mass m slides down a slope that makes an angle \(\displaystyle θ\) with the horizontal, friction is given by \(\displaystyle f_k=μ_kmgcosθ\). All objects will slide down a slope with constant acceleration under these circumstances. Proof of this is left for this chapter’s Problems and Exercises.</p>
+<p class="prose">An object will slide down an inclined plane at a constant velocity if the net force on the object is zero. We can use this fact to measure the coefficient of kinetic friction between two objects. As shown in Example, the kinetic friction on a slope \(\displaystyle f_k=μ_kmgcosθ\). The component of the weight down the slope is equal to \(\displaystyle mgsinθ\) (see the free-body diagram in Figure). These forces act in opposite directions, so when they have equal magnitude, the acceleration is zero. Writing these out:</p>
+<p class="prose">Solving for \(\displaystyle μ_k\), we find that</p>
+<p class="prose">Put a coin on a book and tilt it until the coin slides at a constant velocity down the book. You might need to tap the book lightly to get the coin to move. Measure the angle of tilt relative to the horizontal and find \(\displaystyle μ_k\). Note that the coin will not start to slide at all until an angle greater than \(\displaystyle θ\) is attained, since the coefficient of static friction is larger than the coefficient of kinetic friction. Discuss how this may affect the value for \(\displaystyle μ_k\) and its uncertainty.</p>
+<p class="prose">We have discussed that when an object rests on a horizontal surface, there is a normal force supporting it equal in magnitude to its weight. Furthermore, simple friction is always proportional to the normal force.</p>
+<p class="prose">MAKING CONNECTIONS: SUBMICROSCOPIC EXPLANATIONS OF FRICTION</p>
+<p class="prose">The simpler aspects of friction dealt with so far are its macroscopic (large-scale) characteristics. Great strides have been made in the atomic-scale explanation of friction during the past several decades. Researchers are finding that the atomic nature of friction seems to have several fundamental characteristics. These characteristics not only explain some of the simpler aspects of friction—they also hold the potential for the development of nearly friction-free environments that could save hundreds of billions of dollars in energy which is currently being converted (unnecessarily) to heat.</p>
+<p class="prose">Figure illustrates one macroscopic characteristic of friction that is explained by microscopic (small-scale) research. We have noted that friction is proportional to the normal force, but not to the area in contact, a somewhat counterintuitive notion. When two rough surfaces are in contact, the actual contact area is a tiny fraction of the total area since only high spots touch. When a greater normal force is exerted, the actual contact area increases, and it is found that the friction is proportional to this area.</p>
+<div class="diagram"><img src="images/ch5/fig5-4-this-figure-has-two-parts-each-of-which-.jpg" alt="This figure has two parts, each of which shows two rough surfaces in close proximity to each other. In the first part, the normal force is small, so that the area of contact between the two surfaces is much smaller than their total area. In the second part, the normal force is large, so that the area of contact between the two surfaces has increased. As a result, the friction between the two surfaces in the second part is also greater than the friction in the first part."><div class="d-cap">This figure has two parts, each of which shows two rough surfaces in close proximity to each other. In the first part, the normal force is small, so that the area of contact between the two surfaces is much smaller than their total area. In the second part, the normal force is large, so that the area of contact between the two surfaces has increased. As a result, the friction between the two surfaces in the second part is also greater than the friction in the first part. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">But the atomic-scale view promises to explain far more than the simpler features of friction. The mechanism for how heat is generated is now being determined. In other words, why do surfaces get warmer when rubbed? Essentially, atoms are linked with one another to form lattices. When surfaces rub, the surface atoms adhere and cause atomic lattices to vibrate—essentially creating sound waves that penetrate the material. The sound waves diminish with distance and their energy is converted into heat. Chemical reactions that are related to frictional wear can also occur between atoms and molecules on the surfaces. Figure shows how the tip of a probe drawn across another material is deformed by atomic-scale friction. The force needed to drag the tip can be measured and is found to be related to shear stress, which will be discussed later in this chapter. The variation in shear stress is remarkable (more than a factor of \(\displaystyle 10^{12}\) ) and difficult to predict theoretically, but shear stress is yielding a fundamental understanding of a large-scale phenomenon known since ancient times—friction.</p>
+<div class="diagram"><img src="images/ch5/fig5-5-this-figure-shows-a-molecular-model-of-a.jpg" alt="This figure shows a molecular model of a probe that is dragged over the surface of a substrate. The substrate is represented by a rectangular prism, made up of a grid of small spheres, each sphere representing an atom. The probe, made up of a different grid of small spheres, is in the form of an inverted pyramid with a flattened peak. The pyramid is somewhat distorted because of friction."><div class="d-cap">This figure shows a molecular model of a probe that is dragged over the surface of a substrate. The substrate is represented by a rectangular prism, made up of a grid of small spheres, each sphere representing an atom. The probe, made up of a different grid of small spheres, is in the form of an inverted pyramid with a flattened peak. The pyramid is somewhat distorted because of friction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PHET EXPLORATIONS: FORCES AND MOTION</p>
+<p class="prose">Explore the forces at work when you try to push a filing cabinet. Create an applied force and see the resulting friction force and total force acting on the cabinet. Charts show the forces, position, velocity, and acceleration vs. time. Draw a free-body diagram of all the forces (including gravitational and normal forces).</p>
+<div class="diagram"><img src="images/ch5/fig5-6-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<p class="prose">where \(\displaystyle μ_s\) is the coefficient of static friction, which depends on both of the materials.</p>
+<p class="prose">where \(\displaystyle μ_k\) is the coefficient of kinetic friction, which also depends on both materials.</p>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MAGNITUDE OF STATIC FRICTIONMagnitude of static friction \(\displaystyle f_s\) is\(\displaystyle f_s≤μ_sN\),where \(\displaystyle μ_s\) is the coefficient of static friction and \(\displaystyle N\) is the magnitude of the normal force.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MAGNITUDE OF KINETIC FRICTIONThe magnitude of kinetic friction \(\displaystyle f_k\) is given by\(\displaystyle f_k=μ_kN\),where \(\displaystyle μ_k\) is the coefficient of kinetic friction.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE-HOME EXPERIMENTFind a small plastic object (such as a food container) and slide it on a kitchen table by giving it a gentle tap. Now spray water on the table, simulating a light shower of rain. What happens now when you give the object the same-sized tap? Now add a few drops of (vegetable or olive) oil on the surface of the water and give the same tap. What happens now? This latter situation is particularly important for drivers to note, especially after a light rain shower. Why?</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE-HOME EXPERIMENTAn object will slide down an inclined plane at a constant velocity if the net force on the object is zero. We can use this fact to measure the coefficient of kinetic friction between two objects. As shown in Example, the kinetic friction on a slope \(\displaystyle f_k=μ_kmgcosθ\). The component of the weight down the slope is equal to \(\displaystyle mgsinθ\) (see the free-body diagram in Figure). These forces act in opposite directions, so when they have equal magnitude, the acceleration is zero. Writing these out:\(\displaystyle f_k=Fg_x\)\(\displaystyle μ_kmgcosθ=mgsinθ\).Solving for \(\displaystyle μ_k\), we find that\(\displaystyle μ_k=\frac{mgsinθ}{mgcosθ}=tanθ\).Put a coin on a book and tilt it until the coin slides at a constant velocity down the book. You might need to tap the book lightly to get the coin to move. Measure the angle of tilt relative to the horizontal and find \(\displaystyle μ_k\). Note that the coin will not start to slide at all until an angle greater than \(\displaystyle θ\) is attained, since the coefficient of static friction is larger than the coefficient of kinetic friction. Discuss how this may affect the value for \(\displaystyle μ_k\) and its uncertainty.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MAKING CONNECTIONS: SUBMICROSCOPIC EXPLANATIONS OF FRICTIONThe simpler aspects of friction dealt with so far are its macroscopic (large-scale) characteristics. Great strides have been made in the atomic-scale explanation of friction during the past several decades. Researchers are finding that the atomic nature of friction seems to have several fundamental characteristics. These characteristics not only explain some of the simpler aspects of friction—they also hold the potential for the development of nearly friction-free environments that could save hundreds of billions of dollars in energy which is currently being converted (unnecessarily) to heat.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">\(\displaystyle :</div><div class="cx">PHET EXPLORATIONS: FORCES AND MOTIONExplore the forces at work when you try to push a filing cabinet. Create an applied force and see the resulting friction force and total force acting on the cabinet. Charts show the forces, position, velocity, and acceleration vs. time. Draw a free-body diagram of all the forces (including gravitational and normal forces).Forces and Motion</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 5.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Define normal force. What is its relationship to friction when friction behaves simply?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 5.1 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following statements best describes the direction of the frictional force between two surfaces?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is always parallel to the contact surface and opposes the motion or attempted motion.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is always perpendicular to the contact surface and in the direction of the normal force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is parallel to the contact surface and in the same direction as the velocity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is perpendicular to the contact surface and opposes the gravitational force.</li>
+</ul><div class="qexp">Friction is a contact force that acts parallel to the interface of two systems and always opposes relative motion or the intent of motion.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A 20 kg crate sits at rest on a horizontal floor where the maximum static friction force is 80 N. If you push the crate with a horizontal force of 40 N, what is the magnitude of the static friction force acting on the crate?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>40 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>80 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>196 N</li>
+</ul><div class="qexp">Static friction is a responsive force that increases to be equal and opposite to the applied force until the maximum threshold is reached.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A wooden sled is being pulled across a horizontal patch of snow at a constant velocity. If the normal force is 500 N and the coefficient of kinetic friction is 0.10, what is the magnitude of the kinetic friction force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>50 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>500 N</li>
+</ul><div class="qexp">The magnitude of kinetic friction is calculated by multiplying the coefficient of kinetic friction by the normal force ($f_k = \mu_k N$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If a skydiver transitions from a "head-first" pike position to a "spread-eagle" position while falling, how does their terminal velocity change?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It increases because the drag coefficient $C$ increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It remains the same because their mass has not changed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases because the fluid density remains constant.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It decreases because the surface area $A$ facing the fluid increases.</li>
+</ul><div class="qexp">Terminal velocity is inversely proportional to the square root of the cross-sectional area, so increasing the area increases drag and lowers terminal velocity.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which condition must be met for an object falling through a fluid to reach its terminal velocity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The magnitude of the drag force must equal the magnitude of the object's weight.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The object must be falling in a vacuum where there is no air resistance.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The velocity of the object must be equal to the acceleration due to gravity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the drag coefficient $C$ must be reduced to exactly zero.</li>
+</ul><div class="qexp">Terminal velocity is reached when the upward drag force equals the downward force of gravity, resulting in zero net force and zero acceleration.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 5 · <span>Section 5.2</span></div><div class="h-title">5.2: Drag Forces</div><div class="h-desc">Another interesting force in everyday life is the force of drag on an object when it is moving in a fluid (either a gas or a liquid). You feel the drag force when you move your hand through water. You...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 5.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Express mathematically the drag force.</li>
+      <li>Discuss the applications of drag force.</li>
+      <li>Define terminal velocity.</li>
+      <li>Determine the terminal velocity given mass.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 5.2</div>
+<p class="prose">Another interesting force in everyday life is the force of drag on an object when it is moving in a fluid (either a gas or a liquid). You feel the drag force when you move your hand through water. You might also feel it if you move your hand during a strong wind. The faster you move your hand, the harder it is to move. You feel a smaller drag force when you tilt your hand so only the side goes through the air—you have decreased the area of your hand that faces the direction of motion. Like friction, thedrag forcealways opposes the motion of an object. Unlike simple friction, the drag force is proportional to some function of the velocity of the object in that fluid. This functionality is complicated and depends upon the shape of the object, its size, its velocity, and the fluid it is in. For most large objects such as bicyclists, cars, and baseballs not moving too slowly, the magnitude of the drag force \(F_D\) is found to be proportional to the square of the speed of the object. We can write this relationship mathematically as \(F_D\propto v^2 \). When taking into account other factors, this relationship becomes</p>
+<div class="math-display">\[F_D = \dfrac{1}{2} C_{\rho} Av^2, \label{5.3.1}\]</div>
+<p class="prose">where \(C\) is the drag coefficient, \(A\) is the area of the object facing the fluid, and \(\rho\) is the density of the fluid. (Recall that density is mass per unit volume.) This equation can also be written in a more generalized fashion as \(F_D = bv^2, \) where \(b\) is a constant equivalent to \(0.5 C\rho A.\) We have set the exponent for these equations as 2 because, when an object is moving at high velocity through air, the magnitude of the drag force is proportional to the square of the speed. As we shall see in a few pages on fluid dynamics, for small particles moving at low speeds in a fluid, the exponent is equal to 1.</p>
+<p class="prose">Definition: DRAG FORCE</p>
+<p class="prose">Drag Force \(F_D\) is found to be proportional to the square of the speed of the object. Mathematically \[F_D\propto v^2 \]</p>
+<p class="prose">\[F_D = \dfrac{1}{2} C_{\rho} Av^2, \] where \(C\) is the drag coefficient \(A\) is the area of the object facing the fluid, and \(\rho\) is the density of the fluid.</p>
+<p class="prose">Athletes as well as car designers seek to reduce the drag force to lower their race times. (See Figure). “Aerodynamic” shaping of an automobile can reduce the drag force and so increase a car’s gas mileage.</p>
+<p class="prose">The value of the drag coefficient, \(C\) is determined empirically, usually with the use of a wind tunnel. (See Figure).</p>
+<p class="prose">The drag coefficient can depend upon velocity, but we will assume that it is a constant here. Table lists some typical drag coefficients for a variety of objects. Notice that the drag coefficient is a dimensionless quantity. At highway speeds, over 50% of the power of a car is used to overcome air drag. The most fuel-efficient cruising speed is about 70–80 km/h (about 45–50 mi/h). For this reason, during the 1970s oil crisis in the United States, maximum speeds on highways were set at about 90 km/h (55 mi/h).</p>
+<table class="dt">
+<tr><th>Object</th><th>C</th></tr>
+<tr><td>Airfoil</td><td>0.05</td></tr>
+<tr><td>Toyota Camry</td><td>0.28</td></tr>
+<tr><td>Ford Focus</td><td>0.32</td></tr>
+<tr><td>Honda Civic</td><td>0.36</td></tr>
+<tr><td>Ferrari Testarossa</td><td>0.37</td></tr>
+<tr><td>Dodge Ram pickup</td><td>0.43</td></tr>
+<tr><td>Sphere</td><td>0.45</td></tr>
+<tr><td>Hummer H2 SUV</td><td>0.64</td></tr>
+<tr><td>Skydiver (feet first)</td><td>0.70</td></tr>
+<tr><td>Bicycle</td><td>0.90</td></tr>
+<tr><td>Skydiver (horizontal)</td><td>1.0</td></tr>
+<tr><td>Circular flat plate</td><td>1.12</td></tr>
+</table>
+<p class="prose">Substantial research is under way in the sporting world to minimize drag. The dimples on golf balls are being redesigned as are the clothes that athletes wear. Bicycle racers and some swimmers and runners wear full bodysuits. Australian Cathy Freeman wore a full body suit in the 2000 Sydney Olympics, and won the gold medal for the 400 m race. Many swimmers in the 2008 Beijing Olympics wore (Speedo) body suits; it might have made a difference in breaking many world records (See Figure). Most elite swimmers (and cyclists) shave their body hair. Such innovations can have the effect of slicing away milliseconds in a race, sometimes making the difference between a gold and a silver medal. One consequence is that careful and precise guidelines must be continuously developed to maintain the integrity of the sport.</p>
+<p class="prose">Some interesting situations connected to Newton’s second law occur when considering the effects of drag forces upon a moving object. For instance, consider a skydiver falling through air under the influence of gravity. The two forces acting on him are the force of gravity and the drag force (ignoring the buoyant force). The downward force of gravity remains constant regardless of the velocity at which the person is moving. However, as the person’s velocity increases, the magnitude of the drag force increases until the magnitude of the drag force is equal to the gravitational force, thus producing a net force of zero. A zero net force means that there is no acceleration, as given by Newton’s second law. At this point, the person’s velocity remains constant and we say that the person has reached histerminal velocity \((v_t)\).Since\(F_D\)is proportional to the speed, a heavier skydiver must go faster for \(F_D\) to equal his weight. Let’s see how this works out more quantitatively.</p>
+<p class="prose">At the terminal velocity,</p>
+<div class="math-display">\[ F_{net} = mg - F_D = ma = 0\]</div>
+<p class="prose">Using the equation for drag force, we have \[ mg = \dfrac{1}{2}\rho C Av^2. \]</p>
+<p class="prose">Solving for the velocity, we obtain \[ v = \sqrt{\dfrac{2mg}{\rho C A}} \]</p>
+<p class="prose">Assume the density of air is \(\rho = 1.21 \, kg/m^3. \) A 75-kg skydiver descending head first will have an area approximately \(A = 0.18 \, m^2 \) and a drag coefficient of approximately \(C = 0.70. \) We find that</p>
+<div class="math-display">\[v = \sqrt{\dfrac{2(75 \, kg)(9.80 \, m/s^2)}{(1.21 \, kg/m^3)(0.70)(0.18 \, m^2)}} \]</div>
+<p class="prose">This means a skydiver with a mass of 75 kg achieves a maximum terminal velocity of about 350 km/h while traveling in a pike (head first) position, minimizing the area and his drag. In a spread-eagle position, that terminal velocity may decrease to about 200 km/h as the area increases. This terminal velocity becomes much smaller after the parachute opens.</p>
+<p class="prose">This interesting activity examines the effect of weight upon terminal velocity. Gather together some nested coffee filters. Leaving them in their original shape, measure the time it takes for one, two, three, four, and five nested filters to fall to the floor from the same height (roughly 2 m). (Note that, due to the way the filters are nested, drag is constant and only mass varies.) They obtain terminal velocity quite quickly, so find this velocity as a function of mass. Plot the terminal velocity \(v\) versus mass. Also plot \(v^2\) versus mass. Which of these relationships is more linear? What can you conclude from these graphs?</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : The terminal Velocity</span></div><div class="example-body">
+<p class="prose">Find the terminal velocity of an 85-kg skydiver falling in a spread-eagle position.</p>
+<p class="prose">At terminal velocity, \(F_{net} = 0 \) Thus the drag force on the skydiver must equal the force of gravity (the person’s weight). Using the equation of drag force, we find \(mg = \frac{1}{2} \rho C A v^2\).</p>
+<p class="prose">Thus the terminal velocity \(v_t\) can be written as</p>
+<div class="math-display">\[v_t = \sqrt{\dfrac{2mg}{\rho CA}} \]</div>
+<p class="prose">All quantities are known except the person’s projected area. This is an adult (85 kg) falling spread eagle. We can estimate the frontal area as \[ A = (2 \, m)(0.35 \, m) = 0.70 \, m^2 \]</p>
+<p class="prose">Using our equation for \(v_t,\) we find that</p>
+<div class="math-display">\[ v_t = \sqrt{\dfrac{2(85\space kg)(9.80 \, m/s^2)}{91.21 \, kg/m^3)(1.0)(0.70 \, m^2)}} \]</div>
+<p class="prose">This result is consistent with the value for \(v_t\) mentioned earlier. The 75-kg skydiver going feet first had a \(v = 98 \, m/s.\) He weighed less but had a smaller frontal area and so a smaller drag due to the air.</p>
+<p class="prose">The size of the object that is falling through air presents another interesting application of air drag. If you fall from a 5-m high branch of a tree, you will likely get hurt—possibly fracturing a bone. However, a small squirrel does this all the time, without getting hurt. You don’t reach a terminal velocity in such a short distance, but the squirrel does.</p>
+<p class="prose">The following interesting quote on animal size and terminal velocity is from a 1928 essay by a British biologist, J.B.S. Haldane, titled “On Being the Right Size.”</p>
+<p class="prose">To the mouse and any smaller animal, [gravity] presents practically no dangers. You can drop a mouse down a thousand-yard mine shaft; and, on arriving at the bottom, it gets a slight shock and walks away, provided that the ground is fairly soft. A rat is killed, a man is broken, and a horse splashes. For the resistance presented to movement by the air is proportional to the surface of the moving object. Divide an animal’s length, breadth, and height each by ten; its weight is reduced to a thousandth, but its surface only to a hundredth. So the resistance to falling in the case of the small animal is relatively ten times greater than the driving force.</p>
+<p class="prose">The above quadratic dependence of air drag upon velocity does not hold if the object is very small, is going very slow, or is in a denser medium than air. Then we find that the drag force is proportional just to the velocity. This relationship is given byStokes’ law, which states that \[ F_S = 6 \pi r \eta v \] where \(r\) is the radius of the object, \(\eta\) is the viscosity of the fluid and \(v\) is the object's velocity.</p>
+<p class="prose">Definition: STOKES LAW</p>
+<div class="math-display">\[ F_S = 6 \pi r \eta v \]</div>
+<p class="prose">where \(r\) is the radius of the object, \(\eta\) is the viscosity of the fluid and \(v\) is the object's velocity.</p>
+<p class="prose">Good examples of this law are provided by microorganisms, pollen, and dust particles. Because each of these objects is so small, we find that many of these objects travel unaided only at a constant (terminal) velocity. Terminal velocities for bacteria (size about \(1 \, \mu m\)) can be about \(2 \, m/s.\) To move at a greater speed, many bacteria swim using flagella (organelles shaped like little tails) that are powered by little motors embedded in the cell. Sediment in a lake can move at a greater terminal velocity (about \(5 \, \mu m/s,\)) so it can take days to reach the bottom of the lake after being deposited on the surface.</p>
+<p class="prose">If we compare animals living on land with those in water, you can see how drag has influenced evolution. Fishes, dolphins, and even massive whales are streamlined in shape to reduce drag forces. Birds are streamlined and migratory species that fly large distances often have particular features such as long necks. Flocks of birds fly in the shape of a spear head as the flock forms a streamlined pattern (see Figure). In humans, one important example of streamlining is the shape of sperm, which need to be efficient in their use of energy.</p>
+<p class="prose">Galileo is said to have dropped two objects of different masses from the Tower of Pisa. He measured how long it took each to reach the ground. Since stopwatches weren’t readily available, how do you think he measured their fall time? If the objects were the same size, but with different masses, what do you think he should have observed? Would this result be different if done on the Moon?</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">TAKE-HOME EXPERIMENTThis interesting activity examines the effect of weight upon terminal velocity. Gather together some nested coffee filters. Leaving them in their original shape, measure the time it takes for one, two, three, four, and five nested filters to fall to the floor from the same height (roughly 2 m). (Note that, due to the way the filters are nested, drag is constant and only mass varies.) They obtain terminal velocity quite quickly, so find this velocity as a function of mass. Plot the terminal velocity \(v\) versus mass. Also plot \(v^2\) versus mass. Which of these relationships is more linear? What can you conclude from these graphs?</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">GALILEO’S EXPERIMENTGalileo is said to have dropped two objects of different masses from the Tower of Pisa. He measured how long it took each to reach the ground. Since stopwatches weren’t readily available, how do you think he measured their fall time? If the objects were the same size, but with different masses, what do you think he should have observed? Would this result be different if done on the Moon?</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 5.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">The glue on a piece of tape can exert forces. Can these forces be a type of simple friction? Explain, considering especially that tape can stick to vertical walls and even to ceilings.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 5.2 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A spring has a force constant $k$ of 200 N/m. How much force is required to stretch the spring by 0.15 meters from its equilibrium position?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.33 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>30 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1333 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3000 N</li>
+</ul><div class="qexp">According to Hooke's Law ($F = k\Delta L$), the force is the product of the spring constant and the deformation ($200 \text{ N/m} \times 0.15 \text{ m} = 30 \text{ N}$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In the study of elasticity, how is "strain" defined?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of the applied force to the cross-sectional area.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The proportionality constant $k$ that depends on the shape of the object.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The fractional change in length, represented as the change in length divided by the original length.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The maximum stress a material can withstand before permanent deformation occurs.</li>
+</ul><div class="qexp">Strain is a unitless quantity defined as the ratio of the change in length ($\Delta L$) to the original length ($L_0$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Healthy human joints like the hip or knee have a coefficient of friction that is significantly lower than that of steel sliding on ice. What is the primary reason for this?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bone has a higher Young’s modulus than steel.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The joints are subjected to very low normal forces during movement.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The bones are not actually in contact but are held apart by magnetic forces.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The presence of cartilage and synovial fluid provides a very smooth, lubricated interface.</li>
+</ul><div class="qexp">Cartilage provides a glassy surface and synovial fluid acts as a natural lubricant, reducing the coefficient of friction to values as low as 0.015.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">For a car traveling at highway speeds, if the driver increases the speed from 50 km/h to 100 km/h, the magnitude of the air drag force increases by what factor?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.5</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.41</li>
+</ul><div class="qexp">For large objects at high speeds, the drag force is proportional to the square of the velocity ($F_D \propto v^2$), so doubling the speed quadruples the force.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which elastic modulus should be used to calculate the deformation of a sphere being compressed by uniform pressure from all sides while deep underwater?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Young's Modulus</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bulk Modulus</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Shear Modulus</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Static Modulus</li>
+</ul><div class="qexp">The Bulk Modulus ($B$) describes a material's resistance to uniform compression and the resulting change in volume.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 5 · <span>Section 5.3</span></div><div class="h-title">5.3: Elasticity - Stress and Strain</div><div class="h-desc">We now move from consideration of forces that affect the motion of an object (such as friction and drag) to those that affect an object’s shape. If a bulldozer pushes a car into a wall, the car will n...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 5.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State Hooke’s law.</li>
+      <li>Explain Hooke’s law using graphical representation between deformation and applied force.</li>
+      <li>Discuss the three types of deformations such as changes in length, sideways shear and changes in volume.</li>
+      <li>Describe with examples the young’s modulus, shear modulus and bulk modulus.</li>
+      <li>Determine the change in length given mass, length and radius.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">deformation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">change in shape due to the application of force</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 5.3</div>
+<p class="prose">We now move from consideration of forces that affect the motion of an object (such as friction and drag) to those that affect an object’s shape. If a bulldozer pushes a car into a wall, the car will not move but it will noticeably change shape. A change in shape due to the application of a force is adeformation. Even very small forces are known to cause some deformation. For small deformations, two important characteristics are observed. First, the object returns to its original shape when the force is removed—that is, the deformation is elastic for small deformations. Second, the size of the deformation is proportional to the force—that is, for small deformations, Hooke’s law is obeyed. In equation form,Hooke’slawis given by</p>
+<p class="prose">where \(\Delta L \) is the amount of deformation (the change in length, for example) produced by the force \(F\), and \(k\) is a proportionality constant that depends on the shape and composition of the object and the direction of the force. Note that this force is a function of the deformation \(\Delta L\) it is not constant as a kinetic friction force is. Rearranging this to</p>
+<div class="math-display">\[ \Delta L = \dfrac{F}{k} \]</div>
+<p class="prose">makes it clear that the deformation is proportional to the applied force. Figure shows the Hooke’s law relationship between the extension \(\Delta L\) of a spring or of a human bone. For metals or springs, the straight line region in which Hooke’s law pertains is much larger. Bones are brittle and the elastic region is small and the fracture abrupt. Eventually a large enough stress to the material will cause it to break or fracture.Tensile strengthis the breaking stress that will cause permanent deformation or fracture of a material.</p>
+<p class="prose">where \(\Delta L\) is the amount of deformation (the change in length, for example) produced by the force \(F\), and \(k\) is a proportionality constant that depends on the shape and composition of the object and the direction of the force. \[\Delta L = \dfrac{F}{k} \]</p>
+<p class="prose">The proportionality constant \(k\) depends upon a number of factors for the material. For example, a guitar string made of nylon stretches when it is tightened, and the elongation \(\Delta L\) is proportional to the force applied (at least for small deformations). Thicker nylon strings and ones made of steel stretch less for the same applied force, implying they have a larger \(k\) (see Figure). Finally, all three strings return to their normal lengths when the force is removed, provided the deformation is small. Most materials will behave in this manner if the deformation is less than about 0.1% or about 1 part in \(10^3\).</p>
+<p class="prose">STRETCH YOURSELF A LITTLE</p>
+<p class="prose">How would you go about measuring the proportionality constant \(k\) of a rubber band? If a rubber band stretched 3 cm when a 100-g mass was attached to it, then how much would it stretch if two similar rubber bands were attached to the same mass—even if put together in parallel or alternatively if tied together in series?</p>
+<p class="prose">We now consider three specific types of deformations: changes in length (tension and compression), sideways shear (stress), and changes in volume. All deformations are assumed to be small unless otherwise stated.</p>
+<div class="sh2">Changes in Length—Tension and Compression: Elastic Modulus</div>
+<p class="prose">A change in length \(\Delta L\) is produced when a force is applied to a wire or rod parallel to its length \(L_0\), either stretching it (a tension) or compressing it. (See Figure.)</p>
+<p class="prose">Experiments have shown that the change in length \((\Delta L)\) depends on only a few variables. As already noted, \(\Delta L\) is proportional to the force \(F\) and depends on the substance from which the object is made. Additionally, the change in length is proportional to the original length \(L_0\) and inversely proportional to the cross-sectional area of the wire or rod. For example, a long guitar string will stretch more than a short one, and a thick string will stretch less than a thin one. We can combine all these factors into one equation for \(\Delta L\):</p>
+<div class="math-display">\[\Delta L = \dfrac{1}{Y}\dfrac{F}{A} L_0,\]</div>
+<p class="prose">where \(\Delta L\) is the change in length, \(F\) the applied force, \(Y\) is a factor, called the elastic modulus or Young’s modulus, that depends on the substance, \(A\) is the cross-sectional area, and \(L_0\) is the original length. Table lists values of \(Y\) for several materials—those with a large \(Y\) are said to have a large tensile stifness because they deform less for a given tension or compression.</p>
+<table class="dt">
+<tr><th>Material</th><th>Young’s modulus (tension–compression) Y\((10^9 \, N/m^2)\)</th><th>Sheer modulus S\((10^9 \, N/m^2 )\)</th><th>Bulk modulus B\((10^9 \, N/m^2)\)</th></tr>
+<tr><td>Aluminum</td><td>70</td><td>25</td><td>75</td></tr>
+<tr><td>Bone – tension</td><td>16</td><td>80</td><td>8</td></tr>
+<tr><td>Bone – compression</td><td>9</td><td></td><td></td></tr>
+<tr><td>Brass</td><td>90</td><td>35</td><td>75</td></tr>
+<tr><td>Brick</td><td>15</td><td></td><td></td></tr>
+<tr><td>Concrete</td><td>20</td><td></td><td></td></tr>
+<tr><td>Glass</td><td>70</td><td>20</td><td>30</td></tr>
+<tr><td>Granite</td><td>45</td><td>20</td><td>45</td></tr>
+<tr><td>Hair (human)</td><td>10</td><td></td><td></td></tr>
+<tr><td>Hardwood</td><td>15</td><td>10</td><td></td></tr>
+<tr><td>Iron, cast</td><td>100</td><td>40</td><td>90</td></tr>
+<tr><td>Lead</td><td>16</td><td>5</td><td>50</td></tr>
+<tr><td>Marble</td><td>60</td><td>20</td><td>70</td></tr>
+<tr><td>Nylon</td><td>5</td><td></td><td></td></tr>
+<tr><td>Polystyrene</td><td>3</td><td></td><td></td></tr>
+<tr><td>Silk</td><td>6</td><td></td><td></td></tr>
+<tr><td>Spider thread</td><td>3</td><td></td><td></td></tr>
+<tr><td>Steel</td><td>210</td><td>80</td><td>130</td></tr>
+<tr><td>Tendon</td><td>1</td><td></td><td></td></tr>
+<tr><td>Acetone</td><td></td><td></td><td>0.7</td></tr>
+<tr><td>Ethanol</td><td></td><td></td><td>0.9</td></tr>
+<tr><td>Glycerin</td><td></td><td></td><td>4.5</td></tr>
+<tr><td>Mercury</td><td></td><td></td><td>25</td></tr>
+<tr><td>Water</td><td></td><td></td><td>2.2</td></tr>
+</table>
+<p class="prose">Young’s moduli are not listed for liquids and gases in Table because they cannot be stretched or compressed in only one direction. Note that there is an assumption that the object does not accelerate, so that there are actually two applied forces of magnitude \(F\) acting in opposite directions. For example, the strings in Figure are being pulled down by a force of magnitude \(w\) and held up by the ceiling, which also exerts a force of magnitude \(w\).</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : The Stretch of a Long Cable</span></div><div class="example-body">
+<p class="prose">Suspension cables are used to carry gondolas at ski resorts. (See Figure) Consider a suspension cable that includes an unsupported span of 3020 m. Calculate the amount of stretch in the steel cable. Assume that the cable has a diameter of 5.6 cm and the maximum tension it can withstand is \(3 \times 10^6 \, N\)</p>
+<p class="prose">The force is equal to the maximum tension, or \( F = 3 \times 10^6 \, N. \) The cross-sectional area is \(\pi r^2 = 2.46 \times 10^{-3} m^2.\) The equation \(\Delta l = \frac{1}{Y} \frac{F}{A} L_0 \) can be used to find the change in length.</p>
+<p class="prose">All quantities are known. Thus,</p>
+<div class="math-display">\[ \Delta L = \left( \dfrac{1}{210 \times 10^9 \, N/m^2} \right) \left( \dfrac{3.0 \times 10^6 \, N}{2.46 \times 10^{-3} \, m^2} \right ) (3020 \, m)\]\[ = 18 \, m\]</div>
+<p class="prose">This is quite a stretch, but only about 0.6% of the unsupported length. Effects of temperature upon length might be important in these environments.</p>
+<p class="prose">Bones, on the whole, do not fracture due to tension or compression. Rather they generally fracture due to sideways impact or bending, resulting in the bone shearing or snapping. The behavior of bones under tension and compression is important because it determines the load the bones can carry. Bones are classified as weight-bearing structures such as columns in buildings and trees. Weight-bearing structures have special features; columns in building have steel-reinforcing rods while trees and bones are fibrous. The bones in different parts of the body serve different structural functions and are prone to different stresses. Thus the bone in the top of the femur is arranged in thin sheets separated by marrow while in other places the bones can be cylindrical and filled with marrow or just solid. Overweight people have a tendency toward bone damage due to sustained compressions in bone joints and tendons.</p>
+<p class="prose">Another biological example of Hooke’s law occurs in tendons. Functionally, the tendon (the tissue connecting muscle to bone) must stretch easily at first when a force is applied, but offer a much greater restoring force for a greater strain. Figure shows a stress-strain relationship for a human tendon. Some tendons have a high collagen content so there is relatively little strain, or length change; others, like support tendons (as in the leg) can change length up to 10%. Note that this stress-strain curve is nonlinear, since the slope of the line changes in different regions. In the first part of the stretch called the toe region, the fibers in the tendon begin to align in the direction of the stress—this is calleduncrimping. In the linear region, the fibrils will be stretched, and in the failure region individual fibers begin to break. A simple model of this relationship can be illustrated by springs in parallel: different springs are activated at different lengths of stretch. Examples of this are given in the problems at end of this chapter. Ligaments (tissue connecting bone to bone) behave in a similar way.</p>
+<div class="diagram"><img src="images/ch5/fig5-7-the-strain-on-mammalian-tendon-is-shown-.jpg" alt="The strain on mammalian tendon is shown by a graph, with tensile stress along the x axis and strain along the y axis. The stress strain curve obtained has three regions, namely, toe region at the bottom, linear region between, and failure region at the top."><div class="d-cap">The strain on mammalian tendon is shown by a graph, with tensile stress along the x axis and strain along the y axis. The stress strain curve obtained has three regions, namely, toe region at the bottom, linear region between, and failure region at the top. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Unlike bones and tendons, which need to be strong as well as elastic, the arteries and lungs need to be very stretchable. The elastic properties of the arteries are essential for blood flow. The pressure in the arteries increases and arterial walls stretch when the blood is pumped out of the heart. When the aortic valve shuts, the pressure in the arteries drops and the arterial walls relax to maintain the blood flow. When you feel your pulse, you are feeling exactly this—the elastic behavior of the arteries as the blood gushes through with each pump of the heart. If the arteries were rigid, you would not feel a pulse. The heart is also an organ with special elastic properties. The lungs expand with muscular effort when we breathe in but relax freely and elastically when we breathe out. Our skins are particularly elastic, especially for the young. A young person can go from 100 kg to 60 kg with no visible sag in their skins. The elasticity of all organs reduces with age. Gradual physiological aging through reduction in elasticity starts in the early 20s.</p>
+<p class="prose">Example: Calculating Deformation: How Much Does Your Leg Shorten</p>
+<p class="prose">When You Stand on It?</p>
+<p class="prose">Calculate the change in length of the upper leg bone (the femur) when a 70.0 kg man supports 62.0 kg of his mass on it, assuming the bone to be equivalent to a uniform rod that is 40.0 cm long and 2.00 cm in radius.</p>
+<p class="prose">The force is equal to the weight supported, or \[ F = mg = (62.0 \, kg)(9.80 \, m/s^2) = 607.6 \, N, \] and the cross-sectional area is \(\pi r^2 = 1.257 \times 10^{-3} m^2. \) The equation \(\Delta L = \frac{1}{Y} \frac{F}{A} L_0 \) can be used to find the change in length.</p>
+<p class="prose">All quantities except \(\Delta L\) are known. Note that the compression value for Young’s modulus for bone must be used here. Thus,</p>
+<div class="math-display">\[\Delta L = \left( \dfrac{1}{9 \times 10^9 \, N/m^2} \right) \left(\dfrac{607.6 \, N}{1.257 \times 10^{-3}} \right) (0.400 \, m) \]</div>
+<div class="math-display">\[ = 2 \times 10^{-5} \, m \]</div>
+<p class="prose">This small change in length seems reasonable, consistent with our experience that bones are rigid. In fact, even the rather large forces encountered during strenuous physical activity do not compress or bend bones by large amounts. Although bone is rigid compared with fat or muscle, several of the substances listed in Table have larger values of Young’s modulus \(Y\). In other words, they are more rigid.</p>
+<p class="prose">The equation for change in length is traditionally rearranged and written in the following form:</p>
+<p class="prose">\[\dfrac{F}{A} = Y \dfrac{\Delta L}{L_0}.\] The ratio of force to area, \(\frac{F}{A} \) is defined asstress(measured in \(N/m^2q\), and the ratio of the change in length to length, \(\frac{\Delta L}{L_0} \) is defined asstrain(a unitless quantity). In other words,</p>
+<div class="math-display">\[ stress = Y \times strain. \]</div>
+<p class="prose">In this form, the equation is analogous to Hooke’s law, with stress analogous to force and strain analogous to deformation. If we again rearrange this equation to the form \[ F = YA \dfrac{\Delta L}{L_0}, \] we see that it is the same as Hooke’s law with a proportionality constant \[ k = \dfrac{YA}{L_0}.\]</p>
+<p class="prose">This general idea—that force and the deformation it causes are proportional for small deformations—applies to changes in length, sideways bending, and changes in volume.</p>
+<p class="prose">The ratio of force to area, \(\frac{F}{A}\) is defined as stress measured in \(N/m^2\).</p>
+<p class="prose">The ratio of the change in length to length, \(\frac{\Delta L}{L_0} \) is defined as strain (a unitless quantity). In other words,</p>
+<div class="math-display">\[ stress = Y \times strain \]</div>
+</div></div>
+<div class="sh2">Sideways Stress: Shear Modulus</div>
+<p class="prose">Figure illustrates what is meant by a sideways stress or ashearing force. Here the deformation is called \(\Delta x\) and it is perpendicular to \(L_0\), rather than parallel as with tension and compression. Shear deformation behaves similarly to tension and compression and can be described with similar equations. The expression forshear deformationis</p>
+<div class="math-display">\[ \Delta x = \dfrac{1}{S} \dfrac{F}{A}L_0,\]</div>
+<p class="prose">where \(S\) is the shear modulus (see Table) and \(F\) is the force applied perpendicular to \(L_0\) and parallel to the cross-sectional area \(A\). Again, to keep the object from accelerating, there are actually two equal and opposite forces \(F\) applied across opposite faces, as illustrated in Figure. The equation is logical—for example, it is easier to bend a long thin pencil (small \(A\)) than a short thick one, and both are more easily bent than similar steel rods (large \(S\)).</p>
+<p class="prose">\[ \Delta x = \dfrac{1}{S} \dfrac{F}{A}L_0,\] where \(S\) is the shear modulus (see Table) and \(F\) is the force applied perpendicular to \(L_0\) and parallel to the cross-sectional area \(A\).</p>
+<p class="prose">Examination of the shear moduli in Table reveals some telling patterns. For example, shear moduli are less than Young’s moduli for most materials. Bone is a remarkable exception. Its shear modulus is not only greater than its Young’s modulus, but it is as large as that of steel. This is why bones are so rigid.</p>
+<p class="prose">The spinal column (consisting of 26 vertebral segments separated by discs) provides the main support for the head and upper part of the body. The spinal column has normal curvature for stability, but this curvature can be increased, leading to increased shearing forces on the lower vertebrae. Discs are better at withstanding compressional forces than shear forces. Because the spine is not vertical, the weight of the upper body exerts some of both. Pregnant women and people that are overweight (with large abdomens) need to move their shoulders back to maintain balance, thereby increasing the curvature in their spine and so increasing the shear component of the stress. An increased angle due to more curvature increases the shear forces along the plane. These higher shear forces increase the risk of back injury through ruptured discs. The lumbosacral disc (the wedge shaped disc below the last vertebrae) is particularly at risk because of its location.</p>
+<p class="prose">The shear moduli for concrete and brick are very small; they are too highly variable to be listed. Concrete used in buildings can withstand compression, as in pillars and arches, but is very poor against shear, as might be encountered in heavily loaded floors or during earthquakes. Modern structures were made possible by the use of steel and steel-reinforced concrete. Almost by definition, liquids and gases have shear moduli near zero, because they flow in response to shearing forces.</p>
+<p class="prose">Example: Calculating Force Required to Deform: That Nail Does Not</p>
+<p class="prose">Bend much Under a Load.</p>
+<p class="prose">Find the mass of the picture hanging from a steel nail as shown in Figure, given that the nail bends only \(1.80 \mu m\). (Assume the shear modulus is known to two significant figures.)</p>
+<p class="prose">The force \(F\) on the nail (neglecting the nail’s own weight) is the weight of the picture \(w\). If we can find \(w\), then the mass of the picture is just \(\frac{w}{g} \). The equation \(\Delta x = \frac{1}{S} \frac{F}{A}L_0 \) can be solved for \(F\).</p>
+<p class="prose">Solving the equation \(\Delta x = \frac{1}{S} \frac{F}{A}L_0 \) for \(F\), we see that all other quantities can be found:</p>
+<div class="math-display">\[ F = \dfrac{SA}{L_0} \Delta x. \]</div>
+<div class="math-display">\[A = \pi r^2 = 1.77 \times 10^{-6} \, m^2. \]</div>
+<p class="prose">The value for \(L_0\) is also shown in the figure. Thus,</p>
+<div class="math-display">\[ F = \dfrac{(80 \times 10^9 \, N/m^2)(1.77 \times 10^{-6} \, m^2)}{(5.00 \times 10^{-3} \, m)}(1.80 \times 10^{-6} \, m) = 51 \]</div>
+<p class="prose">This 51 N force is the weight \(w\) of the picture, so the picture’s mass is</p>
+<div class="math-display">\[ m = \dfrac{w}{g} = \dfrac{F}{g} = 5.2 \, kg. \]</div>
+<p class="prose">This is a fairly massive picture, and it is impressive that the nail flexes only \(1.80 \mu m\) —an amount undetectable to the unaided eye.</p>
+<div class="sh2">Changes in Volume: Bulk Modulus</div>
+<p class="prose">An object will be compressed in all directions if inward forces are applied evenly on all its surfaces as in Figure. It is relatively easy to compress gases and extremely difficult to compress liquids and solids. For example, air in a wine bottle is compressed when it is corked. But if you try corking a brim-full bottle, you cannot compress the wine—some must be removed if the cork is to be inserted. The reason for these different compressibilities is that atoms and molecules are separated by large empty spaces in gases but packed close together in liquids and solids. To compress a gas, you must force its atoms and molecules closer together. To compress liquids and solids, you must actually compress their atoms and molecules, and very strong electromagnetic forces in them oppose this compression.</p>
+<p class="prose">We can describe the compression or volume deformation of an object with an equation. First, we note that a force “applied evenly” is defined to have the same stress, or ratio of force to area \(\frac{F}{A} \) on all surfaces. The deformation produced is a change in volume \(\Delta V,\) which is found to behave very similarly to the shear, tension, and compression previously discussed. (This is not surprising, since a compression of the entire object is equivalent to compressing each of its three dimensions.) The relationship of the change in volume to other physical quantities is given by</p>
+<div class="math-display">\[ \Delta V = \dfrac{1}{B} \dfrac{F}{A} V_0, \]</div>
+<p class="prose">where \(B\) is the bulk modulus (see Table), \(V_0\) is the original volume, and \(\frac{F}{A} \) is the force per unit area applied uniformly inward on all surfaces. Note that no bulk moduli are given for gases.</p>
+<p class="prose">What are some examples of bulk compression of solids and liquids? One practical example is the manufacture of industrial-grade diamonds by compressing carbon with an extremely large force per unit area. The carbon atoms rearrange their crystalline structure into the more tightly packed pattern of diamonds. In nature, a similar process occurs deep underground, where extremely large forces result from the weight of overlying material. Another natural source of large compressive forces is the pressure created by the weight of water, especially in deep parts of the oceans. Water exerts an inward force on all surfaces of a submerged object, and even on the water itself. At great depths, water is measurably compressed, as the following example illustrates.</p>
+<p class="prose">Example: Calculating Change in Volume with Deformation: How much</p>
+<p class="prose">is Water Compressed at Great Ocean Depths?</p>
+<p class="prose">Calculate the fractional decrease in volume \((\frac{\Delta V}{V_0}) \) for seawater at 5.00 km depth, where the force per unit area is \(5.00 \times 10^7 \, N/m^2.\)</p>
+<p class="prose">Equation \(\Delta V = \frac{1}{B} \frac{F}{A} V_0 \) is the correct physical relationship. All quantities in the equation except \(\frac{\Delta V}{V_0} \) are known.</p>
+<p class="prose">Solving for the unknown \(\frac{\Delta V}{V_0} \) gives \[ \dfrac{\Delta V}{V_0} = \dfrac{1}{B} \dfrac{F}{A}. \]</p>
+<p class="prose">Substituting known values with the value for the bulk modulus \(B\) from Table,</p>
+<div class="math-display">\[\dfrac{\Delta V}{V_0} = \dfrac{5.00 \times 10^7 \, N/m^2}{2.2 \times 10^9 \, N/m^2} = 0.023 \]</div>
+<p class="prose">Although measurable, this is not a significant decrease in volume considering that the force per unit area is about 500 atmospheres (1 million pounds per square foot). Liquids and solids are extraordinarily difficult to compress.</p>
+<p class="prose">Conversely, very large forces are created by liquids and solids when they try to expand but are constrained from doing so—which is equivalent to compressing them to less than their normal volume. This often occurs when a contained material warms up, since most materials expand when their temperature increases. If the materials are tightly constrained, they deform or break their container. Another very common example occurs when water freezes. Water, unlike most materials, expands when it freezes, and it can easily fracture a boulder, rupture a biological cell, or crack an engine block that gets in its way.</p>
+<p class="prose">Other types of deformations, such as torsion or twisting, behave analogously to the tension, shear, and bulk deformations considered here.</p>
+<p class="prose">Phet explorations: Masses & Springs</p>
+<p class="prose">A realistic mass and spring laboratory. Hang masses from springs and adjust the spring stiffness and damping. You can even slow time. Transport the lab to different planets. A chart shows the kinetic, potential, and thermal energy for each spring.</p>
+<div class="diagram"><img src="images/ch5/fig5-8-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Hooke’s law is given by \[ F = k \Delta L\] where \(L\) is the amount of deformation (the change in length), \(F\) is the applied force, and \(k\) is a proportionality constant that depends on the shape and composition of the object and the direction of the force. The relationship between the deformation and the applied force can also be written as</p>
+<div class="math-display">\[ \Delta L = \dfrac{1}{Y} \dfrac{F}{A} L_0, \] where \(L\) isYoung’s modulus, which depends on the substance, \(A\) is the cross-sectional area, and \(L_0\) is the original length. The ratio of force to area, \(\frac{F}{A} \) is defined asstress, measured in N/m2.The ratio of the change in length to length, \(\frac{\Delta L}{L_0}, \) is defined asstrain(a unitless quantity). In other words, \[ stress = Y \times strain. \]</div>
+<p class="prose">The expression for shear deformation is \[ \Delta x = \dfrac{1}{S} \dfrac{F}{A} L_0, \]</p>
+<p class="prose">where \(S\) is the shear modulus and \(F\) is the force applied perpendicular to \(L_0\) and parallel to the cross-sectional area \(A\).</p>
+<p class="prose">The relationship of the change in volume to other physical quantities is given by</p>
+<p class="prose">\[\Delta V = \dfrac{1}{B} \dfrac{F}{A} V_0,\] where \(B\) is the bulk modulus, \(V_0\) is the original volume, and \(\frac{F}{A}\) is the force per unit area applied uniformly inward on all surfaces.</p>
+<div class="sh3">Footnotes</div>
+<p class="prose">Approximate and average values. Young’s moduli \(Y\) for tension and compression sometimes differ but are averaged here. Bone has significantly different Young’s moduli for tension and compression.</p>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">STRETCH YOURSELF A LITTLEHow would you go about measuring the proportionality constant \(k\) of a rubber band? If a rubber band stretched 3 cm when a 100-g mass was attached to it, then how much would it stretch if two similar rubber bands were attached to the same mass—even if put together in parallel or alternatively if tied together in series?</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">STRESSThe ratio of force to area, \(\frac{F}{A}\) is defined as stress measured in \(N/m^2\).</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">STRAINThe ratio of the change in length to length, \(\frac{\Delta L}{L_0} \) is defined as strain (a unitless quantity). In other words,\[ stress = Y \times strain \]</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">SHEAR DEFORMATION\[ \Delta x = \dfrac{1}{S} \dfrac{F}{A}L_0,\] where \(S\) is the shear modulus (see Table) and \(F\) is the force applied perpendicular to \(L_0\) and parallel to the cross-sectional area \(A\).</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Phet explorations: Masses & SpringsA realistic mass and spring laboratory. Hang masses from springs and adjust the spring stiffness and damping. You can even slow time. Transport the lab to different planets. A chart shows the kinetic, potential, and thermal energy for each spring.Figure : Masses & Springs</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 5.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">When you learn to drive, you discover that you need to let up slightly on the brake pedal as you come to a stop or the car will stop with a jerk. Explain this in terms of the relationship between static and kinetic friction.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 5.3 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">An object with mass $m$ is resting on a slope inclined at an angle $\theta$. If friction behaves simply, what is the expression for the normal force $N$ acting on the object?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$N = mg$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$N = mg \sin(\theta)$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$N = mg \cos(\theta)$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$N = \mu_s mg$</li>
+</ul><div class="qexp">The normal force on an incline is the component of the weight perpendicular to the surface, which is calculated as $mg \cos(\theta)$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Shear deformation is distinct from tension or compression because the applied force is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Parallel to the length $L_0$ and perpendicular to the cross-sectional area $A$.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Applied uniformly inward from all directions on the object's surface.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Gradually reduced as the deformation increases to keep the object elastic.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Perpendicular to the length $L_0$ and parallel to the cross-sectional area $A$.</li>
+</ul><div class="qexp">Shear stress involves forces applied across opposite faces, acting parallel to the surface area rather than stretching or compressing the length.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Under which circumstances is Stokes' Law ($F_s = 6\pi r\eta v$) more accurate than the quadratic drag equation ($F_D = \frac{1}{2} C\rho Av^2$)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>For very small particles, such as dust or bacteria, moving at low speeds.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>For large, streamlined objects like airplanes moving at high velocities.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Only when the object is moving through a vacuum with zero viscosity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>When the object is falling at its terminal velocity in a highly turbulent gas.</li>
+</ul><div class="qexp">Stokes' Law applies to small objects at low speeds where the drag force is proportional to the velocity rather than the square of the velocity.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">From a submicroscopic perspective, why do surfaces get warmer when they are rubbed together?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Friction causes atoms to expand, increasing the total volume of the object.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Surface atoms adhere and cause atomic lattices to vibrate, converting mechanical energy into heat.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The normal force compresses the air between surfaces, causing a rise in temperature.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The coefficient of kinetic friction increases linearly with the temperature of the material.</li>
+</ul><div class="qexp">Microscopic friction involves the interaction of atomic lattices which, when rubbed, create vibrations (sound waves) that are converted into thermal energy.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">A 60 kg skydiver is falling at terminal velocity. Taking $g = 9.8 \text{ m/s}^2$, what is the magnitude of the drag force acting on the skydiver?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>6.12 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>60 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>588 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0 N</li>
+</ul><div class="qexp">At terminal velocity, the upward drag force must exactly balance the downward weight of the skydiver ($60 \text{ kg} \times 9.8 \text{ m/s}^2 = 588 \text{ N}$).</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 5</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 5: Friction, Drag, and Elasticity.</div><div class="h-meta"><div class="h-chip">📝 16 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>5.1</strong></td><td>5.1: Friction</td></tr>
+    <tr><td><strong>5.2</strong></td><td>5.2: Drag Forces</td></tr>
+    <tr><td><strong>5.3</strong></td><td>5.3: Elasticity - Stress and Strain</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 100 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 5 Practice Test</h3><p>16 questions · All OpenStax Review Questions</p></div></div><div id="q4">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 16 review questions from OpenStax College Physics, Chapter 5. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following statements best describes the direction of the frictional force between two surfaces?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is always parallel to the contact surface and opposes the motion or attempted motion.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is always perpendicular to the contact surface and in the direction of the normal force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is parallel to the contact surface and in the same direction as the velocity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is perpendicular to the contact surface and opposes the gravitational force.</li>
+</ul><div class="qexp">Friction is a contact force that acts parallel to the interface of two systems and always opposes relative motion or the intent of motion.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A 20 kg crate sits at rest on a horizontal floor where the maximum static friction force is 80 N. If you push the crate with a horizontal force of 40 N, what is the magnitude of the static friction force acting on the crate?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>40 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>80 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>196 N</li>
+</ul><div class="qexp">Static friction is a responsive force that increases to be equal and opposite to the applied force until the maximum threshold is reached.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A wooden sled is being pulled across a horizontal patch of snow at a constant velocity. If the normal force is 500 N and the coefficient of kinetic friction is 0.10, what is the magnitude of the kinetic friction force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>5 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>50 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>500 N</li>
+</ul><div class="qexp">The magnitude of kinetic friction is calculated by multiplying the coefficient of kinetic friction by the normal force ($f_k = \mu_k N$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If a skydiver transitions from a "head-first" pike position to a "spread-eagle" position while falling, how does their terminal velocity change?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It increases because the drag coefficient $C$ increases.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It remains the same because their mass has not changed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases because the fluid density remains constant.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It decreases because the surface area $A$ facing the fluid increases.</li>
+</ul><div class="qexp">Terminal velocity is inversely proportional to the square root of the cross-sectional area, so increasing the area increases drag and lowers terminal velocity.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Which condition must be met for an object falling through a fluid to reach its terminal velocity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The magnitude of the drag force must equal the magnitude of the object's weight.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The object must be falling in a vacuum where there is no air resistance.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The velocity of the object must be equal to the acceleration due to gravity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>the drag coefficient $C$ must be reduced to exactly zero.</li>
+</ul><div class="qexp">Terminal velocity is reached when the upward drag force equals the downward force of gravity, resulting in zero net force and zero acceleration.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">A spring has a force constant $k$ of 200 N/m. How much force is required to stretch the spring by 0.15 meters from its equilibrium position?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.33 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>30 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1333 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>3000 N</li>
+</ul><div class="qexp">According to Hooke's Law ($F = k\Delta L$), the force is the product of the spring constant and the deformation ($200 \text{ N/m} \times 0.15 \text{ m} = 30 \text{ N}$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">In the study of elasticity, how is "strain" defined?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of the applied force to the cross-sectional area.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The proportionality constant $k$ that depends on the shape of the object.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The fractional change in length, represented as the change in length divided by the original length.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The maximum stress a material can withstand before permanent deformation occurs.</li>
+</ul><div class="qexp">Strain is a unitless quantity defined as the ratio of the change in length ($\Delta L$) to the original length ($L_0$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Healthy human joints like the hip or knee have a coefficient of friction that is significantly lower than that of steel sliding on ice. What is the primary reason for this?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Bone has a higher Young’s modulus than steel.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The joints are subjected to very low normal forces during movement.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The bones are not actually in contact but are held apart by magnetic forces.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The presence of cartilage and synovial fluid provides a very smooth, lubricated interface.</li>
+</ul><div class="qexp">Cartilage provides a glassy surface and synovial fluid acts as a natural lubricant, reducing the coefficient of friction to values as low as 0.015.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">For a car traveling at highway speeds, if the driver increases the speed from 50 km/h to 100 km/h, the magnitude of the air drag force increases by what factor?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>2</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.5</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.41</li>
+</ul><div class="qexp">For large objects at high speeds, the drag force is proportional to the square of the velocity ($F_D \propto v^2$), so doubling the speed quadruples the force.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Which elastic modulus should be used to calculate the deformation of a sphere being compressed by uniform pressure from all sides while deep underwater?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Young's Modulus</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bulk Modulus</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Shear Modulus</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Static Modulus</li>
+</ul><div class="qexp">The Bulk Modulus ($B$) describes a material's resistance to uniform compression and the resulting change in volume.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">An object with mass $m$ is resting on a slope inclined at an angle $\theta$. If friction behaves simply, what is the expression for the normal force $N$ acting on the object?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$N = mg$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$N = mg \sin(\theta)$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$N = mg \cos(\theta)$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$N = \mu_s mg$</li>
+</ul><div class="qexp">The normal force on an incline is the component of the weight perpendicular to the surface, which is calculated as $mg \cos(\theta)$.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">Shear deformation is distinct from tension or compression because the applied force is:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Parallel to the length $L_0$ and perpendicular to the cross-sectional area $A$.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Applied uniformly inward from all directions on the object's surface.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Gradually reduced as the deformation increases to keep the object elastic.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Perpendicular to the length $L_0$ and parallel to the cross-sectional area $A$.</li>
+</ul><div class="qexp">Shear stress involves forces applied across opposite faces, acting parallel to the surface area rather than stretching or compressing the length.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Under which circumstances is Stokes' Law ($F_s = 6\pi r\eta v$) more accurate than the quadratic drag equation ($F_D = \frac{1}{2} C\rho Av^2$)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>For very small particles, such as dust or bacteria, moving at low speeds.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>For large, streamlined objects like airplanes moving at high velocities.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Only when the object is moving through a vacuum with zero viscosity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>When the object is falling at its terminal velocity in a highly turbulent gas.</li>
+</ul><div class="qexp">Stokes' Law applies to small objects at low speeds where the drag force is proportional to the velocity rather than the square of the velocity.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">From a submicroscopic perspective, why do surfaces get warmer when they are rubbed together?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Friction causes atoms to expand, increasing the total volume of the object.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Surface atoms adhere and cause atomic lattices to vibrate, converting mechanical energy into heat.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The normal force compresses the air between surfaces, causing a rise in temperature.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The coefficient of kinetic friction increases linearly with the temperature of the material.</li>
+</ul><div class="qexp">Microscopic friction involves the interaction of atomic lattices which, when rubbed, create vibrations (sound waves) that are converted into thermal energy.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">A 60 kg skydiver is falling at terminal velocity. Taking $g = 9.8 \text{ m/s}^2$, what is the magnitude of the drag force acting on the skydiver?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>6.12 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>60 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>588 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0 N</li>
+</ul><div class="qexp">At terminal velocity, the upward drag force must exactly balance the downward weight of the skydiver ($60 \text{ kg} \times 9.8 \text{ m/s}^2 = 588 \text{ N}$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">What occurs when a material is stressed beyond its "tensile strength"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The material becomes perfectly rigid and cannot be deformed further.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The material enters the toe region where fibers begin to uncrimp.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The deformation becomes proportional to the square root of the force.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The material suffers permanent deformation or undergoes a fracture.</li>
+</ul><div class="qexp">Tensile strength is defined as the breaking stress that causes an object to fail or sustain permanent structural damage.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 16 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Friction, Drag, and Elasticity',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:5,lessonCount:4,cpMin:80,lessons:['Overview','5.1 5.1: Friction','5.2 5.2: Drag Forces','5.3 5.3: Elasticity - Stress and Strain','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===4?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

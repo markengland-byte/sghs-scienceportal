@@ -30,6 +30,9 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='repla
 
 APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec'
 
+# Course mode — set from input file path
+IS_PHYSICS = False
+
 # ─── PARSE EXTRACTED TEXT ─────────────────────────────────────────────
 
 def parse_extracted(filepath):
@@ -288,13 +291,16 @@ def parse_critical_thinking(raw):
 # ─── HTML GENERATION ──────────────────────────────────────────────────
 
 def clean_latex(text):
-    """Remove LaTeX markup from LibreTexts content."""
-    # All variations of PageIndex references
+    """Remove LaTeX junk from LibreTexts content. Preserves real math for physics."""
+    # All variations of PageIndex references (junk in both courses)
     text = re.sub(r'\(?\\?\(?\\?PageIndex\{\d+\}\\?\)?\)?[a-z]?\)?', '', text)
-    # Escaped LaTeX expressions \(...\)
-    text = re.sub(r'\\\([^)]{0,80}\\\)', '', text)
     # Any remaining PageIndex
     text = re.sub(r'\\?PageIndex\{\d+\}', '', text)
+
+    if not IS_PHYSICS:
+        # A&P: strip all inline LaTeX (it's only PageIndex junk in A&P)
+        text = re.sub(r'\\\([^)]{0,80}\\\)', '', text)
+
     # Clean up orphaned "Figure" with dangling punctuation
     text = re.sub(r'Figure\s*\)', 'Figure)', text)
     text = re.sub(r'\(\s*\)', '', text)  # empty parens
@@ -305,6 +311,9 @@ def clean_latex(text):
 def esc(text):
     """HTML-escape text, also cleaning LaTeX."""
     text = clean_latex(text)
+    if IS_PHYSICS:
+        # Don't HTML-escape LaTeX delimiters — MathJax needs them raw
+        return text
     return html.escape(text, quote=True)
 
 
@@ -446,7 +455,15 @@ body{{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(-
 .lnav-info{{font-size:.78rem;color:var(--muted);text-align:center;}}
 .mc-btn{{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}}
 .mc-btn:hover,.mc-btn.done{{background:var(--accent);color:#fff;}}
-.os-credit{{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}}"""
+.os-credit{{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}}
+.example-box{{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}}
+.example-header{{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}}
+.example-icon{{font-size:1.2rem;}}
+.example-title{{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}}
+.example-body{{padding:20px 24px;}}
+.example-body p.prose{{margin-bottom:10px;}}
+.example-sub{{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}}
+.math-display{{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}}"""
 
 
 def generate_name_modal(config):
@@ -516,10 +533,36 @@ def generate_vocab_cards(terms):
     return '\n'.join(lines)
 
 
+def _course_label():
+    return 'OpenStax College Physics' if IS_PHYSICS else 'OpenStax A&amp;P 2e'
+
+
+def _strip_course_prefix(path):
+    """Strip the course directory prefix from figure paths (HTML lives inside the course dir)."""
+    if path.startswith('ap/'):
+        return path[3:]
+    if path.startswith('physics/'):
+        return path[8:]
+    return path
+
+
+def _is_example_heading(text):
+    """Detect physics worked example headings like 'Example 1.1: Unit Conversions'."""
+    return bool(re.match(r'^Example\s+', text, re.IGNORECASE))
+
+
+def _is_example_subheading(text):
+    """Detect Strategy/Solution/Discussion sub-headings within worked examples."""
+    lower = text.lower().strip()
+    return lower in ('strategy', 'discussion') or lower.startswith('solution') or lower.startswith('discussion for')
+
+
 def generate_content_elements(elements):
     """Generate HTML for a section's content elements (paragraphs, headings, figures, tables, callouts)."""
     lines = []
-    for el in elements:
+    in_example = False  # Track whether we're inside a worked example box
+
+    for i, el in enumerate(elements):
         if el['type'] == 'paragraph':
             text = el['text']
             # Clean LaTeX markup from LibreTexts
@@ -527,22 +570,53 @@ def generate_content_elements(elements):
             # Convert **bold** patterns if present
             text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
             text = text.strip()
-            if text:
-                lines.append(f'<p class="prose">{text}</p>')
+            if not text:
+                continue
+
+            if IS_PHYSICS:
+                # Check if this paragraph is a worked example title
+                if _is_example_heading(text):
+                    if in_example:
+                        lines.append('</div></div>')  # Close previous example
+                    in_example = True
+                    # Clean the title
+                    ex_title = clean_latex(text)
+                    lines.append(f'<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">{ex_title}</span></div><div class="example-body">')
+                    continue
+                elif in_example and _is_example_subheading(text):
+                    lines.append(f'<div class="example-sub">{clean_latex(text)}</div>')
+                    continue
+
+                # Check for display math blocks \[...\]
+                if text.startswith('\\[') and text.endswith('\\]'):
+                    lines.append(f'<div class="math-display">{text}</div>')
+                elif '\\[' in text:
+                    # Mixed text with display math — render as prose, MathJax handles it
+                    lines.append(f'<p class="prose">{text}</p>')
+                else:
+                    lines.append(f'<p class="prose">{text}</p>')
+            else:
+                if text:
+                    lines.append(f'<p class="prose">{text}</p>')
 
         elif el['type'] == 'heading':
-            if el['level'] == 2:
-                lines.append(f'<div class="sh2">{esc(el["text"])}</div>')
+            # Close example box if we hit a major heading
+            if in_example and el['level'] <= 3:
+                lines.append('</div></div>')
+                in_example = False
+
+            heading_text = el['text']
+            if IS_PHYSICS and _is_example_subheading(heading_text):
+                lines.append(f'<div class="example-sub">{esc(heading_text)}</div>')
+            elif el['level'] == 2:
+                lines.append(f'<div class="sh2">{esc(heading_text)}</div>')
             else:
-                lines.append(f'<div class="sh3">{esc(el["text"])}</div>')
+                lines.append(f'<div class="sh3">{esc(heading_text)}</div>')
 
         elif el['type'] == 'figure':
-            path = el['path']
-            # Strip 'ap/' prefix since HTML file lives inside ap/
-            if path.startswith('ap/'):
-                path = path[3:]
+            path = _strip_course_prefix(el['path'])
             caption = el.get('caption', '')
-            lines.append(f'<div class="diagram"><img src="{esc(path)}" alt="{esc(caption)}"><div class="d-cap">{esc(caption)} (OpenStax A&amp;P 2e, CC BY 4.0)</div></div>')
+            lines.append(f'<div class="diagram"><img src="{esc(path)}" alt="{esc(caption)}"><div class="d-cap">{esc(caption)} ({_course_label()}, CC BY 4.0)</div></div>')
 
         elif el['type'] == 'table':
             rows = el['rows']
@@ -557,8 +631,12 @@ def generate_content_elements(elements):
         elif el['type'] == 'callout':
             title = el.get('title', 'Note')
             text = el.get('text', '')
-            icon = '💼' if 'career' in title.lower() else '🔗' if 'interactive' in title.lower() else '📌' if 'everyday' in title.lower() else 'ℹ️'
+            icon = '💼' if 'career' in title.lower() else '🔗' if 'interactive' in title.lower() else '📌' if 'everyday' in title.lower() else '🧪' if 'phet' in title.lower() else '🔬' if 'experiment' in title.lower() else 'ℹ️'
             lines.append(f'<div class="callout info"><div class="ci">{icon}</div><div class="cb"><div class="ct">{esc(title)}</div><div class="cx">{esc(text)}</div></div></div>')
+
+    # Close any open example box
+    if in_example:
+        lines.append('</div></div>')
 
     return '\n'.join(lines)
 
@@ -597,9 +675,7 @@ def generate_panel(panel_idx, section, vocab_terms, quiz_questions, checkpoint_q
     for el in section.get('elements', []):
         if el['type'] == 'paragraph':
             raw_desc = el['text']
-            raw_desc = re.sub(r'\\\(\\PageIndex\{(\d+)\}\\\)', '', raw_desc)
-            raw_desc = re.sub(r'\\\([^)]{0,50}\\\)', '', raw_desc)
-            raw_desc = re.sub(r'\s{2,}', ' ', raw_desc).strip()
+            raw_desc = clean_latex(raw_desc)
             desc_text = raw_desc[:200] + '...' if len(raw_desc) > 200 else raw_desc
             break
 
@@ -610,7 +686,7 @@ def generate_panel(panel_idx, section, vocab_terms, quiz_questions, checkpoint_q
 
     lines = []
     lines.append(f'<div class="panel" id="p{panel_idx}">')
-    lines.append(f'  <div class="hero hero-sec"><div class="h-crumb">Chapter {ch_num} · <span>Section {section["num"]}</span></div><div class="h-title">{esc(title)}</div><div class="h-desc">{esc(desc_text)}</div><div class="h-meta"><div class="h-chip">📖 OpenStax A&amp;P 2e, {section["num"]}</div></div></div>')
+    lines.append(f'  <div class="hero hero-sec"><div class="h-crumb">Chapter {ch_num} · <span>Section {section["num"]}</span></div><div class="h-title">{esc(title)}</div><div class="h-desc">{esc(desc_text)}</div><div class="h-meta"><div class="h-chip">📖 {_course_label()}, {section["num"]}</div></div></div>')
     lines.append('  <div class="lc">')
 
     # Learning objectives
@@ -625,9 +701,10 @@ def generate_panel(panel_idx, section, vocab_terms, quiz_questions, checkpoint_q
         lines.append(generate_vocab_cards(vocab_terms))
 
     # Core content
-    lines.append(f'    <div class="cs"><div class="eyebrow">Core Content — OpenStax A&amp;P 2e, {section["num"]}</div>')
+    lines.append(f'    <div class="cs"><div class="eyebrow">Core Content — {_course_label()}, {section["num"]}</div>')
     lines.append(generate_content_elements(section.get('elements', [])))
-    lines.append(f'    <p class="os-credit">📖 OpenStax Anatomy &amp; Physiology 2e, Section {section["num"]}. openstax.org · CC BY 4.0</p>')
+    credit_name = 'OpenStax College Physics' if IS_PHYSICS else 'OpenStax Anatomy &amp; Physiology 2e'
+    lines.append(f'    <p class="os-credit">📖 {credit_name}, Section {section["num"]}. openstax.org · CC BY 4.0</p>')
     lines.append('    </div>')
 
     # Checkpoint
@@ -660,11 +737,7 @@ def generate_overview_panel(config, data, ch_num, total_sections, total_question
         for el in intro_section.get('elements', []):
             if el['type'] == 'paragraph':
                 intro_text += el['text'] + ' '
-        intro_text = intro_text.strip()
-        # Clean LaTeX from intro text
-        intro_text = re.sub(r'\\\(\\PageIndex\{(\d+)\}\\\)', '', intro_text)
-        intro_text = re.sub(r'\\\([^)]{0,50}\\\)', '', intro_text)
-        intro_text = re.sub(r'\s{2,}', ' ', intro_text).strip()
+        intro_text = clean_latex(intro_text.strip())
         intro_text = intro_text[:600]
 
     # Get objectives from intro callout or first section
@@ -682,9 +755,13 @@ def generate_overview_panel(config, data, ch_num, total_sections, total_question
             objectives = intro_section.get('objectives', [])
 
     lines = []
+    course_label = _course_label()
+    course_crumb = 'Physics' if IS_PHYSICS else 'A&amp;P'
+    course_full = 'OpenStax College Physics' if IS_PHYSICS else 'OpenStax Anatomy &amp; Physiology 2e'
+
     lines.append('<div class="panel active" id="p0">')
-    lines.append(f'  <div class="hero hero-ov"><div class="h-crumb">A&amp;P · Chapter {ch_num} · <span>Overview</span></div><div class="h-title">{title}</div><div class="h-desc">{esc(intro_text)}</div>')
-    lines.append(f'    <div class="h-meta"><div class="h-chip">📚 {total_sections} Lessons</div><div class="h-chip">{emoji} OpenStax A&amp;P 2e Ch. {ch_num}</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 {total_questions} Review Questions</div></div>')
+    lines.append(f'  <div class="hero hero-ov"><div class="h-crumb">{course_crumb} · Chapter {ch_num} · <span>Overview</span></div><div class="h-title">{title}</div><div class="h-desc">{esc(intro_text)}</div>')
+    lines.append(f'    <div class="h-meta"><div class="h-chip">📚 {total_sections} Lessons</div><div class="h-chip">{emoji} {course_label} Ch. {ch_num}</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 {total_questions} Review Questions</div></div>')
     lines.append('  </div>')
     lines.append('  <div class="lc">')
 
@@ -696,16 +773,14 @@ def generate_overview_panel(config, data, ch_num, total_sections, total_question
         lines.append('    </ul></div>')
 
     # OpenStax attribution
-    lines.append(f'    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax Anatomy &amp; Physiology 2e — Chapter {ch_num}</div><div class="cx">All content is from OpenStax A&amp;P 2e, Chapter {ch_num}: {title}. CC BY 4.0. Access free at openstax.org.</div></div></div>')
+    lines.append(f'    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">{course_full} — Chapter {ch_num}</div><div class="cx">All content is from {course_label}, Chapter {ch_num}: {title}. CC BY 4.0. Access free at openstax.org.</div></div></div>')
 
     # Intro image if available
     if intro_section:
         for el in intro_section.get('elements', []):
             if el['type'] == 'figure':
-                fig_path = el["path"]
-                if fig_path.startswith('ap/'):
-                    fig_path = fig_path[3:]
-                lines.append(f'    <div class="diagram"><img src="{esc(fig_path)}" alt="{esc(el.get("caption", ""))}"><div class="d-cap">{esc(el.get("caption", ""))} (OpenStax A&amp;P 2e, CC BY 4.0)</div></div>')
+                fig_path = _strip_course_prefix(el["path"])
+                lines.append(f'    <div class="diagram"><img src="{esc(fig_path)}" alt="{esc(el.get("caption", ""))}"><div class="d-cap">{esc(el.get("caption", ""))} ({course_label}, CC BY 4.0)</div></div>')
                 break
 
     lines.append('  </div>')
@@ -739,7 +814,7 @@ def generate_review_panel(panel_idx, ch_num, all_questions, config, content_sect
 
     # Practice test
     lines.append(f'    <div id="quiz-wrap{panel_idx}" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter {ch_num} Practice Test</h3><p>{q_count} questions · All OpenStax Review Questions</p></div></div><div id="q{panel_idx}">')
-    lines.append(f'    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all {q_count} review questions from OpenStax A&amp;P 2e, Chapter {ch_num}. Take your time — there is no time limit.</div></div></div>')
+    lines.append(f'    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all {q_count} review questions from {_course_label()}, Chapter {ch_num}. Take your time — there is no time limit.</div></div></div>')
 
     for i, q in enumerate(all_questions):
         lines.append(generate_quiz_question(q, i + 1, explanations))
@@ -778,6 +853,9 @@ window.cpCheck=function(id){{
 
 def build_module(extracted_path, config_path):
     """Build a complete HTML module from extracted text + config."""
+    global IS_PHYSICS
+    IS_PHYSICS = 'physics' in str(extracted_path).lower()
+
     project_root = Path(__file__).parent.parent
 
     # Load config
@@ -871,7 +949,11 @@ def build_module(extracted_path, config_path):
 
     # Load answers file if it exists (generated by generate_answers.py)
     explanations = {}
-    answers_file = project_root / 'tools' / 'configs' / f'ch{ch_num}-answers.json'
+    # Check for answers file (physics uses physics-chN prefix, A&P uses chN prefix)
+    if IS_PHYSICS:
+        answers_file = project_root / 'tools' / 'configs' / f'physics-ch{ch_num}-answers.json'
+    else:
+        answers_file = project_root / 'tools' / 'configs' / f'ch{ch_num}-answers.json'
     if answers_file.exists():
         with open(answers_file, 'r', encoding='utf-8') as f:
             answers_data = json.load(f)
@@ -923,14 +1005,19 @@ def build_module(extracted_path, config_path):
     out = []
 
     # Head
+    course_short = 'Physics' if IS_PHYSICS else 'A&amp;P'
+    mathjax_script = ''
+    if IS_PHYSICS:
+        mathjax_script = '\n<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"]],displayMath:[["\\\\[","\\\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>\n<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>'
+
     out.append(f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A&amp;P · {esc(config["title"])} | Southern Gap High School</title>
+<title>{course_short} · {esc(config["title"])} | Southern Gap High School</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>{mathjax_script}
 <style>
 {generate_css(config)}
 </style>
@@ -1010,7 +1097,11 @@ def main():
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
 
-    output_path = project_root / 'ap' / config['filename']
+    # Determine output directory from config or extracted path
+    output_dir = config.get('course_dir', 'ap')
+    if 'physics' in str(extracted_path).lower():
+        output_dir = 'physics'
+    output_path = project_root / output_dir / config['filename']
 
     print(f"\n{'='*60}")
     print(f"  BUILDING MODULE: {config['title']}")

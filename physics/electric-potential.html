@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Electric Potential and Electric Field | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🔋</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Electric Potential and Electric Field</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🔋</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Electric Potential and Electric Field</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 19 · <span>Overview</span></div><div class="h-title">Electric Potential and Electric Field</div><div class="h-desc">InElectric Charge and Electric Field, we just scratched the surface (or at least rubbed it) of electrical phenomena. Two of the most familiar aspects of electricity are its energy andvoltage. We know, for example, that great amounts of electrical energy can be stored in batteries, are transmitted cross-country through power lines, and may jump from clouds to explode the sap of trees. In a similar manner, at molecular levels,ionscross cell membranes and transfer information. We also know about voltages associated with electricity. Batteries are typically a few volts, the outlets in your home pr</div>
+    <div class="h-meta"><div class="h-chip">📚 4 Lessons</div><div class="h-chip">🔋 OpenStax College Physics Ch. 19</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 20 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 19</div><div class="cx">All content is from OpenStax College Physics, Chapter 19: Electric Potential and Electric Field. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch19/fig19-1-air-force-officials-practice-using-an-au.jpg" alt="Air Force officials practice using an automated external defibrillator (AED). Electric potential energy is stored in the defibrillator unit and sent to resuscitate the patient."><div class="d-cap">Air Force officials practice using an automated external defibrillator (AED). Electric potential energy is stored in the defibrillator unit and sent to resuscitate the patient. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 4</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 19 · <span>Section 19.01</span></div><div class="h-title">19.1: Electric Potential Energy- Potential Difference</div><div class="h-desc">When a free positive charge \(q\) is accelerated by an electric field, such as shown in Figure , it is given kinetic energy. The process is analogous to an object being accelerated by a gravitational ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 19.01</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define electric potential and electric potential energy.</li>
+      <li>Describe the relationship between potential difference and electrical potential energy.</li>
+      <li>Explain electron volt and its usage in submicroscopic process.</li>
+      <li>Determine electric potential energy given potential difference and amount of charge.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">electric potential</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">potential energy per unit charge</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 19.01</div>
+<p class="prose">When a free positive charge \(q\) is accelerated by an electric field, such as shown in Figure , it is given kinetic energy. The process is analogous to an object being accelerated by a gravitational field. It is as if the charge is going down an electrical hill where its electric potential energy is converted to kinetic energy. Let us explore the work done on a charge \(q\) by the electric field in this process, so that we may develop a definition of electric potential energy.</p>
+<div class="diagram"><img src="images/ch19/fig19-2-newfigure-20-01-01ajpg.jpg" alt="New.Figure_20_01_01a.jpg"><div class="d-cap">New.Figure_20_01_01a.jpg (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The electrostatic or Coulomb force is conservative, which means that the work done on \(q\) is independent of the path taken. This is exactly analogous to the gravitational force in the absence of dissipative forces such as friction. When a force is conservative, it is possible to define a potential energy associated with the force, and it is usually easier to deal with the potential energy (because it depends only on position) than to calculate the work directly.</p>
+<p class="prose">We use the letters PE to denote electric potential energy, which has units of joules (J). The change in potential energy, \(\Delta \mathrm{PE}\), is crucial, since the work done by a conservative force is the negative of the change in potential energy; that is, \(W=-\Delta \mathrm{PE}\). For example, work \(W\) done to accelerate a positive charge from rest is positive and results from a loss in PE, or a negative \(\Delta \mathrm{PE}\). There must be a minus sign in front of \(\Delta \mathrm{PE}\) to make \(W\) positive. PE can be found at any point by taking one point as a reference and calculating the work needed to move a charge to the other point.</p>
+<p class="prose">Gravitational potential energy and electric potential energy are quite analogous. Potential energy accounts for work done by a conservative force and gives added insight regarding energy and energy transformation without the necessity of dealing with the force directly. It is much more common, for example, to use the concept of voltage (related to electric potential energy) than to deal with the Coulomb force directly.</p>
+<p class="prose">Calculating the work directly is generally difficult, since \(W=Fd\cos \theta\) and the direction and magnitude of \(F\) can be complex for multiple charges, for odd-shaped objects, and along arbitrary paths. But we do know that, since \(F=qE\), the work, and hence \(\Delta \mathrm{PE}\), is proportional to the test charge \(q\) To have a physical quantity that is independent of test charge, we defineelectric potential\(V\) (or simply potential, since electric is understood) to be the potential energy per unit charge:</p>
+<div class="math-display">\[V=\dfrac{\mathrm{PE}}{q}.\]</div>
+<p class="prose">This is the electric potential energy per unit charge.</p>
+<div class="math-display">\[V=\dfrac{\mathrm{PE}}{q}\]</div>
+<p class="prose">Since PE is proportional to \(q\), the dependence on \(q\) cancels. Thus \(V\) does not depend on \(q\). The change in potential energy \(\Delta \mathrm{PE}\) is crucial, and so we are concerned with the difference in potential or potential difference \(\Delta V\) between two points, where</p>
+<div class="math-display">\[\Delta V =V_{B}-V_{A}=\dfrac{\Delta \mathrm{PE}}{q}.\]</div>
+<p class="prose">Thepotential differencebetween points A and B, \(V_{B}-V_{A}\), is thus defined to be the change in potential energy of a charge \(q\) moved from A to B, divided by the charge. Units of potential difference are joules per coulomb, given the name volt (V) after Alessandro Volta.</p>
+<div class="math-display">\[1\mathrm{V}=1\mathrm{\dfrac{J}{C}}\]</div>
+<p class="prose">The potential difference between points A and B, \(V_{B}-V_{A}\), is defined to be the change in potential energy of a charge \(q\) moved from A to B, divided by the charge. Units of potential difference are joules per coulomb, given the name volt (V) after Alessandro Volta.</p>
+<div class="math-display">\[1\mathrm{V}=1\mathrm{\dfrac{J}{C}}\]</div>
+<p class="prose">The familiar termvoltageis the common name for potential difference. Keep in mind that whenever a voltage is quoted, it is understood to be the potential difference between two points. For example, every battery has two terminals, and its voltage is the potential difference between them. More fundamentally, the point you choose to be zero volts is arbitrary. This is analogous to the fact that gravitational potential energy has an arbitrary zero, such as sea level or perhaps a lecture hall floor.</p>
+<p class="prose">In summary, the relationship between potential difference (or voltage) and electrical potential energy is given by</p>
+<div class="math-display">\[\Delta V=\dfrac{\Delta \mathrm{PE}}{q}\: \mathrm{and}\: \Delta \mathrm{PE}=q\Delta V.\]</div>
+<p class="prose">POTENTIAL DIFFERENCE AND ELECTRICAL POTENTIAL ENERGY</p>
+<p class="prose">The relationship between potential difference (or voltage) and electrical potential energy is given by</p>
+<div class="math-display">\[\Delta =\dfrac{\Delta \mathrm{PE}}{q}\: \mathrm{and}\: \Delta \mathrm{PE}=q\Delta V.\]</div>
+<p class="prose">The second equation is equivalent to the first.</p>
+<p class="prose">Voltage is not the same as energy. Voltage is the energy per unit charge. Thus a motorcycle battery and a car battery can both have the same voltage (more precisely, the same potential difference between battery terminals), yet one stores much more energy than the other since \(\Delta PE=q\Delta V\). The car battery can move more charge than the motorcycle battery, although both are 12 V batteries.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example :Calculating Energy</span></div><div class="example-body">
+<p class="prose">Suppose you have a 12.0 V motorcycle battery that can move 5000 C of charge, and a 12.0 V car battery that can move 60,000 C of charge. How much energy does each deliver? (Assume that the numerical value of each charge is accurate to three significant figures.)</p>
+<p class="prose">To say we have a 12.0 V battery means that its terminals have a 12.0 V potential difference. When such a battery moves charge, it puts the charge through a potential difference of 12.0 V, and the charge is given a change in potential energy equal to \(\Delta PE=q\Delta V\).</p>
+<p class="prose">So to find the energy output, we multiply the charge moved by the potential difference.</p>
+<p class="prose">For the motorcycle battery, \(q=5000 \mathrm{C}\) and \(\Delta =12.0\mathrm{V}\). The total energy delivered by the motorcycle battery is</p>
+<div class="math-display">\[\Delta \mathrm{PE}_{cycle}=(5000\mathrm{C})(12.0\mathrm{V})\]</div>
+<div class="math-display">\[=(5000\mathrm{C})(12.0\mathrm{J/C})\]</div>
+<div class="math-display">\[=6.00\times 10^{4}\mathrm{J}.\]</div>
+<p class="prose">Similarly, for the car battery, \(q=60,000\mathrm{C}\) and</p>
+<div class="math-display">\[\Delta \mathrm{PE}_{car}=(60,000\mathrm{C})(12.0\mathrm{V})\]</div>
+<div class="math-display">\[=7.20\times 10^{5}\mathrm{J}.\]</div>
+<p class="prose">While voltage and energy are related, they are not the same thing. The voltages of the batteries are identical, but the energy supplied by each is quite different. Note also that as a battery is discharged, some of its energy is used internally and its terminal voltage drops, such as when headlights dim because of a low car battery. The energy supplied by the battery is still calculated as in this example, but not all of the energy is available for external use.</p>
+<p class="prose">Note that the energies calculated in the previous example are absolute values. The change in potential energy for the battery is negative, since it loses energy. These batteries, like many electrical systems, actually move negative charge—electrons in particular. The batteries repel electrons from their negative terminals (A) through whatever circuitry is involved and attract them to their positive terminals (B) as shown in Figure . The change in potential is \(\Delta V =V_{B}-V_{A}=+12\mathrm{V}\) and the charge \(q\) is negative, so that \(\Delta \mathrm{PE}=q\Delta V\) is negative, meaning the potential energy of the battery has decreased when \(q\) has moved from A to B.</p>
+<div class="diagram"><img src="images/ch19/fig19-3-a-headlight-is-connected-to-a-12-v-batte.jpg" alt="A headlight is connected to a 12 V battery. Negative charges move from the negative terminal of the battery to the positive terminal, resulting in a current flow and making the headlight glow. However, the positive terminal is at a greater potential than the negative terminal."><div class="d-cap">A headlight is connected to a 12 V battery. Negative charges move from the negative terminal of the battery to the positive terminal, resulting in a current flow and making the headlight glow. However, the positive terminal is at a greater potential than the negative terminal. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : How Many Electrons Move through a Headlight Each Second?</span></div><div class="example-body">
+<p class="prose">When a 12.0 V car battery runs a single 30.0 W headlight, how many electrons pass through it each second?</p>
+<p class="prose">To find the number of electrons, we must first find the charge that moved in 1.00 s. The charge moved is related to voltage and energy through the equation \(\Delta \mathrm{PE}=q\Delta V\). A 30.0 W lamp uses 30.0 joules per second. Since the battery loses energy, we have \(\Delta \mathrm{PE}=-30.0J\) and, since the electrons are going from the negative terminal to the positive, we see that \(\Delta V=+12.0V\).</p>
+<p class="prose">To find the charge \(q\) moved, we solve the equation \(\Delta \mathrm{PE}=q\Delta V\):</p>
+<div class="math-display">\[q=\dfrac{\Delta \mathrm{PE}}{\Delta V}.\]</div>
+<p class="prose">Entering the values for \(\Delta PE\) and \(\Delta V\), we get</p>
+<div class="math-display">\[q=\dfrac{-30.0\mathrm{J}}{+12.0\mathrm{V}}=\dfrac{-30.0\mathrm{J}}{+12.0\mathrm{J/C}}=-2.50\mathrm{C}.\]</div>
+<p class="prose">The number of electrons \(n_{e}\) is the total charge divided by the charge per electron. That is,</p>
+<div class="math-display">\[n_{e}=\dfrac{-2.50\mathrm{C}}{-1.60\times 10^{-19}\mathrm{C/e^{-}}}=1.56\times 10^{19} \mathrm{electrons}.\]</div>
+<p class="prose">This is a very large number. It is no wonder that we do not ordinarily observe individual electrons with so many being present in ordinary systems. In fact, electricity had been in use for many decades before it was determined that the moving charges in many circumstances were negative. Positive charge moving in the opposite direction of negative charge often produces identical effects; this makes it difficult to determine which is moving or whether both are moving.</p>
+</div></div>
+<div class="sh2">The Electron Volt</div>
+<p class="prose">The energy per electron is very small in macroscopic situations like that in the previous example—a tiny fraction of a joule. But on a submicroscopic scale, such energy per particle (electron, proton, or ion) can be of great importance. For example, even a tiny fraction of a joule can be great enough for these particles to destroy organic molecules and harm living tissue. The particle may do its damage by direct collision, or it may create harmful x rays, which can also inflict damage. It is useful to have an energy unit related to submicroscopic effects. Figure shows a situation related to the definition of such an energy unit. An electron is accelerated between two charged metal plates as it might be in an old-model television tube or oscilloscope. The electron is given kinetic energy that is later converted to another form—light in the television tube, for example. (Note that downhill for the electron is uphill for a positive charge.) Since energy is related to voltage by \(\Delta PE=q\Delta V\) we can think of the joule as a coulomb-volt.</p>
+<div class="diagram"><img src="images/ch19/fig19-4-in-an-electron-gun-the-electrons-move-fr.jpg" alt="In an electron gun the electrons move from the negatively charged plate to the positively charged plate. Their kinetic energy will be equal to the potential energy."><div class="d-cap">In an electron gun the electrons move from the negatively charged plate to the positively charged plate. Their kinetic energy will be equal to the potential energy. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">On the submicroscopic scale, it is more convenient to define an energy unit called theelectron volt(eV), which is the energy given to a fundamental charge accelerated through a potential difference of 1 V. In equation form,</p>
+<div class="math-display">\[1\mathrm{ev}=(1.60\times 10^{-19}\mathrm{C})(1\mathrm{V})=(1.60\times 10^{-19}\mathrm{C})(1\mathrm{J/C})\]</div>
+<div class="math-display">\[=1.60\times 10^{-19}J.\]</div>
+<p class="prose">On the submicroscopic scale, it is more convenient to define an energy unit called the electron volt (eV), which is the energy given to a fundamental charge accelerated through a potential difference of 1 V.In equation form,</p>
+<div class="math-display">\[1 \mathrm{eV}=(1.60\times 10^{-19} \mathrm{C})(1 \mathrm{V})=(1.60\times 10^{-19} \mathrm{C}) (1\mathrm{J/C})\]</div>
+<div class="math-display">\[=1.60\times 10^{-19} \mathrm{C}\]</div>
+<p class="prose">An electron accelerated through a potential difference of 1 V is given an energy of 1 eV. It follows that an electron accelerated through 50 V is given 50 eV. A potential difference of 100,000 V (100 kV) will give an electron an energy of 100,000 eV (100 keV), and so on. Similarly, an ion with a double positive charge accelerated through 100 V will be given 200 eV of energy. These simple relationships between accelerating voltage and particle charges make the electron volt a simple and convenient energy unit in such circumstances.</p>
+<p class="prose">CONNECTIONS: ENERGY UNITS</p>
+<p class="prose">The electron volt (eV) is the most common energy unit for submicroscopic processes. This will be particularly noticeable in the chapters on modern physics. Energy is so important to so many subjects that there is a tendency to define a special energy unit for each major topic. There are, for example, calories for food energy, kilowatt-hours for electrical energy, and therms for natural gas energy.</p>
+<p class="prose">The electron volt is commonly employed in submicroscopic processes—chemical valence energies and molecular and nuclear binding energies are among the quantities often expressed in electron volts. For example, about 5 eV of energy is required to break up certain organic molecules. If a proton is accelerated from rest through a potential difference of 30 kV, it is given an energy of 30 keV (30,000 eV) and it can break up as many as 6000 of these molecules ( \(30,000 \mathrm{eV}\div 5\mathrm{eV}\) per molecule \(=6000\) molecules). Nuclear decay energies are on the order of 1 MeV (1,000,000 eV) per event and can, thus, produce significant biological damage.</p>
+<div class="sh2">Conservation of Energy</div>
+<p class="prose">The total energy of a system is conserved if there is no net addition (or subtraction) of work or heat transfer. For conservative forces, such as the electrostatic force, conservation of energy states that mechanical energy is a constant.</p>
+<p class="prose">Mechanical energyis the sum of the kinetic energy and potential energy of a system; that is, \(KE + PE=\: \mathrm{constant}\). A loss of PE of a charged particle becomes an increase in its KE. Here PE is the electric potential energy. Conservation of energy is stated in equation form as</p>
+<div class="math-display">\[\mathrm{KE}+\mathrm{PE}=\mathrm{constant}\]</div>
+<div class="math-display">\[\mathrm{KE}_{i}+\mathrm{PE}_{i}=\mathrm{KE}_{f}+\mathrm{PE}_{f},\]</div>
+<p class="prose">where i and f stand for initial and final conditions. As we have found many times before, considering energy can give us insights and facilitate problem solving.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Electrical Potential Energy Converted to Kinetic Energy</span></div><div class="example-body">
+<p class="prose">Calculate the final speed of a free electron accelerated from rest through a potential difference of 100 V. (Assume that this numerical value is accurate to three significant figures.)</p>
+<p class="prose">We have a system with only conservative forces. Assuming the electron is accelerated in a vacuum, and neglecting the gravitational force (we will check on this assumption later), all of the electrical potential energy is converted into kinetic energy. We can identify the initial and final forms of energy to be \(\mathrm{KE}_{i}=0,\mathrm{KE}_{f}=\dfrac{1}{2}mv^{2}, \mathrm{PE}_{i}=qV,\: \mathrm{and}\: \mathrm{PE}_{f}=0\).</p>
+<p class="prose">Conservation of energy states that</p>
+<div class="math-display">\[\mathrm{KE}_{i}+\mathrm{PE}_{i}=\mathrm{KE}_{f}+\mathrm{PE}_{f}\]</div>
+<p class="prose">Entering the forms identified above, we obtain</p>
+<div class="math-display">\[qV=\dfrac{mv^{2}}{2}.\]</div>
+<p class="prose">We solve this for \(v\):</p>
+<div class="math-display">\[v=\sqrt {\dfrac{2qV}{m}}.\]</div>
+<p class="prose">Entering values for \(q,\: V,\: \mathrm{and}\: m\) gives</p>
+<div class="math-display">\[v=\sqrt{\dfrac{2(-1.60\times 10^{-19}\mathrm{C})(-100 \mathrm{J/C})}{9.11\times 10^{-31}\mathrm{kg}}}\]</div>
+<div class="math-display">\[=5.93\times 10^{6} \mathrm{m/s}.\]</div>
+<p class="prose">Note that both the charge and the initial voltage are negative, as inFigure. From the discussions inElectric Charge and Electric Field, we know that electrostatic forces on small particles are generally very large compared with the gravitational force. The large final speed confirms that the gravitational force is indeed negligible here. The large speed also indicates how easy it is to accelerate electrons with small voltages because of their very small mass. Voltages much higher than the 100 V in this problem are typically used in electron guns. Those higher voltages produce electron speeds so great that relativistic effects must be taken into account. That is why a low voltage is considered (accurately) in this example.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 19.01. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Using the comparison between a car battery and a motorcycle battery, explain why voltage alone is insufficient to determine the total work an electrical system can perform.</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 19.01 Quiz</h3><p>5 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How is electric potential defined in terms of electric potential energy and charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the electric potential energy per unit charge.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is the force acting on a unit positive charge.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is the total electric potential energy of a group of charges.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is the work required to move a unit charge in a circle.</li>
+</ul><div class="qexp">Electric potential is mathematically defined as V = PE/q, representing the energy normalized by the amount of charge.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is most analogous to a positive charge moving from a region of high electric potential to a region of low electric potential?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A ball being thrown upward in a gravitational field.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A boat sailing across a flat lake.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A spring being compressed by a heavy weight.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A ball rolling down a gravitational hill.</li>
+</ul><div class="qexp">Moving from high potential to low potential for a positive charge results in a loss of potential energy and a gain in kinetic energy, much like an object falling in a gravitational field.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A motorcycle battery with a potential difference of 12.0 V moves 5,000 C of charge. How much energy is delivered?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>417 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>60,000 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.0024 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5,012 J</li>
+</ul><div class="qexp">The energy delivered is calculated by multiplying the charge by the potential difference (PE = qV), which is 5000 C times 12.0 V.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A submicroscopic particle is given 10.0 eV of energy. What is this energy equivalent to in Joules?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 x 10^-19 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.60 x 10^-20 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.60 x 10^-18 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>6.25 x 10^18 J</li>
+</ul><div class="qexp">One electron volt is 1.60 x 10^-19 Joules, so 10 eV is ten times that value.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">If dry air breaks down at an electric field strength of 3.0 x 10^6 V/m, what is the maximum voltage that can exist between two parallel plates separated by 0.025 m?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>7.5 kV</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>75 kV</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>750 kV</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>120 kV</li>
+</ul><div class="qexp">Using the relationship V = Ed for a uniform field, 3.0 x 10^6 V/m multiplied by 0.025 m equals 75,000 V or 75 kV.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 19 · <span>Section 19.02</span></div><div class="h-title">19.2: Electric Potential in a Uniform Electric Field</div><div class="h-desc">In the previous section, we explored the relationship between voltage and energy. In this section, we will explore the relationship between voltage and electric field. For example, a uniform electric ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 19.02</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe the relationship between voltage and electric field.</li>
+      <li>Derive an expression for the electric potential and electric field.</li>
+      <li>Calculate electric field strength given distance and voltage.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">scalar</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">physical quantity with magnitude but no direction</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 19.02</div>
+<p class="prose">In the previous section, we explored the relationship between voltage and energy. In this section, we will explore the relationship between voltage and electric field. For example, a uniform electric field \(\mathbf{E}\) is produced by placing a potential difference (or voltage) \(\Delta V\) across two parallel metal plates, labeled A and B. (Figure Examining this will tell us what voltage is needed to produce a certain electric field strength; it will also reveal a more fundamental relationship between electric potential and electric field. From a physicist’s point of view, either \(\Delta V\) or \(\mathbf{E}\) can be used to describe any charge distribution. \(\Delta V\) is most closely tied to energy, whereas \(\mathbf{E}\) is most closely related to force. \(\Delta V\)is ascalarquantity and has no direction, while \(\mathbf{E}\) is avectorquantity, having both magnitude and direction. (Note that the magnitude of the electric field strength, a scalar quantity, is represented by \(E\) below.) The relationship between \(\Delta V\) and \(\mathbf{E}\) is revealed by calculating the work done by the force in moving a charge from point A to point B. But, as noted inElectric Potential Energy: Potential Difference, this is complex for arbitrary charge distributions, requiring calculus. We therefore look at a uniform electric field as an interesting special case.</p>
+<div class="diagram"><img src="images/ch19/fig19-5-the-figure-shows-two-vertically-oriented.jpg" alt="The figure shows two vertically oriented parallel plates A and B separated by a distance d. The plate A is positively charged and B is negatively charged. Electric field lines are parallel between the plates and curved at the ends of the plates. A charge q is moved from A to B. The work done W equals q times V sub A B, and the electric field intensity E equals V sub A B over d and potential difference delta V equals q times V sub A B."><div class="d-cap">The figure shows two vertically oriented parallel plates A and B separated by a distance d. The plate A is positively charged and B is negatively charged. Electric field lines are parallel between the plates and curved at the ends of the plates. A charge q is moved from A to B. The work done W equals q times V sub A B, and the electric field intensity E equals V sub A B over d and potential difference delta V equals q times V sub A B. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The work done by the electric field in Figure to move a positive charge \(q\) from A, the positive plate, higher potential, to B, the negative plate, lower potential, is</p>
+<div class="math-display">\[W=-\Delta \mathrm{PE}=-q\Delta V\]</div>
+<p class="prose">The potential difference between points A and B is</p>
+<div class="math-display">\[-\Delta V=-(V_{\mathrm{B}}-V_{\mathrm{A}})=V_{\mathrm{A}}-V_{\mathrm{B}}=V_{\mathrm{AB}}.\]</div>
+<p class="prose">Entering this into the expression for work yields</p>
+<div class="math-display">\[W=qV_{\mathrm{AB}}.\]</div>
+<p class="prose">Work is \(W=Fd \cos \theta\); here \(\cos \theta =1\), since the path is parallel to the field, and so \(W=Fd\). Since \(F=qE\), we see that \(W=qEd\). Substituting this expression for work into the previous equation gives</p>
+<div class="math-display">\[qEd=qV_{\mathrm{AB}}.\]</div>
+<p class="prose">The charge cancels, and so the voltage between points A and B is seen to be</p>
+<div class="math-display">\[\newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace} \begin{rcases} V_{\mathrm{AB}}=Ed\\ E=\dfrac{V_{\mathrm{AB}}}{d} \end{rcases} (\mathrm{uniform}\: E\: \mathrm{- field\:only}),\]</div>
+<p class="prose">where \(d\) is the distance from A to B, or the distance between the plates in Figure . Note that the above equation implies the units for electric field are volts per meter. We already know the units for electric field are newtons per coulomb; thus the following relation among units is valid:</p>
+<div class="math-display">\[1 \mathrm{N/C}=1\mathrm{V/m}\]</div>
+<p class="prose">VOLTAGE BETWEEN POINTS A AND B</p>
+<div class="math-display">\[\newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace} \begin{rcases} V_{\mathrm{AB}}=Ed\\ E=\dfrac{V_{\mathrm{AB}}}{d} \end{rcases} (\mathrm{uniform}\: E\: \mathrm{- field\: only}),\]</div>
+<p class="prose">where \(d\) is the distance from A to B, or the distance between the plates.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : What Is the Highest Voltage Possible between Two Plates?</span></div><div class="example-body">
+<p class="prose">Dry air will support a maximum electric field strength of about \(3.0 \times 10^{6} \mathrm{V/m}\). Above that value, the field creates enough ionization in the air to make the air a conductor. This allows a discharge or spark that reduces the field. What, then, is the maximum voltage between two parallel conducting plates separated by 2.5 cm of dry air?</p>
+<p class="prose">We are given the maximum electric field \(E\) between the plates and the distance \(d\) between them. The equation \(V_{\mathrm{AB}}=Ed\) can thus be used to calculate the maximum voltage.</p>
+<p class="prose">The potential difference or voltage between the plates is</p>
+<div class="math-display">\[V_{\mathrm{AB}}=Ed. \nonumber\]</div>
+<p class="prose">Entering the given values for \(E\) and \(d\) gives</p>
+<div class="math-display">\[V_{\mathrm{AB}}=(3.0\times 10^{6} \mathrm{V/m})(0.025 \mathrm{m})=7.5\times 10^{4} \mathrm{V} \nonumber\]</div>
+<div class="math-display">\[V_{\mathrm{AB}}=75\mathrm{kV}. \nonumber\]</div>
+<p class="prose">(The answer is quoted to only two digits, since the maximum field strength is approximate.)</p>
+<p class="prose">One of the implications of this result is that it takes about 75 kV to make a spark jump across a 2.5 cm (1 in.) gap, or 150 kV for a 5 cm spark. This limits the voltages that can exist between conductors, perhaps on a power transmission line. A smaller voltage will cause a spark if there are points on the surface, since points create greater fields than smooth surfaces. Humid air breaks down at a lower field strength, meaning that a smaller voltage will make a spark jump through humid air. The largest voltages can be built up, say with static electricity, on dry days.</p>
+<div class="diagram"><img src="images/ch19/fig19-6-the-picture-shows-a-spark-chamber-placed.jpg" alt="The picture shows a spark chamber placed on a wooden base."><div class="d-cap">The picture shows a spark chamber placed on a wooden base. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Field and Force inside an Electron Gun</span></div><div class="example-body">
+<p class="prose">Since the voltage and plate separation are given, the electric field strength can be calculated directly from the expression \(E=\dfrac{V_{\mathrm{AB}}}{d}\). Once the electric field strength is known, the force on a charge is found using \(\mathbf{F}=q\mathbf{E}\). Since the electric field is in only one direction, we can write this equation in terms of the magnitudes, \(F=qE\).</p>
+<p class="prose">The expression for the magnitude of the electric field between two uniform metal plates is</p>
+<div class="math-display">\[E=\dfrac{V_{\mathrm{AB}}}{d}. \nonumber\]</div>
+<p class="prose">Since the electron is a single charge and is given 25.0 keV of energy, the potential difference must be 25.0 kV. Entering this value for \(V_{\mathrm{AB}}\) and the plate separation of 0.0400 m, we obtain</p>
+<div class="math-display">\[E=\dfrac{25.0 \mathrm{kV}}{0.0400 \mathrm{m}}=6.25 \times 10^{5} \mathrm{V/m}. \nonumber\]</div>
+<p class="prose">The magnitude of the force on a charge in an electric field is obtained from the equation</p>
+<p class="prose">Substituting known values gives</p>
+<div class="math-display">\[F=(0.500 \times 10^{-6} \mathrm{C})(6.25 \times 10^{5} \mathrm{V/m})=0.313 \mathrm{N}. \nonumber\]</div>
+<p class="prose">Note that the units are newtons, since \(1 \mathrm{V/m}=1\mathrm{N/C}\). The force on the charge is the same no matter where the charge is located between the plates. This is because the electric field is uniform between the plates.</p>
+<p class="prose">In more general situations, regardless of whether the electric field is uniform, it points in the direction of decreasing potential, because the force on a positive charge is in the direction of \(\mathbf{E}\) and also in the direction of lower potential \(V\). Furthermore, the magnitude of \(\mathbf{E}\) equals the rate of decrease of \(V\) with distance. The faster \(V\) decreases over distance, the greater the electric field. In equation form, the general relationship between voltage and electric field is</p>
+<div class="math-display">\[E=-\dfrac{\Delta V}{\Delta s},\]</div>
+<p class="prose">where \(\Delta s\) is the distance over which the change in potential, \(\Delta V\), takes place. The minus sign tells us that \(\mathbf{E}\) points in the direction of decreasing potential. The electric field is said to be thegradient(as in grade or slope) of the electric potential.</p>
+<p class="prose">RELATIONSHIP BETWEEN VOLTAGE AND ELECTRIC FIELD</p>
+<p class="prose">In equation form, the general relationship between voltage and electric field is</p>
+<div class="math-display">\[E=-\dfrac{\Delta V}{\Delta s},\]</div>
+<p class="prose">where \(\Delta s\) is the distance over which the change in potential, \(\Delta V\), takes place. The minus sign tells us that \(\mathbf{E}\) points in the direction of decreasing potential. The electric field is said to be thegradient(as in grade or slope) of the electric potential.</p>
+<p class="prose">For continually changing potentials, \(\Delta V\) and \(\Delta s\) become infinitesimals and differential calculus must be employed to determine the electric field.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 19.02. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Why is the electron volt (eV) used as the primary unit for submicroscopic processes, and how can a particle with very low energy in Joules still possess enough energy to destroy organic molecules?</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 19.02 Quiz</h3><p>5 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which statement best describes the relationship between the electric field and electric potential?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The electric field is the negative gradient (rate of decrease) of the electric potential with distance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The electric field is a scalar quantity while the electric potential is a vector quantity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The electric field is the product of the electric potential and the distance from the source.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The electric field remains constant regardless of the change in electric potential.</li>
+</ul><div class="qexp">The electric field E is given by -ΔV/Δs, meaning it points in the direction where potential decreases most rapidly.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In which direction does the electric field vector always point?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Toward regions of higher electric potential.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Parallel to equipotential lines.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Perpendicular to the direction of the Coulomb force on a positive charge.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Toward regions of lower electric potential.</li>
+</ul><div class="qexp">Electric field lines point away from positive charges and toward negative charges, which corresponds to the direction of decreasing potential.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following units is equivalent to the Newton per Coulomb (N/C)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Joule per Coulomb (J/C)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Volt-meter (V·m)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Volt per meter (V/m)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Coulomb per Volt (C/V)</li>
+</ul><div class="qexp">From the equation E = V/d, the units of electric field can be expressed as Volts per meter, which is equivalent to Newtons per Coulomb.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">4</span><span class="qt-inner">How does the electric potential of a point charge change as the distance (r) from the charge increases?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It decreases as 1/r^2.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It decreases as 1/r.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases linearly with r.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It remains constant regardless of r.</li>
+</ul><div class="qexp">The formula for the electric potential of a point charge is V = kQ/r, showing an inverse relationship with distance.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">You have two point charges: +2.0 nC and -5.0 nC. At a specific point in space, the potential due to the first charge is +100 V and the potential due to the second is -250 V. What is the total electric potential at that point?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>-350 V</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>+350 V</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-150 V</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+150 V</li>
+</ul><div class="qexp">Electric potential is a scalar, so the total potential is the simple algebraic sum of the individual potentials (+100 V - 250 V = -150 V).</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 19 · <span>Section 19.03</span></div><div class="h-title">19.3: Electrical Potential Due to a Point Charge</div><div class="h-desc">Point charges, such as electrons, are among the fundamental building blocks of matter. Furthermore, spherical charge distributions (like on a metal sphere) create external electric fields exactly like...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 19.03</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain point charges and express the equation for electric potential of a point charge.</li>
+      <li>Distinguish between electric potential and electric field.</li>
+      <li>Determine the electric potential of a point charge given charge and distance.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 19.03</div>
+<p class="prose">Point charges, such as electrons, are among the fundamental building blocks of matter. Furthermore, spherical charge distributions (like on a metal sphere) create external electric fields exactly like a point charge. The electric potential due to a point charge is, thus, a case we need to consider. Using calculus to find the work needed to move a test charge \(q\) from a large distance away to a distance of \(r\) from a point charge \(Q\), and noting the connection between work and potential \((W=-q\Delta V)\), we can define theelectric potential \(V\)of a point charge:</p>
+<p class="prose">definition: ELECTRIC POTENTIAL \(V\) OF A POINT CHARGE</p>
+<p class="prose">The electric potential \(V\) of a point charge is given by</p>
+<div class="math-display">\[V=\dfrac{kQ}{r}\: (\mathrm{Point\: Charge}). \label{eq1}\]</div>
+<p class="prose">where \(k\) is a constant equal to \(9.0 \times 10^{9}\, \mathrm{N}\cdot \mathrm{m^{2}/C^{2}}.\)</p>
+<p class="prose">The potential at infinity is chosen to be zero. Thus \(V\) for a point charge decreases with distance, whereas \(\mathbf{E}\) for a point charge decreases with distance squared:</p>
+<div class="math-display">\[E=\dfrac{F}{q}=\dfrac{kQ}{r^{2}}.\]</div>
+<p class="prose">Recall that the electric potential \(V\) is a scalar and has no direction, whereas the electric field \(\mathbf{E}\) is a vector. To find the voltage due to a combination of point charges, you add the individual voltages as numbers. To find the total electric field, you must add the individual fields asvectors, taking magnitude and direction into account. This is consistent with the fact that \(V\) is closely associated with energy, a scalar, whereas \(\mathbf{E}\) is closely associated with force, a vector.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : What Voltage Is Produced by a Small Charge on a Metal Sphere?</span></div><div class="example-body">
+<p class="prose">Charges in static electricity are typically in the nanocoulomb \((\mathrm{nC})\) to microcoulomb \((\mu \mathrm{C})\) range. What is the voltage 5.00 cm away from the center of a 1-cm diameter metal sphere that has a \(-3.00 \mathrm{nC}\) static charge?</p>
+<p class="prose">As we have discussed inElectric Charge and Electric Field, charge on a metal sphere spreads out uniformly and produces a field like that of a point charge located at its center. Thus we can find the voltage using Equation \ref{eq1}.</p>
+<p class="prose">Entering known values into the expression for the potential of a point charge, we obtain</p>
+<div class="math-display">\[ \begin{align*} V&=k\dfrac{Q}{r} \\[5pt] &=(8.99 \times 10^{9} \, \mathrm{N}\cdot \mathrm{m^{2}/C^{2}}) \left(\dfrac{-3.00\times 10^{-9}\,\mathrm{C}}{5.00\times 10^{-2}\,\mathrm{m}}\right) \\[5pt] &= -539\, \mathrm{V}. \end{align*}\]</div>
+<p class="prose">The negative value for voltage means a positive charge would be attracted from a larger distance, since the potential is lower (more negative) than at larger distances. Conversely, a negative charge would be repelled, as expected.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : What Is the Excess Charge on a Van de Graaff Generator</span></div><div class="example-body">
+<p class="prose">A demonstration Van de Graaff generator has a 25.0 cm diameter metal sphere that produces a voltage of 100 kV near its surface. (Figure What excess charge resides on the sphere? (Assume that each numerical value here is shown with three significant figures.)</p>
+<div class="diagram"><img src="images/ch19/fig19-7-the-figure-shows-a-van-de-graaff-generat.png" alt="The figure shows a Van de Graaff generator. The generator consists of a flat belt running over two metal pulleys. One pulley is positioned at the top and another at the bottom. The upper pulley is surrounded by an aluminum sphere. The aluminum sphere has a diameter of twenty five centimeters. Inside the sphere, the upper pulley is connected to a conductor which in turn is connected to a voltmeter for measuring the potential on the sphere. The lower pulley is connected to a motor. When the motor is switched on, the lower pulley begins turning the flat belt. The Van de Graaff generator with the above described setup produces a voltage of one hundred kilovolts. The potential on the surface of the sphere will be the same as that of a point charge at the center which is twelve point five centimeters away from the center. Thus the excess charge is calculated using the formula Q equals r times V divided by k."><div class="d-cap">The figure shows a Van de Graaff generator. The generator consists of a flat belt running over two metal pulleys. One pulley is positioned at the top and another at the bottom. The upper pulley is surrounded by an aluminum sphere. The aluminum sphere has a diameter of twenty five centimeters. Inside the sphere, the upper pulley is connected to a conductor which in turn is connected to a voltmeter for measuring the potential on the sphere. The lower pulley is connected to a motor. When the motor is switched on, the lower pulley begins turning the flat belt. The Van de Graaff generator with the above described setup produces a voltage of one hundred kilovolts. The potential on the surface of the sphere will be the same as that of a point charge at the center which is twelve point five centimeters away from the center. Thus the excess charge is calculated using the formula Q equals r times V divided by k. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The potential on the surface will be the same as that of a point charge at the center of the sphere, 12.5 cm away. (The radius of the sphere is 12.5 cm.) We can thus determine the excess charge using Equation \ref{eq1}.</p>
+<p class="prose">Solving for \(Q\) and entering known values gives</p>
+<div class="math-display">\[ \begin{align*} Q &=\dfrac{rV}{k} \\[5pt] &= \dfrac{(0.125 \,\mathrm{m})(100\times 10^{3}\, \mathrm{V})}{8.99\times 10^{9}\, \mathrm{N\cdot m^{2}/C^{2}}} \\[5pt] &= 1.39\times 10^{-6} \,\mathrm{C} \\[5pt] &= 1.39\, \mathrm{\mu C}.\end{align*}\]</div>
+<p class="prose">This is a relatively small charge, but it produces a rather large voltage. We have another indication here that it is difficult to store isolated charges.</p>
+<p class="prose">The voltages in both of these examples could be measured with a meter that compares the measured potential with ground potential. Ground potential is often taken to be zero (instead of taking the potential at infinity to be zero). It is the potential difference between two points that is of importance, and very often there is a tacit assumption that some reference point, such as Earth or a very distant point, is at zero potential. This is analogous to taking sea level as \(h=0\) when considering gravitational potential energy, \(\mathrm{PE_{g}}=mgh\).</p>
+</div></div>
+<div class="sh2">Summary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 19.03. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Describe the relationship between the distance separating two charged plates and the resulting electric field strength, explaining why a spark is more likely to jump between conductors as they move closer together.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 19.03 Quiz</h3><p>5 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the electric potential at a point 5.00 cm from the center of a metal sphere carrying a static charge of -3.00 nC?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>-539 V</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>-53.9 V</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-5390 V</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+539 V</li>
+</ul><div class="qexp">Using V = kQ/r with r = 0.05 m and Q = -3.00 x 10^-9 C gives approximately -539 V.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A Van de Graaff generator sphere with a radius of 0.125 m has a potential of 100,000 V at its surface. What is the excess charge on the sphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.39 nC</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.125 μC</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>8.99 μC</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.39 μC</li>
+</ul><div class="qexp">Solving V = kQ/r for charge gives Q = rV/k, which results in approximately 1.39 x 10^-6 C.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following is true for a conductor in a static situation?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The electric field inside is maximum and the potential is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The entire surface of the conductor must be at different potentials for charges to move.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The surface of the conductor is an equipotential surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Electric field lines are parallel to the surface of the conductor.</li>
+</ul><div class="qexp">In electrostatics, any excess charge on a conductor resides on the surface and the surface must be an equipotential, otherwise charges would flow.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">How much work is required to move a charge of 2.0 C along an equipotential line where the potential is 10 V?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>20 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2 J</li>
+</ul><div class="qexp">By definition, the potential difference (ΔV) along an equipotential line is zero, and since W = -qΔV, the work done is zero.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What is the geometric relationship between electric field lines and equipotential lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They are always parallel to each other.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are always perpendicular to each other.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They intersect at a 45-degree angle.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>There is no fixed geometric relationship between them.</li>
+</ul><div class="qexp">Because no work is done moving a charge along an equipotential line, the force (and thus the electric field) must be perpendicular to the direction of motion.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 19 · <span>Section 19.04</span></div><div class="h-title">19.4: Equipotential Lines</div><div class="h-desc">We can represent electric potentials (voltages) pictorially, just as we drew pictures to illustrate electric fields. Of course, the two are related. Consider Figure , which shows an isolated positive ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 19.04</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain equipotential lines and equipotential surfaces.</li>
+      <li>Describe the action of grounding an electrical appliance.</li>
+      <li>Compare electric field and equipotential lines.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">equipotential line</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a line along which the electric potential is constant</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 19.04</div>
+<p class="prose">We can represent electric potentials (voltages) pictorially, just as we drew pictures to illustrate electric fields. Of course, the two are related. Consider Figure , which shows an isolated positive point charge and its electric field lines. Electric field lines radiate out from a positive charge and terminate on negative charges. While we use blue arrows to represent the magnitude and direction of the electric field, we use green lines to represent places where the electric potential is constant. These are calledequipotential linesin two dimensions, orequipotential surfacesin three dimensions. The termequipotentialis also used as a noun, referring to an equipotential line or surface. The potential for a point charge is the same anywhere on an imaginary sphere of radius \(r\) surrounding the charge. This is true since the potential for a point charge is given by \(V=kQ/r\) and, thus, has the same value at any point that is a given distance \(r\) from the charge. An equipotential sphere is a circle in the two-dimensional view of Figure . Since the electric field lines point radially away from the charge, they are perpendicular to the equipotential lines.</p>
+<div class="diagram"><img src="images/ch19/fig19-8-the-figure-shows-a-positive-charge-q-at-.jpg" alt="The figure shows a positive charge Q at the center of four concentric circles of increasing radii. The electric potential is the same along each of the circles, called equipotential lines. Straight lines representing electric field lines are drawn from the positive charge to intersect the circles at various points. The equipotential lines are perpendicular to the electric field lines."><div class="d-cap">The figure shows a positive charge Q at the center of four concentric circles of increasing radii. The electric potential is the same along each of the circles, called equipotential lines. Straight lines representing electric field lines are drawn from the positive charge to intersect the circles at various points. The equipotential lines are perpendicular to the electric field lines. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">It is important to note thatequipotential lines are always perpendicular to electric field lines.No work is required to move a charge along an equipotential, since \(\Delta V=0\). Thus the work is</p>
+<div class="math-display">\[W=-\Delta \mathrm{PE} =-q\Delta V=0.\]</div>
+<p class="prose">Work is zero if force is perpendicular to motion. Force is in the same direction as \(\mathbf{E}\), so that motion along an equipotential must be perpendicular to \(\mathbf{E}\). More precisely, work is related to the electric field by</p>
+<div class="math-display">\[W=Fd\cos \theta =qEd \cos \theta =0.\]</div>
+<p class="prose">Note that in the above equation, \(E\) and \(F\) symbolize the magnitudes of the electric field strength and force, respectively. Neither \(q\) nor \(\mathbf{E}\) nor \(d\) is zero, and so \(\cos \theta\) must be 0, meaning \(\theta\) must be \(90^{\cdot}\). In other words, motion along an equipotential is perpendicular to \(\mathbf{E}\).</p>
+<p class="prose">One of the rules for static electric fields and conductors is that the electric field must be perpendicular to the surface of any conductor. This implies that aconductor is an equipotential surface in static situations.There can be no voltage difference across the surface of a conductor, or charges will flow. One of the uses of this fact is that a conductor can be fixed at zero volts by connecting it to the earth with a good conductor—a process calledgrounding. Grounding can be a useful safety tool. For example, grounding the metal case of an electrical appliance ensures that it is at zero volts relative to the earth.</p>
+<p class="prose">A conductor can be fixed at zero volts by connecting it to the earth with a good conductor—a process called grounding.</p>
+<p class="prose">Because a conductor is an equipotential, it can replace any equipotential surface. For example, in Figure a charged spherical conductor can replace the point charge, and the electric field and potential surfaces outside of it will be unchanged, confirming the contention that a spherical charge distribution is equivalent to a point charge at its center.</p>
+<div class="diagram"><img src="images/ch19/fig19-9-the-figure-shows-two-sets-of-concentric-.jpg" alt="The figure shows two sets of concentric circles, called equipotential lines, drawn with positive and negative charges at their centers. Curved electric field lines emanate from the positive charge and curve to meet the negative charge. The lines form closed curves between the charges. The equipotential lines are always perpendicular to the field lines."><div class="d-cap">The figure shows two sets of concentric circles, called equipotential lines, drawn with positive and negative charges at their centers. Curved electric field lines emanate from the positive charge and curve to meet the negative charge. The lines form closed curves between the charges. The equipotential lines are always perpendicular to the field lines. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Figure shows the electric field and equipotential lines for two equal and opposite charges. Given the electric field lines, the equipotential lines can be drawn simply by making them perpendicular to the electric field lines. Conversely, given the equipotential lines, as in Figure \(\PageIndex{3a}\), the electric field lines can be drawn by making them perpendicular to the equipotentials, as in Figure \(\PageIndex{3b}\).</p>
+<div class="diagram"><img src="images/ch19/fig19-10-figure-a-shows-two-circles-called-equipo.jpg" alt="Figure (a) shows two circles, called equipotential lines, along which the potential is negative ten volts. A dumbbell-shaped surface encloses the two circles and is labeled negative five volts. This surface is surrounded by another surface labeled negative two volts. Figure (b) shows the same equipotential lines, each set with a negative charge at its center. Blue electric field lines curve toward the negative charges from all directions."><div class="d-cap">Figure (a) shows two circles, called equipotential lines, along which the potential is negative ten volts. A dumbbell-shaped surface encloses the two circles and is labeled negative five volts. This surface is surrounded by another surface labeled negative two volts. Figure (b) shows the same equipotential lines, each set with a negative charge at its center. Blue electric field lines curve toward the negative charges from all directions. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">One of the most important cases is that of the familiar parallel conducting plates shown in Figure . Between the plates, the equipotentials are evenly spaced and parallel. The same field could be maintained by placing conducting plates at the equipotential lines at the potentials shown.</p>
+<div class="diagram"><img src="images/ch19/fig19-11-the-figure-shows-two-parallel-plates-a-a.jpg" alt="The figure shows two parallel plates A and B separated by a distance d. Plate A is positively charged, and B is negatively charged. Electric field lines are parallel to one another between the plates and curved near the ends of the plates. The voltages range from a hundred volts at Plate A to zero volts at plate B."><div class="d-cap">The figure shows two parallel plates A and B separated by a distance d. Plate A is positively charged, and B is negatively charged. Electric field lines are parallel to one another between the plates and curved near the ends of the plates. The voltages range from a hundred volts at Plate A to zero volts at plate B. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">An important application of electric fields and equipotential lines involves the heart. The heart relies on electrical signals to maintain its rhythm. The movement of electrical signals causes the chambers of the heart to contract and relax. When a person has a heart attack, the movement of these electrical signals may be disturbed. An artificial pacemaker and a defibrillator can be used to initiate the rhythm of electrical signals. The equipotential lines around the heart, the thoracic region, and the axis of the heart are useful ways of monitoring the structure and functions of the heart. An electrocardiogram (ECG) measures the small electric signals being generated during the activity of the heart. More about the relationship between electric fields and the heart is discussed inEnergy Stored in Capacitors.</p>
+<p class="prose">PHET EXPLORATIONS: CHARGES AND FIELDS</p>
+<p class="prose">Move point charges around on the playing field and then view the electric field, voltages, equipotential lines, and more.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">GROUNDINGA conductor can be fixed at zero volts by connecting it to the earth with a good conductor—a process called grounding.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: CHARGES AND FIELDSMove point charges around on the playing field and then view the electric field, voltages, equipotential lines, and more.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 19.04. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Explain why no work is performed when a charge moves along an equipotential line, and describe the necessary geometric relationship between that line and the electric field for this to occur.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 19.04 Quiz</h3><p>5 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the primary purpose of grounding an electrical appliance?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To increase the potential energy of the appliance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To ensure the appliance has a high voltage relative to the Earth.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To prevent the flow of any current through the appliance.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To fix the metal case at zero volts relative to the Earth for safety.</li>
+</ul><div class="qexp">Grounding connects the conductor to the Earth, which acts as a reservoir of charge, fixing the potential of the connected object at zero volts.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which medical diagnostic tool measures the small electric signals and equipotential lines generated by the heart's activity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>MRI</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-ray</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ultrasound</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Electrocardiogram (ECG)</li>
+</ul><div class="qexp">An ECG measures the potential differences created by the electrical signals that trigger heart contractions.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">An electron is accelerated from rest through a potential difference of 100 V. What is its final kinetic energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 x 10^-17 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>100 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>100 eV</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.60 x 10^-19 J</li>
+</ul><div class="qexp">By definition, an electron (fundamental charge) accelerated through 1 V gains 1 eV of energy, so 100 V yields 100 eV.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A charge of 0.500 μC is placed between two parallel plates with an electric field strength of 6.25 x 10^5 V/m. What is the magnitude of the electrostatic force on the charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.313 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3.13 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.25 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.0313 N</li>
+</ul><div class="qexp">The force is calculated using F = qE, which is (0.500 x 10^-6 C) multiplied by (6.25 x 10^5 V/m).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why can a motorcycle battery and a car battery have the same voltage but store different amounts of energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The motorcycle battery has a higher internal resistance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The car battery can move a much larger total amount of charge.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Voltage is synonymous with total energy, so they must store the same energy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The motorcycle battery operates at a higher submicroscopic scale.</li>
+</ul><div class="qexp">Since ΔPE = qΔV, even if ΔV is the same, a battery that can move a larger total charge q stores more potential energy.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 5 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 19</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 19: Electric Potential and Electric Field.</div><div class="h-meta"><div class="h-chip">📝 20 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>19.01</strong></td><td>19.1: Electric Potential Energy- Potential Difference</td></tr>
+    <tr><td><strong>19.02</strong></td><td>19.2: Electric Potential in a Uniform Electric Field</td></tr>
+    <tr><td><strong>19.03</strong></td><td>19.3: Electrical Potential Due to a Point Charge</td></tr>
+    <tr><td><strong>19.04</strong></td><td>19.4: Equipotential Lines</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 100 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 19 Practice Test</h3><p>20 questions · All OpenStax Review Questions</p></div></div><div id="q5">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 20 review questions from OpenStax College Physics, Chapter 19. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How is electric potential defined in terms of electric potential energy and charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the electric potential energy per unit charge.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is the force acting on a unit positive charge.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is the total electric potential energy of a group of charges.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is the work required to move a unit charge in a circle.</li>
+</ul><div class="qexp">Electric potential is mathematically defined as V = PE/q, representing the energy normalized by the amount of charge.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is most analogous to a positive charge moving from a region of high electric potential to a region of low electric potential?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A ball being thrown upward in a gravitational field.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A boat sailing across a flat lake.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A spring being compressed by a heavy weight.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A ball rolling down a gravitational hill.</li>
+</ul><div class="qexp">Moving from high potential to low potential for a positive charge results in a loss of potential energy and a gain in kinetic energy, much like an object falling in a gravitational field.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A motorcycle battery with a potential difference of 12.0 V moves 5,000 C of charge. How much energy is delivered?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>417 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>60,000 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.0024 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>5,012 J</li>
+</ul><div class="qexp">The energy delivered is calculated by multiplying the charge by the potential difference (PE = qV), which is 5000 C times 12.0 V.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A submicroscopic particle is given 10.0 eV of energy. What is this energy equivalent to in Joules?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 x 10^-19 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.60 x 10^-20 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.60 x 10^-18 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>6.25 x 10^18 J</li>
+</ul><div class="qexp">One electron volt is 1.60 x 10^-19 Joules, so 10 eV is ten times that value.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">If dry air breaks down at an electric field strength of 3.0 x 10^6 V/m, what is the maximum voltage that can exist between two parallel plates separated by 0.025 m?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>7.5 kV</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>75 kV</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>750 kV</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>120 kV</li>
+</ul><div class="qexp">Using the relationship V = Ed for a uniform field, 3.0 x 10^6 V/m multiplied by 0.025 m equals 75,000 V or 75 kV.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">6</span><span class="qt-inner">Which statement best describes the relationship between the electric field and electric potential?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The electric field is the negative gradient (rate of decrease) of the electric potential with distance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The electric field is a scalar quantity while the electric potential is a vector quantity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The electric field is the product of the electric potential and the distance from the source.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The electric field remains constant regardless of the change in electric potential.</li>
+</ul><div class="qexp">The electric field E is given by -ΔV/Δs, meaning it points in the direction where potential decreases most rapidly.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">In which direction does the electric field vector always point?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Toward regions of higher electric potential.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Parallel to equipotential lines.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Perpendicular to the direction of the Coulomb force on a positive charge.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Toward regions of lower electric potential.</li>
+</ul><div class="qexp">Electric field lines point away from positive charges and toward negative charges, which corresponds to the direction of decreasing potential.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Which of the following units is equivalent to the Newton per Coulomb (N/C)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Joule per Coulomb (J/C)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Volt-meter (V·m)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Volt per meter (V/m)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Coulomb per Volt (C/V)</li>
+</ul><div class="qexp">From the equation E = V/d, the units of electric field can be expressed as Volts per meter, which is equivalent to Newtons per Coulomb.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">9</span><span class="qt-inner">How does the electric potential of a point charge change as the distance (r) from the charge increases?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It decreases as 1/r^2.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It decreases as 1/r.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases linearly with r.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It remains constant regardless of r.</li>
+</ul><div class="qexp">The formula for the electric potential of a point charge is V = kQ/r, showing an inverse relationship with distance.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">10</span><span class="qt-inner">You have two point charges: +2.0 nC and -5.0 nC. At a specific point in space, the potential due to the first charge is +100 V and the potential due to the second is -250 V. What is the total electric potential at that point?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>-350 V</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>+350 V</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-150 V</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+150 V</li>
+</ul><div class="qexp">Electric potential is a scalar, so the total potential is the simple algebraic sum of the individual potentials (+100 V - 250 V = -150 V).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">11</span><span class="qt-inner">What is the electric potential at a point 5.00 cm from the center of a metal sphere carrying a static charge of -3.00 nC?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>-539 V</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>-53.9 V</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>-5390 V</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+539 V</li>
+</ul><div class="qexp">Using V = kQ/r with r = 0.05 m and Q = -3.00 x 10^-9 C gives approximately -539 V.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">A Van de Graaff generator sphere with a radius of 0.125 m has a potential of 100,000 V at its surface. What is the excess charge on the sphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.39 nC</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.125 μC</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>8.99 μC</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.39 μC</li>
+</ul><div class="qexp">Solving V = kQ/r for charge gives Q = rV/k, which results in approximately 1.39 x 10^-6 C.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">13</span><span class="qt-inner">Which of the following is true for a conductor in a static situation?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The electric field inside is maximum and the potential is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The entire surface of the conductor must be at different potentials for charges to move.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The surface of the conductor is an equipotential surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Electric field lines are parallel to the surface of the conductor.</li>
+</ul><div class="qexp">In electrostatics, any excess charge on a conductor resides on the surface and the surface must be an equipotential, otherwise charges would flow.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">14</span><span class="qt-inner">How much work is required to move a charge of 2.0 C along an equipotential line where the potential is 10 V?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>20 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>5 J</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>2 J</li>
+</ul><div class="qexp">By definition, the potential difference (ΔV) along an equipotential line is zero, and since W = -qΔV, the work done is zero.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">15</span><span class="qt-inner">What is the geometric relationship between electric field lines and equipotential lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They are always parallel to each other.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are always perpendicular to each other.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They intersect at a 45-degree angle.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>There is no fixed geometric relationship between them.</li>
+</ul><div class="qexp">Because no work is done moving a charge along an equipotential line, the force (and thus the electric field) must be perpendicular to the direction of motion.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">What is the primary purpose of grounding an electrical appliance?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To increase the potential energy of the appliance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To ensure the appliance has a high voltage relative to the Earth.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To prevent the flow of any current through the appliance.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To fix the metal case at zero volts relative to the Earth for safety.</li>
+</ul><div class="qexp">Grounding connects the conductor to the Earth, which acts as a reservoir of charge, fixing the potential of the connected object at zero volts.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">17</span><span class="qt-inner">Which medical diagnostic tool measures the small electric signals and equipotential lines generated by the heart's activity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>MRI</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>X-ray</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Ultrasound</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Electrocardiogram (ECG)</li>
+</ul><div class="qexp">An ECG measures the potential differences created by the electrical signals that trigger heart contractions.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">18</span><span class="qt-inner">An electron is accelerated from rest through a potential difference of 100 V. What is its final kinetic energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 x 10^-17 J</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>100 J</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>100 eV</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.60 x 10^-19 J</li>
+</ul><div class="qexp">By definition, an electron (fundamental charge) accelerated through 1 V gains 1 eV of energy, so 100 V yields 100 eV.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">19</span><span class="qt-inner">A charge of 0.500 μC is placed between two parallel plates with an electric field strength of 6.25 x 10^5 V/m. What is the magnitude of the electrostatic force on the charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.313 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>3.13 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.25 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.0313 N</li>
+</ul><div class="qexp">The force is calculated using F = qE, which is (0.500 x 10^-6 C) multiplied by (6.25 x 10^5 V/m).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Why can a motorcycle battery and a car battery have the same voltage but store different amounts of energy?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The motorcycle battery has a higher internal resistance.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The car battery can move a much larger total amount of charge.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Voltage is synonymous with total energy, so they must store the same energy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The motorcycle battery operates at a higher submicroscopic scale.</li>
+</ul><div class="qexp">Since ΔPE = qΔV, even if ΔV is the same, a battery that can move a larger total charge q stores more potential energy.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 20 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Electric Potential and Electric Field',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:6,lessonCount:5,cpMin:80,lessons:['Overview','19.01 19.1: Electric Potential Energy- Potential Difference','19.02 19.2: Electric Potential in a Uniform Electric Field','19.03 19.3: Electrical Potential Due to a Point Charge','19.04 19.4: Equipotential Lines','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===5?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

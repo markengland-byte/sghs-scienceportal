@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Statics and Torque | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">⚖️</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Statics and Torque</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">⚖️</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Statics and Torque</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 9 · <span>Overview</span></div><div class="h-title">Statics and Torque</div><div class="h-desc">What might desks, bridges, buildings, trees, and mountains have in common—at least in the eyes of a physicist? The answer is that they are ordinarily motionless relative to the Earth. Furthermore, their acceleration is zero because they remain motionless. That means they also have something in common with a car moving at a constant velocity, because anything with a constant velocity also has an acceleration of zero. Now, the important part—Newton’s second law states that net \(F = ma\), and so the net external force is zero for all stationary objects and for all objects moving at constant velo</div>
+    <div class="h-meta"><div class="h-chip">📚 6 Lessons</div><div class="h-chip">⚖️ OpenStax College Physics Ch. 9</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 28 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 9</div><div class="cx">All content is from OpenStax College Physics, Chapter 9: Statics and Torque. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch9/fig9-1-layered-rock-formation.jpg" alt="Layered rock formation."><div class="d-cap">Layered rock formation. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 6</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.1</span></div><div class="h-title">9.1: The First Condition for Equilibrium</div><div class="h-desc">The first condition necessary to achieve equilibrium is the one already mentioned: the net external force on the system must be zero. Expressed as an equation, this is simply</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State the first condition of equilibrium.</li>
+      <li>Explain static equilibrium.</li>
+      <li>Explain dynamic equilibrium.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">static equilibrium</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a state of equilibrium in which the net external force and torque acting on a system is zero</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">torque</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">turning or twisting effectiveness of a force</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.1</div>
+<p class="prose">The first condition necessary to achieve equilibrium is the one already mentioned: the net external force on the system must be zero. Expressed as an equation, this is simply</p>
+<p class="prose">Note that if net \(F\) is zero, then the net external force inanydirection is zero. For example, the net external forces along the typicalx- andy-axes are zero. This is written as</p>
+<div class="math-display">\[net \, F_x \, and \, F_y = 0\]</div>
+<p class="prose">Figuress and illustrate situations where \(net \, F = 0\) for bothstatic equilibrium(motionless), anddynamic equilibrium(constant velocity).</p>
+<div class="diagram"><img src="images/ch9/fig9-2-in-the-figure-a-stationary-man-is-standi.jpg" alt="In the figure, a stationary man is standing on the ground. His feet are at a distance apart. His hands are at his waist. The left side is labeled as net F is equal to zero. At the right side a free body diagram is shown with one point and two arrows, one vertically upward labeled as N and another vertically downward labeled as W, from the point."><div class="d-cap">In the figure, a stationary man is standing on the ground. His feet are at a distance apart. His hands are at his waist. The left side is labeled as net F is equal to zero. At the right side a free body diagram is shown with one point and two arrows, one vertically upward labeled as N and another vertically downward labeled as W, from the point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-3-a-moving-car-is-shown-four-normal-vector.jpg" alt="A moving car is shown. Four normal vectors at each wheel are shown. At the rear wheel, a rightward arrow labeled as applied F is shown. Another arrow, which is labeled as f and points left, toward the front of the car, is also shown. A green vector at the top of the car shows the constant velocity vector. A free-body diagram is shown at the right with a point. From the point, the weight of the car is downward. Friction force vector f is toward left and applied force vector is toward right. Four normal vectors are shown upward above the point."><div class="d-cap">A moving car is shown. Four normal vectors at each wheel are shown. At the rear wheel, a rightward arrow labeled as applied F is shown. Another arrow, which is labeled as f and points left, toward the front of the car, is also shown. A green vector at the top of the car shows the constant velocity vector. A free-body diagram is shown at the right with a point. From the point, the weight of the car is downward. Friction force vector f is toward left and applied force vector is toward right. Four normal vectors are shown upward above the point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">However, it is not sufficient for the net external force of a system to be zero for a system to be in equilibrium. Consider the two situations illustrated in Figures and where forces are applied to an ice hockey stick lying flat on ice. The net external force is zero in both situations shown in the figure; but in one case, equilibrium is achieved, whereas in the other, it is not. In Figure , the ice hockey stick remains motionless. But in Figure , with the same forces applied in different places, the stick experiences accelerated rotation. Therefore, we know that the point at which a force is applied is another factor in determining whether or not equilibrium is achieved. This will be explored further in the next section.</p>
+<div class="diagram"><img src="images/ch9/fig9-4-a-hockey-stick-is-shown-at-the-middle-po.jpg" alt="A hockey stick is shown. At the middle point of the stick, two red colored force vectors are shown one pointing to the right and the other to the left. The line of action of the two forces is the same. The top of the figure is labeled as net force F is equal to zero. At the lower right side the free body diagram, a point with two horizontal vectors, each labeled F and directed away from the point, is shown."><div class="d-cap">A hockey stick is shown. At the middle point of the stick, two red colored force vectors are shown one pointing to the right and the other to the left. The line of action of the two forces is the same. The top of the figure is labeled as net force F is equal to zero. At the lower right side the free body diagram, a point with two horizontal vectors, each labeled F and directed away from the point, is shown. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-5-a-hockey-stick-is-shown-the-two-force-ve.jpg" alt="A hockey stick is shown. The two force vectors acting on the hockey stick are shown, one pointing to the right and the other to the left. The lines of action of the two forces are different. Each vector is labeled as F. At the top and the bottom of the stick there are two circular arrows, showing the clockwise direction of the rotation. At the lower right side the free body diagram, a point with two horizontal vectors, each labeled F and directed away from the point, is shown."><div class="d-cap">A hockey stick is shown. The two force vectors acting on the hockey stick are shown, one pointing to the right and the other to the left. The lines of action of the two forces are different. Each vector is labeled as F. At the top and the bottom of the stick there are two circular arrows, showing the clockwise direction of the rotation. At the lower right side the free body diagram, a point with two horizontal vectors, each labeled F and directed away from the point, is shown. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PhET Explorations: Torque</p>
+<p class="prose">Investigate howtorque causes an object to rotate. Discover the relationships between angular acceleration, moment of inertia, angular momentum and torque.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PhET Explorations: TorqueInvestigate howtorque causes an object to rotate. Discover the relationships between angular acceleration, moment of inertia, angular momentum and torque.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What can you say about the velocity of a moving body that is in dynamic equilibrium? Draw a sketch of such a body using clearly labeled arrows to represent all external forces on the body.</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.1 Quiz</h3><p>4 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What physical property do motionless desks, mountains, and cars traveling at a constant velocity all share?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Their velocity is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Their acceleration is zero.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They have no forces acting on them.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are all in static equilibrium.</li>
+</ul><div class="qexp">Newton’s second law implies that any object with zero acceleration (whether stationary or moving at constant velocity) must have a net external force of zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">If the net external force on a system is zero, which of the following statements must be true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The system is definitely at rest.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The system has no internal forces.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the net external forces along the x- and y-axes are both zero.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The system cannot be rotating.</li>
+</ul><div class="qexp">The first condition for equilibrium states that if the total net force is zero, then the sum of forces in any specific direction must also be zero.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why is a net external force of zero insufficient to guarantee that a system is in equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The points at which forces are applied can cause accelerated rotation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Internal forces might cause the object to change shape.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Friction might be acting in a direction not considered by the axes.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The object's mass might not be uniformly distributed.</li>
+</ul><div class="qexp">As shown with the hockey stick example, forces can be balanced in magnitude but applied at different locations, creating a net torque and causing rotation.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which state is characterized by an object moving at a constant velocity while the net external force is zero?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Uniform acceleration</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Static equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dynamic equilibrium</li>
+</ul><div class="qexp">Dynamic equilibrium occurs when an object is in motion but has a constant velocity and zero net external force.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.2</span></div><div class="h-title">9.2: The Second Condition for Equilibrium</div><div class="h-desc">The second condition necessary to achieve equilibrium involves avoiding accelerated rotation (maintaining a constant angular velocity. A rotating body or system can be in equilibrium if its rate of ro...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State the second condition that is necessary to achieve equilibrium.</li>
+      <li>Explain torque and the factors on which it depends.</li>
+      <li>Describe the role of torque in rotational mechanics.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.2</div>
+<p class="prose">The second condition necessary to achieve equilibrium involves avoiding accelerated rotation (maintaining a constant angular velocity. A rotating body or system can be in equilibrium if its rate of rotation is constant and remains unchanged by the forces acting on it. To understand what factors affect rotation, let us think about what happens when you open an ordinary door by rotating it on its hinges.</p>
+<p class="prose">Several familiar factors determine how effective you are in opening the door (Figure . First of all, the larger the force, the more effective it is in opening the door—obviously, the harder you push, the more rapidly the door opens. Also, the point at which you push is crucial. If you apply your force too close to the hinges, the door will open slowly, if at all. Most people have been embarrassed by making this mistake and bumping up against a door when it did not open as quickly as expected. Finally, the direction in which you push is also important. The most effective direction is perpendicular to the door—we push in this direction almost instinctively.</p>
+<div class="diagram"><img src="images/ch9/fig9-6-in-the-figure-six-top-views-of-a-door-ar.jpg" alt="In the figure, six top views of a door are shown. In the first figure, a force vector is shown in the North West direction. The perpendicular distance of the force from the point of rotation is r. In the second figure, a force is applied in the opposite direction at the same distance from the hinges. In the third figure, a smaller force in applied at the same point. In the next figure, a horizontal force is applied at the same point. In this case, the perpendicular distance from the hinges is shown as r sin theta. In the next figure, force is applied at a distance near the hinges. In the final figure, the force is shown along the direction of hinges toward the handle of the door."><div class="d-cap">In the figure, six top views of a door are shown. In the first figure, a force vector is shown in the North West direction. The perpendicular distance of the force from the point of rotation is r. In the second figure, a force is applied in the opposite direction at the same distance from the hinges. In the third figure, a smaller force in applied at the same point. In the next figure, a horizontal force is applied at the same point. In this case, the perpendicular distance from the hinges is shown as r sin theta. In the next figure, force is applied at a distance near the hinges. In the final figure, the force is shown along the direction of hinges toward the handle of the door. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The magnitude, direction, and point of application of the force are incorporated into the definition of the physical quantity called torque.Torqueis the rotational equivalent of a force. It is a measure of the effectiveness of a force in changing or accelerating a rotation (changing the angular velocity over a period of time). In equation form, the magnitude of torque is defined to be</p>
+<div class="math-display">\[\tau = rF\, \sin \, \theta\]</div>
+<p class="prose">where \(\tau\) (the Greek letter tau) is the symbol for torque, \(r\) is the distance from the pivot point to the point where the force is applied, \(F\) is the magnitude of the force, and \(\theta\) is the angle between the force and the vector directed from the point of application to the pivot point, as seen in Figures and .</p>
+<div class="diagram"><img src="images/ch9/fig9-7-in-the-first-part-of-the-figure-a-hockey.jpg" alt="In the first part of the figure, a hockey stick is shown. At a point A near the bottom, a nail is fixed. A force is applied at a point near the holding grip of the hockey stick. A quarter circular arrow shows that the stick rotates in the counterclockwise direction. The perpendicular distance between the pivot point and the force vector direction is labeled as r-perpendicular, and the angle between the direction of force and the line joining the pivot A to the point of application of force is given as theta. In the second part of the figure, the pivot point is near the top of the stick and the point of application of the force is about the same as that in the first part of the figure. An upward quarter circle arrow shows that the stick rotates in the clockwise direction."><div class="d-cap">In the first part of the figure, a hockey stick is shown. At a point A near the bottom, a nail is fixed. A force is applied at a point near the holding grip of the hockey stick. A quarter circular arrow shows that the stick rotates in the counterclockwise direction. The perpendicular distance between the pivot point and the force vector direction is labeled as r-perpendicular, and the angle between the direction of force and the line joining the pivot A to the point of application of force is given as theta. In the second part of the figure, the pivot point is near the top of the stick and the point of application of the force is about the same as that in the first part of the figure. An upward quarter circle arrow shows that the stick rotates in the clockwise direction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">An alternative expression for torque is given in terms of theperpendicular lever arm \(r_{\perp}\)as shown in Figures and , which is defined as</p>
+<div class="math-display">\[r_{\perp} = r \, \sin \, \theta\]</div>
+<div class="math-display">\[\tau = r_{\perp}F.\]</div>
+<p class="prose">The perpendicular lever arm \(r_{\perp}\) is the shortest distance from the pivot point to the line along which \(F\) acts; it is shown as a dashed line in Figures and . Note that the line segment that defines the distance \(r_{\perp}\) is perpendicular to \(F\), as its name implies. It is sometimes easier to find or visualize \(r_{\perp}\) than to find both \(r\) and \(\theta\). In such cases, it may be more convenient to use \(\tau = r_{perp}F\) rather than \(\tau = rF \, \sin \, \theta\) for torque, but both are equally valid.</p>
+<p class="prose">TheSI unit of torqueis newtons times meters, usually written as \(N \cdot m\). For example, if you push perpendicular to the door with a force of 40 N at a distance of 0.800 m from the hinges, you exert a torque of \(32 \, N \cdot m(0.800 \, m \times 40 \, N \times sin \, 90^o)\) relative to the hinges. If you reduce the force to 20 N, the torque is reduced to \(16 \, N \cdot m\), and so on.</p>
+<p class="prose">The torque is always calculated with reference to some chosen pivot point. For the same applied force, a different choice for the location of the pivot will give you a different value for the torque, since both \(r\) and \(\theta\) depend on the location of the pivot. Any point in any object can be chosen to calculate the torque about that point. The object may not actually pivot about the chosen “pivot point.”</p>
+<p class="prose">Note that for rotation in a plane, torque has two possible directions. Torque is either clockwise or counterclockwise relative to the chosen pivot point, as illustrated for points B and A, respectively, in Figure . If the object can rotate about point A, it will rotate counterclockwise, which means that the torque for the force is shown as counterclockwise relative to A. But if the object can rotate about point B, it will rotate clockwise, which means the torque for the force shown is clockwise relative to B. Also, the magnitude of the torque is greater when the lever arm is longer.</p>
+<p class="prose">Now,the second condition necessary to achieve equilibriumis thatthe net external torque on a system must be zero. An external torque is one that is created by an external force. You can choose the point around which the torque is calculated. The point can be the physical pivot point of a system or any other point in space—but it must be the same point for all torques. If the second condition (net external torque on a system is zero) is satisfied for one choice of pivot point, it will also hold true for any other choice of pivot point in or out of the system of interest. (This is true only in an inertial frame of reference.) The second condition necessary to achieve equilibrium is stated in equation form as</p>
+<p class="prose">where net means total. Torques, which are in opposite directions are assigned opposite signs. A common convention is to call counterclockwise (ccw) torques positive and clockwise (cw) torques negative.</p>
+<p class="prose">When two children balance a seesaw as shown in Figure , they satisfy the two conditions for equilibrium. Most people have perfect intuition about seesaws, knowing that the lighter child must sit farther from the pivot and that a heavier child can keep a lighter one off the ground indefinitely.</p>
+<div class="diagram"><img src="images/ch9/fig9-8-on-the-right-of-the-diagram-is-a-long-li.jpg" alt="On the right of the diagram is a long light-brown rectangle with a solid black dot on the right end. Below the long rectangle is a double headed arrow pointing to vertical lines at either end of the block labeled with a d in the center. Below the left vertical line is a red arrow pointing up labeled FA. To the left of the left vertical line is a red arrow pointing to the right labeled FB. Above the light-brown long rectangle is a short line segment pointing up labeled FI. From the top of the FI line is another short line moving toward the left and labeled FII. There is red arrow labeled FC pointing at about 30 degrees down and to the right to close the triangle between FI, FII, and FC. The angle between FII and FC is labeled as theta."><div class="d-cap">On the right of the diagram is a long light-brown rectangle with a solid black dot on the right end. Below the long rectangle is a double headed arrow pointing to vertical lines at either end of the block labeled with a d in the center. Below the left vertical line is a red arrow pointing up labeled FA. To the left of the left vertical line is a red arrow pointing to the right labeled FB. Above the light-brown long rectangle is a short line segment pointing up labeled FI. From the top of the FI line is another short line moving toward the left and labeled FII. There is red arrow labeled FC pointing at about 30 degrees down and to the right to close the triangle between FI, FII, and FC. The angle between FII and FC is labeled as theta. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : She Saw Torques On A Seesaw</span></div><div class="example-body">
+<p class="prose">The two children shown in Figure are balanced on a seesaw of negligible mass. (This assumption is made to keep the example simple—more involved examples will follow.) The first child has a mass of 26.0 kg and sits 1.60 m from the pivot.</p>
+<p class="prose">Both conditions for equilibrium must be satisfied. In part (a), we are asked for a distance; thus, the second condition (regarding torques) must be used, since the first (regarding only forces) has no distances in it. To apply the second condition for equilibrium, we first identify the system of interest to be the seesaw plus the two children. We take the supporting pivot to be the point about which the torques are calculated. We then identify all external forces acting on the system.</p>
+<p class="prose">The three external forces acting on the system are the weights of the two children and the supporting force of the pivot. Let us examine the torque produced by each. Torque is defined to be</p>
+<div class="math-display">\[\tau = rF \, \sin \, \theta. \nonumber\]</div>
+<p class="prose">Here \(\theta = 90^o,\) so that \(sin \, \theta = 1\) for all three forces. That means \(r_{\perp} = r\) for all three. The torques exerted by the three forces are first,</p>
+<div class="math-display">\[\tau_1 = r_1w_1\nonumber\]</div>
+<div class="math-display">\[\tau_2 = -r_2w_2\nonumber\]</div>
+<div class="math-display">\[ \begin{align*} \tau_p &= r_pF_p \\[5pt] &= 0 \cdot F_p \\[5pt] &= 0. \end{align*}\]</div>
+<p class="prose">Note that a minus sign has been inserted into the second equation because this torque is clockwise and is therefore negative by convention. Since \(F_p\) acts directly on the pivot point, the distance \(r_p\) is zero. A force acting on the pivot cannot cause a rotation, just as pushing directly on the hinges of a door will not cause it to rotate. Now, the second condition for equilibrium is that the sum of the torques on both children is zero. Therefore</p>
+<div class="math-display">\[\tau_2 = -\tau_1,\nonumber\]</div>
+<div class="math-display">\[r_2w_2 = r_1w_1.\nonumber\]</div>
+<p class="prose">Weight is mass times the acceleration due to gravity. Entering \(mg\) for \(w\), we get</p>
+<div class="math-display">\[r_2m_2g = r_1w_1g.\nonumber\]</div>
+<p class="prose">Solve this for the unknown \(r_2\):</p>
+<div class="math-display">\[r_2 = r_1\dfrac{m_1}{m_2}.\nonumber\]</div>
+<p class="prose">The quantities on the right side of the equation are known; thus, \(r_2\) is</p>
+<div class="math-display">\[ \begin{align*} r_2 &= (1.60 \, m)\dfrac{26.0 \, kg}{32.0 \, kg} \\[5pt] &= 1.30 \, m \end{align*}\]</div>
+<p class="prose">As expected, the heavier child must sit closer to the pivot (1.30 m versus 1.60 m) to balance the seesaw.</p>
+<p class="prose">This part asks for a force \(F_p\). The easiest way to find it is to use the first condition for equilibrium, which is</p>
+<div class="math-display">\[net \, F = 0.\nonumber\]</div>
+<p class="prose">The forces are all vertical, so that we are dealing with a one-dimensional problem along the vertical axis; hence, the condition can be written as</p>
+<div class="math-display">\[net \, F_y = 0 \nonumber\]</div>
+<p class="prose">where we again call the vertical axis they-axis. Choosing upward to be the positive direction, and using plus and minus signs to indicate the directions of the forces, we see that</p>
+<div class="math-display">\[F_p - w_1 - w_2 = 0.\nonumber\]</div>
+<p class="prose">This equation yields what might have been guessed at the beginning:</p>
+<div class="math-display">\[F_p = w_1 + w_2. \nonumber\]</div>
+<p class="prose">So, the pivot supplies a supporting force equal to the total weight of the system:</p>
+<div class="math-display">\[F_p = m_1g + m_2g. \nonumber\]</div>
+<p class="prose">Entering known values gives</p>
+<div class="math-display">\[ \begin{align*} F_p &= (26.0 \, kg)(9.80 \, m/s^2) + (32.0 \, kg)(9.80 \, m/s^2) \\[5pt] &= 568 \, N. \end{align*}\]</div>
+<p class="prose">The two results make intuitive sense. The heavier child sits closer to the pivot. The pivot supports the weight of the two children. Part (b) can also be solved using the second condition for equilibrium, since both distances are known, but only if the pivot point is chosen to be somewhere other than the location of the seesaw’s actual pivot!</p>
+<p class="prose">Several aspects of the preceding example have broad implications. First, the choice of the pivot as the point around which torques are calculated simplified the problem. Since \(F_p\) is exerted on the pivot point, its lever arm is zero. Hence, the torque exerted by the supporting force \(F_p\) is zero relative to that pivot point. The second condition for equilibrium holds for any choice of pivot point, and so we choose the pivot point to simplify the solution of the problem.</p>
+<p class="prose">Second, the acceleration due to gravity canceled in this problem, and we were left with a ratio of masses.This will not always be the case. Always enter the correct forces—do not jump ahead to enter some ratio of masses.</p>
+<p class="prose">Third, the weight of each child is distributed over an area of the seesaw, yet we treated the weights as if each force were exerted at a single point. This is not an approximation—the distances \(r_{\perp}\) and \(r_2\) are the distances to points directly below thecenter of gravityof each child. As we shall see in the next section, the mass and weight of a system can act as if they are located at a single point.</p>
+<p class="prose">Finally, note that the concept of torque has an importance beyond static equilibrium.Torque plays the same role in rotational motion that force plays in linear motion.We will examine this in the next chapter.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Take-Home ExperimentTake a piece of modeling clay and put it on a table, then mash a cylinder down into it so that a ruler can balance on the round side of the cylinder while everything remains still. Put a penny 8 cm away from the pivot. Where would you need to put two pennies to balance? Three pennies?</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Under what conditions can a rotating body be in equilibrium? Give an example.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.2 Quiz</h3><p>4 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How is torque mathematically defined in terms of force (F), distance from pivot (r), and the angle (θ) between them?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>τ = rF sin θ</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>τ = rF cos θ</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>τ = r / (F sin θ)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>τ = F / (r sin θ)</li>
+</ul><div class="qexp">Torque is the rotational equivalent of force and its magnitude depends on the force, the distance from the pivot, and the sine of the angle of application.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the standard SI unit used to measure torque?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Newtons per meter (N/m)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton-meters (N·m)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Joules per second (J/s)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Kilogram-meters (kg·m)</li>
+</ul><div class="qexp">Since torque is the product of a distance (meters) and a force (Newtons), its SI unit is the Newton-meter.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">To open a heavy door most effectively, why do people instinctively push as far from the hinges as possible?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It reduces the required torque.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It increases the force needed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases the lever arm, thereby increasing torque for a given force.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It changes the angle of the force to be more parallel to the door.</li>
+</ul><div class="qexp">Torque is proportional to the distance from the pivot point (the lever arm), so a larger distance produces more rotational effectiveness.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If you apply a 20 N force perpendicular to a wrench handle at a distance of 0.80 m from the bolt, what is the magnitude of the torque?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>25.0 N·m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>32.0 N·m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.50 N·m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>16.0 N·m</li>
+</ul><div class="qexp">Using the formula τ = rF sin θ with θ = 90°, the torque is 0.80 m × 20 N × 1 = 16 N·m.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.3</span></div><div class="h-title">9.3: Stability</div><div class="h-desc">It is one thing to have a system in equilibrium; it is quite another for it to be stable. The toy doll perched on the man’s hand in Figure , for example, is not in stable equilibrium. There arethree t...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State the types of equilibrium.</li>
+      <li>Describe stable and unstable equilibriums.</li>
+      <li>Describe neutral equilibrium.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">neutral equilibrium</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a state of equilibrium that is independent of a system’s displacements from its original position</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.3</div>
+<p class="prose">It is one thing to have a system in equilibrium; it is quite another for it to be stable. The toy doll perched on the man’s hand in Figure , for example, is not in stable equilibrium. There arethree types of equilibrium:stable,unstable, andneutral. Figures throughout this module illustrate various examples.</p>
+<p class="prose">Figure presents a balanced system, such as the toy doll on the man’s hand, which has its center of gravity (cg) directly over the pivot, so that the torque of the total weight is zero. This is equivalent to having the torques of the individual parts balanced about the pivot point, in this case the hand. The cgs of the arms, legs, head, and torso are labeled with smaller type.</p>
+<div class="diagram"><img src="images/ch9/fig9-9-in-the-figure-a-man-is-shown-balancing-a.jpg" alt="In the figure a man is shown balancing a child on his hand. The child is enjoying the activity."><div class="d-cap">In the figure a man is shown balancing a child on his hand. The child is enjoying the activity. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A system is said to be instable equilibriumif, when displaced from equilibrium, it experiences a net force or torque in a direction opposite to the direction of the displacement. For example, a marble at the bottom of a bowl will experience arestoringforce when displaced from its equilibrium position. This force moves it back toward the equilibrium position. Most systems are in stable equilibrium, especially for small displacements. For another example of stable equilibrium, see the pencil in Figure .</p>
+<div class="diagram"><img src="images/ch9/fig9-10-a-pencil-is-balanced-vertically-on-its-f.jpg" alt="A pencil is balanced vertically on its flat end. The weight W of the pencil is acting at its center of gravity downward. The normal reaction N of the surface is shown as an arrow upward. A free body diagram is shown at right of the pencil. The midpoint of the flat base of the pencil is marked as pivot point."><div class="d-cap">A pencil is balanced vertically on its flat end. The weight W of the pencil is acting at its center of gravity downward. The normal reaction N of the surface is shown as an arrow upward. A free body diagram is shown at right of the pencil. The midpoint of the flat base of the pencil is marked as pivot point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A system is inunstable equilibriumif, when displaced, it experiences a net force or torque in thesamedirection as the displacement from equilibrium. A system in unstable equilibrium accelerates away from its equilibrium position if displaced even slightly. An obvious example is a ball resting on top of a hill. Once displaced, it accelerates away from the crest. See the next several figures for examples of unstable equilibrium.</p>
+<div class="diagram"><img src="images/ch9/fig9-11-a-pencil-is-tilted-slightly-toward-left-.jpg" alt="A pencil is tilted slightly toward left. The left end point of its flat surface is marked as the pivot point. The weight W of the pencil is acting at the center of gravity of the pencil. The normal reaction N of the pencil is acting upward at the pivot point. The line of action of the normal reaction is toward left of the line of action of the weight of the pencil."><div class="d-cap">A pencil is tilted slightly toward left. The left end point of its flat surface is marked as the pivot point. The weight W of the pencil is acting at the center of gravity of the pencil. The normal reaction N of the pencil is acting upward at the pivot point. The line of action of the normal reaction is toward left of the line of action of the weight of the pencil. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-12-a-pencil-is-tilted-toward-left-so-that-t.jpg" alt="A pencil is tilted toward left so that the line of action of its weight is toward left of the pivot point which is the left end of the flat end of the pencil."><div class="d-cap">A pencil is tilted toward left so that the line of action of its weight is toward left of the pivot point which is the left end of the flat end of the pencil. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-13-a-vertical-pencil-balanced-at-its-sharp-.jpg" alt="A vertical pencil balanced at its sharp end is shown. The weight of the pencil is acting at its center of gravity and is in the line with the normal reaction N at the pivot point of the pencil."><div class="d-cap">A vertical pencil balanced at its sharp end is shown. The weight of the pencil is acting at its center of gravity and is in the line with the normal reaction N at the pivot point of the pencil. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-14-a-vertical-pencil-tilted-toward-left-is-.jpg" alt="A vertical pencil tilted toward left is shown. The sharp end of the pencil is down and labeled as pivot point. The weight of the pencil is acting at its center of gravity and the line of action of the weight is toward left of the pivot point."><div class="d-cap">A vertical pencil tilted toward left is shown. The sharp end of the pencil is down and labeled as pivot point. The weight of the pencil is acting at its center of gravity and the line of action of the weight is toward left of the pivot point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A system is inneutral equilibriumif its equilibrium is independent of displacements from its original position. A marble on a flat horizontal surface is an example. Combinations of these situations are possible. For example, a marble on a saddle is stable for displacements toward the front or back of the saddle and unstable for displacements to the side. Figure shows another example of neutral equilibrium.</p>
+<div class="diagram"><img src="images/ch9/fig9-15-in-figure-a-a-ball-is-lying-on-a-flat-su.jpg" alt="In figure a, a ball is lying on a flat surface and the point of contact with the surface is labeled pivot point. The weight of the ball is acting at the center of gravity of the ball. The normal force N is in the same line as the weight of the ball. The torque on the ball is zero. In figure b, a side view of a pencil lying flat on a table is shown. The sharp end of the pencil is toward right. The weight of the pencil is acting at the center of gravity of the pencil. The normal reaction N of the table surface is in the same line of action as the weight but in the upward direction."><div class="d-cap">In figure a, a ball is lying on a flat surface and the point of contact with the surface is labeled pivot point. The weight of the ball is acting at the center of gravity of the ball. The normal force N is in the same line as the weight of the ball. The torque on the ball is zero. In figure b, a side view of a pencil lying flat on a table is shown. The sharp end of the pencil is toward right. The weight of the pencil is acting at the center of gravity of the pencil. The normal reaction N of the table surface is in the same line of action as the weight but in the upward direction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">When we consider how far a system in stable equilibrium can be displaced before it becomes unstable, we find that some systems in stable equilibrium are more stable than others. The pencil in Figure and the person in Figure \(\PageIndex{8a}\) are in stable equilibrium, but become unstable for relatively small displacements to the side. The critical point is reached when the cg is no longerabovethe base of support. Additionally, since the cg of a person’s body is above the pivots in the hips, displacements must be quickly controlled. This control is a central nervous system function that is developed when we learn to hold our bodies erect as infants. For increased stability while standing, the feet should be spread apart, giving a larger base of support. Stability is also increased by lowering one’s center of gravity by bending the knees, as when a football player prepares to receive a ball or braces themselves for a tackle. A cane, a crutch, or a walker increases the stability of the user, even more as the base of support widens. Usually, the cg of a female is lower (closer to the ground) than a male. Young children have their center of gravity between their shoulders, which increases the challenge of learning to walk.</p>
+<div class="diagram"><img src="images/ch9/fig9-16-part-a-of-the-figure-shows-a-man-standin.jpg" alt="Part a of the figure shows a man standing on the ground. The feet are a shoulder-width apart from each other. The weight W of the man is acting at the center of gravity of the body of the man. Two normal reactions N each are shown acting on the feet of the man. The distance between the feet of the man is marked as the base of support. A free body diagram is also shown on the left side of the figure. Part b of the figure shows a man standing upright with his knees bent. The feet are a distance apart from each other. The weight W of the man is acting at the center of gravity of the body of the man. Two normal reactions N each are shown acting on the feet of the man. The distance between the feet of the man is marked as the base of support."><div class="d-cap">Part a of the figure shows a man standing on the ground. The feet are a shoulder-width apart from each other. The weight W of the man is acting at the center of gravity of the body of the man. Two normal reactions N each are shown acting on the feet of the man. The distance between the feet of the man is marked as the base of support. A free body diagram is also shown on the left side of the figure. Part b of the figure shows a man standing upright with his knees bent. The feet are a distance apart from each other. The weight W of the man is acting at the center of gravity of the body of the man. Two normal reactions N each are shown acting on the feet of the man. The distance between the feet of the man is marked as the base of support. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Animals such as chickens have easier systems to control. Figure shows that the cg of a chicken lies below its hip joints and between its widely separated and broad feet. Even relatively large displacements of the chicken’s cg are stable and result in restoring forces and torques that return the cg to its equilibrium position with little effort on the chicken’s part. Not all birds are like chickens, of course. Some birds, such as the flamingo, have balance systems that are almost as sophisticated as that of humans.</p>
+<p class="prose">Figure shows that the cg of a chicken is below the hip joints and lies above a broad base of support formed by widely-separated and large feet. Hence, the chicken is in very stable equilibrium, since a relatively large displacement is needed to render it unstable. The body of the chicken is supported from above by the hips and acts as a pendulum between the hips. Therefore, the chicken is stable for front-to-back displacements as well as for side-to-side displacements.</p>
+<div class="diagram"><img src="images/ch9/fig9-17-a-chicken-is-shown-standing-on-the-groun.jpg" alt="A chicken is shown standing on the ground. The weight of the chicken is acting at the center of gravity of the chicken’s body. The distance between the feet of the chicken is labeled as base of support. The normal forces N each are acting at the feet of the chicken. A free body diagram is shown at the right side of the figure."><div class="d-cap">A chicken is shown standing on the ground. The weight of the chicken is acting at the center of gravity of the chicken’s body. The distance between the feet of the chicken is labeled as base of support. The normal forces N each are acting at the feet of the chicken. A free body diagram is shown at the right side of the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Engineers and architects strive to achieve extremely stable equilibriums for buildings and other systems that must withstand wind, earthquakes, and other forces that displace them from equilibrium. Although the examples in this section emphasize gravitational forces, the basic conditions for equilibrium are the same for all types of forces. The net external force must be zero, and the net torque must also be zero.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What three factors affect the torque created by a force relative to a specific pivot point?</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.3 Quiz</h3><p>4 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">According to the common physics convention, how is a counterclockwise (ccw) torque assigned?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is assigned a positive sign.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is assigned a negative sign.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is assigned a value of zero.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is considered neutral and has no sign.</li>
+</ul><div class="qexp">The standard convention in physics is to treat counterclockwise torques as positive and clockwise torques as negative.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which type of equilibrium is demonstrated by a marble resting at the very bottom of a bowl?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Unstable equilibrium</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Stable equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dynamic equilibrium</li>
+</ul><div class="qexp">A system is in stable equilibrium if a small displacement creates a restoring force that moves the object back toward its original position.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What characterizes a system in unstable equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A displacement creates a force that returns it to its original position.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The system remains in its new position after being displaced.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A displacement creates a torque in the same direction as the displacement.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The center of gravity is always below the base of support.</li>
+</ul><div class="qexp">In unstable equilibrium, any small displacement results in a net force or torque that accelerates the object further away from its equilibrium point.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A marble resting on a perfectly flat, horizontal table is an example of which type of equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Stable equilibrium</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Unstable equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Static equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Neutral equilibrium</li>
+</ul><div class="qexp">Neutral equilibrium occurs when the system’s equilibrium is independent of its displacement from the original position.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.4</span></div><div class="h-title">9.4: Applications of Statics, Including Problem-Solving Strategies</div><div class="h-desc">Statics can be applied to a variety of situations, ranging from raising a drawbridge to bad posture and back strain. We begin with a discussion of problem-solving strategies specifically used for stat...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Discuss the applications of Statics in real life.</li>
+      <li>State and discuss various problem-solving strategies in Statics.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.4</div>
+<p class="prose">Statics can be applied to a variety of situations, ranging from raising a drawbridge to bad posture and back strain. We begin with a discussion of problem-solving strategies specifically used for statics. Since statics is a special case of Newton’s laws, both the general problem-solving strategies and the special strategies for Newton’s laws, discussed inProblem-Solving Strategies, still apply.</p>
+<p class="prose">Problem-Solving Strategy: Static Equilibrium Situations</p>
+<p class="prose">Now let us apply this problem-solving strategy for the pole vaulter shown in the three figures below. The pole is uniform and has a mass of 5.00 kg. In Figure , the pole’s cg lies halfway between the vaulter’s hands. It seems reasonable that the force exerted by each hand is equal to half the weight of the pole, or 24.5 N. This obviously satisfies the first condition for equilibrium \((net \, F = 0)\). The second condition \((net \, \tau = 0)\) is also satisfied, as we can see by choosing the cg to be the pivot point. The weight exerts no torque about a pivot point located at the cg, since it is applied at that point and its lever arm is zero. The equal forces exerted by the hands are equidistant from the chosen pivot, and so they exert equal and opposite torques.</p>
+<div class="diagram"><img src="images/ch9/fig9-18-a-pole-vaulter-is-standing-on-the-ground.jpg" alt="A pole vaulter is standing on the ground holding a pole with his two hands. The center of gravity of the pole is between the hands of the pole vaulter and is near the right hand of the man. The weight W is shown as an arrow downward toward center of gravity. The reactions F sub R and F sub L of the hands of the man are shown with vectors in upward direction. A free body diagram of the situation is shown on the top right side of the figure."><div class="d-cap">A pole vaulter is standing on the ground holding a pole with his two hands. The center of gravity of the pole is between the hands of the pole vaulter and is near the right hand of the man. The weight W is shown as an arrow downward toward center of gravity. The reactions F sub R and F sub L of the hands of the man are shown with vectors in upward direction. A free body diagram of the situation is shown on the top right side of the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Similar arguments hold for other systems where supporting forces are exerted symmetrically about the cg. For example, the four legs of a uniform table each support one-fourth of its weight. In Figure , a pole vaulter holding a pole with its cg halfway between his hands is shown. Each hand exerts a force equal to half the weight of the pole, \(F_r = F_L = w/2\). (b) The pole vaulter moves the pole to his left, and the forces that the hands exert are no longer equal. SeeFigure. If the pole is held with its cg to the left of the person, then he must push down with his right hand and up with his left. The forces he exerts are larger here because they are in opposite directions and the cg is at a long distance from either hand.</p>
+<p class="prose">Similar observations can be made using a meter stick held at different locations along its length.</p>
+<div class="diagram"><img src="images/ch9/fig9-19-a-pole-vaulter-is-standing-on-the-ground.jpg" alt="A pole vaulter is standing on the ground holding a pole with his two hands. The center of gravity of the pole is between the hands of the pole vaulter and is near the right hand of the man. The weight W is shown as an arrow downward toward center of gravity. The reactions F sub R and F sub L of the hands of the man are shown with vectors in upward direction. A free body diagram of the situation is shown on the top right side of the figure."><div class="d-cap">A pole vaulter is standing on the ground holding a pole with his two hands. The center of gravity of the pole is between the hands of the pole vaulter and is near the right hand of the man. The weight W is shown as an arrow downward toward center of gravity. The reactions F sub R and F sub L of the hands of the man are shown with vectors in upward direction. A free body diagram of the situation is shown on the top right side of the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch9/fig9-20-a-pole-vaulter-is-standing-on-the-ground.jpg" alt="A pole vaulter is standing on the ground holding a pole from one side with his two hands. The centre of gravity of the pole is to the left of the pole vaulter. The weight W is shown as an arrow downward at center of gravity. The reaction F sub R is shown with a vector pointing downward from the man's right hand and F sub L is shown with a vector in upward direction at the location of the man's left hand. A free body diagram of the situation is shown on the top right side of the figure."><div class="d-cap">A pole vaulter is standing on the ground holding a pole from one side with his two hands. The centre of gravity of the pole is to the left of the pole vaulter. The weight W is shown as an arrow downward at center of gravity. The reaction F sub R is shown with a vector pointing downward from the man's right hand and F sub L is shown with a vector in upward direction at the location of the man's left hand. A free body diagram of the situation is shown on the top right side of the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">If the pole vaulter holds the pole as shown inFigure, the situation is not as simple. The total force he exerts is still equal to the weight of the pole, but it is not evenly divided between his hands. (If \(F_L = F_R \), then the torques about the cg would not be equal since the lever arms are different.) Logically, the right hand should support more weight, since it is closer to the cg. In fact, if the right hand is moved directly under the cg, it will support all the weight. This situation is exactly analogous to two people carrying a load; the one closer to the cg carries more of its weight. Finding the forces \(F_L\) and \(F_R\) is straightforward, as the next example shows.</p>
+<p class="prose">If the pole vaulter holds the pole from near the end of the pole (Figure), the direction of the force applied by the right hand of the vaulter reverses its direction.</p>
+<p class="prose">Example: What Force Is Needed to Support a Weight Held Near Its CG?</p>
+<p class="prose">For the situation shown inFigure, calculate: (a) \(F_R\), the force exerted by the right hand, and (b) \(F_L\), the force exerted by the left hand. The hands are 0.900 m apart, and the cg of the pole is 0.600 m from the left hand.</p>
+<p class="prose">Figureincludes a free body diagram for the pole, the system of interest. There is not enough information to use the first condition for equilibrium \((net \, F = 0)\), since two of the three forces are unknown and the hand forces cannot be assumed to be equal in this case. There is enough information to use the second condition for equilibrium \((net \, \tau = 0)\) if the pivot point is chosen to be at either hand, thereby making the torque from that hand zero. We choose to locate the pivot at the left hand in this part of the problem, to eliminate the torque from the left hand.</p>
+<p class="prose">There are now only two nonzero torques, those from the gravitational force \((\tau_W)\) and from the push or pull of the right hand \((\tau_R)\). Stating the second condition in terms of clockwise and counterclockwise torques,</p>
+<div class="math-display">\[net \, \tau_{CW} = -net \, \tau_{CCW}.\]</div>
+<p class="prose">or the algebraic sum of the torques is zero.</p>
+<p class="prose">Here this is \[\tau_R = -\tau_W\]</p>
+<p class="prose">since the weight of the pole creates a counterclockwise torque and the right hand counters with a clockwise toque. Using the definition of torque, \(\tau = rF \, sin \, \theta\), noting that \(\theta = 90^o\), and substituting known values, we obtain</p>
+<p class="prose">\[(0.900 \, m)(F_R) = (0.600 \, m)(mg).\] Thus,</p>
+<div class="math-display">\[F_R = (0.667)(5.00 \, kg)(9.80 \, m/s^2)\]\[=32.7 \, N.\]</div>
+<p class="prose">The first condition for equilibrium is based on the free body diagram in the figure. This implies that by Newton’s second law:</p>
+<div class="math-display">\[F_L + F_R - mg = 0\]</div>
+<p class="prose">From this we can conclude \[F_L + F_R = w = mg\]</p>
+<p class="prose">Solving for \(F_L\), we obtain</p>
+<div class="math-display">\[= (5.00 \, kg)(9.80 \, m/s^2) - 32.7 \, N\]</div>
+<p class="prose">If the pole vaulter holds the pole as he might at the start of a run, shown inFigure, the forces change again. Both are considerably greater, and one force reverses direction.</p>
+<p class="prose">PhET Explorations: Balancing Act</p>
+<p class="prose">Play with objects on a teeter totter to learn about balance. Test what you've learned by trying the Balance Challenge game.</p>
+<p class="prose">Figure :Balancing Act</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Figure :</div><div class="cx">PhET Explorations: Balancing ActPlay with objects on a teeter totter to learn about balance. Test what you've learned by trying the Balance Challenge game.Balancing Act</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">A wrecking ball is being used to knock down a building. One tall unsupported concrete wall remains standing. If the wrecking ball hits the wall near the top, is the wall more likely to fall over by rotating at its base or by falling straight down? Explain your answer. How is it most likely to fall if it is struck with the same force at its base? Note that this depends on how firmly the wall is attached at its base.</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.4 Quiz</h3><p>4 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How does spreading one's feet apart affect human stability while standing?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It widens the base of support.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It lowers the center of gravity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases the net external torque.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It moves the center of gravity outside the base of support.</li>
+</ul><div class="qexp">Stability is increased by expanding the base of support, making it harder for the center of gravity to move outside that base during a displacement.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why is the choice of the pivot point important when solving a statics problem?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The net torque is only zero if you choose the physical pivot.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A well-chosen pivot point can eliminate unknown forces with zero lever arms.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Choosing the wrong pivot point will lead to a different physical answer.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The first condition of equilibrium depends on the pivot point location.</li>
+</ul><div class="qexp">While the second condition for equilibrium holds for any pivot point, choosing a point where an unknown force acts simplifies the math because that force's torque becomes zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A uniform pole has its center of gravity exactly halfway between a vaulter's hands. If the vaulter holds the pole horizontally at rest, what must be true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The left hand must exert more force than the right hand.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The right hand must exert more force than the left hand.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Each hand exerts an upward force equal to half the pole's weight.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hands must exert forces in opposite vertical directions.</li>
+</ul><div class="qexp">Because the system is symmetric about the center of gravity, both hands provide equal upward forces to satisfy the conditions for net force and net torque being zero.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">On a seesaw, a 26.0-kg child sits 1.60 m from the pivot. If a 32.0-kg child wants to balance the seesaw, how far from the pivot must they sit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.97 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.80 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.30 m</li>
+</ul><div class="qexp">Setting the torques equal (m1r1 = m2r2) gives (26.0 kg)(1.60 m) / (32.0 kg) = 1.30 m.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.5</span></div><div class="h-title">9.5: Simple Machines</div><div class="h-desc">Simple machines are devices that can be used to multiply or augment a force that we apply – often at the expense of a distance through which we apply the force. The word for “machine” comes from the G...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe different simple machines.</li>
+      <li>Calculate the mechanical advantage.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">mechanical advantage</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the ratio of output to input forces for any simple machine</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.5</div>
+<p class="prose">Simple machines are devices that can be used to multiply or augment a force that we apply – often at the expense of a distance through which we apply the force. The word for “machine” comes from the Greek word meaning “to help make things easier.” Levers, gears, pulleys, wedges, and screws are some examples of machines. Energy is still conserved for these devices because a machine cannot do more work than the energy put into it. However, machines can reduce the input force that is needed to perform the job. The ratio of output to input force magnitudes for any simple machine is called itsmechanical advantage(MA).</p>
+<div class="math-display">\[MA = \dfrac{F_o}{F_i}\]</div>
+<p class="prose">One of the simplest machines is the lever, which is a rigid bar pivoted at a fixed place called the fulcrum. Torques are involved in levers, since there is rotation about a pivot point. Distances from the physical pivot of the lever are crucial, and we can obtain a useful expression for the MA in terms of these distances.</p>
+<div class="diagram"><img src="images/ch9/fig9-21-there-is-a-nail-in-a-wooden-plank-a-nail.jpg" alt="There is a nail in a wooden plank. A nail puller is being used to pull the nail out of the plank. A hand is applying force F sub I downward on the handle of the nail puller. The top of the nail exerts a force F sub N downward on the puller. At the point where the nail puller touches the plank, the reaction of the surface force N is applied. At the top of the figure, a free body diagram is shown."><div class="d-cap">There is a nail in a wooden plank. A nail puller is being used to pull the nail out of the plank. A hand is applying force F sub I downward on the handle of the nail puller. The top of the nail exerts a force F sub N downward on the puller. At the point where the nail puller touches the plank, the reaction of the surface force N is applied. At the top of the figure, a free body diagram is shown. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Figureshows a lever type that is used as a nail puller. Crowbars, seesaws, and other such levers are all analogous to this one \(F_i\) is the input force and \(F_o\) is the output force. There are three vertical forces acting on the nail puller (the system of interest) – these are \(F_i\), \(F_o\), and \(N.\) \(F_n\) is the reaction force back on the system, equal and opposite to \(F_o\). (note that \(F_o\) is not a force on the system.) \(N\) is the normal force upon the lever, and its torque is zero since it is exerted at the pivot. The torques due to \(F_i\) and \(F_n\) must be equal to each other if the nail is not moving, to satisfy the second condition for equilibrium \((net \, \tau = 0)\). (In order for the nail to actually move, the torque due to \(F_i\) must be ever-so-slightly greater than torque due to \(F_n\).) Hence,</p>
+<div class="math-display">\[l_iF_i = l_oF_o\] where \(l_i\) and \(l_o\) are the distances from where the input and output forces are applied to the pivot, as shown in the figure. Rearranging the last equation gives \[ \dfrac{F_o}{F_i} = \dfrac{l_i}{l_o}.\] What interests us most here is that the magnitude of the force exerted by the nail puller,\(F_o\), is much greater than the magnitude of the input force applied to the puller at the other end, \(F_i\). For the nail puller, \[MA = \dfrac{F_o}{F_i} = \dfrac{l_i}{l_o}.\]</div>
+<p class="prose">This equation is true for levers in general. For the nail puller, the MA is certainly greater than one. The longer the handle on the nail puller, the greater the force you can exert with it.</p>
+<p class="prose">Two other types of levers that differ slightly from the nail puller are a wheelbarrow and a shovel, shown inFigure. All these lever types are similar in that only three forces are involved – the input force, the output force, and the force on the pivot – and thus their MAs are given by \(MA = \frac{F_o}{F_i} \) and \(MA = \frac{d_1}{d_2}\), with distances being measured relative to the physical pivot. The wheelbarrow and shovel differ from the nail puller because both the input and output forces are on the same side of the pivot.</p>
+<p class="prose">In the case of the wheelbarrow, the output force or load is between the pivot (the wheel’s axle) and the input or applied force. In the case of the shovel, the input force is between the pivot (at the end of the handle) and the load, but the input lever arm is shorter than the output lever arm. In this case, the MA is less than one.</p>
+<div class="diagram"><img src="images/ch9/fig9-22-a-wheelbarrow-is-shown-in-which-the-inpu.jpg" alt="A wheelbarrow is shown in which the input force F sub I is shown as a vector in vertically upward direction below the handle of wheelbarrow. The weight of the wheelbarrow is downward at the center of gravity. The normal reaction of the ground is acting at the wheel in upward direction. The perpendicular distance between the normal reaction and the input force F sub I is labeled as R sub I and the distance between output force F sub O and normal reaction is labeled as R sub O. In figure b, a man is holding a shovel in his hands. One hand is at one end of the handle and the other hand is holding the shovel at the middle. The center of gravity of the shovel is at its flat end. The weight of the shovel is acting at the center of gravity. The input force is acting at the hand in the middle in upward direction and the end of the shovel is acting as pivot. A free body diagram is also shown at the right side of the figure."><div class="d-cap">A wheelbarrow is shown in which the input force F sub I is shown as a vector in vertically upward direction below the handle of wheelbarrow. The weight of the wheelbarrow is downward at the center of gravity. The normal reaction of the ground is acting at the wheel in upward direction. The perpendicular distance between the normal reaction and the input force F sub I is labeled as R sub I and the distance between output force F sub O and normal reaction is labeled as R sub O. In figure b, a man is holding a shovel in his hands. One hand is at one end of the handle and the other hand is holding the shovel at the middle. The center of gravity of the shovel is at its flat end. The weight of the shovel is acting at the center of gravity. The input force is acting at the hand in the middle in upward direction and the end of the shovel is acting as pivot. A free body diagram is also shown at the right side of the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example :What is the Advantage for the Wheelbarrow?</span></div><div class="example-body">
+<p class="prose">In the wheelbarrow ofFigure, the load has a perpendicular lever arm of 7.50 cm, while the hands have a perpendicular lever arm of 1.02 m. (a) What upward force must you exert to support the wheelbarrow and its load if their combined mass is 45.0 kg? (b) What force does the wheelbarrow exert on the ground?</p>
+<p class="prose">Here, we use the concept of mechanical advantage.</p>
+<p class="prose">(a) In this case, \(\frac{F_o}{F_i} = \frac{l_i}{l_o}\) becomes \[F_i = F_o\dfrac{l_o}{l_i},\]</p>
+<p class="prose">Adding values into this equation yields</p>
+<div class="math-display">\[F_i = (45.0 \, kg)(9.80 \, m/s^2)\dfrac{0.075\space m}{1.02 \, m} = 32.4 \, N.\]</div>
+<p class="prose">The free-body diagram (seeFigure) gives the following normal force: \[F_i = + N = W.\] Therefore,</p>
+<div class="math-display">\[N = (45.0 \, kg)(9.80 \, m/s^2) - 32.4 \, N = 409 \, N.\]</div>
+<p class="prose">An even longer handle would reduce the force needed to lift the load. The MA here is \(MA = 1.01/0.0750 = 13.6\)</p>
+<p class="prose">Another very simple machine is the inclined plane. Pushing a cart up a plane is easier than lifting the same cart straight up to the top using a ladder, because the applied force is less. However, the work done in both cases (assuming the work done by friction is negligible) is the same. Inclined lanes or ramps were probably used during the construction of the Egyptian pyramids to move large blocks of stone to the top.</p>
+<p class="prose">A crank is a lever that can be rotated \(360^o\) about its pivot, as shown inFigure. Such a machine may not look like a lever, but the physics of its actions remain the same. The MA for a crank is simply the ratio of the radii \(r_i/r_o\). Wheels and gears have this simple expression for their MAs too. The MA can be greater than 1, as it is for the crank, or less than 1, as it is for the simplified car axle driving the wheels, as shown. If the axle’s radius is \(2.0 \, cm\) and the wheel's radius is \(24.0 \, cm\), then \(MA = 2.0/24.0 = 0.083\) and the axle would have to exert a force of \(12,000 \, N\) on the wheel to enable it to exert a force of \(1000 \, N\) on the ground.</p>
+<div class="diagram"><img src="images/ch9/fig9-23-in-figure-a-a-crank-lever-is-shown-in-wh.jpg" alt="In figure a, a crank lever is shown in which a hand is at the handle of the crank lever. The output force F sub O is at the base of the lever and the input force F sub I is at the handle of the lever. The distance between input force and output force is labeled as R sub I. In figure b, a simplified axle of the car is shown. The input force is shown as a vector F sub I on the axle toward right. The output force is shown at the point of contact of the wheel with the ground toward left. The distance between the output force and the pivot point is labeled as R sub O. In figure c, rope over the pulley is shown. The input force is shown as a downward arrow at the left part of rope. The output force is acting on the right part of the rope. The center of the pulley is the pivot point. The distances of the two forces from the pivot are R sub I and R sub O respectively."><div class="d-cap">In figure a, a crank lever is shown in which a hand is at the handle of the crank lever. The output force F sub O is at the base of the lever and the input force F sub I is at the handle of the lever. The distance between input force and output force is labeled as R sub I. In figure b, a simplified axle of the car is shown. The input force is shown as a vector F sub I on the axle toward right. The output force is shown at the point of contact of the wheel with the ground toward left. The distance between the output force and the pivot point is labeled as R sub O. In figure c, rope over the pulley is shown. The input force is shown as a downward arrow at the left part of rope. The output force is acting on the right part of the rope. The center of the pulley is the pivot point. The distances of the two forces from the pivot are R sub I and R sub O respectively. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">An ordinary pulley has an MA of 1; it only changes the direction of the force and not its magnitude. Combinations of pulleys, such as those illustrated inFigure, are used to multiply force. If the pulleys are friction-free, then the force output is approximately an integral multiple of the tension in the cable. The number of cables pulling directly upward on the system of interest, as illustrated in the figures given below, is approximately the MA of the pulley system. Since each attachment applies an external force in approximately the same direction as the others, they add, producing a total force that is nearly an integral multiple of the input force \(T\).</p>
+<div class="diagram"><img src="images/ch9/fig9-24-in-figure-a-a-rope-over-two-pulleys-is-s.jpg" alt="In figure a, a rope over two pulleys is shown. One pulley is fixed at the roof and the other is hanging through the rope. A weight is hanging from the second pulley. The tensions T are shown at the two parts of hanging pulley and at the free end of the rope. The mechanical advantage of the system is two. In figure b, a set of three pulleys is shown. A pulley is fixed at the roof with another pulley below it. The third pulley is hanging through the rope with a weight hanging at it. The tensions on the rope are shown as vectors on the rope and at the end of the rope. In figure c, set of three pulleys is shown. One of the pulleys is fixed at the roof. Two connected pulleys are hanging through a rope over the first pulley. The directions of the tensions are marked on the ropes and at the end of the rope."><div class="d-cap">In figure a, a rope over two pulleys is shown. One pulley is fixed at the roof and the other is hanging through the rope. A weight is hanging from the second pulley. The tensions T are shown at the two parts of hanging pulley and at the free end of the rope. The mechanical advantage of the system is two. In figure b, a set of three pulleys is shown. A pulley is fixed at the roof with another pulley below it. The third pulley is hanging through the rope with a weight hanging at it. The tensions on the rope are shown as vectors on the rope and at the end of the rope. In figure c, set of three pulleys is shown. One of the pulleys is fixed at the roof. Two connected pulleys are hanging through a rope over the first pulley. The directions of the tensions are marked on the ropes and at the end of the rope. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.5. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Mechanics sometimes put a length of pipe over the handle of a wrench when trying to remove a very tight bolt. How does this help? (It is also hazardous since it can break the bolt.)</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.5 Quiz</h3><p>4 questions</p></div></div><div id="q5">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">If a pole vaulter holds a pole such that the center of gravity is far to the left of both hands, how must the vaulter’s hands exert force to maintain equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The right hand must push down while the left hand pushes up.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both hands must push up with equal force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The left hand must push down while the right hand pushes up.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both hands must push down to counteract gravity.</li>
+</ul><div class="qexp">To counteract the counterclockwise torque from the pole's weight at the left, the right hand must push down to create a clockwise torque relative to the left hand.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the definition of the mechanical advantage (MA) of a simple machine?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of input force to output force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of output force magnitude to input force magnitude.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The product of the force and the distance through which it is applied.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The ratio of the input distance to the output distance.</li>
+</ul><div class="qexp">Mechanical advantage is a measure of force amplification, calculated as the output force divided by the input force.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">For a simple lever like a nail puller, how can the mechanical advantage be calculated using distances from the pivot?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>MA = lo / li</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>MA = Fi / Fo</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>MA = li / lo</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>MA = li × lo</li>
+</ul><div class="qexp">Based on the conservation of torque (Fi·li = Fo·lo), the mechanical advantage (Fo/Fi) is equal to the ratio of the input lever arm to the output lever arm.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which of the following describes the configuration of a wheelbarrow as a simple machine?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The input force is applied between the pivot and the load.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pivot is located between the input force and the load.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The mechanical advantage is always less than one.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The load is located between the pivot and the input force.</li>
+</ul><div class="qexp">In a wheelbarrow, the wheel axle is the pivot, and the load sits between that axle and the handles where the input force is applied.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Next →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 9 · <span>Section 9.6</span></div><div class="h-title">9.6: Forces and Torques in Muscles and Joints</div><div class="h-desc">Muscles, bones, and joints are some of the most interesting applications of statics. There are some surprises. Muscles, for example, exert far greater forces than we might think.Figureshows a forearm ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 9.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the forces exerted by muscles.</li>
+      <li>State how a bad posture causes back strain.</li>
+      <li>Discuss the benefits of skeletal muscles attached close to joints.</li>
+      <li>Discuss various complexities in the real system of muscles, bones, and joints.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 9.6</div>
+<p class="prose">Muscles, bones, and joints are some of the most interesting applications of statics. There are some surprises. Muscles, for example, exert far greater forces than we might think.Figureshows a forearm holding a book and a schematic diagram of an analogous lever system. The schematic is a good approximation for the forearm, which looks more complicated than it is, and we can get some insight into the way typical muscle systems function by analyzing it.</p>
+<p class="prose">Muscles can only contract, so they occur in pairs. In the arm, the biceps muscle is a flexor—that is, it closes the limb. The triceps muscle is an extensor that opens the limb. This configuration is typical of skeletal muscles, bones, and joints in humans and other vertebrates. Most skeletal muscles exert much larger forces within the body than the limbs apply to the outside world. The reason is clear once we realize that most muscles are attached to bones via tendons close to joints, causing these systems to have mechanical advantages much less than one. Viewing them as simple machines, the input force is much greater than the output force, as seen inFigure.</p>
+<div class="diagram"><img src="images/ch9/fig9-25-a-forearm-of-a-person-holding-a-physics-.jpg" alt="A forearm of a person holding a physics book is shown. The biceps and triceps muscles of the arm are visible. The elbow joint is the pivot point. The upper part of the arm is vertical and the lower part is horizontal. Biceps muscles are applying a force F B upward. The vertical bone of hand exerts a force F E on the pivot. At the midpoint of the lower part of the hand, the center of gravity of the hand is shown where the weight of the hand acts. The midpoint of the front face of the book is its center of gravity, where its weight acts downward. A free body diagram is also shown and the distances of the three forces F-B, C-G of arm, and C-G of book from the pivot are shown as r one, r two and r three."><div class="d-cap">A forearm of a person holding a physics book is shown. The biceps and triceps muscles of the arm are visible. The elbow joint is the pivot point. The upper part of the arm is vertical and the lower part is horizontal. Biceps muscles are applying a force F B upward. The vertical bone of hand exerts a force F E on the pivot. At the midpoint of the lower part of the hand, the center of gravity of the hand is shown where the weight of the hand acts. The midpoint of the front face of the book is its center of gravity, where its weight acts downward. A free body diagram is also shown and the distances of the three forces F-B, C-G of arm, and C-G of book from the pivot are shown as r one, r two and r three. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Example: Muscles Exert Bigger Forces Than You Might Think</p>
+<p class="prose">Calculate the force the biceps muscle must exert to hold the forearm and its load as shown inFigure, and compare this force with the weight of the forearm plus its load. You may take the data in the figure to be accurate to three significant figures.</p>
+<p class="prose">There are four forces acting on the forearm and its load (the system of interest). The magnitude of the force of the biceps is \(F_B\); that of the elbow joint is \(F_E\); that of the weights of the forearm is \(w_a\), and its loadis \(w_b\). Two of these are unknown \((F_B\) and \(F_E)\) so that the first condition for equilibrium cannot by itself yield \(F_B\). But if we use the second condition and choose the pivot to be at the elbow, then the torque due to \(F_B\) is zero, and the only unknown becomes \(F_B\).</p>
+<p class="prose">The torques created by the weights are clockwise relative to the pivot, while the torque created by the biceps is counterclockwise; thus, the second condition for equilibrium \((net \, \tau = 0)\) becomes</p>
+<div class="math-display">\[r_2w_a + r_3w_b = r_1F_B.\]</div>
+<p class="prose">Note that \(sin \, \theta = 1\) for all forces, since \(\theta = 90^o\) for all forces. This equation can easily be solved for \(F_B\) in terms of known quantities, yielding \[F_B = \dfrac{r_2w_a + r_3w_b}{r_1}.\]</p>
+<p class="prose">Entering the known values gives</p>
+<div class="math-display">\[F_B = \dfrac{(0.160 \, m)(2.50 \, kg)(9.80 \, m/s^2) + (0.380 \, m)(4.00 \, kg)(9.80 \, m/s^2)}{0.0400 \, m}\]</div>
+<p class="prose">which yields \[F_B = 470 \, N.\]</p>
+<p class="prose">Now, the combined weight of the arm and its load is</p>
+<div class="math-display">\[\dfrac{F_B}{w_a + w_b} = \dfrac{470}{63.7} = 7.38.\]</div>
+<p class="prose">This means that the biceps muscle is exerting a force 7.38 times the weight supported.</p>
+<p class="prose">In the above example of the biceps muscle, the angle between the forearm and upper arm is 90°. If this angle changes, the force exerted by the biceps muscle also changes. In addition, the length of the biceps muscle changes. The force the biceps muscle can exert depends upon its length; it is smaller when it is shorter than when it is stretched.</p>
+<p class="prose">Very large forces are also created in the joints. In the previous example, the downward force \(F_E\) exerted by the humerus at the elbow joint equals 407 N, or 6.38 times the total weight supported. (The calculation of \(F_E\) is straightforward and is left as an end-of-chapter problem.) Because muscles can contract, but not expand beyond their resting length, joints and muscles often exert forces that act in opposite directions and thus subtract. (In the above example, the upward force of the muscle minus the downward force of the joint equals the weight supported—that is, \(470 \, N - 470 \, N = 63 \, N\), approximately equal to the weight supported.) Forces in muscles and joints are largest when their load is a long distance from the joint, as the book is in the previous example.</p>
+<p class="prose">In racquet sports such as tennis the constant extension of the arm during game play creates large forces in this way. The mass times the lever arm of a tennis racquet is an important factor, and many players use the heaviest racquet they can handle. It is no wonder that joint deterioration and damage to the tendons in the elbow, such as “tennis elbow,” can result from repetitive motion, undue torques, and possibly poor racquet selection in such sports. Various tried techniques for holding and using a racquet or bat or stick not only increases sporting prowess but can minimize fatigue and long-term damage to the body. For example, tennis balls correctly hit at the “sweet spot” on the racquet will result in little vibration or impact force being felt in the racquet and the body—less torque as explained inCollisions of Extended Bodies in Two Dimensions. Twisting the hand to provide top spin on the ball or using an extended rigid elbow in a backhand stroke can also aggravate the tendons in the elbow.</p>
+<p class="prose">Training coaches and physical therapists use the knowledge of relationships between forces and torques in the treatment of muscles and joints. In physical therapy, an exercise routine can apply a particular force and torque which can, over a period of time, revive muscles and joints. Some exercises are designed to be carried out under water, because this requires greater forces to be exerted, further strengthening muscles. However, connecting tissues in the limbs, such as tendons and cartilage as well as joints are sometimes damaged by the large forces they carry. Often, this is due to accidents, but heavily muscled athletes, such as weightlifters, can tear muscles and connecting tissue through effort alone.</p>
+<p class="prose">The back is considerably more complicated than the arm or leg, with various muscles and joints between vertebrae, all having mechanical advantages less than 1. Back muscles must, therefore, exert very large forces, which are borne by the spinal column. Discs crushed by mere exertion are very common. The jaw is somewhat exceptional—the masseter muscles that close the jaw have a mechanical advantage greater than 1 for the back teeth, allowing us to exert very large forces with them. A cause of stress headaches is persistent clenching of teeth where the sustained large force translates into fatigue in muscles around the skull.</p>
+<p class="prose">Figureshows how bad posture causes back strain. In part (a), we see a person with good posture. Note that her upper body’s cg is directly above the pivot point in the hips, which in turn is directly above the base of support at her feet. Because of this, her upper body’s weight exerts no torque about the hips. The only force needed is a vertical force at the hips equal to the weight supported. No muscle action is required, since the bones are rigid and transmit this force from the floor. This is a position of unstable equilibrium, but only small forces are needed to bring the upper body back to vertical if it is slightly displaced. Bad posture is shown in part (b); we see that the upper body’s cg is in front of the pivot in the hips. This creates a clockwise torque around the hips that is counteracted by muscles in the lower back. These muscles must exert large forces, since they have typically small mechanical advantages. (In other words, the perpendicular lever arm for the muscles is much smaller than for the cg.) Poor posture can also cause muscle strain for people sitting at their desks using computers. Special chairs are available that allow the body’s CG to be more easily situated above the seat, to reduce back pain. Prolonged muscle action produces muscle strain. Note that the cg of the entire body is still directly above the base of support in part (b) ofFigure. This is compulsory; otherwise the person would not be in equilibrium. We lean forward for the same reason when carrying a load on our backs, to the side when carrying a load in one arm, and backward when carrying a load in front of us, as seen inFigure.</p>
+<div class="diagram"><img src="images/ch9/fig9-26-in-part-a-of-the-figure-a-side-view-of-a.jpg" alt="In part a of the figure, a side view of a girl standing on a surface is shown. The weight of the girl is acting vertically downward and is in the line with her hips. A point above her legs is marked as the pivot point. The weight vector is in the direction of the pivot. In part b, a side view of a girl standing on a surface is shown. The girl is bending slightly toward her front. The weight of her upper body is acting downward and the line of action of weight is not passing through the upper body pivot point."><div class="d-cap">In part a of the figure, a side view of a girl standing on a surface is shown. The weight of the girl is acting vertically downward and is in the line with her hips. A point above her legs is marked as the pivot point. The weight vector is in the direction of the pivot. In part b, a side view of a girl standing on a surface is shown. The girl is bending slightly toward her front. The weight of her upper body is acting downward and the line of action of weight is not passing through the upper body pivot point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">You have probably been warned against lifting objects with your back. This action, even more than bad posture, can cause muscle strain and damage discs and vertebrae, since abnormally large forces are created in the back muscles and spine.</p>
+<div class="diagram"><img src="images/ch9/fig9-27-in-image-a-a-man-with-a-child-on-his-sho.jpg" alt="In image a, a man with a child on his shoulders is shown in which the child is holding the head of the man. The center of gravity is marked at the center of his body. In image b, a man with a long bag on his left shoulder and leaning toward the right is shown. The center of gravity is marked at the center of his body slightly left of the middle. In image c, a lady walking toward the right is shown. She is holding books in her hands. The center of gravity is marked at the center of her body above her legs."><div class="d-cap">In image a, a man with a child on his shoulders is shown in which the child is holding the head of the man. The center of gravity is marked at the center of his body. In image b, a man with a long bag on his left shoulder and leaning toward the right is shown. The center of gravity is marked at the center of his body slightly left of the middle. In image c, a lady walking toward the right is shown. She is holding books in her hands. The center of gravity is marked at the center of her body above her legs. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Example: :Do Not Lift with Your Back</p>
+<p class="prose">Consider the person lifting a heavy box with his back, shown inFigure. (a) Calculate the magnitude of the force \(F_B\) - in the back muscles that is needed to support the upper body plus the box and compare this with his weight. The mass of the upper body is 55.0 kg and the mass of the box is 30.0 kg. (b) Calculate the magnitude and direction of the force \(F_V\) - exerted by the vertebrae on the spine at the indicated pivot point. Again, data in the figure may be taken to be accurate to three significant figures.</p>
+<p class="prose">By now, we sense that the second condition for equilibrium is a good place to start, and inspection of the known values confirms that it can be used to solve for \(F_B\) - if the pivot is chosen to be at the hips. The torques created by \(w_{ab}\) and \(w_{box}\) - are clockwise, while that created by \(F_B \) - is counterclockwise.</p>
+<p class="prose">Using the perpendicular lever arms given in the figure, the second condition for equilibrium \((net \, \tau = 0)\) becomes</p>
+<div class="math-display">\[(0.350 \, m)(55.0 \, kg)(9.80 \, m/s^2) + (0.500 \, m)(30.0 \, kg)(9.80 \, m/s^2) = (0.0800 \, m)F_B \] Solving for \(F_B\) yields \[F_B = 4.20 \times 10^3 \, N.\]</div>
+<p class="prose">The ratio of the force the back muscles exert to the weight of the upper body plus its load is</p>
+<div class="math-display">\[\dfrac{F_B}{w_{ub} + w_{box}} = \dfrac{4200 \, N}{833 \, N} = 5.04.\]</div>
+<p class="prose">This force is considerably larger than it would be if the load were not present.</p>
+<p class="prose">More important in terms of its damage potential is the force on the vertebrae \(F_V\) The first condition for equilibrium \((net \, F= 0)\) can be used to find its magnitude and direction. Using \(y\) fo4r vertical and \(x\) for horizontal, the condition for the net external forces along those axes to be zero</p>
+<div class="math-display">\[net \, F_y = 0 \, and \, net \, F_x = 0\]</div>
+<p class="prose">Starting with the vertical \((y)\) components, this yields</p>
+<p class="prose">\[F_{V_y} - w_{ub} - w_{box} - F_B \, sin \, 29^o = 0.\] Thus,</p>
+<div class="math-display">\[F_{V_y} = w_{ub} + w_{box} + F_B \, sin \, 29.0^o\]</div>
+<p class="prose">\[= 833 \, N + (4200 \, N) \, sin \, 29.0^o\] yielding</p>
+<div class="math-display">\[F_{V_y} = 2.87 \times 10^3 \, N.\]</div>
+<p class="prose">Similarly, for the horizontal \((x)\) components,</p>
+<p class="prose">\[F_{V_x} - F_B \, cos \, 29.0^o = 0\] yielding</p>
+<div class="math-display">\[F_{V_x} = 3.67 \times 10^3 \, N.\]</div>
+<p class="prose">The magnitude of \(F_V \) is given by the Pythagorean theorem:</p>
+<div class="math-display">\[F_V = \sqrt{F_{V_x}^2 + F_{V_Y}^2} = 4.66 \times 10^3 \, N.\]</div>
+<p class="prose">The direction of \(F_V\) is</p>
+<div class="math-display">\[\theta = tan^{-1} \left(\dfrac{F_{V_y}}{F_{V_x}} \right) = 38.0^o.\]</div>
+<p class="prose">Note that the ratio of \(F_V\) to the weight supported is \]\dfrac{F_V}{w_{ub} + w_{box}} = \dfrac{4660 \, N}{833 \, N} = 5.59.\]</p>
+<p class="prose">This force is about 5.6 times greater than it would be if the person were standing erect. The trouble with the back is not so much that the forces are large—because similar forces are created in our hips, knees, and ankles—but that our spines are relatively weak. Proper lifting, performed with the back erect and using the legs to raise the body and load, creates much smaller forces in the back—in this case, about 5.6 times smaller.</p>
+<div class="diagram"><img src="images/ch9/fig9-28-a-man-is-bending-forward-to-lift-a-box-t.jpg" alt="A man is bending forward to lift a box. The back muscles and vertebrae of the person are shown. The weight of the box is acting downward at its center of gravity. The vertebrae of the man are inclined vertical at sixty one degrees. A point on the joint of legs to the upper body is the pivot point. The distance between the center of gravity of the box and the pivot is fifty centimeters and perpendicular distance between the pivot and the weight of the man is thirty five centimeters."><div class="d-cap">A man is bending forward to lift a box. The back muscles and vertebrae of the person are shown. The weight of the box is acting downward at its center of gravity. The vertebrae of the man are inclined vertical at sixty one degrees. A point on the joint of legs to the upper body is the pivot point. The distance between the center of gravity of the box and the pivot is fifty centimeters and perpendicular distance between the pivot and the weight of the man is thirty five centimeters. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">What are the benefits of having most skeletal muscles attached so close to joints? One advantage is speed because small muscle contractions can produce large movements of limbs in a short period of time. Other advantages are flexibility and agility, made possible by the large numbers of joints and the ranges over which they function. For example, it is difficult to imagine a system with biceps muscles attached at the wrist that would be capable of the broad range of movement we vertebrates possess.</p>
+<p class="prose">There are some interesting complexities in real systems of muscles, bones, and joints. For instance, the pivot point in many joints changes location as the joint is flexed, so that the perpendicular lever arms and the mechanical advantage of the system change, too. Thus the force the biceps muscle must exert to hold up a book varies as the forearm is flexed. Similar mechanisms operate in the legs, which explain, for example, why there is less leg strain when a bicycle seat is set at the proper height. The methods employed in this section give a reasonable description of real systems provided enough is known about the dimensions of the system. There are many other interesting examples of force and torque in the body—a few of these are the subject of end-of-chapter problems.</p>
+<div class="sh2">Summary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 9.6. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">A round pencil lying on its side as in Figure is in neutral equilibrium relative to displacements perpendicular to its length. What is its stability relative to displacements parallel to its length?</div><textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div><div class="cp-done" id="cpd6">✅ Unlocked!</div></div>
+    <div id="quiz-wrap6" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 9.6 Quiz</h3><p>4 questions</p></div></div><div id="q6">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Why is the mechanical advantage (MA) of a shovel usually less than one?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The input lever arm is shorter than the output lever arm.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The output force is always greater than the input force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The pivot is located exactly at the center of gravity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Shovels are designed to multiply force rather than speed.</li>
+</ul><div class="qexp">When using a shovel, the hand in the middle provides the input force at a shorter distance from the pivot (the back hand) than the load at the end of the shovel.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In a frictionless pulley system, if four cables are pulling directly upward on the load, what is the approximate mechanical advantage?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>4</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.25</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>8</li>
+</ul><div class="qexp">For a pulley system, the mechanical advantage is approximately equal to the number of cable segments supporting the load.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the mechanical advantage of a simple crank?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The sum of the radii of the axle and the handle.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of the axle radius to the handle radius.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The ratio of the handle radius (ri) to the axle radius (ro).</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The square of the ratio of the input force to the output force.</li>
+</ul><div class="qexp">A crank is a rotating lever where the input arm is the radius of the handle's path and the output arm is the radius of the axle.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why do human skeletal muscles typically need to exert forces much larger than the weights they lift?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Muscles are fundamentally inefficient at converting energy.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Muscles can only contract and cannot push.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The load is usually much closer to the joint than the muscle attachment is.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Muscles are attached very close to joints, resulting in a small mechanical advantage.</li>
+</ul><div class="qexp">Most muscles attach near joints to allow for a wide range of motion, but this short lever arm means they must exert high forces to produce sufficient torque.</div></div>
+    </div><div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Previous</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Next →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 9</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 9: Statics and Torque.</div><div class="h-meta"><div class="h-chip">📝 28 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>9.1</strong></td><td>9.1: The First Condition for Equilibrium</td></tr>
+    <tr><td><strong>9.2</strong></td><td>9.2: The Second Condition for Equilibrium</td></tr>
+    <tr><td><strong>9.3</strong></td><td>9.3: Stability</td></tr>
+    <tr><td><strong>9.4</strong></td><td>9.4: Applications of Statics, Including Problem-Solving Strategies</td></tr>
+    <tr><td><strong>9.5</strong></td><td>9.5: Simple Machines</td></tr>
+    <tr><td><strong>9.6</strong></td><td>9.6: Forces and Torques in Muscles and Joints</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 100 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd7">✅ Unlocked!</div></div>
+    <div id="quiz-wrap7" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 9 Practice Test</h3><p>28 questions · All OpenStax Review Questions</p></div></div><div id="q7">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 28 review questions from OpenStax College Physics, Chapter 9. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What physical property do motionless desks, mountains, and cars traveling at a constant velocity all share?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Their velocity is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Their acceleration is zero.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They have no forces acting on them.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are all in static equilibrium.</li>
+</ul><div class="qexp">Newton’s second law implies that any object with zero acceleration (whether stationary or moving at constant velocity) must have a net external force of zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">If the net external force on a system is zero, which of the following statements must be true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The system is definitely at rest.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The system has no internal forces.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>the net external forces along the x- and y-axes are both zero.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The system cannot be rotating.</li>
+</ul><div class="qexp">The first condition for equilibrium states that if the total net force is zero, then the sum of forces in any specific direction must also be zero.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why is a net external force of zero insufficient to guarantee that a system is in equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The points at which forces are applied can cause accelerated rotation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Internal forces might cause the object to change shape.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Friction might be acting in a direction not considered by the axes.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The object's mass might not be uniformly distributed.</li>
+</ul><div class="qexp">As shown with the hockey stick example, forces can be balanced in magnitude but applied at different locations, creating a net torque and causing rotation.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Which state is characterized by an object moving at a constant velocity while the net external force is zero?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Uniform acceleration</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Static equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dynamic equilibrium</li>
+</ul><div class="qexp">Dynamic equilibrium occurs when an object is in motion but has a constant velocity and zero net external force.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">How is torque mathematically defined in terms of force (F), distance from pivot (r), and the angle (θ) between them?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>τ = rF sin θ</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>τ = rF cos θ</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>τ = r / (F sin θ)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>τ = F / (r sin θ)</li>
+</ul><div class="qexp">Torque is the rotational equivalent of force and its magnitude depends on the force, the distance from the pivot, and the sine of the angle of application.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">What is the standard SI unit used to measure torque?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Newtons per meter (N/m)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton-meters (N·m)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Joules per second (J/s)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Kilogram-meters (kg·m)</li>
+</ul><div class="qexp">Since torque is the product of a distance (meters) and a force (Newtons), its SI unit is the Newton-meter.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">To open a heavy door most effectively, why do people instinctively push as far from the hinges as possible?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It reduces the required torque.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It increases the force needed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases the lever arm, thereby increasing torque for a given force.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It changes the angle of the force to be more parallel to the door.</li>
+</ul><div class="qexp">Torque is proportional to the distance from the pivot point (the lever arm), so a larger distance produces more rotational effectiveness.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">If you apply a 20 N force perpendicular to a wrench handle at a distance of 0.80 m from the bolt, what is the magnitude of the torque?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>25.0 N·m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>32.0 N·m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.50 N·m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>16.0 N·m</li>
+</ul><div class="qexp">Using the formula τ = rF sin θ with θ = 90°, the torque is 0.80 m × 20 N × 1 = 16 N·m.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">According to the common physics convention, how is a counterclockwise (ccw) torque assigned?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is assigned a positive sign.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is assigned a negative sign.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is assigned a value of zero.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is considered neutral and has no sign.</li>
+</ul><div class="qexp">The standard convention in physics is to treat counterclockwise torques as positive and clockwise torques as negative.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Which type of equilibrium is demonstrated by a marble resting at the very bottom of a bowl?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Unstable equilibrium</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Stable equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Dynamic equilibrium</li>
+</ul><div class="qexp">A system is in stable equilibrium if a small displacement creates a restoring force that moves the object back toward its original position.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">What characterizes a system in unstable equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A displacement creates a force that returns it to its original position.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The system remains in its new position after being displaced.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A displacement creates a torque in the same direction as the displacement.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The center of gravity is always below the base of support.</li>
+</ul><div class="qexp">In unstable equilibrium, any small displacement results in a net force or torque that accelerates the object further away from its equilibrium point.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">A marble resting on a perfectly flat, horizontal table is an example of which type of equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Stable equilibrium</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Unstable equilibrium</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Static equilibrium</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Neutral equilibrium</li>
+</ul><div class="qexp">Neutral equilibrium occurs when the system’s equilibrium is independent of its displacement from the original position.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">How does spreading one's feet apart affect human stability while standing?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It widens the base of support.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It lowers the center of gravity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases the net external torque.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It moves the center of gravity outside the base of support.</li>
+</ul><div class="qexp">Stability is increased by expanding the base of support, making it harder for the center of gravity to move outside that base during a displacement.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">Why is the choice of the pivot point important when solving a statics problem?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The net torque is only zero if you choose the physical pivot.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A well-chosen pivot point can eliminate unknown forces with zero lever arms.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Choosing the wrong pivot point will lead to a different physical answer.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The first condition of equilibrium depends on the pivot point location.</li>
+</ul><div class="qexp">While the second condition for equilibrium holds for any pivot point, choosing a point where an unknown force acts simplifies the math because that force's torque becomes zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">A uniform pole has its center of gravity exactly halfway between a vaulter's hands. If the vaulter holds the pole horizontally at rest, what must be true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The left hand must exert more force than the right hand.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The right hand must exert more force than the left hand.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Each hand exerts an upward force equal to half the pole's weight.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The hands must exert forces in opposite vertical directions.</li>
+</ul><div class="qexp">Because the system is symmetric about the center of gravity, both hands provide equal upward forces to satisfy the conditions for net force and net torque being zero.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">On a seesaw, a 26.0-kg child sits 1.60 m from the pivot. If a 32.0-kg child wants to balance the seesaw, how far from the pivot must they sit?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.60 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.97 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.80 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.30 m</li>
+</ul><div class="qexp">Setting the torques equal (m1r1 = m2r2) gives (26.0 kg)(1.60 m) / (32.0 kg) = 1.30 m.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">If a pole vaulter holds a pole such that the center of gravity is far to the left of both hands, how must the vaulter’s hands exert force to maintain equilibrium?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The right hand must push down while the left hand pushes up.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Both hands must push up with equal force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The left hand must push down while the right hand pushes up.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Both hands must push down to counteract gravity.</li>
+</ul><div class="qexp">To counteract the counterclockwise torque from the pole's weight at the left, the right hand must push down to create a clockwise torque relative to the left hand.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">What is the definition of the mechanical advantage (MA) of a simple machine?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The ratio of input force to output force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of output force magnitude to input force magnitude.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The product of the force and the distance through which it is applied.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The ratio of the input distance to the output distance.</li>
+</ul><div class="qexp">Mechanical advantage is a measure of force amplification, calculated as the output force divided by the input force.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">19</span><span class="qt-inner">For a simple lever like a nail puller, how can the mechanical advantage be calculated using distances from the pivot?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>MA = lo / li</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>MA = Fi / Fo</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>MA = li / lo</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>MA = li × lo</li>
+</ul><div class="qexp">Based on the conservation of torque (Fi·li = Fo·lo), the mechanical advantage (Fo/Fi) is equal to the ratio of the input lever arm to the output lever arm.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">20</span><span class="qt-inner">Which of the following describes the configuration of a wheelbarrow as a simple machine?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The input force is applied between the pivot and the load.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pivot is located between the input force and the load.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The mechanical advantage is always less than one.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The load is located between the pivot and the input force.</li>
+</ul><div class="qexp">In a wheelbarrow, the wheel axle is the pivot, and the load sits between that axle and the handles where the input force is applied.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">21</span><span class="qt-inner">Why is the mechanical advantage (MA) of a shovel usually less than one?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The input lever arm is shorter than the output lever arm.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The output force is always greater than the input force.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The pivot is located exactly at the center of gravity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Shovels are designed to multiply force rather than speed.</li>
+</ul><div class="qexp">When using a shovel, the hand in the middle provides the input force at a shorter distance from the pivot (the back hand) than the load at the end of the shovel.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">22</span><span class="qt-inner">In a frictionless pulley system, if four cables are pulling directly upward on the load, what is the approximate mechanical advantage?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>4</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0.25</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>8</li>
+</ul><div class="qexp">For a pulley system, the mechanical advantage is approximately equal to the number of cable segments supporting the load.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">23</span><span class="qt-inner">What is the mechanical advantage of a simple crank?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The sum of the radii of the axle and the handle.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of the axle radius to the handle radius.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The ratio of the handle radius (ri) to the axle radius (ro).</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The square of the ratio of the input force to the output force.</li>
+</ul><div class="qexp">A crank is a rotating lever where the input arm is the radius of the handle's path and the output arm is the radius of the axle.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">24</span><span class="qt-inner">Why do human skeletal muscles typically need to exert forces much larger than the weights they lift?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Muscles are fundamentally inefficient at converting energy.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Muscles can only contract and cannot push.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The load is usually much closer to the joint than the muscle attachment is.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Muscles are attached very close to joints, resulting in a small mechanical advantage.</li>
+</ul><div class="qexp">Most muscles attach near joints to allow for a wide range of motion, but this short lever arm means they must exert high forces to produce sufficient torque.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">25</span><span class="qt-inner">In the context of the human arm, which muscle acts as the "flexor"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The biceps muscle.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The triceps muscle.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The humerus bone.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The masseter muscle.</li>
+</ul><div class="qexp">A flexor is a muscle that closes a limb at the joint; in the arm, the biceps performs this action.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">26</span><span class="qt-inner">Why does bad posture, such as leaning forward while standing, lead to significant back strain?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It shifts the center of gravity behind the hips.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The upper body’s weight creates a torque that back muscles must counteract.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases the mechanical advantage of the spinal column.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It places the body in a state of neutral equilibrium.</li>
+</ul><div class="qexp">When the upper body's center of gravity is not directly over the hips, gravity creates a torque that must be balanced by large forces from the back muscles.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">27</span><span class="qt-inner">What is a primary biological benefit of having muscles attached very close to joints despite the mechanical disadvantage?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It minimizes the force the muscle must exert.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It allows for higher stability and neutral equilibrium.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It allows for speed and a large range of movement.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It prevents joints from experiencing high pressure.</li>
+</ul><div class="qexp">Attaching muscles close to the pivot allows small contractions to produce large, rapid movements of the limbs.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">28</span><span class="qt-inner">Which of the following is true regarding proper lifting techniques?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>One should bend at the waist to use back muscles effectively.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The legs should be used to raise the body while keeping the back erect.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Lifting with the back increases the mechanical advantage of the spine.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Keeping the load far from the body reduces the torque on the vertebrae.</li>
+</ul><div class="qexp">Lifting with an erect back and using the legs keeps the center of gravity of the load closer to the pivot points, drastically reducing the forces on the spine.</div></div>
+    </div><div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 28 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Previous</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Statics and Torque',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:8,lessonCount:7,cpMin:80,lessons:['Overview','9.1 9.1: The First Condition for Equilibrium','9.2 9.2: The Second Condition for Equilibrium','9.3 9.3: Stability','9.4 9.4: Applications of Statics, Including Problem-Solving Strategies','9.5 9.5: Simple Machines','9.6 9.6: Forces and Torques in Muscles and Joints','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===7?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

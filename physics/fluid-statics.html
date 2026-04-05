@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Fluid Statics | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">💧</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Fluid Statics</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">💧</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Fluid Statics</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 11 · <span>Overview</span></div><div class="h-title">Fluid Statics</div><div class="h-desc">Much of what we value in life is fluid: a breath of fresh winter air; the hot blue flame in our gas cooker; the water we drink, swim in, and bathe in; the blood in our veins. What exactly is a fluid? Can we understand fluids with the laws already presented, or will new laws emerge from their study? The physical characteristics of static or stationary fluids and some of the laws that govern their behavior are the topics of this chapter.Fluid Dynamics and Its Biological and Medical Applicationsexplores aspects of fluid flow. Paul Peter Urone (Professor Emeritus at California State University, Sa</div>
+    <div class="h-meta"><div class="h-chip">📚 9 Lessons</div><div class="h-chip">💧 OpenStax College Physics Ch. 11</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 30 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 11</div><div class="cx">All content is from OpenStax College Physics, Chapter 11: Fluid Statics. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch11/fig11-1-a-swimmer-in-a-pool-doing-the-backstroke.jpg" alt="A swimmer in a pool doing the backstroke."><div class="d-cap">A swimmer in a pool doing the backstroke. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 9</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.1</span></div><div class="h-title">11.1: What Is a Fluid?</div><div class="h-desc">Matter most commonly exists as a solid, liquid, or gas; these states are known as the three commonphases of matter. Solids have a definite shape and a specific volume, liquids have a definite volume b...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State the common phases of matter.</li>
+      <li>Explain the physical characteristics of solids, liquids, and gases.</li>
+      <li>Describe the arrangement of atoms in solids, liquids, and gases.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">fluids</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">liquids and gases; a fluid is a state of matter that yields to shearing forces</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">pressure</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the force per unit area perpendicular to the force, over which the force acts</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.1</div>
+<p class="prose">Matter most commonly exists as a solid, liquid, or gas; these states are known as the three commonphases of matter. Solids have a definite shape and a specific volume, liquids have a definite volume but their shape changes depending on the container in which they are held, and gases have neither a definite shape nor a specific volume as their molecules move to fill the container in which they are held (Figure . Liquids and gases are considered to be fluids because they yield to shearing forces, whereas solids resist them. Note that the extent to which fluids yield to shearing forces (and hence flow easily and quickly) depends on a quantity called the viscosity which is discussed in detail inViscosity and Laminar Flow; Poiseuille’s Law. We can understand the phases of matter and what constitutes a fluid by considering the forces between atoms that make up matter in the three phases.</p>
+<div class="diagram"><img src="images/ch11/fig11-2-this-figure-has-three-parts-part-a-shows.jpg" alt="This figure has three parts. Part a shows a solid, and the atoms in the solid are shown as small red spheres held together in a grid. Part b shows a liquid in a short cylindrical container, and the atoms in the liquid are represented by small red spheres that can move past one another. The movement of the atoms is represented by arrows. Part c shows a cylinder that is labeled to indicate that it contains oxygen gas. The atoms in the gas are represented by small red spheres that move around. Their motion is indicated by arrows./"><div class="d-cap">This figure has three parts. Part a shows a solid, and the atoms in the solid are shown as small red spheres held together in a grid. Part b shows a liquid in a short cylindrical container, and the atoms in the liquid are represented by small red spheres that can move past one another. The movement of the atoms is represented by arrows. Part c shows a cylinder that is labeled to indicate that it contains oxygen gas. The atoms in the gas are represented by small red spheres that move around. Their motion is indicated by arrows./ (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Atoms insolidsare in close contact, with forces between them that allow the atoms to vibrate but not to change positions with neighboring atoms. (These forces can be thought of as springs that can be stretched or compressed, but not easily broken.) Thus a solidresistsall types of stress. A solid cannot be easily deformed because the atoms that make up the solid are not able to move about freely. Solids also resist compression, because their atoms form part of a lattice structure in which the atoms are a relatively fixed distance apart. Under compression, the atoms would be forced into one another. Most of the examples we have studied so far have involved solid objects which deform very little when stressed.</p>
+<p class="prose">Submicroscopic Explanation of Solids and Liquids</p>
+<p class="prose">Atomic and molecular characteristics explain and underlie the macroscopic characteristics of solids and fluids. This submicroscopic explanation is one theme of this text and is highlighted inConservation of Momentum. See, for example, microscopic description of collisions and momentum or microscopic description of pressure in a gas. This present section is devoted entirely to the submicroscopic explanation of solids and liquids.</p>
+<p class="prose">Atoms ingasesare separated by distances that are large compared with the size of the atoms. The forces between gas atoms are therefore very weak, except when the atoms collide with one another. Gases thus not only flow (and are therefore considered to be fluids) but they are relatively easy to compress because there is much space and little force between atoms. When placed in an open container gases, unlike liquids, will escape. The major distinction is that gases are easily compressed, whereas liquids are not. We shall generally refer to both gases and liquids simply asfluids, and make a distinction between them only when they behave differently.</p>
+<p class="prose">PhET Explorations: States of Matter - Basics</p>
+<p class="prose">Heat, cool, and compress atoms and molecules and watch as they change between solid, liquid, and gas phases.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Submicroscopic Explanation of Solids and LiquidsAtomic and molecular characteristics explain and underlie the macroscopic characteristics of solids and fluids. This submicroscopic explanation is one theme of this text and is highlighted inConservation of Momentum. See, for example, microscopic description of collisions and momentum or microscopic description of pressure in a gas. This present section is devoted entirely to the submicroscopic explanation of solids and liquids.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PhET Explorations: States of Matter - BasicsHeat, cool, and compress atoms and molecules and watch as they change between solid, liquid, and gas phases.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What physical characteristic distinguishes a fluid from a solid?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.1 Quiz</h3><p>3 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following physical characteristics primarily distinguishes a fluid from a solid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A fluid yields to shearing forces, whereas a solid resists them.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A fluid has a higher density than a solid.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A fluid has a definite shape and a specific volume.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A fluid's atoms are held together by rigid lattice structures.</li>
+</ul><div class="qexp">Fluids, which include liquids and gases, are defined by their inability to resist shearing forces, allowing them to flow.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">At the submicroscopic level, why are gases much easier to compress than liquids or solids?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gas atoms are in constant contact with one another.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas atoms are separated by distances that are large compared to the size of the atoms.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The forces between gas atoms are extremely strong.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gas atoms are fixed in a lattice structure that can be easily flattened.</li>
+</ul><div class="qexp">The large amount of empty space between gas molecules allows them to be forced closer together under pressure.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which phase of matter is characterized by having a definite volume but a shape that changes depending on its container?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Solid</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Liquid</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Plasma</li>
+</ul><div class="qexp">Liquids have a fixed volume due to close atomic contact but lack a rigid shape because atoms can move past one another.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.2</span></div><div class="h-title">11.2: Density</div><div class="h-desc">Which weighs more, a ton of feathers or a ton of bricks? This old riddle plays with the distinction between mass and density. A ton is a ton, of course; but bricks have much greater density than feath...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define density.</li>
+      <li>Calculate the mass of a reservoir from its density.</li>
+      <li>Compare and contrast the densities of various substances.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">density</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the mass per unit volume of a substance or object</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.2</div>
+<p class="prose">Which weighs more, a ton of feathers or a ton of bricks? This old riddle plays with the distinction between mass and density. A ton is a ton, of course; but bricks have much greater density than feathers, and so we are tempted to think of them as heavier (Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-3-a-pile-of-feathers-measuring-a-ton-and-a.jpg" alt="A pile of feathers measuring a ton and a ton of bricks are placed on either side of a plank that is balanced on a small support."><div class="d-cap">A pile of feathers measuring a ton and a ton of bricks are placed on either side of a plank that is balanced on a small support. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Density, as you will see, is an important characteristic of substances. It is crucial, for example, in determining whether an object sinks or floats in a fluid.</p>
+<p class="prose">Density is mass per unit volume.</p>
+<div class="math-display">\[\rho = \dfrac{m}{V},\label{density}\]</div>
+<p class="prose">where the Greek letter \(\rho\) (rho) is the symbol for density, \(m\) is the mass, and \(V\) is the volume occupied by the substance.</p>
+<p class="prose">In the riddle regarding the feathers and bricks, the masses are the same, but the volume occupied by the feathers is much greater, since their density is much lower. The SI unit of density is \(kg/m^3\), representative values are given in Table . The metric system was originally devised so that water would have a density of \(1 \, g/cm^3\), equivalent to \(10^3 \, kg/m^3\). Thus the basic mass unit, the kilogram, was first devised to be the mass of 1000 mL of water, which has a volume of \(1000 \, cm^3\).</p>
+<table class="dt">
+<tr><th>Substance</th><th>\(\rho(10^3\frac{kg}{m^3} \, or \, \frac{g}{mL})\)</th><th>Substance</th><th>\(\rho(10^3\frac{kg}{m^3} \, or \, \frac{g}{mL})\)</th><th>Substance</th><th>\(\rho(10^3\frac{kg}{m^3} \, or \, \frac{g}{mL})\)</th></tr>
+<tr><td>Solids</td><td>Liquids</td><td>Gases</td></tr>
+<tr><td>Aluminum</td><td>2.7</td><td>Water (4ºC)</td><td>1.000</td><td>Air</td><td>\(1.29 \times 10^{-3}\)</td></tr>
+<tr><td>Brass</td><td>8.44</td><td>Blood</td><td>1.05</td><td>Carbon dioxide</td><td>\(1.98 \times 10^{-3}\)</td></tr>
+<tr><td>Copper (average)</td><td>8.8</td><td>Sea water</td><td>1.025</td><td>Carbon monoxide</td><td>\(1.25 \times 10^{-3}\)</td></tr>
+<tr><td>Gold</td><td>19.32</td><td>Mercury</td><td>13.6</td><td>Hydrogen</td><td>\(0.090 \times 10^{-3}\)</td></tr>
+<tr><td>Iron or steel</td><td>7.8</td><td>Ethyl alcohol</td><td>0.79</td><td>Helium</td><td>\(0.18 \times 10^{-3}\)</td></tr>
+<tr><td>Lead</td><td>11.3</td><td>Petrol</td><td>0.68</td><td>Methane</td><td>\(0.72 \times 10^{-3}\)</td></tr>
+<tr><td>Polystyrene</td><td>0.10</td><td>Glycerin</td><td>1.26</td><td>Nitrogen</td><td>\(1.25 \times 10^{-3}\)</td></tr>
+<tr><td>Tungsten</td><td>19.30</td><td>Olive oil</td><td>0.92</td><td>Nitrous oxide</td><td>\(1.98 \times 10^{-3}\)</td></tr>
+<tr><td>Uranium</td><td>18.70</td><td></td><td></td><td>Oxygen</td><td>\(1.43 \times 10^{-3}\)</td></tr>
+<tr><td>Concrete</td><td>2.30–3.0</td><td></td><td></td><td>Steam \(100^o\)</td><td>\(0.60 \times 10^{-3}\)</td></tr>
+<tr><td>Cork</td><td>0.24</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Glass, common (average)</td><td>2.6</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Granite</td><td>2.7</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Earth’s crust</td><td>3.3</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Wood</td><td>0.3–0.9</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Ice (0°C)</td><td>0.917</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Bone</td><td>1.7–2.0</td><td></td><td></td><td></td><td></td></tr>
+</table>
+<p class="prose">As you can see by examining Table , the density of an object may help identify its composition. The density of gold, for example, is about 2.5 times the density of iron, which is about 2.5 times the density of aluminum. Density also reveals something about the phase of the matter and its substructure. Notice that the densities of liquids and solids are roughly comparable, consistent with the fact that their atoms are in close contact. The densities of gases are much less than those of liquids and solids, because the atoms in gases are separated by large amounts of empty space.</p>
+<p class="prose">TAKE-HOME EXPERIMENT SUGAR AND SALT</p>
+<p class="prose">A pile of sugar and a pile of salt look pretty similar, but which weighs more? If the volumes of both piles are the same, any difference in mass is due to their different densities (including the air space between crystals). Which do you think has the greater density? What values did you find? What method did you use to determine these values?</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating the Mass of a Reservoir From Its Volume</span></div><div class="example-body">
+<p class="prose">A reservoir has a surface area of \(50 \, km^2\) and an average depth of 40.0 m. What mass of water is held behind the dam? (See Figure for a view of a large reservoir—the Three Gorges Dam site on the Yangtze River in central China.)</p>
+<div class="diagram"><img src="images/ch11/fig11-4-photograph-of-the-three-gorges-dam-in-ce.jpg" alt="Photograph of the Three Gorges Dam in central China."><div class="d-cap">Photograph of the Three Gorges Dam in central China. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We can calculate the volume \(V\) of the reservoir from its dimensions, and find the density of water \(\rho\) in Table . Then the mass \(m\) can be found from the definition of density (Equation \ref{density}).</p>
+<p class="prose">Solving Equation \ref{density} for \(m\) gives</p>
+<div class="math-display">\[m = \rho V. \nonumber\]</div>
+<p class="prose">The volume \(V\) of the reservoir is its surface area \(A\) times its average depth \(h\):</p>
+<div class="math-display">\[\begin{align*} V &= Ah \\[5pt] &= (50.0 \, km^2)(40.0 \, m) \\[5pt] &= \left [ (50.0 \, km^2)\left(\frac{10^3 \, m}{1 \, km}\right )\right ](40.0 \, m) \\[5pt] &= 2.00 \times 10^9 \, m^3 \end{align*}\]</div>
+<p class="prose">The density of water \(\rho\) from Table is \(1.000 \times 10^3 \, kg/m^3 \). Substituting \(V\) and \(\rho\) into the expression for mass gives</p>
+<div class="math-display">\[\begin{align*} m &= (1.00 \times 10^3 \, kg/m^3)(2.00 \times 10^9 \, m^3) \\[5pt] &= 2.00 \times 10^{12} \, kg.\end{align*}\]</div>
+<p class="prose">A large reservoir contains a very large mass of water. In this example, the weight of the water in the reservoir is \(mg = 1.96 \times 10^{13} \, N\), where \(g\) is the acceleration due to the Earth’s gravity (about \(9.80 \, m/s^2\)). It is reasonable to ask whether the dam must supply a force equal to this tremendous weight. The answer is no. As we shall see in the following sections, the force the dam must supply can be much smaller than the weight of the water it holds back.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Which of the following substances are fluids at room temperature: air, mercury, water, glass?</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.2 Quiz</h3><p>3 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A reservoir has a surface area of $50.0\text{ km}^2$ and an average depth of $40.0\text{ m}$. What is the mass of water held in the reservoir? (Density of water = $1000\text{ kg/m}^3$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$2.00 \times 10^{10}\text{ kg}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$2.00 \times 10^6\text{ kg}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$2.00 \times 10^9\text{ kg}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$2.00 \times 10^{12}\text{ kg}$</li>
+</ul><div class="qexp">Volume $V = \text{Area} \times \text{depth} = 50.0 \times 10^6\text{ m}^2 \times 40.0\text{ m} = 2.00 \times 10^9\text{ m}^3$; Mass $m = \rho V = 1000 \times 2.00 \times 10^9 = 2.00 \times 10^{12}\text{ kg}$.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Based on the concept of density, why would a ton of feathers occupy a much larger volume than a ton of bricks?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Feathers have a much lower mass per unit volume than bricks.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bricks are inherently heavier than feathers regardless of mass.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The feathers have a higher specific gravity than bricks.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Density is directly proportional to the total mass of the substance.</li>
+</ul><div class="qexp">Density is defined as mass divided by volume, so a substance with lower density requires more volume to reach the same mass.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A pressure gauge on an air tank reads $6.90 \times 10^6\text{ Pa}$. What force does this air exert on the flat end of the tank if the end is a disk with a radius of $0.075\text{ m}$?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$5.17 \times 10^5\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$1.22 \times 10^5\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$4.87 \times 10^4\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$1.63 \times 10^6\text{ N}$</li>
+</ul><div class="qexp">Force $F = PA = P(\pi r^2) = (6.90 \times 10^6\text{ Pa})(3.14)(0.075\text{ m})^2 = 1.22 \times 10^5\text{ N}$.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.3</span></div><div class="h-title">11.3: Pressure</div><div class="h-desc">You have no doubt heard the wordpressurebeing used in relation to blood (high or low blood pressure) and in relation to the weather (high- and low-pressure weather systems). These are only two of many...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define pressure.</li>
+      <li>Explain the relationship between pressure and force.</li>
+      <li>Calculate force given pressure and area.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.3</div>
+<p class="prose">You have no doubt heard the wordpressurebeing used in relation to blood (high or low blood pressure) and in relation to the weather (high- and low-pressure weather systems). These are only two of many examples of pressures in fluids.</p>
+<p class="prose">Pressure is defined as the force divided by the area perpendicular to the force over which the force is applied, or</p>
+<div class="math-display">\[P = \dfrac{F}{A}. \label{pressure}\]</div>
+<p class="prose">where \(F\) is a force applied to an area \(A\) that is perpendicular to the force.</p>
+<p class="prose">A given force can have a significantly different effect depending on the area over which the force is exerted, as shown in Figure Figure . The SI unit for pressure is thepascal, where</p>
+<div class="math-display">\[1 \, Pa = 1 \, N/m^2.\]</div>
+<p class="prose">In addition to the pascal, there are many other units for pressure that are in common use. In meteorology, atmospheric pressure is often described in units of millibar (mb), where</p>
+<div class="math-display">\[100 \, mb = 1 \times 10^4 \, Pa.\]</div>
+<p class="prose">Pounds per square inch \((lb/in^2 \, or \, psi)\) is still sometimes used as a measure of tire pressure, and millimeters of mercury (mm Hg) is still often used in the measurement of blood pressure. Pressure is defined for all states of matter but is particularly important when discussing fluids.</p>
+<div class="diagram"><img src="images/ch11/fig11-5-in-figure-a-the-person-is-poked-with-a-f.jpg" alt="In figure a, the person is poked with a finger exerting a small pressure due to the large area of contact and, in b, he is poked with a syringe exerting a large pressure due to the small area of contact."><div class="d-cap">In figure a, the person is poked with a finger exerting a small pressure due to the large area of contact and, in b, he is poked with a syringe exerting a large pressure due to the small area of contact. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Force Exerted by the Air - What Force Does a Pressure Exert?</span></div><div class="example-body">
+<p class="prose">An astronaut is working outside the International Space Station where the atmospheric pressure is essentially zero. The pressure gauge on her air tank reads \(6.9 \times 10^6 \, Pa\). What force does the air inside the tank exert on the flat end of the cylindrical tank, a disk 0.150 m in diameter?</p>
+<p class="prose">We can find the force exerted from the definition of pressure (Equation \red{pressure}) provided we can find the area \(A\) acted upon.</p>
+<p class="prose">By rearranging the definition of pressure (Equation \red{pressure}) to solve for force, we see that</p>
+<p class="prose">Here, the pressure \(P\) is given, as is the area of the end of the cylinder \(A\), given by \(A = \pi r^2\). Thus</p>
+<div class="math-display">\[ \begin{align*} F &= (6.90 \times 10^6 \, Pa)(3.14)(0.0750 \, m)^2 \\[5pt] &= 1.22 \times 10^5 \, N. \end{align*}\]</div>
+<p class="prose">Wow! No wonder the tank must be strong. Since we found \(F = PA\), we see that the force exerted by a pressure is directly proportional to the area acted upon as well as the pressure itself.</p>
+<p class="prose">The force exerted on the end of the tank is perpendicular to its inside surface. This direction is because the force is exerted by a static or stationary fluid. We have already seen that fluids cannotwithstandshearing (sideways) forces; they cannotexertshearing forces, either. Fluid pressure has no direction, being a scalar quantity. The forces due to pressure have well-defined directions: they are always exerted perpendicular to any surface. (See the tire in Figure , for example.)</p>
+<div class="diagram"><img src="images/ch11/fig11-6-the-forces-inside-a-tire-are-shown-by-ar.jpg" alt="The forces inside a tire are shown by arrow lines. An inset shows an enlarged view of the valve in the tire. Air pressure in the tire keeps the valve closed."><div class="d-cap">The forces inside a tire are shown by arrow lines. An inset shows an enlarged view of the valve in the tire. Air pressure in the tire keeps the valve closed. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Finally, note that pressure is exerted on all surfaces. Swimmers, as well as the tire, feel pressure on all sides (Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-7-a-man-swimming-underwater-has-many-arrow.jpg" alt="A man swimming underwater has many arrows pointing toward him to represent the directions and magnitudes of the forces exerted on him at various points."><div class="d-cap">A man swimming underwater has many arrows pointing toward him to represent the directions and magnitudes of the forces exerted on him at various points. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PHET EXPLORATIONS: GAS PROPERTIES</p>
+<p class="prose">Pump gas molecules in thissimulationto a box and see what happens as you change the volume, add or remove heat, change gravity, and more. Measure the temperature and pressure, and discover how the properties of the gas vary in relation to each other.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: GAS PROPERTIESPump gas molecules in thissimulationto a box and see what happens as you change the volume, add or remove heat, change gravity, and more. Measure the temperature and pressure, and discover how the properties of the gas vary in relation to each other.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Why are gases easier to compress than liquids and solids?</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.3 Quiz</h3><p>3 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following statements about fluid pressure is true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Fluid pressure is a vector quantity with a specific direction.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Pressure is only exerted in the downward direction due to gravity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pressure is a scalar and is exerted perpendicular to any surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Pressure decreases as the area over which a force is applied increases.</li>
+</ul><div class="qexp">Pressure is a scalar that acts in all directions within a fluid and always exerts force perpendicular to the surface of an object.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why does a person feel more pain when poked with a syringe needle than with a finger, even if the same force is applied?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The syringe needle has a larger mass.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The needle exerts a smaller pressure because of the small contact area.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The finger yields to shearing forces more easily than the needle.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The small area of the needle tip results in a very large pressure.</li>
+</ul><div class="qexp">Pressure is force divided by area ($P=F/A$), so a smaller area of contact results in higher pressure for the same force.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the pressure due to the weight of water at a depth of $10.0\text{ m}$? (Assume $\rho = 1000\text{ kg/m}^3$ and $g = 9.80\text{ m/s}^2$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$9.80 \times 10^4\text{ Pa}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$1.01 \times 10^5\text{ Pa}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$9.80 \times 10^3\text{ Pa}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$1.00 \times 10^2\text{ Pa}$</li>
+</ul><div class="qexp">Pressure due to depth is calculated using $P = h\rho g = (10.0\text{ m})(1000\text{ kg/m}^3)(9.80\text{ m/s}^2) = 9.80 \times 10^4\text{ Pa}$.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.4</span></div><div class="h-title">11.4: Variation of Pressure with Depth in a Fluid</div><div class="h-desc">If your ears have ever popped on a plane flight or ached during a deep dive in a swimming pool, you have experienced the effect of depth on pressure in a fluid. At the Earth’s surface, the air pressur...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define pressure in terms of weight.</li>
+      <li>Explain the variation of pressure with depth in a fluid.</li>
+      <li>Calculate density given pressure and altitude.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Pascal’s Principle</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a change in pressure applied to an enclosed fluid is transmitted undiminished to all portions of the fluid and to the walls of its container</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.4</div>
+<p class="prose">If your ears have ever popped on a plane flight or ached during a deep dive in a swimming pool, you have experienced the effect of depth on pressure in a fluid. At the Earth’s surface, the air pressure exerted on you is a result of the weight of air above you. This pressure is reduced as you climb up in altitude and the weight of air above you decreases. Under water, the pressure exerted on you increases with increasing depth. In this case, the pressure being exerted upon you is a result of both the weight of water above youandthat of the atmosphere above you. You may notice an air pressure change on an elevator ride that transports you many stories, but you need only dive a meter or so below the surface of a pool to feel a pressure increase. The difference is that water is much denser than air, about 775 times as dense.</p>
+<div class="diagram"><img src="images/ch11/fig11-8-a-container-with-fluid-filled-to-a-depth.jpg" alt="A container with fluid filled to a depth h. The fluid's weight w equal to m times g is shown by an arrow pointing downward. A denotes the area of the fluid at the bottom of the container and as well as on the surface."><div class="d-cap">A container with fluid filled to a depth h. The fluid's weight w equal to m times g is shown by an arrow pointing downward. A denotes the area of the fluid at the bottom of the container and as well as on the surface. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Consider the container in Figure . Its bottom supports the weight of the fluid in it. Let us calculate the pressure exerted on the bottom by the weight of the fluid. Thatpressureis the weight of the fluid \(mg\) divided by the area \(A\) supporting it (the area of the bottom of the container):</p>
+<div class="math-display">\[P = \dfrac{mg}{A}.\]</div>
+<p class="prose">We can find the mass of the fluid from its volume and density:</p>
+<p class="prose">The volume of the fluid \(V\) is related to the dimensions of the container. It is</p>
+<p class="prose">where \(A\) is the cross-sectional area and \(h\) is the depth. Combining the last two equations gives \[m = \rho Ah.\]</p>
+<p class="prose">If we enter this into the expression for pressure, we obtain \[P = \dfrac{(\rho Ah)g}{A}.\]</p>
+<p class="prose">The area cancels, and rearranging the variables yields</p>
+<div class="math-display">\[P = h\rho g. \label{eq10}\]</div>
+<p class="prose">This value is thepressure due to the weight of a fluid. Equation \ref{eq10} has general validity beyond the special conditions under which it is derived here. Even if the container were not there, the surrounding fluid would still exert this pressure, keeping the fluid static. Thus Equation \ref{eq10} represents the pressure due to the weight of any fluid ofaverage density \(\rho\) at any depth \(h\)below its surface. For liquids, which are nearly incompressible, this equation holds to great depths. For gases, which are quite compressible, one can apply this equation as long as the density changes are small over the depth considered. Example illustrates this situation.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating the Average Pressure and Force Exerted: What Force Must a Dam Withstand?</span></div><div class="example-body">
+<p class="prose">In[link], we calculated the mass of water in a large reservoir. We will now consider the pressure and force acting on the dam retaining water (Figure . The dam is 500 m wide, and the water is 80.0 m deep at the dam.</p>
+<div class="diagram"><img src="images/ch11/fig11-9-a-two-dimensional-view-of-a-dam-with-dim.png" alt="A two-dimensional view of a dam with dimensions L and h is shown. Force F at h is shown by a horizontal arrow. The force F exerted by water on the dam is F equals average pressure p bar into area A and pressure in turn is average height h bar into density rho into acceleration due to gravity g."><div class="d-cap">A two-dimensional view of a dam with dimensions L and h is shown. Force F at h is shown by a horizontal arrow. The force F exerted by water on the dam is F equals average pressure p bar into area A and pressure in turn is average height h bar into density rho into acceleration due to gravity g. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The average pressure \(\overline{P}\) due to the weight of the water is the pressure at the average depth \(\overline{h}\) of 40.0 m, since pressure increases linearly with depth.</p>
+<p class="prose">The average pressure due to the weight of a fluid (Equation \ref{eq10}) is</p>
+<div class="math-display">\[\overline{P} = \overline{h}\rho g. \nonumber \]</div>
+<p class="prose">Entering the density of water from[link]and taking \(\overline{h}\) to be the average depth of 40.0 m, we obtain</p>
+<div class="math-display">\[ \begin{align*} \overline{P} &= (40.0 \, m)\left(10^3 \, \frac{kg}{m^3} \right) \left(9.80\, \frac{m}{s^2} \right) \\[5pt] &= 3.92 \times 10^5 \, \frac{N}{m^2} = 392 \, kPa. \end{align*} \]</div>
+<p class="prose">The force exerted on the dam by the water is the average pressure times the area of contact:</p>
+<div class="math-display">\[F = \overline{P} A. \nonumber \]</div>
+<p class="prose">We have already found the value for \(\overline{P}\). The area of the dam is</p>
+<div class="math-display">\[A = 80.0 \, m \times 500 \, m = 4.00 \times 10^4 \, m^2,\nonumber\]</div>
+<div class="math-display">\[ \begin{align*} F &= (3.92 \times 10^5 \, N/m^2)(4.00 \times 10^4 \, m^2) \\[5pt] &= 1.57 \times 10^{10} \, N.\end{align*} \]</div>
+<p class="prose">Although this force seems large, it is small compared with the \(1.96 \times 10^{13} \, N\) weight of the water in the reservoir—in fact, it is only \(0.0800 \, \% \) of the weight. Note that the pressure found in part (a) is completely independent of the width and length of the lake—it depends only on its average depth at the dam. Thus the force depends only on the water’s average depth and the dimensions of the dam,noton the horizontal extent of the reservoir. In the diagram, the thickness of the dam increases with depth to balance the increasing force due to the increasing pressure.epth to balance the increasing force due to the increasing pressure.</p>
+<p class="prose">Atmospheric pressureis another example of pressure due to the weight of a fluid, in this case due to the weight ofairabove a given height. The atmospheric pressure at the Earth’s surface varies a little due to the large-scale flow of the atmosphere induced by the Earth’s rotation (this creates weather “highs” and “lows”). However, the average pressure at sea level is given by thestandard atmospheric pressure \(P_{atm}\),measured to be</p>
+<div class="math-display">\[1 \, atmosphere \, (atm) = P_{atm} = 1.01 \times 10^5 \, N/m^2 = 101 \, kPa.\]</div>
+<p class="prose">This relationship means that, on average, at sea level, a column of air above \(1.00 \, m^2 \) of the Earth’s surface has a weight of \(1.01 \times 10^5 \, N,\) equivalent to 1 atm (Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-10-figure-shows-a-column-of-air-exerting-a-.jpg" alt="Figure shows a column of air exerting a weight of one point zero one times ten to the power five newtons on a rectangular patch of ground of one square meter cross section."><div class="d-cap">Figure shows a column of air exerting a weight of one point zero one times ten to the power five newtons on a rectangular patch of ground of one square meter cross section. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Average Density: How Dense Is the Air?</span></div><div class="example-body">
+<p class="prose">Calculate the average density of the atmosphere, given that it extends to an altitude of 120 km. Compare this density with that of air listed in[link].</p>
+<p class="prose">If we solve \(P = h\rho g \) for density, we see that</p>
+<div class="math-display">\[\overline{\rho} = \dfrac{P}{hg}.\nonumber\]</div>
+<p class="prose">We then take \(P\) to be atmospheric pressure, \(h\) is given, and \(g\) is known, and so we can use this to calculate \(\overline{\rho}\).</p>
+<p class="prose">Entering known values into the expression for \(\overline{\rho}\) yields</p>
+<div class="math-display">\[ \begin{align*} \overline{\rho} &= \dfrac{1.01 \times 10^5 \, N/m^2}{(120 \times 10^3 \, m)(9.80 \, m/s^2)} \\[5pt] &= 8.59 \times 10^{-2} \, kg/m^3. \end{align*} \]</div>
+<p class="prose">This result is the average density of air between the Earth’s surface and the top of the Earth’s atmosphere, which essentially ends at 120 km. The density of air at sea level is given in[link]as \(1.29 \, kg/m^3 \) - about 15 times its average value. Because air is so compressible, its density has its highest value near the Earth’s surface and declines rapidly with altitude.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Depth Below the Surface of Water: What Depth of Water Creates the Same Pressure as the Entire Atmosphere?</span></div><div class="example-body">
+<p class="prose">Calculate the depth below the surface of water at which the pressure due to the weight of the water equals 1.00 atm.</p>
+<p class="prose">We begin by solving the equation \(P = h\rho g\) for depth \(h\):</p>
+<div class="math-display">\[h = \dfrac{P}{\rho g}.\nonumber\]</div>
+<p class="prose">Then we take \(P\) to be 1.00 atm and \(\rho \)</p>
+<p class="prose">to be the density of the water that creates the pressure.</p>
+<p class="prose">Entering the known values into the expression for \(h\) gives</p>
+<div class="math-display">\[ \begin{align*} h &= \dfrac{1.01 \times 10^5 \, N/m^2}{(1.00 \times 10^3 \, m)(9.80 \, m/s^2)} \\[5pt] &= 10.3 \, m. \end{align*} \]</div>
+<p class="prose">Just 10.3 m of water creates the same pressure as 120 km of air. Since water is nearly incompressible, we can neglect any change in its density over this depth.</p>
+<p class="prose">What do you suppose is thetotalpressure at a depth of 10.3 m in a swimming pool? Does the atmospheric pressure on the water’s surface affect the pressure below? The answer is yes. This seems only logical, since both the water’s weight and the atmosphere’s weight must be supported. So thetotalpressure at a depth of 10.3 m is 2 atm—half from the water above and half from the air above. We shall see inPascal’s Principlethat fluid pressures always add in this way.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">How do gases differ from liquids?</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.4 Quiz</h3><p>3 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which factor determines the force water exerts on a vertical dam?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The horizontal length of the reservoir behind the dam.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The average depth of the water and the area of the dam's face.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The total volume of water contained in the reservoir.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The total surface area of the lake behind the dam.</li>
+</ul><div class="qexp">Pressure depends only on depth ($h\rho g$), and force is the average pressure times the area of contact ($F = \bar{P}A$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why does atmospheric pressure decrease with increasing altitude?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The temperature of the air increases at higher altitudes.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The acceleration due to gravity increases as you move away from Earth.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There is less weight of air above you as your altitude increases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The density of air remains constant regardless of the altitude.</li>
+</ul><div class="qexp">Atmospheric pressure is the result of the weight of the air column above a given point; higher altitudes have shorter air columns.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">According to Pascal’s principle, what happens when a change in pressure is applied to an enclosed fluid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The pressure is transmitted only in the direction of the applied force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pressure is absorbed by the fluid's viscosity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The pressure increases at the bottom but decreases at the top.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The change in pressure is transmitted undiminished to all portions of the fluid.</li>
+</ul><div class="qexp">Pascal's principle states that pressure changes in an enclosed fluid are distributed equally throughout the entire fluid and container walls.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.5</span></div><div class="h-title">11.5: Pascal’s Principle</div><div class="h-desc">Pressureis defined as force per unit area. Can pressure be increased in a fluid by pushing directly on the fluid? Yes, but it is much easier if the fluid is enclosed. The heart, for example, increases...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define pressure.</li>
+      <li>State Pascal’s principle.</li>
+      <li>Understand applications of Pascal’s principle.</li>
+      <li>Derive relationships between forces in a hydraulic system.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.5</div>
+<p class="prose">Pressureis defined as force per unit area. Can pressure be increased in a fluid by pushing directly on the fluid? Yes, but it is much easier if the fluid is enclosed. The heart, for example, increases blood pressure by pushing directly on the blood in an enclosed system (valves closed in a chamber). If you try to push on a fluid in an open system, such as a river, the fluid flows away. An enclosed fluid cannot flow away, and so pressure is more easily increased by an applied force.</p>
+<p class="prose">What happens to a pressure in an enclosed fluid? Since atoms in a fluid are free to move about, they transmit the pressure to all parts of the fluid and to the walls of the container. Remarkably, the pressure is transmittedundiminished. This phenomenon is calledPascal’s principle, because it was first clearly stated by the French philosopher and scientist Blaise Pascal (1623–1662): A change in pressure applied to an enclosed fluid is transmitted undiminished to all portions of the fluid and to the walls of its container.</p>
+<p class="prose">Definition: Pascal’s Principle</p>
+<p class="prose">A change in pressure applied to an enclosed fluid is transmitted undiminished to all portions of the fluid and to the walls of its container.</p>
+<p class="prose">Pascal’s principle, an experimentally verified fact, is what makes pressure so important in fluids. Since a change in pressure is transmitted undiminished in an enclosed fluid, we often know more about pressure than other physical quantities in fluids. Moreover, Pascal’s principle implies thatthe total pressure in a fluid is the sum of the pressures from different sources. We shall find this fact—that pressures add—very useful.</p>
+<p class="prose">Blaise Pascal had an interesting life in that he was home-schooled by his father who removed all of the mathematics textbooks from his house and forbade him to study mathematics until the age of 15. This, of course, raised the boy’s curiosity, and by the age of 12, he started to teach himself geometry. Despite this early deprivation, Pascal went on to make major contributions in the mathematical fields of probability theory, number theory, and geometry. He is also well known for being the inventor of the first mechanical digital calculator, in addition to his contributions in the field of fluid statics.</p>
+<div class="sh2">Application of Pascal’s Principle</div>
+<p class="prose">One of the most important technological applications of Pascal’s principle is found in ahydraulic system, which is an enclosed fluid system used to exert forces. The most common hydraulic systems are those that operate car brakes. Let us first consider the simple hydraulic system shown in Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-11-a-small-force-can-be-converted-into-a-la.jpg" alt="A small force can be converted into a larger force when pressure is transmitted through liquids in different containers with pistons that are connected."><div class="d-cap">A small force can be converted into a larger force when pressure is transmitted through liquids in different containers with pistons that are connected. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Relationship Between Forces in a Hydraulic System</div>
+<p class="prose">We can derive a relationship between the forces in the simple hydraulic system shown in Figure by applying Pascal’s principle. Note first that the two pistons in the system are at the same height, and so there will be no difference in pressure due to a difference in depth. Now the pressure due to \(F_1\) acting on area \(A_1\) is simply \(P_1 = \frac{F_1}{A_1}\), as defined by \(P = \frac{F}{A}\). According to Pascal’s principle, this pressure is transmitted undiminished throughout the fluid and to all walls of the container. Thus, a pressure \(P_2\) is felt at the other piston that is equal to \(P_1\). That is</p>
+<p class="prose">But since \(P_2 - \frac{F_2}{A_2}\), we see that</p>
+<div class="math-display">\[\dfrac{F_1}{A_1} = \frac{F_2}{A_2}. \label{eq20}\]</div>
+<p class="prose">This equation relates the ratios of force to area in any hydraulic system, providing the pistons are at the same vertical height and that friction in the system is negligible. Hydraulic systems can increase or decrease the force applied to them. To make the force larger, the pressure is applied to a larger area. For example, if a 100-N force is applied to the left cylinder in Figure and the right one has an area five times greater, then the force out is 500 N. Hydraulic systems are analogous to simple levers, but they have the advantage that pressure can be sent through tortuously curved lines to several places at once.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Force of Slave Cylinders: Pascal Puts on the Brakes</span></div><div class="example-body">
+<p class="prose">Consider the automobile hydraulic system shown in Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-12-when-the-driver-applies-force-on-the-bra.png" alt="When the driver applies force on the brake pedal the master cylinder transmits the same pressure to the slave cylinders but results in a larger force due to the larger area of the slave cylinders."><div class="d-cap">When the driver applies force on the brake pedal the master cylinder transmits the same pressure to the slave cylinders but results in a larger force due to the larger area of the slave cylinders. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A force of 100 N is applied to the brake pedal, which acts on the cylinder—called the master—through a lever. A force of 500 N is exerted on the master cylinder. (The reader can verify that the force is 500 N using techniques of statics fromApplications of Statics, Including Problem-Solving Strategies.) Pressure created in the master cylinder is transmitted to four so-called slave cylinders. The master cylinder has a diameter of 0.500 cm, and each slave cylinder has a diameter of 2.50 cm. Calculate the force \(F_2\) created at each of the slave cylinders.</p>
+<p class="prose">We are given the force \(F_1\) that is applied to the master cylinder. The cross-sectional areas \(A_1\) and \(A_2\) can be calculated from their given diameters. Then Equation \ref{eq20} can be used to find the force \(F_2\). Manipulate this algebraically to get \(F_2\)</p>
+<p class="prose">on one side and substitute known values:</p>
+<p class="prose">Pascal’s principle applied to hydraulic systems is given by Equation \ref{eq20}:</p>
+<div class="math-display">\[\begin{align*} F_2 &= \dfrac{A_2}{A_1}F_1 \\[5pt] &= \dfrac{\pi r_2^2}{\pi r_1^2}F_1 \\[5pt] &= \dfrac{(1.25 \, cm)^2}{(0.250 \, cm)^2} \times 500 \, N \\[5pt] &= 1.25 \times 10^4 \, N. \end{align*} \]</div>
+<p class="prose">This value is the force exerted by each of the four slave cylinders. Note that we can add as many slave cylinders as we wish. If each has a 2.50-cm diameter, each will exert \(1.25 \times 10^4 \, N.\)</p>
+<p class="prose">A simple hydraulic system, such as a simple machine, can increase force but cannot do more work than done on it. Work is force times distance moved, and the slave cylinder moves through a smaller distance than the master cylinder. Furthermore, the more slaves added, the smaller the distance each moves. Many hydraulic systems—such as power brakes and those in bulldozers—have a motorized pump that actually does most of the work in the system. The movement of the legs of a spider is achieved partly by hydraulics. Using hydraulics, a jumping spider can create a force that makes it capable of jumping 25 times its length!</p>
+<p class="prose">Definition: Conservation of Energy</p>
+<p class="prose">Conservation of energy applied to a hydraulic system tells us that the systemcannotdo more work than is done on it. Work transfers energy, and so the work output cannot exceed the work input. Power brakes and other similar hydraulic systems use pumps to supply extra energy when needed.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">cannot</div><div class="cx">Definition: Conservation of EnergyConservation of energy applied to a hydraulic system tells us that the systemdo more work than is done on it. Work transfers energy, and so the work output cannot exceed the work input. Power brakes and other similar hydraulic systems use pumps to supply extra energy when needed.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.5. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Approximately how does the density of air vary with altitude?</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.5 Quiz</h3><p>3 questions</p></div></div><div id="q5">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">In a hydraulic system, a master cylinder with an area of $2.00\text{ cm}^2$ is pushed with a force of $100\text{ N}$. What is the force output of a slave cylinder with an area of $10.0\text{ cm}^2$?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$500\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$20\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$1000\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$50\text{ N}$</li>
+</ul><div class="qexp">Using $F_1/A_1 = F_2/A_2$, we find $F_2 = F_1(A_2/A_1) = 100\text{ N} \times (10.0/2.00) = 500\text{ N}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">How does the conservation of energy apply to a hydraulic lift system?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The system creates more energy than is put into it.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The work output cannot exceed the work input.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The output force is larger, so the output distance must also be larger.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Energy is lost as the fluid moves through curved lines.</li>
+</ul><div class="qexp">Hydraulic systems can multiply force, but they must obey the law of conservation of energy; the distance moved by the output piston is smaller.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If a tire gauge reads $30.0\text{ psi}$, and the atmospheric pressure is $14.7\text{ psi}$, what is the absolute pressure inside the tire?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$15.3\text{ psi}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$30.0\text{ psi}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$44.7\text{ psi}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$0\text{ psi}$</li>
+</ul><div class="qexp">Absolute pressure is the sum of gauge pressure and atmospheric pressure ($P_{abs} = P_g + P_{atm}$).</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Next →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.6</span></div><div class="h-title">11.6: Gauge Pressure, Absolute Pressure, and Pressure Measurement</div><div class="h-desc">If you limp into a gas station with a nearly flat tire, you will notice the tire gauge on the airline reads nearly zero when you begin to fill it. In fact, if there were a gaping hole in your tire, th...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define gauge pressure and absolute pressure.</li>
+      <li>Understand the working of aneroid and open-tube barometers.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">absolute pressure</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the sum of gauge pressure and atmospheric pressure</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.6</div>
+<p class="prose">If you limp into a gas station with a nearly flat tire, you will notice the tire gauge on the airline reads nearly zero when you begin to fill it. In fact, if there were a gaping hole in your tire, the gauge would read zero, even though atmospheric pressure exists in the tire. Why does the gauge read zero? There is no mystery here. Tire gauges are simply designed to read zero at atmospheric pressure and positive when pressure is greater than atmospheric.</p>
+<p class="prose">Similarly, atmospheric pressure adds to blood pressure in every part of the circulatory system. (As noted inPascal’s Principle, the total pressure in a fluid is the sum of the pressures from different sources—here, the heart and the atmosphere.) But atmospheric pressure has no net effect on blood flow since it adds to the pressure coming out of the heart and going back into it, too. What is important is how muchgreaterblood pressure is than atmospheric pressure. Blood pressure measurements, like tire pressures, are thus made relative to atmospheric pressure.</p>
+<p class="prose">In brief, it is very common for pressure gauges to ignore atmospheric pressure—that is, to read zero at atmospheric pressure. We therefore definegauge pressureto be the pressure relative to atmospheric pressure. Gauge pressure is positive for pressures above atmospheric pressure, and negative for pressures below it.</p>
+<p class="prose">Definition: Gauge Pressure</p>
+<p class="prose">Gauge pressure is the pressure relative to atmospheric pressure. Gauge pressure is positive for pressures above atmospheric pressure, and negative for pressures below it.</p>
+<p class="prose">In fact, atmospheric pressure does add to the pressure in any fluid not enclosed in a rigid container. This happens because of Pascal’s principle. The total pressure, orabsolute pressure, is thus the sum of gauge pressure and atmospheric pressure:</p>
+<div class="math-display">\[P_{abs} = P_g + P_{atm} \]</div>
+<p class="prose">where \(P_{abs}\) is absolute pressure, \(P_g\) is gauge pressure, and \(P_{atm} \) is atmospheric pressure. For example, if your tire gauge reads 34 psi (pounds per square inch), then the absolute pressure is 34 psi plus 14.7 psi (\(P_{atm}\) in psi), or 48.7 psi (equivalent to 336 kPa).</p>
+<p class="prose">Definition: Absolute Pressure</p>
+<p class="prose">Absolute pressure is the sum of gauge pressure and atmospheric pressure.</p>
+<p class="prose">For reasons we will explore later, in most cases the absolute pressure in fluids cannot be negative. Fluids push rather than pull, so the smallest absolute pressure is zero. (A negative absolute pressure is a pull.) Thus the smallest possible gauge pressure is \(P_g = -P_{atm} \) (this makes \(P_{abs}|) zero).</p>
+<p class="prose">There is no theoretical limit to how large a gauge pressure can be.</p>
+<p class="prose">There are a host of devices for measuring pressure, ranging from tire gauges to blood pressure cuffs. Pascal’s principle is of major importance in these devices. The undiminished transmission of pressure through a fluid allows precise remote sensing of pressures. Remote sensing is often more convenient than putting a measuring device into a system, such as a person’s artery.</p>
+<p class="prose">Figureshows one of the many types of mechanical pressure gauges in use today. In all mechanical pressure gauges, pressure results in a force that is converted (or transduced) into some type of readout.</p>
+<div class="diagram"><img src="images/ch11/fig11-13-aneroid-gauge-measures-pressure-using-a-.jpg" alt="Aneroid gauge measures pressure using a bellows and spring arrangement connected to the pointer that points to a calibrated scale."><div class="d-cap">Aneroid gauge measures pressure using a bellows and spring arrangement connected to the pointer that points to a calibrated scale. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">An entire class of gauges uses the property that pressure due to the weight of a fluid is given by \(P = h\rho g\).</p>
+<p class="prose">Consider the U-shaped tube shown inFigure, for example. This simple tube is called amanometer. InFigure(a), both sides of the tube are open to the atmosphere. Atmospheric pressure therefore pushes down on each side equally so its effect cancels. If the fluid is deeper on one side, there is a greater pressure on the deeper side, and the fluid flows away from that side until the depths are equal.</p>
+<p class="prose">Let us examine how a manometer is used to measure pressure. Suppose one side of the U-tube is connected to some source of pressure \(P_{abs}\) such as the toy balloon inFigure(b) or the vacuum-packed peanut jar shown inFigure(c). Pressure is transmitted undiminished to the manometer, and the fluid levels are no longer equal. InFigure(b), \(P_{abs}\) is greater than atmospheric pressure, whereas inFigure(c), \(P_{abs}\) is less than atmospheric pressure. In both cases, \(P_{abs}\) differs from atmospheric pressure by an amount \(h\rho g\), where \(\rho\) is the density of the fluid in the manometer. InFigure(b), \(P_{abs}\) can support a column of fluid of height \(h\), and so it must exert a pressure \(h\rho g\) greater than atmospheric pressure (the gauge pressure \(P_g\) is positive). InFigure(c), atmospheric pressure can support a column of fluid of height \(h\), and so \(P_{abs}\) is less than atmospheric pressure by an amount \(h\rho g\) (the gauge pressure \(P_g\) is negative). A manometer with one side open to the atmosphere is an ideal device for measuring gauge pressures. The gauge pressure is \(P_g = h\rho g\) and is found by measuring \(h\).</p>
+<div class="diagram"><img src="images/ch11/fig11-14-open-tube-manometers-have-u-shaped-tubes.jpg" alt="Open-tube manometers have U-shaped tubes and one end is always open. When open to atmosphere, fluid at both ends will be the same, as in the first figure. When pressure at one end is greater, the fluid level will go down on that end, as in the second figure. If the pressure at one end is less, then the height of the fluid column on that side will increase, as in the third figure."><div class="d-cap">Open-tube manometers have U-shaped tubes and one end is always open. When open to atmosphere, fluid at both ends will be the same, as in the first figure. When pressure at one end is greater, the fluid level will go down on that end, as in the second figure. If the pressure at one end is less, then the height of the fluid column on that side will increase, as in the third figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Mercury manometers are often used to measure arterial blood pressure. An inflatable cuff is placed on the upper arm as shown inFigure. By squeezing the bulb, the person making the measurement exerts pressure, which is transmitted undiminished to both the main artery in the arm and the manometer. When this applied pressure exceeds blood pressure, blood flow below the cuff is cut off. The person making the measurement then slowly lowers the applied pressure and listens for blood flow to resume. Blood pressure pulsates because of the pumping action of the heart, reaching a maximum, calledsystolic pressure, and a minimum, calleddiastolic pressure, with each heartbeat. Systolic pressure is measured by noting the value of \(h\) when blood flow first begins as cuff pressure is lowered. Diastolic pressure is measured by noting when blood flows without interruption. The typical blood pressure of a young adult raises the mercury to a height of 120 mm at systolic and 80 mm at diastolic. This is commonly quoted as 120 over 80, or 120/80. The first pressure is representative of the maximum output of the heart; the second is due to the elasticity of the arteries in maintaining the pressure between beats. The density of the mercury fluid in the manometer is 13.6 times greater than water, so the height of the fluid will be 1/13.6 of that in a water manometer. This reduced height can make measurements difficult, so mercury manometers are used to measure larger pressures, such as blood pressure. The density of mercury is such that \(1 \, mm \, Hg = 133 \, Pa\).</p>
+<p class="prose">Definition: Systolic Pressure</p>
+<p class="prose">Systolic Pressure is the maximum blood pressure.</p>
+<p class="prose">Definition: Diastolic Pressure</p>
+<p class="prose">Diastolic pressure is the minimum blood pressure.</p>
+<div class="diagram"><img src="images/ch11/fig11-15-us-army-spc-monica-brown-takes-a-soldier.jpg" alt="U.S. Army Spc. Monica Brown takes a soldier's blood pressure reading at the hospital on Forward Operating Base Salerno, Afghanistan, March 10, 2008."><div class="d-cap">U.S. Army Spc. Monica Brown takes a soldier's blood pressure reading at the hospital on Forward Operating Base Salerno, Afghanistan, March 10, 2008. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Height of IV Bag: Blood Pressure and Intravenous</span></div><div class="example-body">
+<p class="prose">Intravenous infusions are usually made with the help of the gravitational force. Assuming that the density of the fluid being administered is 1.00 g/ml, at what height should the IV bag be placed above the entry point so that the fluid just enters the vein if the blood pressure in the vein is 18 mm Hg above atmospheric pressure? Assume that the IV bag is collapsible.</p>
+<p class="prose">For the fluid to just enter the vein, its pressure at entry must exceed the blood pressure in the vein (18 mm Hg above atmospheric pressure). We therefore need to find the height of fluid that corresponds to this gauge pressure.</p>
+<p class="prose">We first need to convert the pressure into SI units. Since \(1.0 \, mm \, Hg = 133 \, Pa\),</p>
+<div class="math-display">\[\begin{align*}P = 18 \, mm \, Hg \times \dfrac{133 \, Pa}{1.0 \, mm \, Hg} = 2400 \, Pa \\[5pt] &= 0.24 \, Pa \end{align*}\]</div>
+<p class="prose">The IV bag must be placed at 0.24 m above the entry point into the arm for the fluid to just enter the arm. Generally, IV bags are placed higher than this. You may have noticed that the bags used for blood collection are placed below the donor to allow blood to flow easily from the arm to the bag, which is the opposite direction of flow than required in the example presented here.</p>
+<p class="prose">Abarometeris a device that measures atmospheric pressure. A mercury barometer is shown inFigure. This device measures atmospheric pressure, rather than gauge pressure, because there is a nearly pure vacuum above the mercury in the tube. The height of the mercury is such that \(h\rho g = P_{atm}\). When atmospheric pressure varies, the mercury rises or falls, giving important clues to weather forecasters. The barometer can also be used as an altimeter, since average atmospheric pressure varies with altitude. Mercury barometers and manometers are so common that units of mm Hg are often quoted for atmospheric pressure and blood pressures.Tablegives conversion factors for some of the more commonly used units of pressure.</p>
+<div class="diagram"><img src="images/ch11/fig11-16-mercury-barometer-has-an-evacuated-glass.jpg" alt="Mercury barometer has an evacuated glass tube inverted and placed in the mercury container. The height of the mercury column in the inverted tube is determined by the atmospheric pressure."><div class="d-cap">Mercury barometer has an evacuated glass tube inverted and placed in the mercury container. The height of the mercury column in the inverted tube is determined by the atmospheric pressure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<table class="dt">
+<tr><th>Conversion to N/m2(Pa)</th><th>Conversion from atm</th></tr>
+<tr><td>\(1.0 atm=1.013×10^5N/m^2\)</td><td>\(1.0 atm=1.013×10^5N/m^2\)</td></tr>
+<tr><td>\(1.0dyne/cm^2=0.10N/m^2\)</td><td>\(1.0atm=1.013×10^6dyne/cm^2\)</td></tr>
+<tr><td>\(1.0kg/cm^2=9.8×10^4N/m^2\)</td><td>\(1.0atm=1.013kg/cm^2\)</td></tr>
+<tr><td>\(1.0lb/in.^2=6.90×10^3N/m^2\)</td><td>\(1.0atm=14.7lb/in.^2\)</td></tr>
+<tr><td>\(1.0 mm Hg=133N/m^2\)</td><td>\(1.0atm=760 mm Hg\)</td></tr>
+<tr><td>\(1.0 cm Hg=1.33×10^3N/m^2\)</td><td>\(1.0atm=76.0 cm Hg\)</td></tr>
+<tr><td>\(1.0 cm water=98.1N/m^2\)</td><td>\(1.0atm=1.03×10^3cm water\)</td></tr>
+<tr><td>\(1.0 bar=1.000×10^5N/m^2\)</td><td>\(1.0atm=1.013 bar\)</td></tr>
+<tr><td>\(1.0 millibar=1.000×10^2N/m^2\)</td><td>\(1.0 atm=1013 millibar\)</td></tr>
+</table>
+<p class="prose">Conversion Factors for Various Pressure Units</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.6. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Give an example in which density is used to identify the substance composing an object. Would information in addition to average density be needed to identify the substances in an object composed of more than one material?</div><textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div><div class="cp-done" id="cpd6">✅ Unlocked!</div></div>
+    <div id="quiz-wrap6" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.6 Quiz</h3><p>3 questions</p></div></div><div id="q6">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the smallest possible gauge pressure in any environment?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$0$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Unlimited negative values</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$-1.00\text{ atm}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Negative atmospheric pressure ($-P_{atm}$)</li>
+</ul><div class="qexp">Since absolute pressure cannot be negative, the gauge pressure reaches its minimum when absolute pressure is zero ($P_g = 0 - P_{atm}$).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why is mercury used instead of water in traditional barometers?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Its high density allows the barometer to be a manageable height.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is the only fluid that responds to atmospheric pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a higher specific heat than water.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water is too viscous to move inside a glass tube.</li>
+</ul><div class="qexp">Mercury is 13.6 times denser than water, meaning an atmospheric column is ~760mm rather than ~10m high.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A patient has a blood pressure reading of $120/80\text{ mm Hg}$. What does the "120" represent?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Diastolic pressure, the minimum blood pressure.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Systolic pressure, the maximum blood pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The absolute pressure including the atmosphere.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The density of the patient's blood.</li>
+</ul><div class="qexp">Systolic pressure is the maximum pressure in the arteries when the heart beats, typically measured in mm Hg.</div></div>
+    </div><div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Previous</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Next →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.7</span></div><div class="h-title">11.7: Archimedes’ Principle</div><div class="h-desc">When you rise from lounging in a warm bath, your arms feel strangely heavy. This is because you no longer have the buoyant support of the water. Where does this buoyant force come from? Why is it that...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.7</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define buoyant force.</li>
+      <li>State Archimedes’ principle.</li>
+      <li>Understand why objects float or sink.</li>
+      <li>Understand the relationship between density and Archimedes’ principle.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Archimedes’ principle</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the buoyant force on an object equals the weight of the fluid it displaces</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.7</div>
+<p class="prose">When you rise from lounging in a warm bath, your arms feel strangely heavy. This is because you no longer have the buoyant support of the water. Where does this buoyant force come from? Why is it that some things float and others do not? Do objects that sink get any support at all from the fluid? Is your body buoyed by the atmosphere, or are only helium balloons affected (Figure ?</p>
+<div class="diagram"><img src="images/ch11/fig11-17-in-figures-a-and-b-an-anchor-and-submari.jpg" alt="In figures a and b, an anchor and submarine experience buoyancy due to water. In figure c, helium-filled balloons float due to the buoyancy of air."><div class="d-cap">In figures a and b, an anchor and submarine experience buoyancy due to water. In figure c, helium-filled balloons float due to the buoyancy of air. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Answers to all these questions, and many others, are based on the fact that pressure increases with depth in a fluid. This means that the upward force on the bottom of an object in a fluid is greater than the downward force on the top of the object. There is a net upward, orbuoyant forceon any object in any fluid (Figure . If the buoyant force is greater than the object’s weight, the object will rise to the surface and float. If the buoyant force is less than the object’s weight, the object will sink. If the buoyant force equals the object’s weight, the object will remain suspended at that depth. The buoyant force is always present whether the object floats, sinks, or is suspended in a fluid.</p>
+<p class="prose">Defintion: Buoyant Force</p>
+<p class="prose">The buoyant force is the net upward force on any object in any fluid.</p>
+<div class="diagram"><img src="images/ch11/fig11-18-a-cylinder-of-cross-sectional-area-a-exp.jpg" alt="A cylinder of cross-sectional area A experiences an upward force F sub 2 on the bottom of the cylinder and a downward force F sub 1 on its top. Buoyant force is due to the difference between the upward force on the bottom of the cylinder and the downward force on its top."><div class="d-cap">A cylinder of cross-sectional area A experiences an upward force F sub 2 on the bottom of the cylinder and a downward force F sub 1 on its top. Buoyant force is due to the difference between the upward force on the bottom of the cylinder and the downward force on its top. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Just how great is this buoyant force? To answer this question, think about what happens when a submerged object is removed from a fluid, as in Figure .</p>
+<div class="diagram"><img src="images/ch11/fig11-19-an-object-immersed-in-a-fluid-rises-if-i.jpg" alt="An object immersed in a fluid rises if its buoyant force is greater than its weight and sinks if its buoyant force is less than its weight. By Archimedes’ principle the buoyant force equals the weight of the fluid displaced."><div class="d-cap">An object immersed in a fluid rises if its buoyant force is greater than its weight and sinks if its buoyant force is less than its weight. By Archimedes’ principle the buoyant force equals the weight of the fluid displaced. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The space it occupied is filled by fluid having a weight \(w_{fl}\). This weight is supported by the surrounding fluid, and so the buoyant force must equal \(w_{fl}\), the weight of the fluid displaced by the object. It is a tribute to the genius of the Greek mathematician and inventor Archimedes (ca. 287–212 B.C.) that he stated this principle long before concepts of force were well established. Stated in words,Archimedes’ principleis as follows: The buoyant force on an object equals the weight of the fluid it displaces. In equation form, Archimedes’ principle is</p>
+<p class="prose">where \(F_B\) is the buoyant force and \(w_{fl}\) is the weight of the fluid displaced by the object. Archimedes’ principle is valid in general, for any object in any fluid, whether partially or totally submerged.</p>
+<p class="prose">Archimedes’ Principle</p>
+<p class="prose">According to this principle the buoyant force on an object equals the weight of the fluid it displaces. In equation form, Archimedes’ principle is \[F_B = w_{fl},\] where \(F_B\) is the buoyant force and \(w_{fl}\) is the weight of the fluid displaced by the object.</p>
+<p class="prose">Humm …High-tech body swimsuits were introduced in 2008 in preparation for the Beijing Olympics. One concern (and international rule) was that these suits should not provide any buoyancy advantage. How do you think that this rule could be verified?</p>
+<p class="prose">Making Connections: Take-Home Investigation</p>
+<p class="prose">The density of aluminum foil is 2.7 times the density of water. Take a piece of foil, roll it up into a ball and drop it into water. Does it sink? Why or why not? Can you make it sink?</p>
+<div class="sh2">Floating and Sinking</div>
+<p class="prose">Drop a lump of clay in water. It will sink. Then mold the lump of clay into the shape of a boat, and it will float. Because of its shape, the boat displaces more water than the lump and experiences a greater buoyant force. The same is true of steel ships.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating buoyant force: dependency on shape</span></div><div class="example-body">
+<p class="prose">To find the buoyant force, we must find the weight of water displaced. We can do this by using the densities of water and steel given in[link]. We note that, since the steel is completely submerged, its volume and the water’s volume are the same. Once we know the volume of water, we can find its mass and weight.</p>
+<p class="prose">First, we use the definition of density \(\rho = \frac{m}{V}\) to find the steel’s volume, and then we substitute values for mass and density. This gives</p>
+<div class="math-display">\[V_{st} = \dfrac{m_{st}}{\rho_{st}} = \dfrac{1.00 \times 10^7 \, kg}{7.8 \times 10^3 \, kg/m^3} = 1.28 \times 10^3 \, m^3.\]</div>
+<p class="prose">Because the steel is completely submerged, this is also the volume of water displaced, \(V_W\). We can now find the mass of water displaced from the relationship between its volume and density, both of which are known. This gives</p>
+<div class="math-display">\[m_W = \rho_WV_W = (1.000 \times 10^3 \, kg/m^3)(1.28 \times 10^3 \, m^3)\]</div>
+<div class="math-display">\[= 1.3 \times 10^6 \, kg.\]</div>
+<p class="prose">By Archimedes’ principle, the weight of water displaced is \(m_Wg\), so the buoyance force is</p>
+<div class="math-display">\[F_B = w_W = m_Wg = (1.28 \times 10^6\space kg)(9.80 \, m/s^2)\]</div>
+<div class="math-display">\[= 1.3 \times 10^7 \, N.\]</div>
+<p class="prose">The steel’s weight is \(m_W g = 9.80 \times 10^7 \, N\),</p>
+<p class="prose">which is much greater than the buoyant force, so the steel will remain submerged. Note that the buoyant force is rounded to two digits because the density of steel is given to only two digits.</p>
+<p class="prose">Here we are given the maximum volume of water the steel boat can displace. The buoyant force is the weight of this volume of water.</p>
+<p class="prose">The mass of water displaced is found from its relationship to density and volume, both of which are known. That is,</p>
+<div class="math-display">\[m_W = \rho_WV_W = (1.000 \times 10^3 \, kg/m^3)(1.00 \times 10^5 \, m^3)\]</div>
+<div class="math-display">\[= 9.80 \times 10^8 \, kg.\]</div>
+<p class="prose">The maximum buoyant force is the weight of this much water, or</p>
+<div class="math-display">\[F_B = w_W = m_W g = (1.00 \times 10^8 \, kg)(9.80 \, m/s^2)\]</div>
+<div class="math-display">\[= \times 10^8 \, N.\]</div>
+<p class="prose">The maximum buoyant force is ten times the weight of the steel, meaning the ship can carry a load nine times its own weight without sinking.</p>
+<p class="prose">Making Connections: Take-Home Investigation</p>
+</div></div>
+<div class="sh2">Density and Archimedes’ Principle</div>
+<p class="prose">Density plays a crucial role in Archimedes’ principle. The average density of an object is what ultimately determines whether it floats. If its average density is less than that of the surrounding fluid, it will float. This is because the fluid, having a higher density, contains more mass and hence more weight in the same volume. The buoyant force, which equals the weight of the fluid displaced, is thus greater than the weight of the object. Likewise, an object denser than the fluid will sink.</p>
+<p class="prose">The extent to which a floating object is submerged depends on how the object’s density is related to that of the fluid. In Figure , for example, the unloaded ship has a lower density and less of it is submerged compared with the same ship loaded. We can derive a quantitative expression for the fraction submerged by considering density. The fraction submerged is the ratio of the volume submerged to the volume of the object, or</p>
+<div class="math-display">\[fraction \, submerged = \dfrac{V_{sub}}{V_{obj}} = \dfrac{V_{fl}}{V_{obj}}.\]</div>
+<p class="prose">The volume submerged equals the volume of fluid displaced, which we call \(V_{fl}\). Now we can obtain the relationship between the densities by substituting \(\rho = \frac{m}{V}\) into the expression. This gives</p>
+<div class="math-display">\[\dfrac{V_{fl}}{V_{obj}} = \dfrac{m_{fl}/\rho_{fl}}{m_{obj}/\overline{\rho}_{obj}},\]</div>
+<p class="prose">where \(\overline{\rho}_{obj}\) is the average density of the object and \(\rho_{fl}\) is the density of the fluid. Since the object floats, its mass and that of the displaced fluid are equal, and so they cancel from the equation, leaving</p>
+<div class="math-display">\[fraction \, submerged = \dfrac{\overline{\rho}_{obj}}{\rho_{fl}}.\]</div>
+<div class="diagram"><img src="images/ch11/fig11-20-two-cargo-ships-one-is-floating-higher-i.jpg" alt="Two cargo ships. One is floating higher in the water than the other."><div class="d-cap">Two cargo ships. One is floating higher in the water than the other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We use this last relationship to measure densities. This is done by measuring the fraction of a floating object that is submerged—for example, with a hydrometer. It is useful to define the ratio of the density of an object to a fluid (usually water) asspecific gravity:</p>
+<p class="prose">\[specific \, gravity = \dfrac{\overline{\rho}}{\rho_W},\] where \(\overline{\rho}\) is the average density of the object or substance and \(\rho_W\) is the density of water at 4.00°C. Specific gravity is dimensionless, independent of whatever units are used for \(\rho\). If an object floats, its specific gravity is less than one. If it sinks, its specific gravity is greater than one. Moreover, the fraction of a floating object that is submerged equals its specific gravity. If an object’s specific gravity is exactly 1, then it will remain suspended in the fluid, neither sinking nor floating. Scuba divers try to obtain this state so that they can hover in the water. We measure the specific gravity of fluids, such as battery acid, radiator fluid, and urine, as an indicator of their condition. One device for measuring specific gravity is shown in Figure .</p>
+<p class="prose">Definition: Specific Gravity</p>
+<p class="prose">Specific gravity is the ratio of the density of an object to a fluid (usually water).</p>
+<div class="diagram"><img src="images/ch11/fig11-21-a-hydrometer-has-lead-at-the-bottom-and-.jpg" alt="A hydrometer has lead at the bottom and air on top. It floats on the fluid and specific gravity can be directly read from it."><div class="d-cap">A hydrometer has lead at the bottom and air on top. It floats on the fluid and specific gravity can be directly read from it. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Average Density: Floating Woman</span></div><div class="example-body">
+<p class="prose">Suppose a 60.0-kg woman floats in freshwater with \(97.0\%\) of her volume submerged when her lungs are full of air. What is her average density?</p>
+<p class="prose">We can find the woman’s density by solving the equation</p>
+<div class="math-display">\[fraction \, submerged = \dfrac{\overline{\rho}_{obj}}{\rho_{fl}}\]</div>
+<p class="prose">for the density of the object. This yields</p>
+<div class="math-display">\[\overline{\rho}_{obj} = \overline{\rho}_{person} = (fraction \, submerged) \cdot \rho_{fl}.\]</div>
+<p class="prose">We know both the fraction submerged and the density of water, and so we can calculate the woman’s density.</p>
+<p class="prose">Entering the known values into the expression for her density, we obtain</p>
+<div class="math-display">\[\overline{\rho}_{person} = 0.970 \cdot \left(10^3 \, \dfrac{kg}{m^3}\right) = 970 \, \dfrac{kg}{m^3}.\]</div>
+<p class="prose">Her density is less than the fluid density. We expect this because she floats. Body density is one indicator of a person’s percent body fat, of interest in medical diagnostics and athletic training. (See Figure</p>
+<div class="diagram"><img src="images/ch11/fig11-22-the-weight-of-a-person-can-be-determined.jpg" alt="The weight of a person can be determined while submerged in a fat tank. Based on this, the percentage of body weight can be calculated."><div class="d-cap">The weight of a person can be determined while submerged in a fat tank. Based on this, the percentage of body weight can be calculated. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">There are many obvious examples of lower-density objects or substances floating in higher-density fluids—oil on water, a hot-air balloon, a bit of cork in wine, an iceberg, and hot wax in a “lava lamp,” to name a few. Less obvious examples include lava rising in a volcano and mountain ranges floating on the higher-density crust and mantle beneath them. Even seemingly solid Earth has fluid characteristics.</p>
+</div></div>
+<div class="sh2">More Density Measurements</div>
+<p class="prose">One of the most common techniques for determining density is shown in Figure . An object, here a coin, is weighed in air and then weighed again while submerged in a liquid. The density of the coin, an indication of its authenticity, can be calculated if the fluid density is known. This same technique can also be used to determine the density of the fluid if the density of the coin is known. All of these calculations are based on Archimedes’ principle.</p>
+<div class="diagram"><img src="images/ch11/fig11-23-the-density-of-a-coin-can-be-determined-.jpg" alt="The density of a coin can be determined by measuring its weight in air and its weight submerged in a fluid of known density."><div class="d-cap">The density of a coin can be determined by measuring its weight in air and its weight submerged in a fluid of known density. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Archimedes’ principle states that the buoyant force on the object equals the weight of the fluid displaced. This, in turn, means that the objectappearsto weigh less when submerged; we call this measurement the object’sapparent weight. The object suffers anapparent weight lossequal to the weight of the fluid displaced. Alternatively, on balances that measure mass, the object suffers anapparent mass lossequal to the mass of fluid displaced. That is</p>
+<p class="prose">\[apparent \, weight \, loss = weight \, of \, fluid \, displaced\] or</p>
+<div class="math-display">\[apparent \, mass \, loss = mass \, of \, fluid \, displaced.\]</div>
+<p class="prose">The next example illustrates the use of this technique.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Density: Is the Coin Authentic?</span></div><div class="example-body">
+<p class="prose">The mass of an ancient Greek coin is determined in air to be 8.630 g. When the coin is submerged in water as shown in Figure , its apparent mass is 7.800 g. Calculate its density, given that water has a density of \(1.000 \, g/m^3\)</p>
+<p class="prose">and that effects caused by the wire suspending the coin are negligible.</p>
+<p class="prose">To calculate the coin’s density, we need its mass (which is given) and its volume. The volume of the coin equals the volume of water displaced. The volume of water displaced \(\rho = \frac{m}{V}\) for \(V\).</p>
+<p class="prose">The volume of water is \(V_W = \frac{m_W}{\rho_W}\) where \(m_W\) is the mass of water displaced. As noted, the mass of the water displaced equals the apparent mass loss, which is \(m_W = 8.630 \, g - 7.800 \, g = 0.830 \, g\). Thus the volume of water is \(V_W = \frac{0.830 \, g}{1.000 \, g/cm^3} = 0.830 \, cm^3\). This is also the volume of the coin, since it is completely submerged. We can now find the density of the coin using the definition of density:</p>
+<div class="math-display">\[\rho_c = \dfrac{m_c}{V_c} = \dfrac{8.630 \, g}{0.830 \, cm^3} = 10.4 \, g/cm^3.\]</div>
+<p class="prose">You can see from[link]that this density is very close to that of pure silver, appropriate for this type of ancient coin. Most modern counterfeits are not pure silver.</p>
+<p class="prose">This brings us back to Archimedes’ principle and how it came into being. As the story goes, the king of Syracuse gave Archimedes the task of determining whether the royal crown maker was supplying a crown of pure gold. The purity of gold is difficult to determine by color (it can be diluted with other metals and still look as yellow as pure gold), and other analytical techniques had not yet been conceived. Even ancient peoples, however, realized that the density of gold was greater than that of any other then-known substance. Archimedes purportedly agonized over his task and had his inspiration one day while at the public baths, pondering the support the water gave his body. He came up with his now-famous principle, saw how to apply it to determine density, and ran naked down the streets of Syracuse crying “Eureka!” (Greek for “I have found it”). Similar behavior can be observed in contemporary physicists from time to time!</p>
+<p class="prose">PhET Explorations: Buoyancy</p>
+<p class="prose">When will objects float and when will they sink? Learn how buoyancy works with blocks. Arrows show the applied forces, and you can modify the properties of the blocks and the fluid.</p>
+</div></div>
+<div class="sh3">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Take-Home InvestigationThe density of aluminum foil is 2.7 times the density of water. Take a piece of foil, roll it up into a ball and drop it into water. Does it sink? Why or why not? Can you make it sink?</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PhET Explorations: BuoyancyWhen will objects float and when will they sink? Learn how buoyancy works with blocks. Arrows show the applied forces, and you can modify the properties of the blocks and the fluid.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.7. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Figure shows a glass of ice water filled to the brim. Will the water overflow when the ice melts? Explain your answer.</div><textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div><div class="cp-done" id="cpd7">✅ Unlocked!</div></div>
+    <div id="quiz-wrap7" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.7 Quiz</h3><p>3 questions</p></div></div><div id="q7">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which principle explains why an object submerged in a fluid experiences an upward buoyant force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pascal's Principle</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bernoulli's Principle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Archimedes' Principle</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Newton's Third Law</li>
+</ul><div class="qexp">Archimedes' principle states that the buoyant force on an object equals the weight of the fluid it displaces.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A steel anchor sinks in the ocean because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The buoyant force on it is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Its weight is equal to the weight of the water it displaces.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water is more compressible than steel.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Its density is greater than the density of seawater.</li>
+</ul><div class="qexp">An object sinks if its average density is greater than that of the fluid, making its weight greater than the maximum buoyant force.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What is the specific gravity of a substance with a density of $2700\text{ kg/m}^3$? (Density of water = $1000\text{ kg/m}^3$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$2.7$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$27$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$0.27$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$2700$</li>
+</ul><div class="qexp">Specific gravity is the ratio of the density of the substance to the density of water ($2700 / 1000 = 2.7$).</div></div>
+    </div><div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Previous</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Next →</button></div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.8</span></div><div class="h-title">11.8: Cohesion and Adhesion in Liquids - Surface Tension and Capillary Action</div><div class="h-desc">Children blow soap bubbles and play in the spray of a sprinkler on a hot summer day (Figure . An underwater spider keeps his air supply in a shiny bubble he carries wrapped around him. A technician dr...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.8</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Understand cohesive and adhesive forces.</li>
+      <li>Define surface tension.</li>
+      <li>Understand capillary action.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">adhesive forces</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the attractive forces between molecules of different types</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.8</div>
+<p class="prose">Children blow soap bubbles and play in the spray of a sprinkler on a hot summer day (Figure . An underwater spider keeps his air supply in a shiny bubble he carries wrapped around him. A technician draws blood into a small-diameter tube just by touching it to a drop on a pricked finger. A premature infant struggles to inflate her lungs. What is the common thread? All these activities are dominated by the attractive forces between atoms and molecules in liquids—both within a liquid and between the liquid and its surroundings.</p>
+<div class="diagram"><img src="images/ch11/fig11-24-the-soap-bubbles-that-the-child-blows-in.jpg" alt="The soap bubbles that the child blows into the air maintain their shape because of the attractive force between the molecules of the soap bubble."><div class="d-cap">The soap bubbles that the child blows into the air maintain their shape because of the attractive force between the molecules of the soap bubble. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Attractive forces between molecules of the same type are calledcohesive forces. Liquids can, for example, be held in open containers because cohesive forces hold the molecules together. Attractive forces between molecules of different types are calledadhesive forces. Such forces cause liquid drops to cling to window panes, for example. In this section we examine effects directly attributable to cohesive and adhesive forces in liquids.</p>
+<p class="prose">Definition: Cohesive Forces</p>
+<p class="prose">Attractive forces between molecules of the same type are called cohesive forces.</p>
+<p class="prose">Definition: Adhesive Forces</p>
+<p class="prose">Attractive forces between molecules of different types are called adhesive forces.</p>
+<div class="sh2">Surface Tension</div>
+<p class="prose">Cohesive forces between molecules cause the surface of a liquid to contract to the smallest possible surface area. This general effect is calledsurface tension. Molecules on the surface are pulled inward by cohesive forces, reducing the surface area. Molecules inside the liquid experience zero net force, since they have neighbors on all sides.</p>
+<p class="prose">Definition: Surface Tension</p>
+<p class="prose">Cohesive forces between molecules cause the surface of a liquid to contract to the smallest possible surface area. This general effect is called surface tension.</p>
+<p class="prose">Forces between atoms and molecules underlie the macroscopic effect called surface tension. These attractive forces pull the molecules closer together and tend to minimize the surface area. This is another example of a submicroscopic explanation for a macroscopic phenomenon.</p>
+<p class="prose">The model of a liquid surface acting like a stretched elastic sheet can effectively explain surface tension effects. For example, some insects can walk on water (as opposed to floating in it) as we would walk on a trampoline—they dent the surface as shown in Figure \(\PageIndex{2a}\). Figure \(\PageIndex{2b}\) shows another example, where a needle rests on a water surface. The iron needle cannot, and does not, float, because its density is greater than that of water. Rather, its weight is supported by forces in the stretched surface that try to make the surface smaller or flatter. If the needle were placed point down on the surface, its weight acting on a smaller area would break the surface, and it would sink.</p>
+<div class="diagram"><img src="images/ch11/fig11-25-a-leg-of-an-insect-resting-on-the-water-.jpg" alt="A leg of an insect resting on the water surface is shown in the first figure. In the second figure an iron needle rests on the surface of water without sinking. Both are possible due to the tension on the surface of the liquid."><div class="d-cap">A leg of an insect resting on the water surface is shown in the first figure. In the second figure an iron needle rests on the surface of water without sinking. Both are possible due to the tension on the surface of the liquid. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Surface tension is proportional to the strength of the cohesive force, which varies with the type of liquid. Surface tension \(\overline{\gamma}\) is defined to be the forceFper unit length \(L\) exerted by a stretched liquid membrane:</p>
+<div class="math-display">\[\gamma = \dfrac{F}{L}.\]</div>
+<p class="prose">Table lists values of \(\overline{\gamma}\) for some liquids.</p>
+<table class="dt">
+<tr><th>Liquid</th><th>Surface tension γ(N/m)</th></tr>
+<tr><td>Water at \(0^oC\)</td><td>0.0756</td></tr>
+<tr><td>Water at \(20^oC\)</td><td>0.0728</td></tr>
+<tr><td>Water at \(100^OC\)</td><td>0.0589</td></tr>
+<tr><td>Soapy water (typical)</td><td>0.0370</td></tr>
+<tr><td>Ethyl alcohol</td><td>0.0223</td></tr>
+<tr><td>Glycerin</td><td>0.0631</td></tr>
+<tr><td>Mercury</td><td>0.465</td></tr>
+<tr><td>Olive Oil</td><td>0.032</td></tr>
+<tr><td>Tissue fluids (typical)</td><td>0.050</td></tr>
+<tr><td>Blood, whole at \(37^oC\)</td><td>0.058</td></tr>
+<tr><td>Blood plasma at \(37^oC\)</td><td>0.073</td></tr>
+<tr><td>Gold at \(1070^oC\)</td><td>1.000</td></tr>
+<tr><td>Oxygen at \(-193^oC\)</td><td>0.0157</td></tr>
+<tr><td>Helium at \(-269^oC\)</td><td>0.00012</td></tr>
+</table>
+<p class="prose">For the insect of Figure Figure \(\PageIndex{1a}\), its weight \(w\) is supported by the upward components of the surface tension force: \(w = \gamma L \sin \theta\), where \(L\) is the circumference of the insect’s foot in contact with the water. Figure shows one way to measure surface tension. The liquid film exerts a force on the movable wire in an attempt to reduce its surface area. The magnitude of this force depends on the surface tension of the liquid and can be measured accurately.</p>
+<div class="diagram"><img src="images/ch11/fig11-26-sliding-wire-device-which-is-used-to-mea.jpg" alt="Sliding wire device which is used to measure surface tension shows the force exerted on the two surfaces of the liquid. This force remains a constant until the film’s breaking point."><div class="d-cap">Sliding wire device which is used to measure surface tension shows the force exerted on the two surfaces of the liquid. This force remains a constant until the film’s breaking point. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Surface tension is the reason why liquids form bubbles and droplets. The inward surface tension force causes bubbles to be approximately spherical and raises the pressure of the gas trapped inside relative to atmospheric pressure outside. It can be shown that the gauge pressure \(P \) inside a spherical bubble is given by</p>
+<div class="math-display">\[P = \dfrac{4\gamma}{r},\]</div>
+<p class="prose">where \(r\) is the radius of the bubble. Thus the pressure inside a bubble is greatest when the bubble is the smallest. Another bit of evidence for this is illustrated in Figure . When air is allowed to flow between two balloons of unequal size, the smaller balloon tends to collapse, filling the larger balloon.</p>
+<div class="diagram"><img src="images/ch11/fig11-27-when-two-balloons-are-attached-to-the-en.jpg" alt="When two balloons are attached to the ends of a glass tube air flows from one to the other if their sizes are different."><div class="d-cap">When two balloons are attached to the ends of a glass tube air flows from one to the other if their sizes are different. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Surface Tension: Pressure Inside a Bubble</span></div><div class="example-body">
+<p class="prose">Calculate the gauge pressure inside a soap bubble \(2.00 \times 10^{-4} m\) in radius using the surface tension for soapy water inTable. Convert this pressure to mm Hg.</p>
+<p class="prose">The radius is given and the surface tension can be found inTable, and so \(P\) can be found directly from the equation \(P = \frac{4\gamma}{r}\).</p>
+<p class="prose">Substituding \(r\) and \(\gamma\) into this equation \(P = \frac{4\gamma}{r}\), we obtaiin</p>
+<div class="math-display">\[P = \dfrac{4\gamma}{r} = \dfrac{4(0.037 \, N/m)}{2.00 \times 10^{-4}m} = 740 \, N/m^2 = 740 \, Pa.\]</div>
+<p class="prose">We use a conversion factor to get this into units of mm Hg:</p>
+<div class="math-display">\[P = (740 \, N/m^2)\dfrac{1.00 \, mm \, Hg}{133 \, N/m^2} = 5.56 \, mm \, Hg.\]</div>
+<p class="prose">Note that if a hole were to be made in the bubble, the air would be forced out, the bubble would decrease in radius, and the gauge pressure would reduce to zero, and the absolute pressure inside woulddecreaseto atmospheric pressure (760 mm Hg).</p>
+<p class="prose">Our lungs contain hundreds of millions of mucus-lined sacs calledalveoli, which are very similar in size, and about 0.1 mm in diameter. (SeeFigure.) You can exhale without muscle action by allowing surface tension to contract these sacs. Medical patients whose breathing is aided by a positive pressure respirator have air blown into the lungs, but are generally allowed to exhale on their own. Even if there is paralysis, surface tension in the alveoli will expel air from the lungs. Since pressure increases as the radii of the alveoli decrease, an occasional deep cleansing breath is needed to fully reinflate the alveoli. Respirators are programmed to do this and we find it natural, as do our companion dogs and cats, to take a cleansing breath before settling into a nap.</p>
+<div class="diagram"><img src="images/ch11/fig11-28-the-alveoli-at-the-end-of-the-lung-tubes.jpg" alt="The alveoli at the end of the lung tubes enable exhalation and do not allow inhalation due to the surface tension of the mucous lining."><div class="d-cap">The alveoli at the end of the lung tubes enable exhalation and do not allow inhalation due to the surface tension of the mucous lining. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The tension in the walls of the alveoli results from the membrane tissue and a liquid on the walls of the alveoli containing a long lipoprotein that acts as a surfactant (a surface-tension reducing substance). The need for the surfactant results from the tendency of small alveoli to collapse and the air to fill into the larger alveoli making them even larger (as demonstrated inFigure). During inhalation, the lipoprotein molecules are pulled apart and the wall tension increases as the radius increases (increased surface tension). During exhalation, the molecules slide back together and the surface tension decreases, helping to prevent a collapse of the alveoli. The surfactant therefore serves to change the wall tension so that small alveoli don’t collapse and large alveoli are prevented from expanding too much. This tension change is a unique property of these surfactants, and is not shared by detergents (which simply lower surface tension). (SeeFigure.)</p>
+<div class="diagram"><img src="images/ch11/fig11-29-graph-of-surface-tension-as-a-function-o.jpg" alt="Graph of surface tension as a function of surface area for detergents and interstitial fluids."><div class="d-cap">Graph of surface tension as a function of surface area for detergents and interstitial fluids. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">If water gets into the lungs, the surface tension is too great and you cannot inhale. This is a severe problem in resuscitating drowning victims. A similar problem occurs in newborn infants who are born without this surfactant—their lungs are very difficult to inflate. This condition is known ashyaline membrane diseaseand is a leading cause of death for infants, particularly in premature births. Some success has been achieved in treating hyaline membrane disease by spraying a surfactant into the infant’s breathing passages. Emphysema produces the opposite problem with alveoli. Alveolar walls of emphysema victims deteriorate, and the sacs combine to form larger sacs. Because pressure produced by surface tension decreases with increasing radius, these larger sacs produce smaller pressure, reducing the ability of emphysema victims to exhale. A common test for emphysema is to measure the pressure and volume of air that can be exhaled.</p>
+<p class="prose">Making Connections: Take-Home Investigation</p>
+</div></div>
+<div class="sh2">Adhesion and Capillary Action</div>
+<p class="prose">Why is it that water beads up on a waxed car but does not on bare paint? The answer is that the adhesive forces between water and wax are much smaller than those between water and paint. Competition between the forces of adhesion and cohesion are important in the macroscopic behavior of liquids. An important factor in studying the roles of these two forces is the angle \(\theta\) between the tangent to the liquid surface and the surface (Figure . Thecontact angle\(\theta\) is directly related to the relative strength of the cohesive and adhesive forces. The larger the strength of the cohesive force relative to the adhesive force, the larger \(\theta\) is, and the more the liquid tends to form a droplet. The smaller \(\theta\) is, the smaller the relative strength, so that the adhesive force is able to flatten the drop.Tablelists contact angles for several combinations of liquids and solids.</p>
+<p class="prose">Definition: Contact Angle</p>
+<p class="prose">The angle \(\theta\) between the tangent to the liquid surface and the surface is called thecontact angle.</p>
+<div class="diagram"><img src="images/ch11/fig11-30-water-is-seen-to-make-beads-on-the-waxed.jpg" alt="Water is seen to make beads on the waxed surface of car paint and it remains flat on the surface without wax. The beads are due to the greater force of attraction between the water molecules than between the water molecules and the surface. On the surface without wax the force of attraction between the water molecules and paint is greater."><div class="d-cap">Water is seen to make beads on the waxed surface of car paint and it remains flat on the surface without wax. The beads are due to the greater force of attraction between the water molecules than between the water molecules and the surface. On the surface without wax the force of attraction between the water molecules and paint is greater. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">One important phenomenon related to the relative strength of cohesive and adhesive forces iscapillary action—the tendency of a fluid to be raised or suppressed in a narrow tube, orcapillary tube. This action causes blood to be drawn into a small-diameter tube when the tube touches a drop.</p>
+<p class="prose">The tendency of a fluid to be raised or suppressed in a narrow tube, or capillary tube, is called capillary action.</p>
+<p class="prose">If a capillary tube is placed vertically into a liquid, as shown inFigure, capillary action will raise or suppress the liquid inside the tube depending on the combination of substances. The actual effect depends on the relative strength of the cohesive and adhesive forces and, thus, the contact angle \(\theta\) given in the table. If \(\theta\) is less that \(90^o\), then the fluid will be raised; if \(\theta\) is greater than \(90^o\), it will be suppressed. Mercury, for example, has a very large surface tension and a large contact angle with glass. When placed in a tube, the surface of a column of mercury curves downward, somewhat like a drop. The curved surface of a fluid in a tube is called ameniscus. The tendency of surface tension is always to reduce the surface area. Surface tension thus flattens the curved liquid surface in a capillary tube. This results in a downward force in mercury and an upward force in water, as seen inFigure.</p>
+<div class="diagram"><img src="images/ch11/fig11-31-mercury-kept-in-a-container-into-which-a.jpg" alt="Mercury kept in a container into which a narrow tube is inserted lowers its level inside the tube relative to the level in the rest of the container. In a similar situation, water rises in the tube so that the water level in the tube is above the water level in the rest of the container. This phenomenon is due to the large contact angle of mercury with glass and the smaller contact angle of water with glass."><div class="d-cap">Mercury kept in a container into which a narrow tube is inserted lowers its level inside the tube relative to the level in the rest of the container. In a similar situation, water rises in the tube so that the water level in the tube is above the water level in the rest of the container. This phenomenon is due to the large contact angle of mercury with glass and the smaller contact angle of water with glass. (OpenStax College Physics, CC BY 4.0)</div></div>
+<table class="dt">
+<tr><th>Interface</th><th>Contact angle \(\phi\)</th></tr>
+<tr><td>Mercury-glass</td><td>\(140^o\)</td></tr>
+<tr><td>Water-glass</td><td>\(0^o\)</td></tr>
+<tr><td>Water-paraffin</td><td>\(107^o\)</td></tr>
+<tr><td>Water-silver</td><td>\(90^o\)</td></tr>
+<tr><td>Organic liquids (most)-glass</td><td>\(0^o\)</td></tr>
+<tr><td>Ethyl alcohol-glass</td><td>\(0^o\)</td></tr>
+<tr><td>Kerosene-glass</td><td>\(26^o\)</td></tr>
+</table>
+<p class="prose">Capillary action can move liquids horizontally over very large distances, but the height to which it can raise or suppress a liquid in a tube is limited by its weight. It can be shown that this heigh \(h\) is given by</p>
+<div class="math-display">\[h = \dfrac{2\gamma \cos \theta}{\rho gr}.\]</div>
+<p class="prose">If we look at the different factors in this expression, we might see how it makes good sense. The height is directly proportional to the surface tension \(\gamma\), which is its direct cause. Furthermore, the height is inversely proportional to tube radius—the smaller the radius , the higher the fluid can be raised, since a smaller tube holds less mass. The height is also inversely proportional to fluid density , since a larger density means a greater mass in the same volume. (SeeFigure.)</p>
+<div class="diagram"><img src="images/ch11/fig11-32-the-left-image-shows-liquid-in-a-contain.jpg" alt="The left image shows liquid in a container with four tubes of progressively smaller diameter inserted into the liquid. The liquid rises higher in the smaller-diameter tubes. The right image shows two containers, one holding a dense liquid and the other holding a less-dense liquid. Identical tubes are inserted into each liquid. The less-dense liquid rises higher in its tube than the more-dense liquid does in its tube."><div class="d-cap">The left image shows liquid in a container with four tubes of progressively smaller diameter inserted into the liquid. The liquid rises higher in the smaller-diameter tubes. The right image shows two containers, one holding a dense liquid and the other holding a less-dense liquid. Identical tubes are inserted into each liquid. The less-dense liquid rises higher in its tube than the more-dense liquid does in its tube. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Radius of a Capillary Tube: Capillary Action: Tree Sap</span></div><div class="example-body">
+<p class="prose">Can capillary action be solely responsible for sap rising in trees? To answer this question, calculate the radius of a capillary tube that would raise sap 100 m to the top of a giant redwood, assuming that sap’s density is \(1050 \, kg/m^3\), its contact angle is zero, and its surface tension is the same as that of water at \(20.0^oC\).</p>
+<p class="prose">The height to which a liquid will rise as a result of capillary action is given by \(h = \frac{2\gamma \cos \theta}{\rho gr}\), and every quantity is known exceptfor \(r\).</p>
+<p class="prose">Solving for \(r\) and substituting known values produces</p>
+<div class="math-display">\[r = \dfrac{2\gamma \cos \theta}{\rho gh} = \dfrac{2(0.0728 \, N/m)cos(0^o)}{(1050 \, kg/m^3)(9.80 \, m/s^2)(100 \, m)}\]</div>
+<div class="math-display">\[= 1.41 \times 10^{-7} \, m.\]</div>
+<p class="prose">This result is unreasonable. Sap in trees moves through thexylem, which forms tubes with radii as small as \(2.5 \times 10^{-7} \, m.\) This value is about 180 times as large as the radius found necessary here to raise sap \(100 m\). This means that capillary action alone cannot be solely responsible for sap getting to the tops of trees.</p>
+<p class="prose">Howdoessap get to the tops of tall trees? (Recall that a column of water can only rise to a height of 10 m when there is a vacuum at the top—see[link].) The question has not been completely resolved, but it appears that it is pulled up like a chain held together by cohesive forces. As each molecule of sap enters a leaf and evaporates (a process called transpiration), the entire chain is pulled up a notch. So a negative pressure created by water evaporation must be present to pull the sap up through the xylem vessels. In most situations,fluids can push but can exert only negligible pull, because the cohesive forces seem to be too small to hold the molecules tightly together. But in this case, the cohesive force of water molecules provides a very strong pull.Figureshows one device for studying negative pressure. Some experiments have demonstrated that negative pressures sufficient to pull sap to the tops of the tallest treescanbe achieved.</p>
+<div class="diagram"><img src="images/ch11/fig11-33-when-the-piston-is-raised-the-liquid-str.jpg" alt="When the piston is raised the liquid stretches somewhat, which results in negative pressure."><div class="d-cap">When the piston is raised the liquid stretches somewhat, which results in negative pressure. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Surface TensionForces between atoms and molecules underlie the macroscopic effect called surface tension. These attractive forces pull the molecules closer together and tend to minimize the surface area. This is another example of a submicroscopic explanation for a macroscopic phenomenon.</div></div></div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Making Connections: Take-Home InvestigationTry floating a sewing needle on water. In order for this activity to work, the needle needs to be very clean as even the oil from your fingers can be sufficient to affect the surface properties of the needle.Place the bristles of a paint brush into water. Pull the brush out and notice that for a short while, the bristles will stick together. The surface tension of the water surrounding the bristles is sufficient to hold the bristles together. As the bristles dry out, the surface tension effect dissipates.Place a loop of thread on the surface of still water in such a way that all of the thread is in contact with the water. Note the shape of the loop. Now place a drop of detergent into the middle of the loop. What happens to the shape of the loop? Why?Sprinkle pepper onto the surface of water. Add a drop of detergent. What happens? Why?Float two matches parallel to each other and add a drop of detergent between them. What happens? Note: For each new experiment, the water needs to be replaced and the bowl washed to free it of any residual detergent.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.8. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">How is pressure related to the sharpness of a knife and its ability to cut?</div><textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 80 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Quiz →</button></div><div class="cp-done" id="cpd8">✅ Unlocked!</div></div>
+    <div id="quiz-wrap8" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.8 Quiz</h3><p>3 questions</p></div></div><div id="q8">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A woman with an average density of $970\text{ kg/m}^3$ floats in freshwater. What percentage of her volume is submerged?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$3\%$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$97\%$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$100\%$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$9.7\%$</li>
+</ul><div class="qexp">The fraction submerged for a floating object is the ratio of the object's density to the fluid's density ($970 / 1000 = 0.97$ or $97\%$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">An object weighs $100\text{ N}$ in air and has an apparent weight of $80\text{ N}$ when submerged in water. What is the buoyant force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$180\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$80\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$20\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$100\text{ N}$</li>
+</ul><div class="qexp">The buoyant force equals the apparent weight loss ($100\text{ N} - 80\text{ N} = 20\text{ N}$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Surface tension in a liquid is caused by:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Adhesive forces between the liquid and its container.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Atmospheric pressure pushing down on the surface.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The density of the liquid being higher at the surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cohesive forces pulling surface molecules inward.</li>
+</ul><div class="qexp">Surface tension arises because molecules at the surface are pulled together by neighbors below and to the side, but not above.</div></div>
+    </div><div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Previous</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(9)">Next →</button></div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 11 · <span>Section 11.9</span></div><div class="h-title">11.9: Pressures in the Body</div><div class="h-desc"></div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 11.9</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Explain the concept of pressure the in human body.</li>
+      <li>Explain systolic and diastolic blood pressures.</li>
+      <li>Describe pressures in the eye, lungs, spinal column, bladder, and skeletal system.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 11.9</div>
+
+    <p class="os-credit">📖 OpenStax College Physics, Section 11.9. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp9"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Why does a dull hypodermic needle hurt more than a sharp one?</div><textarea class="cp-textarea" id="cpt9" placeholder="Write your answer here..." oninput="cpCheck(9)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc9">Characters: <span id="cpn9">0</span> / 80 required</div><button class="cp-btn" id="cpb9" onclick="cpUnlock(9)">Unlock Quiz →</button></div><div class="cp-done" id="cpd9">✅ Unlocked!</div></div>
+    <div id="quiz-wrap9" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 11.9 Quiz</h3><p>3 questions</p></div></div><div id="q9">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What term describes the attractive forces between molecules of different types?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Adhesive forces</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cohesive forces</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Surface tension</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Specific gravity</li>
+</ul><div class="qexp">Adhesion refers to the attraction between unlike molecules, such as water and glass.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Inside a spherical soap bubble, the gauge pressure is related to the radius ($r$) and surface tension ($\gamma$) by which relationship?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$P = \gamma / r$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$P = 4\gamma / r$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$P = h\rho g$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$P = F / A$</li>
+</ul><div class="qexp">For a spherical bubble with two surfaces (inside and out), the gauge pressure is $4\gamma / r$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Capillary action will cause a liquid to rise in a narrow tube if:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The tube radius is very large.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The liquid's density is greater than mercury.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The contact angle is less than $90$ degrees.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cohesive forces are significantly stronger than adhesive forces.</li>
+</ul><div class="qexp">When the contact angle is less than 90 degrees, adhesive forces are strong enough to overcome cohesion and pull the liquid up.</div></div>
+    </div><div class="qscore" id="sc9"><div class="score-n" id="scn9">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">← Previous</button><button class="mc-btn" onclick="markDone(9,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(10)">Next →</button></div>
+</div>
+
+<div class="panel" id="p10">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 11</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 11: Fluid Statics.</div><div class="h-meta"><div class="h-chip">📝 30 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>11.1</strong></td><td>11.1: What Is a Fluid?</td></tr>
+    <tr><td><strong>11.2</strong></td><td>11.2: Density</td></tr>
+    <tr><td><strong>11.3</strong></td><td>11.3: Pressure</td></tr>
+    <tr><td><strong>11.4</strong></td><td>11.4: Variation of Pressure with Depth in a Fluid</td></tr>
+    <tr><td><strong>11.5</strong></td><td>11.5: Pascal’s Principle</td></tr>
+    <tr><td><strong>11.6</strong></td><td>11.6: Gauge Pressure, Absolute Pressure, and Pressure Measurement</td></tr>
+    <tr><td><strong>11.7</strong></td><td>11.7: Archimedes’ Principle</td></tr>
+    <tr><td><strong>11.8</strong></td><td>11.8: Cohesion and Adhesion in Liquids - Surface Tension and Capillary Action</td></tr>
+    <tr><td><strong>11.9</strong></td><td>11.9: Pressures in the Body</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp10"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt10" placeholder="Write your answer here..." oninput="cpCheck(10)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc10">Characters: <span id="cpn10">0</span> / 100 required</div><button class="cp-btn" id="cpb10" onclick="cpUnlock(10)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd10">✅ Unlocked!</div></div>
+    <div id="quiz-wrap10" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 11 Practice Test</h3><p>30 questions · All OpenStax Review Questions</p></div></div><div id="q10">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 30 review questions from OpenStax College Physics, Chapter 11. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Which of the following physical characteristics primarily distinguishes a fluid from a solid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A fluid yields to shearing forces, whereas a solid resists them.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>A fluid has a higher density than a solid.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A fluid has a definite shape and a specific volume.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A fluid's atoms are held together by rigid lattice structures.</li>
+</ul><div class="qexp">Fluids, which include liquids and gases, are defined by their inability to resist shearing forces, allowing them to flow.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">At the submicroscopic level, why are gases much easier to compress than liquids or solids?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gas atoms are in constant contact with one another.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas atoms are separated by distances that are large compared to the size of the atoms.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The forces between gas atoms are extremely strong.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gas atoms are fixed in a lattice structure that can be easily flattened.</li>
+</ul><div class="qexp">The large amount of empty space between gas molecules allows them to be forced closer together under pressure.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which phase of matter is characterized by having a definite volume but a shape that changes depending on its container?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Solid</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Gas</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Liquid</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Plasma</li>
+</ul><div class="qexp">Liquids have a fixed volume due to close atomic contact but lack a rigid shape because atoms can move past one another.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A reservoir has a surface area of $50.0\text{ km}^2$ and an average depth of $40.0\text{ m}$. What is the mass of water held in the reservoir? (Density of water = $1000\text{ kg/m}^3$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$2.00 \times 10^{10}\text{ kg}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$2.00 \times 10^6\text{ kg}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$2.00 \times 10^9\text{ kg}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$2.00 \times 10^{12}\text{ kg}$</li>
+</ul><div class="qexp">Volume $V = \text{Area} \times \text{depth} = 50.0 \times 10^6\text{ m}^2 \times 40.0\text{ m} = 2.00 \times 10^9\text{ m}^3$; Mass $m = \rho V = 1000 \times 2.00 \times 10^9 = 2.00 \times 10^{12}\text{ kg}$.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Based on the concept of density, why would a ton of feathers occupy a much larger volume than a ton of bricks?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Feathers have a much lower mass per unit volume than bricks.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bricks are inherently heavier than feathers regardless of mass.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The feathers have a higher specific gravity than bricks.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Density is directly proportional to the total mass of the substance.</li>
+</ul><div class="qexp">Density is defined as mass divided by volume, so a substance with lower density requires more volume to reach the same mass.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">6</span><span class="qt-inner">A pressure gauge on an air tank reads $6.90 \times 10^6\text{ Pa}$. What force does this air exert on the flat end of the tank if the end is a disk with a radius of $0.075\text{ m}$?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$5.17 \times 10^5\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$1.22 \times 10^5\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$4.87 \times 10^4\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$1.63 \times 10^6\text{ N}$</li>
+</ul><div class="qexp">Force $F = PA = P(\pi r^2) = (6.90 \times 10^6\text{ Pa})(3.14)(0.075\text{ m})^2 = 1.22 \times 10^5\text{ N}$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">7</span><span class="qt-inner">Which of the following statements about fluid pressure is true?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Fluid pressure is a vector quantity with a specific direction.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Pressure is only exerted in the downward direction due to gravity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Pressure is a scalar and is exerted perpendicular to any surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Pressure decreases as the area over which a force is applied increases.</li>
+</ul><div class="qexp">Pressure is a scalar that acts in all directions within a fluid and always exerts force perpendicular to the surface of an object.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Why does a person feel more pain when poked with a syringe needle than with a finger, even if the same force is applied?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The syringe needle has a larger mass.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The needle exerts a smaller pressure because of the small contact area.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The finger yields to shearing forces more easily than the needle.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The small area of the needle tip results in a very large pressure.</li>
+</ul><div class="qexp">Pressure is force divided by area ($P=F/A$), so a smaller area of contact results in higher pressure for the same force.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">What is the pressure due to the weight of water at a depth of $10.0\text{ m}$? (Assume $\rho = 1000\text{ kg/m}^3$ and $g = 9.80\text{ m/s}^2$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$9.80 \times 10^4\text{ Pa}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$1.01 \times 10^5\text{ Pa}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$9.80 \times 10^3\text{ Pa}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$1.00 \times 10^2\text{ Pa}$</li>
+</ul><div class="qexp">Pressure due to depth is calculated using $P = h\rho g = (10.0\text{ m})(1000\text{ kg/m}^3)(9.80\text{ m/s}^2) = 9.80 \times 10^4\text{ Pa}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Which factor determines the force water exerts on a vertical dam?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The horizontal length of the reservoir behind the dam.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The average depth of the water and the area of the dam's face.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The total volume of water contained in the reservoir.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The total surface area of the lake behind the dam.</li>
+</ul><div class="qexp">Pressure depends only on depth ($h\rho g$), and force is the average pressure times the area of contact ($F = \bar{P}A$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">Why does atmospheric pressure decrease with increasing altitude?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The temperature of the air increases at higher altitudes.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The acceleration due to gravity increases as you move away from Earth.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There is less weight of air above you as your altitude increases.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The density of air remains constant regardless of the altitude.</li>
+</ul><div class="qexp">Atmospheric pressure is the result of the weight of the air column above a given point; higher altitudes have shorter air columns.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">According to Pascal’s principle, what happens when a change in pressure is applied to an enclosed fluid?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The pressure is transmitted only in the direction of the applied force.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The pressure is absorbed by the fluid's viscosity.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The pressure increases at the bottom but decreases at the top.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The change in pressure is transmitted undiminished to all portions of the fluid.</li>
+</ul><div class="qexp">Pascal's principle states that pressure changes in an enclosed fluid are distributed equally throughout the entire fluid and container walls.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">In a hydraulic system, a master cylinder with an area of $2.00\text{ cm}^2$ is pushed with a force of $100\text{ N}$. What is the force output of a slave cylinder with an area of $10.0\text{ cm}^2$?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$500\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$20\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$1000\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$50\text{ N}$</li>
+</ul><div class="qexp">Using $F_1/A_1 = F_2/A_2$, we find $F_2 = F_1(A_2/A_1) = 100\text{ N} \times (10.0/2.00) = 500\text{ N}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">14</span><span class="qt-inner">How does the conservation of energy apply to a hydraulic lift system?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The system creates more energy than is put into it.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The work output cannot exceed the work input.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The output force is larger, so the output distance must also be larger.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Energy is lost as the fluid moves through curved lines.</li>
+</ul><div class="qexp">Hydraulic systems can multiply force, but they must obey the law of conservation of energy; the distance moved by the output piston is smaller.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">If a tire gauge reads $30.0\text{ psi}$, and the atmospheric pressure is $14.7\text{ psi}$, what is the absolute pressure inside the tire?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$15.3\text{ psi}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$30.0\text{ psi}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$44.7\text{ psi}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$0\text{ psi}$</li>
+</ul><div class="qexp">Absolute pressure is the sum of gauge pressure and atmospheric pressure ($P_{abs} = P_g + P_{atm}$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">What is the smallest possible gauge pressure in any environment?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$0$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Unlimited negative values</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$-1.00\text{ atm}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Negative atmospheric pressure ($-P_{atm}$)</li>
+</ul><div class="qexp">Since absolute pressure cannot be negative, the gauge pressure reaches its minimum when absolute pressure is zero ($P_g = 0 - P_{atm}$).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">17</span><span class="qt-inner">Why is mercury used instead of water in traditional barometers?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Its high density allows the barometer to be a manageable height.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is the only fluid that responds to atmospheric pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It has a higher specific heat than water.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Water is too viscous to move inside a glass tube.</li>
+</ul><div class="qexp">Mercury is 13.6 times denser than water, meaning an atmospheric column is ~760mm rather than ~10m high.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">A patient has a blood pressure reading of $120/80\text{ mm Hg}$. What does the "120" represent?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Diastolic pressure, the minimum blood pressure.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Systolic pressure, the maximum blood pressure.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The absolute pressure including the atmosphere.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The density of the patient's blood.</li>
+</ul><div class="qexp">Systolic pressure is the maximum pressure in the arteries when the heart beats, typically measured in mm Hg.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Which principle explains why an object submerged in a fluid experiences an upward buoyant force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Pascal's Principle</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Bernoulli's Principle</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Archimedes' Principle</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Newton's Third Law</li>
+</ul><div class="qexp">Archimedes' principle states that the buoyant force on an object equals the weight of the fluid it displaces.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">20</span><span class="qt-inner">A steel anchor sinks in the ocean because:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The buoyant force on it is zero.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Its weight is equal to the weight of the water it displaces.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Water is more compressible than steel.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Its density is greater than the density of seawater.</li>
+</ul><div class="qexp">An object sinks if its average density is greater than that of the fluid, making its weight greater than the maximum buoyant force.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">21</span><span class="qt-inner">What is the specific gravity of a substance with a density of $2700\text{ kg/m}^3$? (Density of water = $1000\text{ kg/m}^3$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$2.7$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$27$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$0.27$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$2700$</li>
+</ul><div class="qexp">Specific gravity is the ratio of the density of the substance to the density of water ($2700 / 1000 = 2.7$).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">22</span><span class="qt-inner">A woman with an average density of $970\text{ kg/m}^3$ floats in freshwater. What percentage of her volume is submerged?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$3\%$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$97\%$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$100\%$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$9.7\%$</li>
+</ul><div class="qexp">The fraction submerged for a floating object is the ratio of the object's density to the fluid's density ($970 / 1000 = 0.97$ or $97\%$).</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">23</span><span class="qt-inner">An object weighs $100\text{ N}$ in air and has an apparent weight of $80\text{ N}$ when submerged in water. What is the buoyant force?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$180\text{ N}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$80\text{ N}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$20\text{ N}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$100\text{ N}$</li>
+</ul><div class="qexp">The buoyant force equals the apparent weight loss ($100\text{ N} - 80\text{ N} = 20\text{ N}$).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">24</span><span class="qt-inner">Surface tension in a liquid is caused by:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Adhesive forces between the liquid and its container.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Atmospheric pressure pushing down on the surface.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The density of the liquid being higher at the surface.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cohesive forces pulling surface molecules inward.</li>
+</ul><div class="qexp">Surface tension arises because molecules at the surface are pulled together by neighbors below and to the side, but not above.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">25</span><span class="qt-inner">What term describes the attractive forces between molecules of different types?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Adhesive forces</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cohesive forces</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Surface tension</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Specific gravity</li>
+</ul><div class="qexp">Adhesion refers to the attraction between unlike molecules, such as water and glass.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">26</span><span class="qt-inner">Inside a spherical soap bubble, the gauge pressure is related to the radius ($r$) and surface tension ($\gamma$) by which relationship?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$P = \gamma / r$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$P = 4\gamma / r$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$P = h\rho g$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$P = F / A$</li>
+</ul><div class="qexp">For a spherical bubble with two surfaces (inside and out), the gauge pressure is $4\gamma / r$.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">27</span><span class="qt-inner">Capillary action will cause a liquid to rise in a narrow tube if:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The tube radius is very large.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The liquid's density is greater than mercury.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The contact angle is less than $90$ degrees.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Cohesive forces are significantly stronger than adhesive forces.</li>
+</ul><div class="qexp">When the contact angle is less than 90 degrees, adhesive forces are strong enough to overcome cohesion and pull the liquid up.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">28</span><span class="qt-inner">Infants born prematurely may suffer from hyaline membrane disease because their lungs lack:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Sufficient oxygen gas.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Alveoli of a large enough radius.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Diaphragm muscle strength.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Surfactant to reduce surface tension.</li>
+</ul><div class="qexp">Surfactants reduce surface tension in the alveoli, making it possible for the lungs to inflate.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">29</span><span class="qt-inner">To allow fluid to enter a vein where the blood pressure is $18\text{ mm Hg}$ above atmospheric, an IV bag must be placed at a minimum height of approximately: (Fluid density = $1.00\text{ g/mL}$)</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>$0.24\text{ m}$</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>$1.00\text{ m}$</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>$10.3\text{ m}$</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>$0.018\text{ m}$</li>
+</ul><div class="qexp">$18\text{ mm Hg}$ is ~ $2400\text{ Pa}$. $h = P/(\rho g) = 2400 / (1000 \times 9.8) \approx 0.24\text{ m}$.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">30</span><span class="qt-inner">How is it possible for sap to reach the top of a $100\text{-meter}$ tall tree?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Capillary action alone is sufficient.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Cohesive forces of water provide a strong "pull" (negative pressure) as water evaporates from leaves.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Atmospheric pressure pushes the sap up from the roots.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The density of sap is much lower than the density of water.</li>
+</ul><div class="qexp">Transpiration creates negative pressure, and the strong cohesive forces between water molecules pull the sap up in a continuous chain.</div></div>
+    </div><div class="qscore" id="sc10"><div class="score-n" id="scn10">-</div><div class="score-l">out of 30 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">← Previous</button><button class="mc-btn" onclick="markDone(10,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Fluid Statics',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:11,lessonCount:10,cpMin:80,lessons:['Overview','11.1 11.1: What Is a Fluid?','11.2 11.2: Density','11.3 11.3: Pressure','11.4 11.4: Variation of Pressure with Depth in a Fluid','11.5 11.5: Pascal’s Principle','11.6 11.6: Gauge Pressure, Absolute Pressure, and Pressure Measurement','11.7 11.7: Archimedes’ Principle','11.8 11.8: Cohesion and Adhesion in Liquids - Surface Tension and Capillary Action','11.9 11.9: Pressures in the Body','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===10?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

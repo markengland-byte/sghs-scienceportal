@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Electric Charge and Electric Field | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">⚡</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Electric Charge and Electric Field</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">⚡</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Electric Charge and Electric Field</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 18 · <span>Overview</span></div><div class="h-title">Electric Charge and Electric Field</div><div class="h-desc">The image of American politician and scientist Benjamin Franklin (1706–1790) flying a kite in a thunderstorm is familiar to every schoolchild. (Figure In this experiment, Franklin demonstrated a connection between lightning andstatic electricity. Sparks were drawn from a key hung on a kite string during an electrical storm. These sparks were like those produced by static electricity, such as the spark that jumps from your finger to a metal doorknob after you walk across a wool carpet. What Franklin demonstrated in his dangerous experiment was a connection between phenomena on two different sca</div>
+    <div class="h-meta"><div class="h-chip">📚 9 Lessons</div><div class="h-chip">⚡ OpenStax College Physics Ch. 18</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 30 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 18</div><div class="cx">All content is from OpenStax College Physics, Chapter 18: Electric Charge and Electric Field. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch18/fig18-1-a-child-swoops-down-a-plastic-playground.jpg" alt="A child swoops down a plastic playground slide, his hair standing on end."><div class="d-cap">A child swoops down a plastic playground slide, his hair standing on end. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 9</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.0</span></div><div class="h-title">18.0: Prelude to Electric Charge and Electric Field</div><div class="h-desc">The image of American politician and scientist Benjamin Franklin (1706–1790) flying a kite in a thunderstorm is familiar to every schoolchild. (Figure In this experiment, Franklin demonstrated a conne...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.0</div></div></div>
+  <div class="lc">
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">static electricity</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a buildup of electric charge on the surface of an object</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.0</div>
+<p class="prose">The image of American politician and scientist Benjamin Franklin (1706–1790) flying a kite in a thunderstorm is familiar to every schoolchild. (Figure In this experiment, Franklin demonstrated a connection between lightning andstatic electricity. Sparks were drawn from a key hung on a kite string during an electrical storm. These sparks were like those produced by static electricity, such as the spark that jumps from your finger to a metal doorknob after you walk across a wool carpet. What Franklin demonstrated in his dangerous experiment was a connection between phenomena on two different scales: one the grand power of an electrical storm, the other an effect of more human proportions. Connections like this one reveal the underlying unity of the laws of nature, an aspect we humans find particularly appealing.</p>
+<div class="diagram"><img src="images/ch18/fig18-1-a-child-swoops-down-a-plastic-playground.jpg" alt="A child swoops down a plastic playground slide, his hair standing on end."><div class="d-cap">A child swoops down a plastic playground slide, his hair standing on end. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="diagram"><img src="images/ch18/fig18-2-the-figure-shows-an-artist-rending-of-a-.jpg" alt="The figure shows an artist rending of a man in old style clothes holding the black string of a red kite. Surrounding the kite are white clouds and a yellow flash of lightning."><div class="d-cap">The figure shows an artist rending of a man in old style clothes holding the black string of a red kite. Surrounding the kite are white clouds and a yellow flash of lightning. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Much has been written about Franklin. His experiments were only part of the life of a man who was a scientist, inventor, revolutionary, statesman, and writer. Franklin’s experiments were not performed in isolation, nor were they the only ones to reveal connections.</p>
+<p class="prose">For example, the Italian scientist Luigi Galvani (1737–1798) performed a series of experiments in which static electricity was used to stimulate contractions of leg muscles of dead frogs, an effect already known in humans subjected to static discharges. But Galvani also found that if he joined two metal wires (say copper and zinc) end to end and touched the other ends to muscles, he produced the same effect in frogs as static discharge. Alessandro Volta (1745–1827), partly inspired by Galvani’s work, experimented with various combinations of metals and developed the battery.</p>
+<p class="prose">During the same era, other scientists made progress in discovering fundamental connections. The periodic table was developed as the systematic properties of the elements were discovered. This influenced the development and refinement of the concept of atoms as the basis of matter. Such submicroscopic descriptions of matter also help explain a great deal more.</p>
+<p class="prose">Atomic and molecular interactions, such as the forces of friction, cohesion, and adhesion, are now known to be manifestations of theelectromagnetic force. Static electricity is just one aspect of the electromagnetic force, which also includes moving electricity and magnetism.</p>
+<p class="prose">All the macroscopic forces that we experience directly, such as the sensations of touch and the tension in a rope, are due to the electromagnetic force, one of the four fundamental forces in nature. The gravitational force, another fundamental force, is actually sensed through the electromagnetic interaction of molecules, such as between those in our feet and those on the top of a bathroom scale. (The other two fundamental forces, the strong nuclear force and the weak nuclear force, cannot be sensed on the human scale.)</p>
+<p class="prose">This chapter begins the study of electromagnetic phenomena at a fundamental level. The next several chapters will cover static electricity, moving electricity, and magnetism—collectively known as electromagnetism. In this chapter, we begin with the study of electric phenomena due to charges that are at least temporarily stationary, called electrostatics, or static electricity.</p>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.0. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">There are very large numbers of charged particles in most objects. Why, then, don’t most objects exhibit static electricity?</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.0 Quiz</h3><p>3 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">When a glass rod is rubbed with silk, the glass becomes positively charged and the silk becomes negatively charged. What will happen if two glass rods rubbed with silk are brought near each other?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They will attract each other</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They will repel each other</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There will be no interaction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They will first attract and then repel</li>
+</ul><div class="qexp">Since both glass rods acquire the same type of positive charge, they will repel each other according to the principle that like charges repel.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is the SI unit of electric charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Volt</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Coulomb</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ampere</li>
+</ul><div class="qexp">The coulomb (C) is the standard SI unit used to measure the quantity of electric charge.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">An atom contains a nucleus with a positive charge and orbiting electrons with a negative charge. What is the charge of a single proton?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>+1.60 × 10⁻¹⁹ C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>-1.60 × 10⁻¹⁹ C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0 C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+1.00 C</li>
+</ul><div class="qexp">Protons carry a fundamental unit of positive charge equal in magnitude to the charge of an electron.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.1</span></div><div class="h-title">18.1: Static Electricity and Charge - Conservation of Charge</div><div class="h-desc">What makes plastic wrap cling? Static electricity. Not only are applications of static electricity common these days, its existence has been known since ancient times. The first record of its effects ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define electric charge, and describe how the two types of charge interact.</li>
+      <li>Describe three common situations that generate static electricity.</li>
+      <li>State the law of conservation of charge.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">electric charge</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a physical property of an object that causes it to be attracted toward or repelled from another charged object; each charged object generates and is influenced by a force called an electromagnetic force</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Van de Graaff generator</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a machine that produces a large amount of excess charge, used for experiments with high voltage</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.1</div>
+<p class="prose">What makes plastic wrap cling? Static electricity. Not only are applications of static electricity common these days, its existence has been known since ancient times. The first record of its effects dates to ancient Greeks who noted more than 500 years B.C. that polishing amber temporarily enabled it to attract bits of straw (Figure . The very wordelectricderives from the Greek word for amber (electron).</p>
+<div class="diagram"><img src="images/ch18/fig18-3-this-piece-of-gold-colored-amber-from-ma.jpg" alt="This piece of gold-colored amber from Malaysia has been rubbed and polished to a smooth, rounded shape."><div class="d-cap">This piece of gold-colored amber from Malaysia has been rubbed and polished to a smooth, rounded shape. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Many of the characteristics of static electricity can be explored by rubbing things together. Rubbing creates the spark you get from walking across a wool carpet, for example. Static cling generated in a clothes dryer and the attraction of straw to recently polished amber also result from rubbing. Similarly, lightning results from air movements under certain weather conditions. You can also rub a balloon on your hair, and the static electricity created can then make the balloon cling to a wall. We also have to be cautious of static electricity, especially in dry climates. When we pump gasoline, we are warned to discharge ourselves (after sliding across the seat) on a metal surface before grabbing the gas nozzle. Attendants in hospital operating rooms must wear booties with a conductive strip of aluminum foil on the bottoms to avoid creating sparks which may ignite flammable anesthesia gases combined with the oxygen being used.</p>
+<p class="prose">Some of the most basic characteristics of static electricity include:</p>
+<p class="prose">How do we know there are two types ofelectric charge? When various materials are rubbed together in controlled ways, certain combinations of materials always produce one type of charge on one material and the opposite type on the other. By convention, we call one type of charge “positive”, and the other type “negative.” For example, when glass is rubbed with silk, the glass becomes positively charged and the silk negatively charged. Since the glass and silk have opposite charges, they attract one another like clothes that have rubbed together in a dryer. Two glass rods rubbed with silk in this manner will repel one another, since each rod has positive charge on it. Similarly, two silk cloths so rubbed will repel, since both cloths have negative charge. Figure shows how these simple materials can be used to explore the nature of the force between charges.</p>
+<div class="diagram"><img src="images/ch18/fig18-4-a-negatively-charged-cloth-is-attracted-.jpg" alt="(a) Negatively charged cloth is attracted to the positively charged glass rod which is hanging by the thread. (b) A positively charged glass rod is hanging with a thread. When another positively charged glass rod brought close to the first rod it deflects due to the repulsive force. (c) Two negatively charged silk cloth brought close to each other repel each other."><div class="d-cap">(a) Negatively charged cloth is attracted to the positively charged glass rod which is hanging by the thread. (b) A positively charged glass rod is hanging with a thread. When another positively charged glass rod brought close to the first rod it deflects due to the repulsive force. (c) Two negatively charged silk cloth brought close to each other repel each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">More sophisticated questions arise. Where do these charges come from? Can you create or destroy charge? Is there a smallest unit of charge? Exactly how does the force depend on the amount of charge and the distance between charges? Such questions obviously occurred to Benjamin Franklin and other early researchers, and they interest us even today.</p>
+<div class="sh2">Charge Carried by Electrons and Protons</div>
+<p class="prose">Franklin wrote in his letters and books that he could see the effects of electric charge but did not understand what caused the phenomenon. Today we have the advantage of knowing that normal matter is made of atoms, and that atoms contain positive and negative charges, usually in equal amounts.</p>
+<p class="prose">Figure shows a simple model of an atom with negativeelectronsorbiting its positive nucleus. The nucleus is positive due to the presence of positively chargedprotons. Nearly all charge in nature is due to electrons and protons, which are two of the three building blocks of most matter. (The third is the neutron, which is neutral, carrying no charge.) Other charge-carrying particles are observed in cosmic rays and nuclear decay, and are created in particle accelerators. All but the electron and proton survive only a short time and are quite rare by comparison.</p>
+<div class="diagram"><img src="images/ch18/fig18-5-three-electrons-are-shown-moving-in-diff.jpg" alt="Three electrons are shown moving in different direction around the nucleus and their motion is similar to planetary motion."><div class="d-cap">Three electrons are shown moving in different direction around the nucleus and their motion is similar to planetary motion. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The charges of electrons and protons are identical in magnitude but opposite in sign. Furthermore, all charged objects in nature are integral multiples of this basic quantity of charge, meaning that all charges are made of combinations of a basic unit of charge. Usually, charges are formed by combinations of electrons and protons. The magnitude of this basic charge is</p>
+<div class="math-display">\[|q_e|=1.60\times 10^{-19}C \nonumber\]</div>
+<p class="prose">The symbol \(q\) is commonly used for charge and the subscript\(e\)indicates the charge of a single electron (or proton).</p>
+<p class="prose">The SI unit of charge is the coulomb (C). The number of protons needed to make a charge of 1.00 C is</p>
+<div class="math-display">\[1.00C\times \dfrac{1 proton}{1.60\times 10^{-19}C}=6.25\times 10^{18} protons \nonumber\]</div>
+<p class="prose">Similarly, \(6.25\times 10^{18}\) electrons have a combined charge of −1.00 coulomb. Just as there is a smallest bit of an element (an atom), there is a smallest bit of charge. There is no directly observed charge smaller than \(∣q_e∣\) (see ThingsGreatand Small: The Submicroscopic Origin of Charge), and all observed charges are integral multiples of \(∣q_e∣\).</p>
+<p class="prose">THINGS GREAT AND SMALL: THE SUBMICROSCOPIC ORIGIN OF CHARGE</p>
+<p class="prose">With the exception of exotic, short-lived particles, all charge in nature is carried by electrons and protons. Electrons carry the charge we have named negative. Protons carry an equal-magnitude charge that we call positive. (Figure Electron and proton charges are considered fundamental building blocks, since all other charges are integral multiples of those carried by electrons and protons. Electrons and protons are also two of the three fundamental building blocks of ordinary matter. The neutron is the third and has zero total charge.</p>
+<p class="prose">Figure shows a person touching a Van de Graaff generator and receiving excess positive charge. The expanded view of a hair shows the existence of both types of charges but an excess of positive. The repulsion of these positive like charges causes the strands of hair to repel other strands of hair and to stand up. The further blowup shows an artist’s conception of an electron and a proton perhaps found in an atom in a strand of hair.</p>
+<div class="diagram"><img src="images/ch18/fig18-6-a-girl-is-touching-a-van-de-graaff-gener.jpg" alt="A girl is touching a Van de Graaff generator with her hair standing up. A magnified view of her single hair is shown which is filled with electrons and protons."><div class="d-cap">A girl is touching a Van de Graaff generator with her hair standing up. A magnified view of her single hair is shown which is filled with electrons and protons. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The electron seems to have no substructure; in contrast, when the substructure of protons is explored by scattering extremely energetic electrons from them, it appears that there are point-like particles inside the proton. These sub-particles, named quarks, have never been directly observed, but they are believed to carry fractional charges as seen in Figure . Charges on electrons and protons and all other directly observable particles are unitary, but these quark substructures carry charges of either \(-\dfrac{1}{3}\) or \(+\dfrac{2}{3}\). There are continuing attempts to observe fractional charge directly and to learn of the properties of quarks, which are perhaps the ultimate substructure of matter.</p>
+<div class="diagram"><img src="images/ch18/fig18-7-a-magnified-view-of-a-fraction-of-proton.jpg" alt="A magnified view of a fraction of proton is shown in an art having three quarks of spherical shape separated from each other."><div class="d-cap">A magnified view of a fraction of proton is shown in an art having three quarks of spherical shape separated from each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Separation of Charge in Atoms</div>
+<p class="prose">Charges in atoms and molecules can be separated—for example, by rubbing materials together. Some atoms and molecules have a greater affinity for electrons than others and will become negatively charged by close contact in rubbing, leaving the other material positively charged. (Figure Positive charge can similarly be induced by rubbing. Methods other than rubbing can also separate charges. Batteries, for example, use combinations of substances that interact in such a way as to separate charges. Chemical interactions may transfer negative charge from one substance to the other, making one battery terminal negative and leaving the first one positive.</p>
+<div class="diagram"><img src="images/ch18/fig18-8-figure-19-01-06ajpg.jpg" alt="Figure_19_01_06a.jpg"><div class="d-cap">Figure_19_01_06a.jpg (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">No charge is actually created or destroyed when charges are separated as we have been discussing. Rather, existing charges are moved about. In fact, in all situations the total amount of charge is always constant. This universally obeyed law of nature is called thelaw of conservation of charge.</p>
+<p class="prose">LAW OF CONSERVATION OF CHARGE</p>
+<p class="prose">Total charge is constant in any process.</p>
+<p class="prose">In more exotic situations, such as in particle accelerators, mass, \(\Delta m\), can be created from energy in the amount \(\Delta m=\dfrac{E}{c^{2}}\). Sometimes, the created mass is charged, such as when an electron is created. Whenever a charged particle is created, another having an opposite charge is always created along with it, so that the total charge created is zero. Usually, the two particles are “matter-antimatter” counterparts. For example, an antielectron would usually be created at the same time as an electron. The antielectron has a positive charge (it is called a positron), and so the total charge created is zero. (Figure All particles have antimatter counterparts with opposite signs. When matter and antimatter counterparts are brought together, they completely annihilate one another. By annihilate, we mean that the mass of the two particles is converted to energyE, again obeying the relationship \(\Delta m=\dfrac{E}{c^{2}}\). Since the two particles have equal and opposite charge, the total charge is zero before and after the annihilation; thus, total charge is conserved.</p>
+<p class="prose">MAKING CONNECTIONS: CONSERVATION LAWS</p>
+<p class="prose">Only a limited number of physical quantities are universally conserved. Charge is one—energy, momentum, and angular momentum are others. Because they are conserved, these physical quantities are used to explain more phenomena and form more connections than other, less basic quantities. We find that conserved quantities give us great insight into the rules followed by nature and hints to the organization of nature. Discoveries of conservation laws have led to further discoveries, such as the weak nuclear force and the quark substructure of protons and other particles.</p>
+<div class="diagram"><img src="images/ch18/fig18-9-here-energy-is-shown-by-a-vector-initial.jpg" alt="Here energy is shown by a vector. Initially electrostatic charge q tot is equal to zero. Now energy gets converted into matter and creates one electron and antielectron pair but final electrostatic charge is equal to zero so change in mass delta m is equal to two m e, which is equal to E divided by c square. (b) In this figure, Electron and antielectron are colliding with each other. The electrostatic charge q tot before collision is zero and after collision it will remain zero."><div class="d-cap">Here energy is shown by a vector. Initially electrostatic charge q tot is equal to zero. Now energy gets converted into matter and creates one electron and antielectron pair but final electrostatic charge is equal to zero so change in mass delta m is equal to two m e, which is equal to E divided by c square. (b) In this figure, Electron and antielectron are colliding with each other. The electrostatic charge q tot before collision is zero and after collision it will remain zero. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The law of conservation of charge is absolute—it has never been observed to be violated. Charge, then, is a special physical quantity, joining a very short list of other quantities in nature that are always conserved. Other conserved quantities include energy, momentum, and angular momentum.</p>
+<p class="prose">PHET EXPLORATIONS: BALLOONS AND STATIC ELECTRICITY</p>
+<p class="prose">Why does a balloon stick to your sweater? Rub a balloon on a sweater, then let go of the balloon and it flies over and sticks to the sweater. View the charges in the sweater, balloons, and the wall.</p>
+<div class="sh3">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Why do most objects tend to contain nearly equal numbers of positive and negative charges?</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.1 Quiz</h3><p>3 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How many protons are required to produce a net positive charge of 2.0 C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.25 × 10¹⁸ protons</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.25 × 10¹⁸ protons</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3.13 × 10¹⁹ protons</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.25 × 10¹⁹ protons</li>
+</ul><div class="qexp">Dividing the total charge (2.0 C) by the charge per proton (1.60 × 10⁻¹⁹ C) yields approximately 1.25 × 10¹⁹ protons.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why are metals generally considered good conductors of electricity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They have a high density of protons</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Their atoms are packed very tightly</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They contain free electrons that can move easily</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They have a crystalline structure that blocks ions</li>
+</ul><div class="qexp">Conductors like metals contain electrons that are not bound to individual atoms, allowing them to move freely through the material.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A neutral metal sphere is charged by bringing a negatively charged rod near it and then grounding the side of the sphere opposite the rod. What is the resulting charge on the sphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Positive</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Negative</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Fluctuating</li>
+</ul><div class="qexp">In induction, the sphere acquires a charge opposite to that of the charging rod because the rod repels like charges into the ground.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.2</span></div><div class="h-title">18.2: Conductors and Insulators</div><div class="h-desc">Some substances, such as metals and salty water, allow charges to move through them with relative ease. Some of the electrons in metals and similar conductors are not bound to individual atoms or site...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Define conductor and insulator, explain the difference, and give examples of each.</li>
+      <li>Describe three methods for charging an object.</li>
+      <li>Explain what happens to an electric force as you move farther from the source.</li>
+      <li>Define polarization.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">conductor</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">an object with properties that allow charges to move about freely within it</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">free electron</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">an electron that is free to move away from its atomic orbit</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.2</div>
+<p class="prose">Some substances, such as metals and salty water, allow charges to move through them with relative ease. Some of the electrons in metals and similar conductors are not bound to individual atoms or sites in the material. Thesefree electronscan move through the material much as air moves through loose sand. Any substance that has free electrons and allows charge to move relatively freely through it is called aconductor. The moving electrons may collide with fixed atoms and molecules, losing some energy, but they can move in a conductor. Superconductors allow the movement of charge without any loss of energy. Salty water and other similar conducting materials contain free ions that can move through them. An ion is an atom or molecule having a positive or negative (nonzero) total charge. In other words, the total number of electrons is not equal to the total number of protons.</p>
+<div class="diagram"><img src="images/ch18/fig18-10-this-black-power-charging-unit-connects-.jpg" alt="This black power charging unit connects a laptop to an electrical outlet, allowing the laptop to be charged up."><div class="d-cap">This black power charging unit connects a laptop to an electrical outlet, allowing the laptop to be charged up. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Other substances, such as glass, do not allow charges to move through them. These are calledinsulators. Electrons and ions in insulators are bound in the structure and cannot move easily—as much as \(10^{23}\) times more slowly than in conductors. Pure water and dry table salt are insulators, for example, whereas molten salt and salty water are conductors.</p>
+<div class="sh2">Charging by Contact</div>
+<p class="prose">Figure shows an electroscope being charged by touching it with a positively charged glass rod. Because the glass rod is an insulator, it must actually touch the electroscope to transfer charge to or from it. (Note that the extra positive charges reside on the surface of the glass rod as a result of rubbing it with silk before starting the experiment.) Since only electrons move in metals, we see that they are attracted to the top of the electroscope. There, some are transferred to the positive rod by touch, leaving the electroscope with a net positive charge.</p>
+<div class="diagram"><img src="images/ch18/fig18-11-in-part-a-an-electroscope-is-shown-a-gla.jpg" alt="In part a, an electroscope is shown. A glass rod with positive signs is close to the tip of the electroscope which has negative signs on it and the leaves have has plus signs on it. In part b, the glass rod with positive sign is in contact with the tip of electroscope having negative signs. The negative signs are shown moving to the rod by arrows pointing toward the rod. The surfaces of the leaves now have both positive and negative charge. In part c, the glass rod is absent. The tip and the leaves of the electroscope have both positive and negative signs on them."><div class="d-cap">In part a, an electroscope is shown. A glass rod with positive signs is close to the tip of the electroscope which has negative signs on it and the leaves have has plus signs on it. In part b, the glass rod with positive sign is in contact with the tip of electroscope having negative signs. The negative signs are shown moving to the rod by arrows pointing toward the rod. The surfaces of the leaves now have both positive and negative charge. In part c, the glass rod is absent. The tip and the leaves of the electroscope have both positive and negative signs on them. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Electrostatic repulsion in the leaves of the charged electroscope separates them. The electrostatic force has a horizontal component that results in the leaves moving apart as well as a vertical component that is balanced by the gravitational force. Similarly, the electroscope can be negatively charged by contact with a negatively charged object.</p>
+<div class="sh2">Charging by Induction</div>
+<p class="prose">It is not necessary to transfer excess charge directly to an object in order to charge it.Figure shows a method of induction wherein a charge is created in a nearby object, without direct contact. Here we see two neutral metal spheres in contact with one another but insulated from the rest of the world. A positively charged rod is brought near one of them, attracting negative charge to that side, leaving the other sphere positively charged.</p>
+<div class="diagram"><img src="images/ch18/fig18-12-in-part-a-a-pair-of-neutral-metal-sphere.jpg" alt="In part a, a pair of neutral metal spheres are in contact. In part b, a rod with positive signs is close to one surface of the sphere and the negative signs are shown on this surface toward the rod and positive signs are shown on the outermost face of the other sphere. In part c, the rod and the spheres are not in contact. The outermost surface of one sphere has negative signs and the outermost surface of another sphere has positive signs. In part d, the glass rod is not shown. The inner surfaces of the metallic spheres have opposite charges. One sphere has negative signs and the other has positive signs facing each other."><div class="d-cap">In part a, a pair of neutral metal spheres are in contact. In part b, a rod with positive signs is close to one surface of the sphere and the negative signs are shown on this surface toward the rod and positive signs are shown on the outermost face of the other sphere. In part c, the rod and the spheres are not in contact. The outermost surface of one sphere has negative signs and the outermost surface of another sphere has positive signs. In part d, the glass rod is not shown. The inner surfaces of the metallic spheres have opposite charges. One sphere has negative signs and the other has positive signs facing each other. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">This is an example of induced polarization of neutral objects. Polarization is the separation of charges in an object that remains neutral. If the spheres are now separated (before the rod is pulled away), each sphere will have a net charge. Note that the object closest to the charged rod receives an opposite charge when charged by induction. Note also that no charge is removed from the charged rod, so that this process can be repeated without depleting the supply of excess charge.</p>
+<div class="diagram"><img src="images/ch18/fig18-13-in-part-a-a-rod-with-positive-sign-is-br.jpg" alt="In part a, a rod with positive sign is brought near a neutral metal sphere. One surface toward the rod has negative signs and the other surface has positive signs. In part b, a rod with positive sign is close to one surface of the sphere having negative signs and the other surface has low number of positive signs and a wire is attached to that face which is connected to the ground. In part c, a rod with positive sign is close to one surface of the sphere having negative signs and the other surface has low number of positive signs. In part d, the positive rod is absent, and the sphere has negative signs on it."><div class="d-cap">In part a, a rod with positive sign is brought near a neutral metal sphere. One surface toward the rod has negative signs and the other surface has positive signs. In part b, a rod with positive sign is close to one surface of the sphere having negative signs and the other surface has low number of positive signs and a wire is attached to that face which is connected to the ground. In part c, a rod with positive sign is close to one surface of the sphere having negative signs and the other surface has low number of positive signs. In part d, the positive rod is absent, and the sphere has negative signs on it. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Another method of charging by induction is shown in Figure . The neutral metal sphere is polarized when a charged rod is brought near it. The sphere is then grounded, meaning that a conducting wire is run from the sphere to the ground. Since the earth is large and most ground is a good conductor, it can supply or accept excess charge easily. In this case, electrons are attracted to the sphere through a wire called the ground wire, because it supplies a conducting path to the ground. The ground connection is broken before the charged rod is removed, leaving the sphere with an excess charge opposite to that of the rod. Again, an opposite charge is achieved when charging by induction and the charged rod loses none of its excess charge.</p>
+<p class="prose">Neutral objects can be attracted to any charged object. The pieces of straw attracted to polished amber are neutral, for example. If you run a plastic comb through your hair, the charged comb can pick up neutral pieces of paper. Figure shows how the polarization of atoms and molecules in neutral objects results in their attraction to a charged object.</p>
+<div class="diagram"><img src="images/ch18/fig18-14-microscopic-views-of-objects-are-shown-a.jpg" alt="Microscopic views of objects are shown. A positive rod with positive signs is close to an insulator. The negative ends of all the molecules of the insulator are aligned toward the rod and positive ends of all molecules shown as spheres are away from the rod. In part b, a negative rod with negative signs is close to an insulator. The positive ends of all the molecules of the insulator are aligned toward the rod and negative ends of all molecules shown as spheres are away from the rod. In part c, a rod with negative signs and insulator with the surface closer to the rod has positive signs. The other surface has negative signs."><div class="d-cap">Microscopic views of objects are shown. A positive rod with positive signs is close to an insulator. The negative ends of all the molecules of the insulator are aligned toward the rod and positive ends of all molecules shown as spheres are away from the rod. In part b, a negative rod with negative signs is close to an insulator. The positive ends of all the molecules of the insulator are aligned toward the rod and negative ends of all molecules shown as spheres are away from the rod. In part c, a rod with negative signs and insulator with the surface closer to the rod has positive signs. The other surface has negative signs. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">When a charged rod is brought near a neutral substance, an insulator in this case, the distribution of charge in atoms and molecules is shifted slightly. Opposite charge is attracted nearer the external charged rod, while like charge is repelled. Since the electrostatic force decreases with distance, the repulsion of like charges is weaker than the attraction of unlike charges, and so there is a net attraction. Thus a positively charged glass rod attracts neutral pieces of paper, as will a negatively charged rubber rod. Some molecules, like water, are polar molecules. Polar molecules have a natural or inherent separation of charge, although they are neutral overall. Polar molecules are particularly affected by other charged objects and show greater polarization effects than molecules with naturally uniform charge distributions.</p>
+<p class="prose">Check Your Understanding</p>
+<p class="prose">Can you explain the attraction of water to the charged rod in the figure below?</p>
+<div class="diagram"><img src="images/ch18/fig18-15-water-flowing-out-of-a-glass-pipette-cha.jpg" alt="Water flowing out of a glass pipette changes its course when a charged rod is brought close to it."><div class="d-cap">Water flowing out of a glass pipette changes its course when a charged rod is brought close to it. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Water molecules are polarized, giving them slightly positive and slightly negative sides. This makes water even more susceptible to a charged rod’s attraction. As the water flows downward, due to the force of gravity, the charged conductor exerts a net attraction to the opposite charges in the stream of water, pulling it closer.</p>
+<p class="prose">PHET EXPLORATIONS: JOHN TRAVOLTAGE</p>
+<p class="prose">Make sparks fly with John Travoltage. Wiggle Johnnie's foot and he picks up charges from the carpet. Bring his hand close to the door knob and get rid of the excess charge.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">An eccentric inventor attempts to levitate by first placing a large negative charge on himself and then putting a large positive charge on the ceiling of his workshop. Instead, while attempting to place a large negative charge on himself, his clothes fly off. Explain.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.2 Quiz</h3><p>3 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the term for the separation of charges in an object that remains net neutral?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ionization</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Polarization</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Grounding</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Superconduction</li>
+</ul><div class="qexp">Polarization involves shifting the distribution of charge within an object so that one side is more positive and the other more negative, while the total charge remains zero.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What happens to a charged conductor when it is grounded?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It becomes polarized</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It doubles its excess charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It creates a vacuum</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It becomes neutral as excess charge is transferred to or from the Earth</li>
+</ul><div class="qexp">The Earth acts as a vast reservoir that can easily accept or supply electrons to neutralize a charged object.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">According to Coulomb’s law, if the distance between two point charges is doubled, what happens to the magnitude of the electrostatic force between them?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It decreases by a factor of 4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It decreases by a factor of 2</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases by a factor of 2</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It increases by a factor of 4</li>
+</ul><div class="qexp">Coulomb's law follows an inverse square relationship, so doubling the distance (r) results in (1/2)² or 1/4 of the original force.</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.3</span></div><div class="h-title">18.3: Coulomb's Law</div><div class="h-desc">Through the work of scientists in the late 18th century, the main features of theelectrostatic force—the existence of two types of charge, the observation that like charges repel, unlike charges attra...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State Coulomb’s law in terms of how the electrostatic force changes with the distance between two objects.</li>
+      <li>Calculate the electrostatic force between two charged point forces, such as electrons or protons.</li>
+      <li>Compare the electrostatic force to the gravitational attraction for a proton and an electron; for a human and the Earth.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">Coulomb’s law</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the mathematical equation calculating the electrostatic force vector between two charged particles</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.3</div>
+<p class="prose">Through the work of scientists in the late 18th century, the main features of theelectrostatic force—the existence of two types of charge, the observation that like charges repel, unlike charges attract, and the decrease of force with distance—were eventually refined, and expressed as a mathematical formula. The mathematical formula for the electrostatic force is calledCoulomb’s lawafter the French physicist Charles Coulomb (1736–1806), who performed experiments and first proposed a formula to calculate it.</p>
+<div class="diagram"><img src="images/ch18/fig18-16-two-spiral-galaxies-show-the-strong-grav.jpg" alt="Two spiral galaxies show the strong gravitational attraction between them as their arms appear to reach out toward one another."><div class="d-cap">Two spiral galaxies show the strong gravitational attraction between them as their arms appear to reach out toward one another. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Definition: Coulomb’s Law</p>
+<p class="prose">Coulomb’s law calculates the magnitude of the force \(F\) between two point charges, \(q_1\) and \(q_2\), separated by a distance \(r\).</p>
+<div class="math-display">\[F=k\dfrac{|q_{1}q_{2}|}{r^{2}}.\]</div>
+<p class="prose">In SI units, the constant\(k\) is equal to</p>
+<div class="math-display">\[k=8.988\times 10^{9}\dfrac{N\cdot m^{2}}{C^{2}}\approx 8.99\times 10^{9}\dfrac{N\cdot m^{2}}{C^{2}}.\]</div>
+<p class="prose">The electrostatic force is a vector quantity and is expressed in units of newtons. The force is understood to be along the line joining the two charges. (Figure</p>
+<p class="prose">Although the formula for Coulomb’s law is simple, it was no mean task to prove it. The experiments Coulomb did, with the primitive equipment then available, were difficult. Modern experiments have verified Coulomb’s law to great precision. For example, it has been shown that the force is inversely proportional to distance between two objects squared \((F\propto 1/r^{2})\) to an accuracy of 1 part in \(10^{16}\). No exceptions have ever been found, even at the small distances within the atom.</p>
+<div class="diagram"><img src="images/ch18/fig18-17-in-part-a-two-charges-q-one-and-q-two-ar.jpg" alt="In part a, two charges q one and q two are shown at a distance r. Force vector arrow F one two points toward left and acts on q one. Force vector arrow F two one points toward right and acts on q two. Both forces act in opposite directions and are represented by arrows of same length. In part b, two charges q one and q two are shown at a distance r. Force vector arrow F one two points toward right and acts on q one. Force vector arrow F two one points toward left and acts on q two. Both forces act toward each other and are represented by arrows of same length."><div class="d-cap">In part a, two charges q one and q two are shown at a distance r. Force vector arrow F one two points toward left and acts on q one. Force vector arrow F two one points toward right and acts on q two. Both forces act in opposite directions and are represented by arrows of same length. In part b, two charges q one and q two are shown at a distance r. Force vector arrow F one two points toward right and acts on q one. Force vector arrow F two one points toward left and acts on q two. Both forces act toward each other and are represented by arrows of same length. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : How Strong is the Coulomb Force Relative to the Gravitational Force?</span></div><div class="example-body">
+<p class="prose">Compare the electrostatic force between an electron and proton separated by \(0.530\times 10^{-10}m\) with the gravitational force between them. This distance is their average separation in a hydrogen atom.</p>
+<p class="prose">To compare the two forces, we first compute the electrostatic force using Coulomb’s law, \(F=k\dfrac {|q_{1}q_{2}}{r^{2}}\). We then calculate the gravitational force using Newton’s universal law of gravitation. Finally, we take a ratio to see how the forces compare in magnitude.</p>
+<p class="prose">Entering the given and known information about the charges and separation of the electron and proton into the expression of Coulomb’s law yields</p>
+<div class="math-display">\[ \begin{align*} F &=k\dfrac{|q_{1}q_{2}|}{r^2} \\[5pt] &=(8.99\times 10^{9} N\cdot m^{2}/C^{2})\times \dfrac{(1.60\times 10^{-19}C)(1.60\times 10^{-19}C)}{(0.530\times 10^{-10}m)^{2}} \end{align*}\]</div>
+<p class="prose">Thus the Coulomb force is</p>
+<div class="math-display">\[F=8.19\times 10^{-8}N. \nonumber\]</div>
+<p class="prose">The charges are opposite in sign, so this is an attractive force. This is a very large force for an electron—it would cause an acceleration of \(8.99\times 10^{22} m/s^{2}\)(verification is left as an end-of-section problem).The gravitational force is given by Newton’s law of gravitation as:</p>
+<div class="math-display">\[F_{G}=G\dfrac{mM}{r^2},\nonumber\]</div>
+<p class="prose">where \(G=6.67\times 10^{-11} N\cdot m^{2}/kg^{2}\). Here \(m\) and \(M\) represent the electron and proton masses, which can be found in the appendices. Entering values for the knowns yields</p>
+<div class="math-display">\[F_{G}=(6.67\times 10^{-11} N\cdot m^{2}/kg^{2})\times \dfrac{(9.11\times 10^{-31}kg)(1.67\times 10^{-27}kg)}{(0.530\times 10^{-10}m)^{2}}=3.61\times 10^{-47}N \nonumber\]</div>
+<p class="prose">This is also an attractive force, although it is traditionally shown as positive since gravitational force is always attractive. The ratio of the magnitude of the electrostatic force to gravitational force in this case is, thus,</p>
+<div class="math-display">\[\dfrac{F}{F_{G}}=2.27\times 10^{39}. \nonumber\]</div>
+<p class="prose">This is a remarkably large ratio! Note that this will be the ratio of electrostatic force to gravitational force for an electron and a proton at any distance (taking the ratio before entering numerical values shows that the distance cancels). This ratio gives some indication of just how much larger the Coulomb force is than the gravitational force between two of the most common particles in nature.</p>
+<p class="prose">As the example implies, gravitational force is completely negligible on a small scale, where the interactions of individual charged particles are important. On a large scale, such as between the Earth and a person, the reverse is true. Most objects are nearly electrically neutral, and so attractive and repulsiveCoulomb forcesnearly cancel. Gravitational force on a large scale dominates interactions between large objects because it is always attractive, while Coulomb forces tend to cancel.</p>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">If you have charged an electroscope by contact with a positively charged object, describe how you could use it to determine the charge of other objects. Specifically, what would the leaves of the electroscope do if other charged objects were brought near its knob?</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.3 Quiz</h3><p>3 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Calculate the magnitude of the electrostatic force between two 1.0 μC charges separated by 0.03 m.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.33 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>300 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.01 N</li>
+</ul><div class="qexp">Using F = k|q₁q₂|/r², F = (9.0 × 10⁹)(10⁻⁶)(10⁻⁶)/(0.03)², which simplifies to 10 N.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why does the gravitational force dominate over the Coulomb force on a macroscopic scale, such as between the Earth and the Moon?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gravitational forces are inherently stronger than Coulomb forces</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The distance is too great for Coulomb forces to act</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Large objects are usually electrically neutral, causing Coulomb forces to cancel out</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Magnetic fields interfere with Coulomb forces in space</li>
+</ul><div class="qexp">While the Coulomb force is much stronger for individual particles, most large-scale matter is neutral, leading to the near-total cancellation of electrostatic forces.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">If the force between two charges is 36 N, what will the force be if the distance between them is tripled?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>108 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>18 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>4 N</li>
+</ul><div class="qexp">Tripling the distance reduces the force by a factor of 3², which is 9; 36 N divided by 9 equals 4 N.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.4</span></div><div class="h-title">18.4: Electric Field- Concept of a Field Revisited</div><div class="h-desc">Contact forces, such as between a baseball and a bat, are explained on the small scale by the interaction of the charges in atoms and molecules in close proximity. They interact through forces that in...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe a force field and calculate the strength of an electric field due to a point charge.</li>
+      <li>Calculate the force exerted on a test charge by an electric field.</li>
+      <li>Explain the relationship between electrical force (F) on a test charge and electrical field strength (E).</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">electric field</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a three-dimensional map of the electric force extended out into space from a point charge</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">field</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a map of the amount and direction of a force acting on other objects, extending out into space</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.4</div>
+<p class="prose">Contact forces, such as between a baseball and a bat, are explained on the small scale by the interaction of the charges in atoms and molecules in close proximity. They interact through forces that include theCoulomb force. Action at a distance is a force between objects that are not close enough for their atoms to “touch.” That is, they are separated by more than a few atomic diameters.</p>
+<p class="prose">For example, a charged rubber comb attracts neutral bits of paper from a distance via the Coulomb force. It is very useful to think of an object being surrounded in space by aforce field. The force field carries the force to another object (called a test object) some distance away.</p>
+<div class="sh2">Concept of a Field</div>
+<p class="prose">A field is a way of conceptualizing and mapping the force that surrounds any object and acts on another object at a distance without apparent physical connection. For example, the gravitational field surrounding the earth (and all other masses) represents the gravitational force that would be experienced if another mass were placed at a given point within the field.</p>
+<p class="prose">In the same way, the Coulomb force field surrounding any charge extends throughout space. Using Coulomb’s law, \(F=k|q_{1}q_{2}|/r^{2}\), its magnitude is given by the equation \(F=k|qQ|/r^{2}\), for apoint charge(a particle having a charge \(Q\)) acting on atest charge\(q\) at a distance \(r\) (Figure . Both the magnitude and direction of the Coulomb force field depend on \(Q\) and the test charge \(q\).</p>
+<div class="diagram"><img src="images/ch18/fig18-18-in-part-a-two-charges-q-and-q-one-are-pl.jpg" alt="In part a, two charges Q and q one are placed at a distance r. The force vector F one on charge q one is shown by an arrow pointing toward right away from Q. In part b, two charges Q and q two are placed at a distance r. The force vector F two on charge q two is shown by an arrow pointing toward left toward Q."><div class="d-cap">In part a, two charges Q and q one are placed at a distance r. The force vector F one on charge q one is shown by an arrow pointing toward right away from Q. In part b, two charges Q and q two are placed at a distance r. The force vector F two on charge q two is shown by an arrow pointing toward left toward Q. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">To simplify things, we would prefer to have a field that depends only on \(Q\) and not on the test charge \(q\). The electric field is defined in such a manner that it represents only the charge creating it and is unique at every point in space. Specifically, the electric field \(E\) is defined to be the ratio of the Coulomb force to the test charge:</p>
+<div class="math-display">\[\mathbf{E}=\dfrac{\mathbf{F}}{q},\]</div>
+<p class="prose">where \(\mathbf{F}\) is the electrostatic force (or Coulomb force) exerted on a positive test charge \(q\). It is understood that \(\mathbf{E}\) is in the same direction as \(\mathbf{F}\). It is also assumed that \(q\) is so small that it does not alter the charge distribution creating the electric field. The units of electric field are newtons per coulomb (N/C). If the electric field is known, then the electrostatic force on any charge \(q\) is simply obtained by multiplying charge times electric field, or \(\mathbf{F}=q\mathbf{E}\). Consider the electric field due to a point charge \(Q\). According to Coulomb’s law, the force it exerts on a test charge \(q\) is \(F=k|qQ|/r^{2}\). Thus the magnitude of the electric field, \(E\), for a point charge is</p>
+<div class="math-display">\[E=|\dfrac{F}{q}|=k|\dfrac{qQ}{qr^{2}}|=k\dfrac{|Q|}{r^{2}}.\]</div>
+<p class="prose">Since the test charge cancels, we see that</p>
+<div class="math-display">\[E=k\dfrac{|Q|}{r^{2}}.\]</div>
+<p class="prose">The electric field is thus seen to depend only on the charge \(Q\) and the distance \(r\); it is completely independent of the test charge\(q\).</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating the Electric Field of a Point Charge</span></div><div class="example-body">
+<p class="prose">Calculate the strength and direction of the electric field \(E\) due to a point charge of 2.00 nC (nano-Coulombs) at a distance of 5.00 mm from the charge.</p>
+<p class="prose">We can find the electric field created by a point charge by using the equation \(E=kQ/r^{2}\).</p>
+<p class="prose">Here \(Q=2.00\times 10^{-9}C\) and \(r=5.00\times 10^{-3}m\). Entering those values into the above equation gives</p>
+<div class="math-display">\[ \begin{align*} E&=k\dfrac{Q}{r^{2}} \\[5pt] &= (8.99\times 10^{9} N\cdot m^{2}/C^{2})\times \dfrac{(2.00\times 10^{-9}C)}{(5.00\times 10^{-3}m)^{2}} \\[5pt] &= 7.19\times 10^{5} N/C. \end{align*}\]</div>
+<p class="prose">Thiselectric field strengthis the same at any point 5.00 mm away from the charge \(Q\) that creates the field. It is positive, meaning that it has a direction pointing away from the charge \(Q\).</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating the Force Exerted on a Point Charge by an Electric Field</span></div><div class="example-body">
+<p class="prose">What force does the electric field found in the previous example exert on a point charge of\(-0.250\mu C\)?</p>
+<p class="prose">Since we know the electric field strength and the charge in the field, the force on that charge can be calculated using the definition of electric field \(\mathbf{E}=\mathbf{F}/q\) rearranged to \(\mathbf{F}=q\mathbf{E}\).</p>
+<p class="prose">The magnitude of the force on a charge \(q=-.250\mu C\) exerted by a field of strength \(E=7.20\times 10^{5} N/C\) is thus,</p>
+<div class="math-display">\[ \begin{align*} F &=-qE \\[5pt] &= (0.250\times 10^{-6}C)(7.20\times 10^{5} N/C) \\[5pt] &=0.180N. \end{align*}\]</div>
+<p class="prose">Because \(q\) is negative, the force is directed opposite to the direction of the field.</p>
+<p class="prose">The force is attractive, as expected for unlike charges. (The field was created by a positive charge and here acts on a negative charge.) The charges in this example are typical of common static electricity, and the modest attractive force obtained is similar to forces experienced in static cling and similar situations.</p>
+<p class="prose">PHET EXPLORATIONS: ELECTRIC FIELD OF DREAMS</p>
+<p class="prose">Play ball! Add charges to theField of Dreamsand see how they react to the electric field. Turn on a background electric field and adjust the direction and magnitude.</p>
+<div class="diagram"><img src="images/ch18/fig18-19-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="sh3">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PHET EXPLORATIONS: ELECTRIC FIELD OF DREAMSPlay ball! Add charges to theField of Dreamsand see how they react to the electric field. Turn on a background electric field and adjust the direction and magnitude.Figure : Electric Field of Dreams</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">When a glass rod is rubbed with silk, it becomes positive and the silk becomes negative—yet both attract dust. Does the dust have a third type of charge that is attracted to both positive and negative? Explain.</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.4 Quiz</h3><p>3 questions</p></div></div><div id="q5">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">How is the electric field (E) defined at a point in space?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The product of charge and mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of the electrostatic force to the test charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The total energy per unit charge</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The rate of change of charge over time</li>
+</ul><div class="qexp">The electric field is defined as E = F/q, representing the force exerted per unit of positive test charge at a specific location.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In which direction do electric field lines point relative to a negative point charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Outward, away from the charge</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Circularly around the charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Inward, toward the charge</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Perpendicular to the plane of the charge</li>
+</ul><div class="qexp">By convention, electric field lines represent the direction of the force on a positive test charge, which is attracted toward negative charges.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Calculate the electric field strength 0.003 m (3 mm) away from a 2.0 nC point charge.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2.0 × 10⁶ N/C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.0 × 10³ N/C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.2 × 10⁵ N/C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.8 × 10⁴ N/C</li>
+</ul><div class="qexp">Using E = k|Q|/r², E = (9.0 × 10⁹)(2.0 × 10⁻⁹)/(0.003)², which results in 2.0 × 10⁶ N/C.</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Next →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.5</span></div><div class="h-title">18.5: Electric Field Lines- Multiple Charges</div><div class="h-desc">Drawings using lines to representelectric fieldsaround charged objects are very useful in visualizing field strength and direction. Since the electric field has both magnitude and direction, it is a v...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate the total force (magnitude and direction) exerted on a test charge from more than one charge</li>
+      <li>Describe an electric field diagram of a positive point charge; of a negative point charge with twice the magnitude of positive charge</li>
+      <li>Draw the electric field lines between two points of the same charge; between two points of opposite charge.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.5</div>
+<p class="prose">Drawings using lines to representelectric fieldsaround charged objects are very useful in visualizing field strength and direction. Since the electric field has both magnitude and direction, it is a vector. Like allvectors, the electric field can be represented by an arrow that has length proportional to its magnitude and that points in the correct direction. (We have used arrows extensively to represent force vectors, for example.)</p>
+<p class="prose">Figure shows two pictorial representations of the same electric field created by a positive point charge \(Q\). Figure (b) shows the standard representation using continuous lines. Figure (b) shows numerous individual arrows with each arrow representing the force on a test charge \(q\). Field lines are essentially a map of infinitesimal force vectors.</p>
+<div class="diagram"><img src="images/ch18/fig18-20-in-part-a-electric-field-lines-emanating.jpg" alt="In part a, electric field lines emanating from the charge Q are shown by the vector arrows pointing outward in every direction of two dimensional space. In part b, electric field lines emanating from the charge Q are shown by the vector arrows pointing outward in every direction of two dimensional space."><div class="d-cap">In part a, electric field lines emanating from the charge Q are shown by the vector arrows pointing outward in every direction of two dimensional space. In part b, electric field lines emanating from the charge Q are shown by the vector arrows pointing outward in every direction of two dimensional space. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Note that the electric field is defined for a positive test charge \(q\), so that the field lines point away from a positive charge and toward a negative charge. (Figure The electric field strength is exactly proportional to the number of field lines per unit area, since the magnitude of the electric field for a point charge is \(E=k|Q|/r^{2}\) and area is proportional to \(r^{2}\). This pictorial representation, in which field lines represent the direction and their closeness (that is, their areal density or the number of lines crossing a unit area) represents strength, is used for all fields: electrostatic, gravitational, magnetic, and others.</p>
+<div class="diagram"><img src="images/ch18/fig18-21-in-part-a-electric-field-lines-emanating.jpg" alt="In part a, electric field lines emanating from a positive charge is shown by the vector arrows in all direction of two dimensional space and the density of these field lines is less. In part b, electric field lines entering the negative charge is shown by the vector arrows coming from all direction of two dimensional space and the density of these field lines is less. In part c, electric field lines entering the negative charge is shown by the vector arrows coming from all direction of two dimensional space and the density of these field lines is large."><div class="d-cap">In part a, electric field lines emanating from a positive charge is shown by the vector arrows in all direction of two dimensional space and the density of these field lines is less. In part b, electric field lines entering the negative charge is shown by the vector arrows coming from all direction of two dimensional space and the density of these field lines is less. In part c, electric field lines entering the negative charge is shown by the vector arrows coming from all direction of two dimensional space and the density of these field lines is large. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">In many situations, there are multiple charges. The total electric field created by multiple charges is the vector sum of the individual fields created by each charge. The following example shows how to add electric field vectors.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Adding Electric Fields</span></div><div class="example-body">
+<p class="prose">Find the magnitude and direction of the total electric field due to the two point charges, \(q_{1}\) and \(q_{2}\), at the origin of the coordinate system as shown in Figure .</p>
+<div class="diagram"><img src="images/ch18/fig18-22-two-charges-are-placed-on-a-coordinate-a.jpg" alt="Two charges are placed on a coordinate axes. Q two is at the position x equals 4 and y equals 0 centimeters. Q one is at the position x equals 0 and y equals two centimeters. Charge on q one is plus five point zero nano coulomb and charge on q two is plus ten nano coulomb. The electric field, E one having a magnitude of one point one three multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow along positive y axis starting from the origin. The electric field, E two having magnitude zero point five six multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow along negative x axis starting from the origin. The resultant field makes an angle of sixty three point four degree above the negative y axis having magnitude one point two six multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow pointing away from the origin in the second quadrant."><div class="d-cap">Two charges are placed on a coordinate axes. Q two is at the position x equals 4 and y equals 0 centimeters. Q one is at the position x equals 0 and y equals two centimeters. Charge on q one is plus five point zero nano coulomb and charge on q two is plus ten nano coulomb. The electric field, E one having a magnitude of one point one three multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow along positive y axis starting from the origin. The electric field, E two having magnitude zero point five six multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow along negative x axis starting from the origin. The resultant field makes an angle of sixty three point four degree above the negative y axis having magnitude one point two six multiplied by ten raise to the power five Newton per coulomb is represented by a vector arrow pointing away from the origin in the second quadrant. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Since the electric field is a vector (having magnitude and direction), we add electric fields with the same vector techniques used for other types of vectors. We first must find the electric field due to each charge at the point of interest, which is the origin of the coordinate system (O) in this instance. We pretend that there is a positive test charge, \(q\), at point O, which allows us to determine the direction of the fields \(\mathbf{E}_{1}\) and \(\mathbf{E}_{2}\). Once those fields are found, the total field can be determined usingvector addition.</p>
+<p class="prose">The electric field strength at the origin due to \(q_{1}\) is labeled \(E_{1}\) and is calculated:</p>
+<div class="math-display">\[E_{1}=k\dfrac{q_{1}}{r_{1}^{2}}=(8.99\times 10^{9}N\cdot m^{2}/C^{2})\dfrac{(5.00\times 10^{-9}C)}{(2.00\times 10^{-2}m)^{2}}\]</div>
+<div class="math-display">\[E_{1}=1.124\times 10^{5}N/C.\]</div>
+<p class="prose">Similarly, \(E_{2}\) is</p>
+<div class="math-display">\[E_{2}=k\dfrac{q_{2}}{r_{2}^{2}}=(8.99\times 10^{9}N\cdot m^{2}/C^{2})\dfrac{(10.0\times 10^{-9}C)}{(4.00\times 10^{-2}m)^{2}}\]</div>
+<div class="math-display">\[E_{2}=0.5619\times 10^{5}N/C.\]</div>
+<p class="prose">Four digits have been retained in this solution to illustrate that \(E_{1}\) is exactly twice the magnitude of \(E_{2}\). Now arrows are drawn to represent the magnitudes and directions of \(\mathbf{E}_{1}\) and \(\mathbf{E}_{2}\). (Figure The direction of the electric field is that of the force on a positive charge so both arrows point directly away from the positive charges that create them. The arrow for \(\mathbf{E}_{1}\) is exactly twice the length of that for \(\mathbf{E}_{2}\). The arrows form a right triangle in this case and can be added using the Pythagorean theorem. The magnitude of the total field \(E_{tot}\) is</p>
+<div class="math-display">\[E_{tot}=(E_{1}^{2}+E_{2}^{2})^{1/2}\]</div>
+<div class="math-display">\[=[(1.124\times 10^{5}N/C)^{2}+(0.5619\times 10^{5}N/C)^{2}]^{1/2}\]</div>
+<div class="math-display">\[=1.26\times 10^{5}N/C.\]</div>
+<div class="math-display">\[\theta =\tan ^{-1}(\dfrac{E_{1}}{E_{2}})\]</div>
+<div class="math-display">\[=\tan ^{-1}(\dfrac{1.124\times 10^{5}N/C}{0.5619\times 10^{5}N/C})\]</div>
+<p class="prose">or \(63.4^{\circ}\) above thex-axis.</p>
+<p class="prose">In cases where the electric field vectors to be added are not perpendicular, vector components or graphical techniques can be used. The total electric field found in this example is the total electric field at only one point in space. To find the total electric field due to these two charges over an entire region, the same technique must be repeated for each point in the region. This impossibly lengthy task (there are an infinite number of points in space) can be avoided by calculating the total field at representative points and using some of the unifying features noted next.</p>
+<p class="prose">Figure shows how the electric field from two point charges can be drawn by finding the total field at representative points and drawing electric field lines consistent with those points. While the electric fields from multiple charges are more complex than those of single charges, some simple features are easily noticed.</p>
+<div class="diagram"><img src="images/ch18/fig18-23-two-charges-q-one-and-q-two-are-placed-a.jpg" alt="Two charges q one and q two are placed at a distance and their field lines shown by curved arrows move away from each other. At a point P on the field lines emanating from q one, the resultant electric field is represented by a vector arrow tangent to the curve representing this field line. A point P prime on a field line emanating from the charge q two and the resultant electric field is represented by a vector arrow tangent to the curve representing this field line."><div class="d-cap">Two charges q one and q two are placed at a distance and their field lines shown by curved arrows move away from each other. At a point P on the field lines emanating from q one, the resultant electric field is represented by a vector arrow tangent to the curve representing this field line. A point P prime on a field line emanating from the charge q two and the resultant electric field is represented by a vector arrow tangent to the curve representing this field line. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">For example, the field is weaker between like charges, as shown by the lines being farther apart in that region. (This is because the fields from each charge exert opposing forces on any charge placed between them.) (See Figure and Figure (a).) Furthermore, at a great distance from two like charges, the field becomes identical to the field from a single, larger charge.</p>
+<p class="prose">Figure (b) shows the electric field of two unlike charges. The field is stronger between the charges. In that region, the fields from each charge are in the same direction, and so their strengths add. The field of two unlike charges is weak at large distances, because the fields of the individual charges are in opposite directions and so their strengths subtract. At very large distances, the field of two unlike charges looks like that of a smaller single charge.</p>
+<div class="diagram"><img src="images/ch18/fig18-24-in-part-a-two-negative-charges-of-magnit.jpg" alt="In part a, two negative charges of magnitude minus q are placed at some distance. Their field lines are represented by curved arrows terminating into the negative charges. The curves are divergent. In part b, two charges are placed at a distance where one is positive labeled as plus q and other is negative labeled as minus q. The field lines represented by curved arrows start from the positive charge and end at the negative charge. The curves are convergent."><div class="d-cap">In part a, two negative charges of magnitude minus q are placed at some distance. Their field lines are represented by curved arrows terminating into the negative charges. The curves are divergent. In part b, two charges are placed at a distance where one is positive labeled as plus q and other is negative labeled as minus q. The field lines represented by curved arrows start from the positive charge and end at the negative charge. The curves are convergent. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">We use electric field lines to visualize and analyze electric fields (the lines are a pictorial tool, not a physical entity in themselves). The properties of electric field lines for any charge distribution can be summarized as follows:</p>
+<p class="prose">The last property means that the field is unique at any point. The field line represents the direction of the field; so if they crossed, the field would have two directions at that location (an impossibility if the field is unique).</p>
+<p class="prose">PHET EXPLORATIONS: CHARGES AND FIELDS</p>
+<p class="prose">Move point charges around on the playing field and then view the electric field, voltages, equipotential lines, and more. It's colorful, it's dynamic, it's free.</p>
+<div class="diagram"><img src="images/ch18/fig18-25-phet-iconpng.png" alt="PhET_Icon.png"><div class="d-cap">PhET_Icon.png (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.5. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Why does a car always attract dust right after it is polished? (Note that car wax and car tires are insulators.)</div><textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div><div class="cp-done" id="cpd6">✅ Unlocked!</div></div>
+    <div id="quiz-wrap6" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.5 Quiz</h3><p>3 questions</p></div></div><div id="q6">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A point charge of -0.50 μC is placed in an electric field of 4.0 × 10⁴ N/C pointing to the right. What is the force on the charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2.0 N to the right</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.02 N to the right</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.0 N to the left</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.02 N to the left</li>
+</ul><div class="qexp">The force is F = qE = (0.50 × 10⁻⁶)(4.0 × 10⁴) = 0.02 N; because the charge is negative, the force is in the opposite direction of the field.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is a property of electric field lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They can cross each other in regions of high field strength</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They always form closed loops</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They must begin on positive charges and end on negative charges</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Their density is inversely proportional to the field strength</li>
+</ul><div class="qexp">Field lines originate from positive charges and terminate on negative charges, and they never cross because the field is unique at every point.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">In an electric field line diagram, how is a stronger electric field represented compared to a weaker one?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Field lines are closer together</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Field lines are further apart</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Field lines are longer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Field lines are thicker</li>
+</ul><div class="qexp">The density of field lines (number of lines per unit area) is directly proportional to the magnitude of the electric field.</div></div>
+    </div><div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Previous</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Next →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.6</span></div><div class="h-title">18.6: Electric Forces in Biology</div><div class="h-desc">Classical electrostatics has an important role to play in modern molecular biology. Large molecules such as proteins, nucleic acids, and so on—so important to life—are usually electrically charged. DN...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe how a water molecule is polar.</li>
+      <li>Explain electrostatic screening by a water molecule within a living cell.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">dipole</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">a molecule’s lack of symmetrical charge distribution, causing one side to be more positive and another to be more negative</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.6</div>
+<p class="prose">Classical electrostatics has an important role to play in modern molecular biology. Large molecules such as proteins, nucleic acids, and so on—so important to life—are usually electrically charged. DNA itself is highly charged; it is the electrostatic force that not only holds the molecule together but gives the molecule structure and strength. Figure is a schematic of the DNA double helix.</p>
+<div class="diagram"><img src="images/ch18/fig18-26-a-double-helical-d-n-a-structure-is-show.jpg" alt="A double-helical D N A structure is shown in the figure."><div class="d-cap">A double-helical D N A structure is shown in the figure. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">The fournucleotide basesare given the symbols A (adenine), C (cytosine), G (guanine), and T (thymine). The order of the four bases varies in each strand, but the pairing between bases is always the same. C and G are always paired and A and T are always paired, which helps to preserve the order of bases in cell division (mitosis) so as to pass on the correct genetic information. Since the Coulomb force drops with distance (\(F \propto 1/r^{2}\)), the distances between the base pairs must be small enough that the electrostatic force is sufficient to hold them together.</p>
+<p class="prose">DNA is a highly charged molecule, with about \(2q_e\) (fundamental charge) per \(0.3\times 10^{-9}\)m. The distance separating the two strands that make up the DNA structure is about 1 nm, while the distance separating the individual atoms within each base is about 0.3 nm.</p>
+<p class="prose">One might wonder why electrostatic forces do not play a larger role in biology than they do if we have so many charged molecules. The reason is that the electrostatic force is “diluted” due toscreeningbetween molecules. This is due to the presence of other charges in the cell.</p>
+<div class="sh2">Polarity of Water Molecules</div>
+<p class="prose">The best example of this charge screening is the water molecule, represented as \(\mathrm{H_{2}O}\). Water is a stronglypolarmolecule. Its 10 electrons (8 from the oxygen atom and 2 from the two hydrogen atoms) tend to remain closer to the oxygen nucleus than the hydrogen nuclei. This creates two centers of equal and opposite charges—what is called adipole, as illustrated in Figure . The magnitude of the dipole is called the dipole moment.</p>
+<div class="diagram"><img src="images/ch18/fig18-27-molecular-structure-of-two-water-molecul.jpg" alt="Molecular structure of two water molecules is shown. Oxygen atom of one water molecule has minus delta on it and the Hydrogen atom of other water molecule has a positive delta charge on it. The force on attraction between these two atoms is shown as dotted line."><div class="d-cap">Molecular structure of two water molecules is shown. Oxygen atom of one water molecule has minus delta on it and the Hydrogen atom of other water molecule has a positive delta charge on it. The force on attraction between these two atoms is shown as dotted line. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">These two centers of charge will terminate some of the electric field lines coming from a free charge, as on a DNA molecule. This results in a reduction in the strength of theCoulomb interaction. One might say that screening makes the Coulomb force a short range force rather than long range. Other ions of importance in biology that can reduce or screen Coulomb interactions are \(\mathrm{Na^{+}}\), and \(\mathrm{K^{+}}\), and \(\mathrm{Cl^{-}}\). These ions are located both inside and outside of living cells. The movement of these ions through cell membranes is crucial to the motion of nerve impulses through nerve axons.</p>
+<p class="prose">Recent studies of electrostatics in biology seem to show that electric fields in cells can be extended over larger distances, in spite of screening, by “microtubules” within the cell. Thesemicrotubulesare hollow tubes composed of proteins that guide the movement of chromosomes when cells divide, the motion of other organisms within the cell, and provide mechanisms for motion of some cells (as motors).</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.6. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Describe how a positively charged object can be used to give another object a negative charge. What is the name of this process?</div><textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 80 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Quiz →</button></div><div class="cp-done" id="cpd7">✅ Unlocked!</div></div>
+    <div id="quiz-wrap7" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.6 Quiz</h3><p>3 questions</p></div></div><div id="q7">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Between two identical positive point charges, what can be observed about the electric field lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They connect one charge directly to the other</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They curve away from each other, resulting in a weak field between the charges</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>they merge into a single line pointing toward infinity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They spiral into the center point between the charges</li>
+</ul><div class="qexp">Because the charges repel and their individual fields point in opposite directions between them, the lines diverge and the net field is zero at the exact midpoint.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">How do field lines appear at a great distance from a configuration of two equal and opposite charges (a dipole)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They look like field lines from a single charge twice the magnitude</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They become perfectly parallel</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>they vanish completely</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They become very weak because the fields of the individual charges nearly cancel</li>
+</ul><div class="qexp">At large distances, the opposite charges appear to be in the same location, leading to a cancellation of their effects and a very weak resultant field.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why is the water molecule (H₂O) considered a polar molecule?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It has a non-uniform distribution of charge creating a dipole</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It only exists in cold climates</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It can be turned into an insulator or a conductor</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It contains only protons in its chemical bonds</li>
+</ul><div class="qexp">The 10 electrons in water tend to stay closer to the oxygen nucleus, creating a positive side and a negative side within the molecule.</div></div>
+    </div><div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Previous</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(8)">Next →</button></div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.7</span></div><div class="h-title">18.7: Conductors and Electric Fields in Static Equilibrium</div><div class="h-desc">Conductorscontainfree chargesthat move easily. When excess charge is placed on a conductor or the conductor is put into a static electric field, charges in the conductor quickly respond to reach a ste...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.7</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>List the three properties of a conductor in electrostatic equilibrium.</li>
+      <li>Explain the effect of an electric field on free charges in a conductor.</li>
+      <li>Explain why no electric field may exist inside a conductor.</li>
+      <li>Describe the electric field surrounding Earth.</li>
+      <li>Explain what happens to an electric field applied to an irregular conductor.</li>
+      <li>Describe how a lightning rod works.</li>
+      <li>Explain how a metal car may protect passengers inside from the dangerous electric fields caused by a downed line touching the car.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.7</div>
+<p class="prose">Conductorscontainfree chargesthat move easily. When excess charge is placed on a conductor or the conductor is put into a static electric field, charges in the conductor quickly respond to reach a steady state calledelectrostatic equilibrium.</p>
+<p class="prose">Figure shows the effect of an electric field on free charges in a conductor. The free charges move until the field is perpendicular to the conductor’s surface. There can be no component of the field parallel to the surface in electrostatic equilibrium, since, if there were, it would produce further movement of charge. A positive free charge is shown, but free charges can be either positive or negative and are, in fact, negative in metals. The motion of a positive charge is equivalent to the motion of a negative charge in the opposite direction.</p>
+<div class="diagram"><img src="images/ch18/fig18-28-in-part-a-an-electric-field-e-exists-at-.jpg" alt="In part a, an electric field E exists at some angle with the horizontal applied on a conductor. One component of this field E parallel is along x axis represented by a vector arrow and other E perpendicular, is along y axis represented by a vector arrow. Charge inside the conductor moves along x axis so the force acting on it is F parallel, which is equal to q multiplied by E parallel. In part b, a charge is shown inside the conductor and electric field is represented by a vector arrow pointing upward starting from the surface of the conductor."><div class="d-cap">In part a, an electric field E exists at some angle with the horizontal applied on a conductor. One component of this field E parallel is along x axis represented by a vector arrow and other E perpendicular, is along y axis represented by a vector arrow. Charge inside the conductor moves along x axis so the force acting on it is F parallel, which is equal to q multiplied by E parallel. In part b, a charge is shown inside the conductor and electric field is represented by a vector arrow pointing upward starting from the surface of the conductor. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A conductor placed in anelectric fieldwill bepolarized. Figure shows the result of placing a neutral conductor in an originally uniform electric field. The field becomes stronger near the conductor but entirely disappears inside it.</p>
+<div class="diagram"><img src="images/ch18/fig18-29-a-spherical-conductor-is-placed-in-the-e.jpg" alt="A spherical conductor is placed in the external electric field. The field lines are shown running from left to right. The field lines enter and leave the conductor at right angles. Negative charges accumulate on the left surface of the conductor and positive charges accumulate on the right surface of the conductor."><div class="d-cap">A spherical conductor is placed in the external electric field. The field lines are shown running from left to right. The field lines enter and leave the conductor at right angles. Negative charges accumulate on the left surface of the conductor and positive charges accumulate on the right surface of the conductor. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">MISCONCEPTION ALERT: ELECTRIC FIELD INSIDE A CONDUCTOR</p>
+<p class="prose">Excess charges placed on a spherical conductor repel and move until they are evenly distributed, as shown in Figure . Excess charge is forced to the surface until the field inside the conductor is zero. Outside the conductor, the field is exactly the same as if the conductor were replaced by a point charge at its center equal to the excess charge.</p>
+<div class="diagram"><img src="images/ch18/fig18-30-a-positively-charged-sphere-is-shown-and.png" alt="A positively charged sphere is shown and positive charges are distributed all over the surface. Electric field lines emanate from the sphere in the space shown by the vector arrow pointing outward."><div class="d-cap">A positively charged sphere is shown and positive charges are distributed all over the surface. Electric field lines emanate from the sphere in the space shown by the vector arrow pointing outward. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PROPERTIES OF A CONDUCTOR IN ELECTROSTATIC EQUILIBRIUM</p>
+<p class="prose">The properties of a conductor are consistent with the situations already discussed and can be used to analyze any conductor in electrostatic equilibrium. This can lead to some interesting new insights, such as described below.</p>
+<p class="prose">How can a very uniform electric field be created? Consider a system of two metal plates with opposite charges on them, as shown in Figure . The properties of conductors in electrostatic equilibrium indicate that the electric field between the plates will be uniform in strength and direction. Except near the edges, the excess charges distribute themselves uniformly, producing field lines that are uniformly spaced (hence uniform in strength) and perpendicular to the surfaces (hence uniform in direction, since the plates are flat). The edge effects are less important when the plates are close together.</p>
+<div class="diagram"><img src="images/ch18/fig18-31-two-charged-metal-plates-are-shown-the-l.jpg" alt="Two charged metal plates are shown. The lower plate has negative charge and the upper plate has positive charge. The electric field lines start from positive plate and enter the negative plate represented by arrows."><div class="d-cap">Two charged metal plates are shown. The lower plate has negative charge and the upper plate has positive charge. The electric field lines start from positive plate and enter the negative plate represented by arrows. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Earth’s Electric Field</div>
+<p class="prose">A near uniform electric field of approximately 150 N/C, directed downward, surrounds Earth, with the magnitude increasing slightly as we get closer to the surface. What causes the electric field? At around 100 km above the surface of Earth we have a layer of charged particles, called theionosphere. The ionosphere is responsible for a range of phenomena including the electric field surrounding Earth. In fair weather the ionosphere is positive and the Earth largely negative, maintaining the electric field (Figure \(\PageIndex{5a}\)).</p>
+<p class="prose">In storm conditions clouds form and localized electric fields can be larger and reversed in direction (Figure \(\PageIndex{5b}\)). The exact charge distributions depend on the local conditions, and variations of Figure \(\PageIndex{5b}\) are possible.</p>
+<p class="prose">If the electric field is sufficiently large, the insulating properties of the surrounding material break down and it becomes conducting. For air this occurs at around \(3\times 10^{6}\) N/C. Air ionizes ions and electrons recombine, and we get discharge in the form of lightning sparks and corona discharge.</p>
+<div class="diagram"><img src="images/ch18/fig18-32-in-part-a-a-child-is-flying-a-kite-with-.jpg" alt="In part a, a child is flying a kite with two men in an open field on a bright sunny day. In part b, lightning appears over a body of water in stormy weather."><div class="d-cap">In part a, a child is flying a kite with two men in an open field on a bright sunny day. In part b, lightning appears over a body of water in stormy weather. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Electric Fields on Uneven Surfaces</div>
+<p class="prose">So far we have considered excess charges on a smooth, symmetrical conductor surface. What happens if a conductor has sharp corners or is pointed? Excess charges on a nonuniform conductor become concentrated at the sharpest points. Additionally, excess charge may move on or off the conductor at the sharpest points.</p>
+<p class="prose">To see how and why this happens, consider the charged conductor in Figure . The electrostatic repulsion of like charges is most effective in moving them apart on the flattest surface, and so they become least concentrated there. This is because the forces between identical pairs of charges at either end of the conductor are identical, but the components of the forces parallel to the surfaces are different. The component parallel to the surface is greatest on the flattest surface and, hence, more effective in moving the charge.</p>
+<p class="prose">The same effect is produced on a conductor by an externally applied electric field, as seen in Figure \(\PageIndex{6c}\). Since the field lines must be perpendicular to the surface, more of them are concentrated on the most curved parts.</p>
+<div class="diagram"><img src="images/ch18/fig18-33-in-part-a-a-conductor-is-shown-with-the-.jpg" alt="In part a, a conductor is shown with the unsymmetrical shape. The identical pair of charges at opposite ends on the conductor have similar components of forces represented by arrows. In part b, the unsymmetrical object has positive charge on its surface. The electric field lines are shown emerging perpendicular from the surface of the conductor represented by vector arrow. In part c, the field lines in and around the conductor running from left to right is shown. The left surface of the conductor has negative charge and the right surface has positive charge. The field lines enter and leave the conductor at right angles."><div class="d-cap">In part a, a conductor is shown with the unsymmetrical shape. The identical pair of charges at opposite ends on the conductor have similar components of forces represented by arrows. In part b, the unsymmetrical object has positive charge on its surface. The electric field lines are shown emerging perpendicular from the surface of the conductor represented by vector arrow. In part c, the field lines in and around the conductor running from left to right is shown. The left surface of the conductor has negative charge and the right surface has positive charge. The field lines enter and leave the conductor at right angles. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Applications of Conductors</div>
+<p class="prose">On a very sharply curved surface, such as shown in Figure , the charges are so concentrated at the point that the resulting electric field can be great enough to remove them from the surface. This can be useful.</p>
+<p class="prose">Lightning rods work best when they are most pointed. The large charges created in storm clouds induce an opposite charge on a building that can result in a lightning bolt hitting the building. The induced charge is bled away continually by a lightning rod, preventing the more dramatic lightning strike.</p>
+<div class="diagram"><img src="images/ch18/fig18-34-a-cone-shaped-positively-charged-conduct.jpg" alt="A cone shaped positively charged conductor is shown where most of the positive charges are accumulated at the tip. The field lines represented by arrows emerge at right angles from the surface of the conductor in outward direction. The density of field lines is greater at the tip of the cone than at other surfaces."><div class="d-cap">A cone shaped positively charged conductor is shown where most of the positive charges are accumulated at the tip. The field lines represented by arrows emerge at right angles from the surface of the conductor in outward direction. The density of field lines is greater at the tip of the cone than at other surfaces. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Of course, we sometimes wish to prevent the transfer of charge rather than to facilitate it. In that case, the conductor should be very smooth and have as large a radius of curvature as possible. (Figure Smooth surfaces are used on high-voltage transmission lines, for example, to avoid leakage of charge into the air.</p>
+<p class="prose">Another device that makes use of some of these principles is aFaraday cage. This is a metal shield that encloses a volume. All electrical charges will reside on the outside surface of this shield, and there will be no electrical field inside. A Faraday cage is used to prohibit stray electrical fields in the environment from interfering with sensitive measurements, such as the electrical signals inside a nerve cell.</p>
+<p class="prose">During electrical storms if you are driving a car, it is best to stay inside the car as its metal body acts as a Faraday cage with zero electrical field inside. If in the vicinity of a lightning strike, its effect is felt on the outside of the car and the inside is unaffected, provided you remain totally inside. This is also true if an active (“hot”) electrical wire was broken (in a storm or an accident) and fell on your car.</p>
+<div class="diagram"><img src="images/ch18/fig18-35-in-part-a-a-lightning-rod-is-shown-on-th.jpg" alt="In part a, a lightning rod is shown on the roof of a house. In part b, a person is touching the metal sphere of the Van De Graaff and his hair is standing up."><div class="d-cap">In part a, a lightning rod is shown on the roof of a house. In part b, a person is touching the metal sphere of the Van De Graaff and his hair is standing up. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.7. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp8"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">What is grounding? What effect does it have on a charged conductor? On a charged insulator?</div><textarea class="cp-textarea" id="cpt8" placeholder="Write your answer here..." oninput="cpCheck(8)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc8">Characters: <span id="cpn8">0</span> / 80 required</div><button class="cp-btn" id="cpb8" onclick="cpUnlock(8)">Unlock Quiz →</button></div><div class="cp-done" id="cpd8">✅ Unlocked!</div></div>
+    <div id="quiz-wrap8" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.7 Quiz</h3><p>3 questions</p></div></div><div id="q8">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the effect of electrostatic screening by water molecules in a biological cell?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It increases the range of the Coulomb force</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It reduces the effective strength of the Coulomb interaction between free charges</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It prevents all electrical signals from traveling</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It causes DNA to unravel instantly</li>
+</ul><div class="qexp">Polar water molecules and ions align to partially neutralize the fields of other charges, making the Coulomb force effectively shorter-range in biological environments.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which biological molecule uses the electrostatic force to pair bases and provide structural strength to its double-helix shape?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Glucose</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Hemoglobin</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ATP</li>
+</ul><div class="qexp">The structural integrity and base-pairing of DNA rely heavily on the attractive electrostatic forces between specific molecules.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">A conductor is in electrostatic equilibrium. What is the magnitude of the electric field inside the material of the conductor?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is equal to the external field</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It depends on the thickness of the conductor</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is infinite</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is zero</li>
+</ul><div class="qexp">Inside a conductor in equilibrium, charges distribute themselves on the surface to perfectly cancel the internal electric field.</div></div>
+    </div><div class="qscore" id="sc8"><div class="score-n" id="scn8">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">← Previous</button><button class="mc-btn" onclick="markDone(8,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(9)">Next →</button></div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 18 · <span>Section 18.8</span></div><div class="h-title">18.8: Applications of Electrostatics</div><div class="h-desc">The study ofelectrostaticshas proven useful in many areas. This module covers just a few of the many applications of electrostatics.</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 18.8</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Name several real-world applications of the study of electrostatics.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 18.8</div>
+<p class="prose">The study ofelectrostaticshas proven useful in many areas. This module covers just a few of the many applications of electrostatics.</p>
+<div class="sh3">The Van de Graaff Generator</div>
+<p class="prose">Van de Graaff generators(or Van de Graaffs) are not only spectacular devices used to demonstrate high voltage due to static electricity—they are also used for serious research. The first was built by Robert Van de Graaff in 1931 (based on original suggestions by Lord Kelvin) for use in nuclear physics research. Figure shows a schematic of a large research version. Van de Graaffs utilize both smooth and pointed surfaces, and conductors and insulators to generate large static charges and, hence, large voltages.</p>
+<p class="prose">A very large excess charge can be deposited on the sphere, because it moves quickly to the outer surface. Practical limits arise because the large electric fields polarize and eventually ionize surrounding materials, creating free charges that neutralize excess charge or allow it to escape. Nevertheless, voltages of 15 million volts are well within practical limits.</p>
+<div class="diagram"><img src="images/ch18/fig18-36-schematic-of-van-de-graaff-generator-is-.jpg" alt="Schematic of Van de Graaff generator is shown. The parts of the generators shown include a conductor, insulator, nonconductive belt, ion source, and experimental area."><div class="d-cap">Schematic of Van de Graaff generator is shown. The parts of the generators shown include a conductor, insulator, nonconductive belt, ion source, and experimental area. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">TAKE-HOME EXPERIMENT: ELECTROSTATICS AND HUMIDITY</p>
+<p class="prose">Rub a comb through your hair and use it to lift pieces of paper. It may help to tear the pieces of paper rather than cut them neatly. Repeat the exercise in your bathroom after you have had a long shower and the air in the bathroom is moist. Is it easier to get electrostatic effects in dry or moist air? Why would torn paper be more attractive to the comb than cut paper? Explain your observations.</p>
+<div class="sh3">Xerography</div>
+<p class="prose">Most copy machines use an electrostatic process calledxerography—a word coined from the Greek wordsxerosfor dry andgraphosfor writing. The heart of the process is shown in simplified form in Figure . A selenium-coated aluminum drum is sprayed with positive charge from points on a device called a corotron. Selenium is a substance with an interesting property—it is a photoconductor. That is, selenium is an insulator when in the dark and a conductor when exposed to light.</p>
+<p class="prose">In the first stage of the xerography process, the conducting aluminum drum is grounded so that a negative charge is induced under the thin layer of uniformly positively charged selenium. In the second stage, the surface of the drum is exposed to the image of whatever is to be copied. Where the image is light, the selenium becomes conducting, and the positive charge is neutralized. In dark areas, the positive charge remains, and so the image has been transferred to the drum.</p>
+<p class="prose">The third stage takes a dry black powder, called toner, and sprays it with a negative charge so that it will be attracted to the positive regions of the drum. Next, a blank piece of paper is given a greater positive charge than on the drum so that it will pull the toner from the drum. Finally, the paper and electrostatically held toner are passed through heated pressure rollers, which melt and permanently adhere the toner within the fibers of the paper.</p>
+<div class="diagram"><img src="images/ch18/fig18-37-four-stages-of-xerography-are-shown-a-po.jpg" alt="Four stages of xerography are shown. A positively charged aluminum drum is shown which is grounded. In second stage image is being transferred to it, creating positive image. In third stage, negatively charged toner is attached with the drum and in fourth stage, toner is pulled by the paper which is highly charged."><div class="d-cap">Four stages of xerography are shown. A positively charged aluminum drum is shown which is grounded. In second stage image is being transferred to it, creating positive image. In third stage, negatively charged toner is attached with the drum and in fourth stage, toner is pulled by the paper which is highly charged. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Laser Printers</div>
+<p class="prose">Laser printersuse the xerographic process to make high-quality images on paper, employing a laser to produce an image on the photoconducting drum as shown in Figure . In its most common application, the laser printer receives output from a computer, and it can achieve high-quality output because of the precision with which laser light can be controlled. Many laser printers do significant information processing, such as making sophisticated letters or fonts, and may contain a computer more powerful than the one giving them the raw data to be printed.</p>
+<div class="diagram"><img src="images/ch18/fig18-38-a-laser-printer-mechanism-is-shown-laser.jpg" alt="A laser printer mechanism is shown. Laser beam produced from a computer, laser, or optics is incident on the drum containing some image."><div class="d-cap">A laser printer mechanism is shown. Laser beam produced from a computer, laser, or optics is incident on the drum containing some image. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh3">Ink Jet Printers and Electrostatic Painting</div>
+<p class="prose">Theink jet printer, commonly used to print computer-generated text and graphics, also employs electrostatics. A nozzle makes a fine spray of tiny ink droplets, which are then given an electrostatic charge (Figure . Once charged, the droplets can be directed, using pairs of charged plates, with great precision to form letters and images on paper. Ink jet printers can produce color images by using a black jet and three other jets with primary colors, usually cyan, magenta, and yellow, much as a color television produces color (this is more difficult with xerography, requiring multiple drums and toners).</p>
+<div class="diagram"><img src="images/ch18/fig18-39-an-ink-jet-printer-mechanism-is-shown-in.jpg" alt="An ink-jet printer mechanism is shown. Ink is projected from ink nozzle and passes through the charging electrodes moving through deflection plate and finally imprinting on paper."><div class="d-cap">An ink-jet printer mechanism is shown. Ink is projected from ink nozzle and passes through the charging electrodes moving through deflection plate and finally imprinting on paper. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Electrostatic painting employs electrostatic charge to spray paint onto odd-shaped surfaces. Mutual repulsion of like charges causes the paint to fly away from its source. Surface tension forms drops, which are then attracted by unlike charges to the surface to be painted. Electrostatic painting can reach those hard-to-get at places, applying an even coat in a controlled manner. If the object is a conductor, the electric field is perpendicular to the surface, tending to bring the drops in perpendicularly. Corners and points on conductors will receive extra paint. Felt can similarly be applied.</p>
+<div class="sh3">Smoke Precipitators and Electrostatic Air Cleaning</div>
+<p class="prose">Another important application of electrostatics is found in air cleaners, both large and small. The electrostatic part of the process places excess (usually positive) charge on smoke, dust, pollen, and other particles in the air and then passes the air through an oppositely charged grid that attracts and retains the charged particles (Figure . Largeelectrostatic precipitatorsare used industrially to remove over 99% of the particles from stack gas emissions associated with the burning of coal and oil. Home precipitators, often in conjunction with the home heating and air conditioning system, are very effective in removing polluting particles, irritants, and allergens.</p>
+<div class="diagram"><img src="images/ch18/fig18-40-a-schematic-of-an-electrostatic-precipit.jpg" alt="(a) Schematic of an electrostatic precipitator. Air is passed through grids of opposite charge. The first grid charges airborne particles, while the second attracts and collects them. (b) The dramatic effect of electrostatic precipitators is seen by the absence of smoke from this power plant.[alt]Schematic of an electrostatic precipitator is shown. Four filters are shown one after another. Air passes through initial filter, then through positively charged grid, then through the third grid which is negatively charged and finally through the final grid. The number of particles is shown decreasing as air passes through various filters."><div class="d-cap">(a) Schematic of an electrostatic precipitator. Air is passed through grids of opposite charge. The first grid charges airborne particles, while the second attracts and collects them. (b) The dramatic effect of electrostatic precipitators is seen by the absence of smoke from this power plant.[alt]Schematic of an electrostatic precipitator is shown. Four filters are shown one after another. Air passes through initial filter, then through positively charged grid, then through the third grid which is negatively charged and finally through the final grid. The number of particles is shown decreasing as air passes through various filters. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">PROBLEM-SOLVING STRATEGIES FOR ELECTROSTATICS</p>
+<p class="prose">The following worked example illustrates how this strategy is applied:</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Acceleration of a Charged Drop of Gasoline</span></div><div class="example-body">
+<p class="prose">If steps are not taken to ground a gasoline pump, static electricity can be placed on gasoline when filling your car’s tank. Suppose a tiny drop of gasoline has a mass of \(4.00\times 10^{-15}kg\) and is given a positive charge of \(3.20\times 10^{-19}C\). (a) Find the weight of the drop. (b) Calculate the electric force on the drop if there is an upward electric field of strength \(3.00\times 10^{5} N/C\) due to other static electricity in the vicinity. (c) Calculate the drop’s acceleration.</p>
+<p class="prose">To solve an integrated concept problem, we must first identify the physical principles involved and identify the chapters in which they are found.</p>
+<p class="prose">The following solutions to each part of the example illustrate how the specific problem-solving strategies are applied. These involve identifying knowns and unknowns, checking to see if the answer is reasonable, and so on.</p>
+<p class="prose">Weight is mass times the acceleration due to gravity, as first expressed in</p>
+<p class="prose">Entering the given mass and the average acceleration due to gravity yields</p>
+<div class="math-display">\[\begin{align*} w &=(4.00\times 10^{-15}kg)(9.80m/s^{2}) \\[5pt] &= 3.92\times 10^{-14}N.\end{align*} \]</div>
+<p class="prose">This is a small weight, consistent with the small mass of the drop.</p>
+<p class="prose">The force an electric field exerts on a charge is given by rearranging the following equation:</p>
+<p class="prose">Here we are given the charge (\(3.20\times 10^{-19}C\) is twice the fundamental unit of charge) and the electric field strength, and so the electric force is found to be</p>
+<div class="math-display">\[\begin{align*} F&=(3.20\times 10^{-19}C)(3.00\times 10^{5}N/C) \\[5pt] &=9.60\times 10^{-14}N. \end{align*} \]</div>
+<p class="prose">While this is a small force, it is greater than the weight of the drop.</p>
+<p class="prose">The acceleration can be found using Newton’s second law, provided we can identify all of the external forces acting on the drop. We assume only the drop’s weight and the electric force are significant. Since the drop has a positive charge and the electric field is given to be upward, the electric force is upward. We thus have a one-dimensional (vertical direction) problem, and we can state Newton’s second law as</p>
+<div class="math-display">\[a=\dfrac{F_{net}}{m}. \nonumber\]</div>
+<p class="prose">where \(F_{net}=F-w\). Entering this and the known values into the expression for Newton’s second law yields</p>
+<div class="math-display">\[\begin{align*} a &=\dfrac{F-w}{m} \\[5pt] &=\dfrac{9.60\times 10^{-14}N-3.92\times 10^{-14}N}{4.00\times 10^{-15}kg} \\[5pt] &= 14.2m/s^{2}. \end{align*} \]</div>
+<p class="prose">This is an upward acceleration great enough to carry the drop to places where you might not wish to have gasoline.</p>
+<p class="prose">This worked example illustrates how to apply problem-solving strategies to situations that include topics in different chapters. The first step is to identify the physical principles involved in the problem. The second step is to solve for the unknown using familiar problem-solving strategies. These are found throughout the text, and many worked examples show how to use them for single topics. In this integrated concepts example, you can see how to apply them across several topics. You will find these techniques useful in applications of physics outside a physics course, such as in your profession, in other science disciplines, and in everyday life. The following problems will build your skills in the broad application of physical principles.</p>
+<p class="prose">The Unreasonable Results exercises for this module have results that are unreasonable because some premise is unreasonable or because certain of the premises are inconsistent with one another. Physical principles applied correctly then produce unreasonable results. The purpose of these problems is to give practice in assessing whether nature is being accurately described, and if it is not to trace the source of difficulty.</p>
+<p class="prose">PROBLEM-SOLVING STRATEGY</p>
+<p class="prose">To determine if an answer is reasonable, and to determine the cause if it is not, do the following.</p>
+</div></div>
+<div class="sh3">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 18.8. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp9"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Figure shows the charge distribution in a water molecule, which is called a polar molecule because it has an inherent separation of charge. Given water’s polar character, explain what effect humidity has on removing excess charge from objects.</div><textarea class="cp-textarea" id="cpt9" placeholder="Write your answer here..." oninput="cpCheck(9)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc9">Characters: <span id="cpn9">0</span> / 80 required</div><button class="cp-btn" id="cpb9" onclick="cpUnlock(9)">Unlock Quiz →</button></div><div class="cp-done" id="cpd9">✅ Unlocked!</div></div>
+    <div id="quiz-wrap9" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 18.8 Quiz</h3><p>3 questions</p></div></div><div id="q9">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">On an irregularly shaped conductor, where is the excess charge most concentrated?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>At the sharpest points or corners</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>On the flattest surfaces</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Evenly across the entire surface</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In the exact geometric center of the object</li>
+</ul><div class="qexp">Repulsive forces between charges are most effective at pushing them away from each other on flat surfaces, leaving them most crowded at points with a small radius of curvature.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why is it safe to stay inside a car during a lightning storm?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The rubber tires insulate the car from the ground</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The metal body acts as a Faraday cage, keeping the internal electric field at zero</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The glass windows block the flow of electrons</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gasoline in the tank neutralizes the lightning strike</li>
+</ul><div class="qexp">A metal enclosure (Faraday cage) ensures that all excess charge resides on the outer surface and the electric field inside is zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">When field lines meet the surface of a conductor in electrostatic equilibrium, what angle do they form with the surface?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 degrees (parallel)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>45 degrees</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>90 degrees (perpendicular)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>180 degrees</li>
+</ul><div class="qexp">If there were a parallel component of the field, it would cause surface charges to move; thus, the field must be perpendicular in equilibrium.</div></div>
+    </div><div class="qscore" id="sc9"><div class="score-n" id="scn9">-</div><div class="score-l">out of 3 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">← Previous</button><button class="mc-btn" onclick="markDone(9,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(10)">Next →</button></div>
+</div>
+
+<div class="panel" id="p10">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 18</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 18: Electric Charge and Electric Field.</div><div class="h-meta"><div class="h-chip">📝 30 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>18.0</strong></td><td>18.0: Prelude to Electric Charge and Electric Field</td></tr>
+    <tr><td><strong>18.1</strong></td><td>18.1: Static Electricity and Charge - Conservation of Charge</td></tr>
+    <tr><td><strong>18.2</strong></td><td>18.2: Conductors and Insulators</td></tr>
+    <tr><td><strong>18.3</strong></td><td>18.3: Coulomb's Law</td></tr>
+    <tr><td><strong>18.4</strong></td><td>18.4: Electric Field- Concept of a Field Revisited</td></tr>
+    <tr><td><strong>18.5</strong></td><td>18.5: Electric Field Lines- Multiple Charges</td></tr>
+    <tr><td><strong>18.6</strong></td><td>18.6: Electric Forces in Biology</td></tr>
+    <tr><td><strong>18.7</strong></td><td>18.7: Conductors and Electric Fields in Static Equilibrium</td></tr>
+    <tr><td><strong>18.8</strong></td><td>18.8: Applications of Electrostatics</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp10"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt10" placeholder="Write your answer here..." oninput="cpCheck(10)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc10">Characters: <span id="cpn10">0</span> / 100 required</div><button class="cp-btn" id="cpb10" onclick="cpUnlock(10)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd10">✅ Unlocked!</div></div>
+    <div id="quiz-wrap10" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 18 Practice Test</h3><p>30 questions · All OpenStax Review Questions</p></div></div><div id="q10">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 30 review questions from OpenStax College Physics, Chapter 18. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">When a glass rod is rubbed with silk, the glass becomes positively charged and the silk becomes negatively charged. What will happen if two glass rods rubbed with silk are brought near each other?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They will attract each other</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They will repel each other</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>There will be no interaction</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They will first attract and then repel</li>
+</ul><div class="qexp">Since both glass rods acquire the same type of positive charge, they will repel each other according to the principle that like charges repel.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Which of the following is the SI unit of electric charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Volt</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Coulomb</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Ampere</li>
+</ul><div class="qexp">The coulomb (C) is the standard SI unit used to measure the quantity of electric charge.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">3</span><span class="qt-inner">An atom contains a nucleus with a positive charge and orbiting electrons with a negative charge. What is the charge of a single proton?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>+1.60 × 10⁻¹⁹ C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>-1.60 × 10⁻¹⁹ C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>0 C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>+1.00 C</li>
+</ul><div class="qexp">Protons carry a fundamental unit of positive charge equal in magnitude to the charge of an electron.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">How many protons are required to produce a net positive charge of 2.0 C?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.25 × 10¹⁸ protons</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.25 × 10¹⁸ protons</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>3.13 × 10¹⁹ protons</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.25 × 10¹⁹ protons</li>
+</ul><div class="qexp">Dividing the total charge (2.0 C) by the charge per proton (1.60 × 10⁻¹⁹ C) yields approximately 1.25 × 10¹⁹ protons.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">5</span><span class="qt-inner">Why are metals generally considered good conductors of electricity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They have a high density of protons</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Their atoms are packed very tightly</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They contain free electrons that can move easily</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They have a crystalline structure that blocks ions</li>
+</ul><div class="qexp">Conductors like metals contain electrons that are not bound to individual atoms, allowing them to move freely through the material.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">6</span><span class="qt-inner">A neutral metal sphere is charged by bringing a negatively charged rod near it and then grounding the side of the sphere opposite the rod. What is the resulting charge on the sphere?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Positive</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Negative</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Neutral</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Fluctuating</li>
+</ul><div class="qexp">In induction, the sphere acquires a charge opposite to that of the charging rod because the rod repels like charges into the ground.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">7</span><span class="qt-inner">What is the term for the separation of charges in an object that remains net neutral?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Ionization</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Polarization</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Grounding</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Superconduction</li>
+</ul><div class="qexp">Polarization involves shifting the distribution of charge within an object so that one side is more positive and the other more negative, while the total charge remains zero.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">8</span><span class="qt-inner">What happens to a charged conductor when it is grounded?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It becomes polarized</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It doubles its excess charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It creates a vacuum</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It becomes neutral as excess charge is transferred to or from the Earth</li>
+</ul><div class="qexp">The Earth acts as a vast reservoir that can easily accept or supply electrons to neutralize a charged object.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">9</span><span class="qt-inner">According to Coulomb’s law, if the distance between two point charges is doubled, what happens to the magnitude of the electrostatic force between them?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It decreases by a factor of 4</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It decreases by a factor of 2</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It increases by a factor of 2</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It increases by a factor of 4</li>
+</ul><div class="qexp">Coulomb's law follows an inverse square relationship, so doubling the distance (r) results in (1/2)² or 1/4 of the original force.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">10</span><span class="qt-inner">Calculate the magnitude of the electrostatic force between two 1.0 μC charges separated by 0.03 m.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.33 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>10 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>300 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.01 N</li>
+</ul><div class="qexp">Using F = k|q₁q₂|/r², F = (9.0 × 10⁹)(10⁻⁶)(10⁻⁶)/(0.03)², which simplifies to 10 N.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">11</span><span class="qt-inner">Why does the gravitational force dominate over the Coulomb force on a macroscopic scale, such as between the Earth and the Moon?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Gravitational forces are inherently stronger than Coulomb forces</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The distance is too great for Coulomb forces to act</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Large objects are usually electrically neutral, causing Coulomb forces to cancel out</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Magnetic fields interfere with Coulomb forces in space</li>
+</ul><div class="qexp">While the Coulomb force is much stronger for individual particles, most large-scale matter is neutral, leading to the near-total cancellation of electrostatic forces.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">If the force between two charges is 36 N, what will the force be if the distance between them is tripled?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>12 N</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>108 N</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>18 N</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>4 N</li>
+</ul><div class="qexp">Tripling the distance reduces the force by a factor of 3², which is 9; 36 N divided by 9 equals 4 N.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">13</span><span class="qt-inner">How is the electric field (E) defined at a point in space?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The product of charge and mass</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The ratio of the electrostatic force to the test charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The total energy per unit charge</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The rate of change of charge over time</li>
+</ul><div class="qexp">The electric field is defined as E = F/q, representing the force exerted per unit of positive test charge at a specific location.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">14</span><span class="qt-inner">In which direction do electric field lines point relative to a negative point charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Outward, away from the charge</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Circularly around the charge</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Inward, toward the charge</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Perpendicular to the plane of the charge</li>
+</ul><div class="qexp">By convention, electric field lines represent the direction of the force on a positive test charge, which is attracted toward negative charges.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">15</span><span class="qt-inner">Calculate the electric field strength 0.003 m (3 mm) away from a 2.0 nC point charge.</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2.0 × 10⁶ N/C</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>6.0 × 10³ N/C</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.2 × 10⁵ N/C</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.8 × 10⁴ N/C</li>
+</ul><div class="qexp">Using E = k|Q|/r², E = (9.0 × 10⁹)(2.0 × 10⁻⁹)/(0.003)², which results in 2.0 × 10⁶ N/C.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">16</span><span class="qt-inner">A point charge of -0.50 μC is placed in an electric field of 4.0 × 10⁴ N/C pointing to the right. What is the force on the charge?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>2.0 N to the right</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>0.02 N to the right</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.0 N to the left</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.02 N to the left</li>
+</ul><div class="qexp">The force is F = qE = (0.50 × 10⁻⁶)(4.0 × 10⁴) = 0.02 N; because the charge is negative, the force is in the opposite direction of the field.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">17</span><span class="qt-inner">Which of the following is a property of electric field lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They can cross each other in regions of high field strength</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They always form closed loops</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They must begin on positive charges and end on negative charges</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Their density is inversely proportional to the field strength</li>
+</ul><div class="qexp">Field lines originate from positive charges and terminate on negative charges, and they never cross because the field is unique at every point.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">18</span><span class="qt-inner">In an electric field line diagram, how is a stronger electric field represented compared to a weaker one?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Field lines are closer together</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Field lines are further apart</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Field lines are longer</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Field lines are thicker</li>
+</ul><div class="qexp">The density of field lines (number of lines per unit area) is directly proportional to the magnitude of the electric field.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Between two identical positive point charges, what can be observed about the electric field lines?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They connect one charge directly to the other</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They curve away from each other, resulting in a weak field between the charges</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>they merge into a single line pointing toward infinity</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They spiral into the center point between the charges</li>
+</ul><div class="qexp">Because the charges repel and their individual fields point in opposite directions between them, the lines diverge and the net field is zero at the exact midpoint.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">20</span><span class="qt-inner">How do field lines appear at a great distance from a configuration of two equal and opposite charges (a dipole)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They look like field lines from a single charge twice the magnitude</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They become perfectly parallel</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>they vanish completely</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They become very weak because the fields of the individual charges nearly cancel</li>
+</ul><div class="qexp">At large distances, the opposite charges appear to be in the same location, leading to a cancellation of their effects and a very weak resultant field.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">21</span><span class="qt-inner">Why is the water molecule (H₂O) considered a polar molecule?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It has a non-uniform distribution of charge creating a dipole</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It only exists in cold climates</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It can be turned into an insulator or a conductor</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It contains only protons in its chemical bonds</li>
+</ul><div class="qexp">The 10 electrons in water tend to stay closer to the oxygen nucleus, creating a positive side and a negative side within the molecule.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">22</span><span class="qt-inner">What is the effect of electrostatic screening by water molecules in a biological cell?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It increases the range of the Coulomb force</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It reduces the effective strength of the Coulomb interaction between free charges</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It prevents all electrical signals from traveling</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It causes DNA to unravel instantly</li>
+</ul><div class="qexp">Polar water molecules and ions align to partially neutralize the fields of other charges, making the Coulomb force effectively shorter-range in biological environments.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">23</span><span class="qt-inner">Which biological molecule uses the electrostatic force to pair bases and provide structural strength to its double-helix shape?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Glucose</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Hemoglobin</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>DNA</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>ATP</li>
+</ul><div class="qexp">The structural integrity and base-pairing of DNA rely heavily on the attractive electrostatic forces between specific molecules.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">24</span><span class="qt-inner">A conductor is in electrostatic equilibrium. What is the magnitude of the electric field inside the material of the conductor?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is equal to the external field</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It depends on the thickness of the conductor</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is infinite</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is zero</li>
+</ul><div class="qexp">Inside a conductor in equilibrium, charges distribute themselves on the surface to perfectly cancel the internal electric field.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">25</span><span class="qt-inner">On an irregularly shaped conductor, where is the excess charge most concentrated?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>At the sharpest points or corners</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>On the flattest surfaces</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Evenly across the entire surface</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In the exact geometric center of the object</li>
+</ul><div class="qexp">Repulsive forces between charges are most effective at pushing them away from each other on flat surfaces, leaving them most crowded at points with a small radius of curvature.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">26</span><span class="qt-inner">Why is it safe to stay inside a car during a lightning storm?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The rubber tires insulate the car from the ground</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The metal body acts as a Faraday cage, keeping the internal electric field at zero</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The glass windows block the flow of electrons</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Gasoline in the tank neutralizes the lightning strike</li>
+</ul><div class="qexp">A metal enclosure (Faraday cage) ensures that all excess charge resides on the outer surface and the electric field inside is zero.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">27</span><span class="qt-inner">When field lines meet the surface of a conductor in electrostatic equilibrium, what angle do they form with the surface?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0 degrees (parallel)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>45 degrees</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>90 degrees (perpendicular)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>180 degrees</li>
+</ul><div class="qexp">If there were a parallel component of the field, it would cause surface charges to move; thus, the field must be perpendicular in equilibrium.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">28</span><span class="qt-inner">In the xerography process, what is the unique property of the selenium-coated drum?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is a superconductor at room temperature</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is a permanent magnet</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is an insulator that becomes a conductor when exposed to light</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is an isotope of aluminum</li>
+</ul><div class="qexp">Selenium is a photoconductor, which allows an electrostatic image to be formed by neutralizing charge only in areas exposed to light.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">29</span><span class="qt-inner">What is the primary purpose of a Van de Graaff generator?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>To produce large amounts of excess charge and high voltages</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>To convert electricity into mechanical work</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>To measure the mass of an electron</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>To clean air in industrial smokestacks</li>
+</ul><div class="qexp">Van de Graaff generators are used to demonstrate high-voltage electrostatics and to provide high-energy particles for research.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">30</span><span class="qt-inner">How does an electrostatic precipitator remove smoke particles from stack gases?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>By burning the particles with high-voltage sparks</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>By giving particles an excess charge and attracting them to an oppositely charged grid</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>By using a magnetic field to deflect the particles</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>By filtering the particles through silk cloths</li>
+</ul><div class="qexp">Precipitators use electrostatic attraction to pull charged pollutants out of the air stream and onto collection plates.</div></div>
+    </div><div class="qscore" id="sc10"><div class="score-n" id="scn10">-</div><div class="score-l">out of 30 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">← Previous</button><button class="mc-btn" onclick="markDone(10,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Electric Charge and Electric Field',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:11,lessonCount:10,cpMin:80,lessons:['Overview','18.0 18.0: Prelude to Electric Charge and Electric Field','18.1 18.1: Static Electricity and Charge - Conservation of Charge','18.2 18.2: Conductors and Insulators','18.3 18.3: Coulomb's Law','18.4 18.4: Electric Field- Concept of a Field Revisited','18.5 18.5: Electric Field Lines- Multiple Charges','18.6 18.6: Electric Forces in Biology','18.7 18.7: Conductors and Electric Fields in Static Equilibrium','18.8 18.8: Applications of Electrostatics','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===10?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>

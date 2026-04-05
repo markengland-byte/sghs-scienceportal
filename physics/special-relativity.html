@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics · Special Relativity | Southern Gap High School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea"]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--navy:#0f2240;--navy-mid:#1a3560;--teal:#0b8f8c;--teal-light:#12c4c0;--teal-pale:#e0f6f6;--amber:#e8920e;--amber-pale:#fff7ea;--green:#1a7a4a;--green-pale:#eaf7f0;--red:#c0392b;--red-pale:#fdecea;--purple:#6c3fa0;--purple-pale:#f3eeff;--cream:#f8f6f1;--text:#1c2333;--muted:#5e6e8a;--border:#dde3ef;--sidebar-w:272px;--header-h:62px;--accent:#4f46e5;--accent-light:#6366f1;--accent-pale:#eef2ff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Source Sans 3",sans-serif;background:var(--cream);color:var(--text);line-height:1.75;font-size:16px;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 16px rgba(0,0,0,.35);}
+.tb-back{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);margin-right:8px;transition:all .2s;}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tb-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:12px;flex-shrink:0;}
+.tb-name{font-size:.85rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);}
+.tb-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 16px;font-size:.77rem;color:rgba(255,255,255,.75);font-weight:500;}
+.prog-wrap{position:fixed;top:var(--header-h);left:0;right:0;z-index:199;height:4px;background:rgba(255,255,255,.08);}
+#prog-bar{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.sidebar{position:fixed;top:calc(var(--header-h)+4px);left:0;bottom:0;width:var(--sidebar-w);background:var(--navy-mid);overflow-y:auto;z-index:100;}
+.sb-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:18px 18px 6px;}
+.sb-link{display:flex;align-items:flex-start;gap:10px;padding:9px 18px;text-decoration:none;cursor:pointer;transition:background .2s;border-right:3px solid transparent;}
+.sb-link:hover{background:rgba(255,255,255,.06);}
+.sb-link.active{background:rgba(192,57,43,.2);border-right-color:var(--accent);}
+.sb-link.done .sb-num{background:var(--green)!important;color:#fff!important;}
+.sb-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-link.active .sb-num{background:var(--accent);color:#fff;}
+.sb-txt{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500;line-height:1.4;}
+.sb-link.active .sb-txt{color:#fff;}
+.sb-div{height:1px;background:rgba(255,255,255,.07);margin:6px 18px;}
+.main{margin-left:var(--sidebar-w);padding-top:calc(var(--header-h)+4px);min-height:100vh;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:48px 56px 40px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);}
+.h-crumb{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.h-crumb span{color:rgba(255,255,255,.85);}
+.h-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:10px;}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.7);max-width:600px;line-height:1.65;}
+.h-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
+.h-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.82);}
+.hero-ov{background:linear-gradient(135deg,#2a0a0a,#8b1a1a);}
+.hero-sec{background:linear-gradient(135deg,#1a0a2a,#6a1a2a);}
+.hero-rev{background:linear-gradient(135deg,#1a1a2a,#3a3a6a);}
+.lc{padding:40px 56px 64px;max-width:900px;}
+.cs{margin-bottom:44px;}
+.eyebrow{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
+.sh2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.sh3{font-size:1.05rem;font-weight:700;color:var(--navy);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.prose{font-size:.96rem;line-height:1.85;color:#2a3245;margin-bottom:14px;}
+.prose strong{color:var(--navy);}
+.obj-box{background:var(--navy);color:#fff;border-radius:14px;padding:26px 32px;margin-bottom:30px;}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:14px;}
+.obj-list{list-style:none;}
+.obj-list li{padding:6px 0 6px 28px;position:relative;font-size:.9rem;color:rgba(255,255,255,.87);border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.obj-list li:last-child{border-bottom:none;}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent-light);font-weight:700;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:4px;}
+.vocab-hint{font-size:.76rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+.vcard{height:140px;cursor:pointer;perspective:1000px;}
+.vcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.vcard.flipped .vcard-inner{transform:rotateY(180deg);}
+.vfront,.vback{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;}
+.vfront{background:var(--navy);border:1px solid rgba(255,255,255,.1);}
+.vterm{font-family:"JetBrains Mono",monospace;font-size:.84rem;font-weight:600;color:var(--accent-light);line-height:1.3;}
+.vhint{font-size:.64rem;color:rgba(255,255,255,.26);margin-top:8px;}
+.vback{background:var(--accent-pale);border:1px solid var(--accent);transform:rotateY(180deg);}
+.vdef{font-size:.79rem;color:var(--navy);line-height:1.55;}
+.callout{border-radius:10px;padding:18px 22px;margin:18px 0;display:flex;gap:14px;}
+.ci{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.cb{flex:1;}
+.ct{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.cx{font-size:.89rem;line-height:1.7;}
+.callout.info{background:#eaf4ff;border-left:4px solid #3a86e0;}
+.callout.info .ct{color:#1a4a9a;}
+.callout.key{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.callout.key .ct{color:var(--navy);}
+.callout.openstax{background:#f0f4ff;border-left:4px solid #2563eb;}
+.callout.openstax .ct{color:#1e3a8a;}
+.dt{width:100%;border-collapse:collapse;font-size:.87rem;margin:16px 0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.dt th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-size:.76rem;font-weight:600;letter-spacing:.5px;}
+.dt td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dt tr:nth-child(even) td{background:#f3f6fc;}
+.dt tr:last-child td{border-bottom:none;}
+.diagram{margin:20px 0;text-align:center;}
+.diagram img{max-width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.d-cap{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.5;}
+.checkpoint-box{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:28px 32px;margin:28px 0;}
+.cp-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.cp-icon{width:40px;height:40px;background:var(--accent-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cp-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--navy);}
+.cp-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.cp-question{font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+.cp-textarea{width:100%;min-height:110px;padding:14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:"Source Sans 3",sans-serif;resize:vertical;line-height:1.65;transition:border .2s;outline:none;}
+.cp-textarea:focus{border-color:var(--accent);}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;}
+.cp-counter{font-size:.8rem;color:var(--muted);}
+.cp-counter span{font-weight:700;color:var(--amber);}
+.cp-btn{padding:10px 26px;border-radius:8px;border:none;font-size:.88rem;font-weight:700;font-family:"Source Sans 3",sans-serif;cursor:pointer;transition:all .2s;background:#ccc;color:#fff;pointer-events:none;}
+.cp-btn.ready{background:var(--accent);color:#fff;pointer-events:all;}
+.cp-btn.ready:hover{opacity:.9;}
+.cp-done{display:none;padding:10px 18px;background:var(--accent-pale);border:1px solid var(--accent);border-radius:8px;font-size:.85rem;color:var(--accent);font-weight:600;}
+.quiz-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:30px;margin:24px 0;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.qh{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.q-icon{width:42px;height:42px;background:var(--accent-pale);border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.qh h3{font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy);}
+.qh p{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.qq{margin-bottom:24px;}
+.qt{font-size:.94rem;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:flex-start;}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+.qt-inner{flex:1;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qo{display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.88rem;transition:border-color .2s,background .2s;line-height:1.55;}
+.qo:hover{border-color:var(--teal);background:var(--teal-pale);}
+.qo.correct{border-color:var(--teal);background:var(--teal-pale);}
+.qo.incorrect{border-color:var(--red);background:var(--red-pale);}
+.qo.revealed{pointer-events:none;}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.qo.correct .ol{background:var(--teal);color:#fff;}
+.qo.incorrect .ol{background:var(--red);color:#fff;}
+.qexp{display:none;margin-top:10px;padding:12px 15px;background:var(--teal-pale);border-radius:8px;font-size:.85rem;color:var(--navy);line-height:1.65;border-left:3px solid var(--teal);}
+.qexp.show{display:block;}
+.qscore{display:none;background:var(--navy);color:#fff;border-radius:10px;padding:20px 24px;margin-top:18px;text-align:center;}
+.qscore.show{display:block;}
+.score-n{font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--accent-light);}
+.score-l{font-size:.9rem;color:rgba(255,255,255,.65);margin-top:4px;}
+.lnav{display:flex;justify-content:space-between;align-items:center;padding:22px 56px;border-top:1px solid var(--border);background:#fff;}
+.nbtn{display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.nbtn.prev{background:#fff;border:2px solid var(--border);color:var(--muted);}
+.nbtn.prev:hover{border-color:var(--navy);color:var(--navy);}
+.nbtn.next{background:var(--navy);color:#fff;}
+.nbtn.next:hover{background:var(--navy-mid);}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;}
+.lnav-info{font-size:.78rem;color:var(--muted);text-align:center;}
+.mc-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:"Source Sans 3",sans-serif;}
+.mc-btn:hover,.mc-btn.done{background:var(--accent);color:#fff;}
+.os-credit{font-size:.72rem;color:var(--muted);font-style:italic;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);}
+.example-box{background:#fff;border:2px solid var(--accent);border-radius:14px;margin:24px 0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.example-header{background:var(--accent-pale);padding:16px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.example-icon{font-size:1.2rem;}
+.example-title{font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--navy);}
+.example-body{padding:20px 24px;}
+.example-body p.prose{margin-bottom:10px;}
+.example-sub{font-weight:700;color:var(--accent);font-size:.95rem;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.math-display{text-align:center;padding:16px 12px;margin:12px 0;font-size:1.1em;overflow-x:auto;}
+</style>
+</head>
+<body>
+<div id="name-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:#fff;border-radius:18px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.4);"><div style="font-size:2rem;margin-bottom:10px;">🚄</div><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#0f2240;margin-bottom:6px;">Special Relativity</h2><p style="font-size:.9rem;color:#5e6e8a;margin-bottom:24px;line-height:1.6;">Your quiz scores will be sent to Mr. England automatically. Enter your full name to get started.</p><label style="font-size:.8rem;font-weight:700;color:#0f2240;letter-spacing:.5px;display:block;margin-bottom:6px;">YOUR FULL NAME</label><input id="student-name" type="text" placeholder="First Last" autocomplete="name" style="width:100%;padding:12px 16px;border:2px solid #dde3ef;border-radius:10px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#dde3ef'"><div id="name-err" style="color:#c0392b;font-size:.8rem;margin-top:6px;display:none;">Please enter your first and last name.</div><button onclick="startModule()" style="margin-top:18px;width:100%;padding:13px;background:#0f2240;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:'Source Sans 3',sans-serif;cursor:pointer;">Start Learning →</button></div></div>
+<div id="submit-toast" style="position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.25);z-index:8000;display:none;align-items:center;gap:10px;max-width:320px;"><span style="font-size:1.1rem;">📤</span><span id="toast-msg">Score sent!</span></div>
+<header class="top-bar"><a class="tb-back" href="../ap/index.html">← A&amp;P</a><div class="tb-logo">🚄</div><div><div class="tb-name">Southern Gap High School · A&amp;P</div><div class="tb-sub">Mr. England</div></div><div class="tb-badge" id="student-badge">Special Relativity</div></header>
+<div class="prog-wrap"><div id="prog-bar"></div></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sb-label">Overview</div>
+  <a class="sb-link active" onclick="goTo(0)" href="#"><div class="sb-num">0</div><div class="sb-txt">Chapter Overview</div></a>
+  <div class="sb-div"></div>
+  <div class="sb-label">Content</div>
+  <div class="sb-div"></div>
+  <div class="sb-label">Review</div>
+  <a class="sb-link" onclick="goTo(1)" href="#"><div class="sb-num">1</div><div class="sb-txt">Chapter Review &amp; Practice Test</div></a>
+</nav>
+<main class="main" id="main">
+
+<div class="panel active" id="p0">
+  <div class="hero hero-ov"><div class="h-crumb">Physics · Chapter 28 · <span>Overview</span></div><div class="h-title">Special Relativity</div><div class="h-desc">Have you ever looked up at the night sky and dreamed of traveling to other planets in faraway star systems? Would there be other life forms? What would other worlds look like? You might imagine that such an amazing trip would be possible if we could just travel fast enough, but you will read in this chapter why this is not true. In 1905 Albert Einstein developed the theory of special relativity. This theory explains the limit on an object’s speed and describes the consequences. Relativity.The wordrelativitymight conjure an image of Einstein, but the idea did not begin with him. People have bee</div>
+    <div class="h-meta"><div class="h-chip">📚 6 Lessons</div><div class="h-chip">🚄 OpenStax College Physics Ch. 28</div><div class="h-chip">✍️ Checkpoints Required</div><div class="h-chip">📝 28 Review Questions</div></div>
+  </div>
+  <div class="lc">
+    <div class="callout openstax"><div class="ci">📖</div><div class="cb"><div class="ct">OpenStax College Physics — Chapter 28</div><div class="cx">All content is from OpenStax College Physics, Chapter 28: Special Relativity. CC BY 4.0. Access free at openstax.org.</div></div></div>
+    <div class="diagram"><img src="images/ch28/fig28-1-night-sky-with-bright-orion-nebula-clust.jpg" alt="Night sky with bright Orion Nebula cluster in the center amongst the group of stars."><div class="d-cap">Night sky with bright Orion Nebula cluster in the center amongst the group of stars. (OpenStax College Physics, CC BY 4.0)</div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" disabled>← Previous</button><div class="lnav-info">Overview · 0 of 6</div><button class="nbtn next" onclick="goTo(1)">Begin →</button></div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.1</span></div><div class="h-title">28.1: Einstein’s Postulates</div><div class="h-desc">Have you ever used the Pythagorean Theorem and gotten a wrong answer? Probably not, unless you made a mistake in either your algebra or your arithmetic. Each time you perform the same calculation, you...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.1</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>State and explain both of Einstein’s postulates.</li>
+      <li>Explain what an inertial frame of reference is.</li>
+      <li>Describe one way the speed of light can be changed</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">relativistic momentum</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">\(p\), the momentum of an object moving at relativistic velocity; \(p = \gamma mu\), where \(m\) is the rest mass of the object, \(u\) is its velocity relative to an observer, and the relativistic factor \(\gamma = \frac{1}{\sqrt{1 - \frac{u^2}{c^2}}}\)</div></div></div></div>
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">relativity</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the study of how different observers measure the same event</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.1</div>
+<p class="prose">Have you ever used the Pythagorean Theorem and gotten a wrong answer? Probably not, unless you made a mistake in either your algebra or your arithmetic. Each time you perform the same calculation, you know that the answer will be the same. Trigonometry is reliable because of the certainty that one part always flows from another in a logical way. Each part is based on a set of postulates, and you can always connect the parts by applying those postulates. Physics is the same way with the exception thatallparts must describe nature. If we are careful to choose the correct postulates, then our theory will follow and will be verified by experiment.</p>
+<div class="diagram"><img src="images/ch28/fig28-3-a-calculator-is-placed-on-open-math-book.jpg" alt="A calculator is placed on open math books and few papers. Problems on trigonometry are solved on one of the papers."><div class="d-cap">A calculator is placed on open math books and few papers. Problems on trigonometry are solved on one of the papers. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Einstein essentially did the theoretical aspect of this method forrelativity. With two deceptively simple postulates and a careful consideration of how measurements are made, he produced the theory ofspecial relativity.</p>
+<div class="sh2">Einstein’s First Postulate</div>
+<p class="prose">The first postulate upon which Einstein based the theory of special relativity relates to reference frames. All velocities are measured relative to some frame of reference. For example, a car’s motion is measured relative to its starting point or the road it is moving over, a projectile’s motion is measured relative to the surface it was launched from, and a planet’s orbit is measured relative to the star it is orbiting around. The simplest frames of reference are those that are not accelerated and are not rotating. Newton’s first law, the law of inertia, holds exactly in such a frame.</p>
+<p class="prose">Definition: Inertial Reference Frame</p>
+<p class="prose">Aninertial frame of referenceis a reference frame in which a body at rest remains at rest and a body in motion moves at a constant speed in a straight line unless acted on by an outside force.</p>
+<p class="prose">The laws of physics seem to be simplest in inertial frames. For example, when you are in a plane flying at a constant altitude and speed, physics seems to work exactly the same as if you were standing on the surface of the Earth. However, in a plane that is taking off, matters are somewhat more complicated. In these cases, the net force on an object, \(F\), is not equal to the product of mass and acceleration, \(ma\). Instead, \(F\) is equal to \(ma\) plus a fictitious force. This situation is not as simple as in an inertial frame. Not only are laws of physics simplest in inertial frames, but they should be the same in all inertial frames, since there is no preferred frame and no absolute motion. Einstein incorporated these ideas into hisfirst postulate of special relativity.</p>
+<p class="prose">First Postulate of Special Relativity</p>
+<p class="prose">The laws of physics are the same and can be stated in their simplest form in all inertial frames of reference.</p>
+<p class="prose">As with many fundamental statements, there is more to this postulate than meets the eye. The laws of physics include only those that satisfy this postulate. We shall find that the definitions of relativistic momentum and energy must be altered to fit. Another outcome of this postulate is the famous equation \(E = mc^{2}\).</p>
+<div class="sh2">Einstein’s Second Postulate</div>
+<p class="prose">The second postulate upon which Einstein based his theory of special relativity deals with the speed of light. Late in the 19th century, the major tenets of classical physics were well established. Two of the most important were the laws of electricity and magnetism and Newton’s laws. In particular, the laws of electricity and magnetism predict that light travels at \(c = 3.00 \times 10^{8} m/s\) in a vacuum, but they do not specify the frame of reference in which light has this speed.</p>
+<p class="prose">There was a contradiction between this prediction and Newton’s laws, in which velocities add like simple vectors. If the latter were true, then two observers moving at different speeds would see light traveling at different speeds. Imagine what a light wave would look like to a person traveling along with it at a speed \(c\). If such a motion were possible then the wave would be stationary relative to the observer. It would have electric and magnetic fields that varied in strength at various distances from the observer but were constant in time. This is not allowed by Maxwell’s equations. So either Maxwell’s equations are wrong, or an object with mass cannot travel at speed \(c\). Einstein concluded that the latter is true. An object with mass cannot travel at speed \(c\). This conclusion implies that light in a vacuum must always travel at speed \(c\) relative to any observer. Maxwell’s equations are correct, and Newton’s addition of velocities is not correct for light.</p>
+<p class="prose">Investigations such as Young’s double slit experiment in the early-1800s had convincingly demonstrated that light is a wave. Many types of waves were known, and all travelled in some medium. Scientists therefore assumed that a medium carried light, even in a vacuum, and light travelled at a speed \(c\) relative to that medium. Starting in the mid-1880s, the American physicist A. A. Michelson, later aided by E. W. Morley, made a series of direct measurements of the speed of light. The results of their measurements were startling.</p>
+<p class="prose">Michelson-Morley Experiment</p>
+<p class="prose">TheMichelson-Morley experimentdemonstrated that the speed of light in a vacuum is independent of the motion of the Earth about the Sun.</p>
+<p class="prose">The eventual conclusion derived from this result is that light, unlike mechanical waves such as sound, does not need a medium to carry it. Furthermore, the Michelson-Morley results implied that the speed of light \(c\) is independent of the motion of the source relative to the observer. That is, everyone observes light to move at speed \(c\) regardless of how they move relative to the source or one another. For a number of years, many scientists tried unsuccessfully to explain these results and still retain the general applicability of Newton’s laws.</p>
+<p class="prose">It was not until 1905, when Einstein published his first paper on special relativity, that the currently accepted conclusion was reached. Based mostly on his analysis that the laws of electricity and magnetism would not allow another speed for light, and only slightly aware of the Michelson-Morley experiment, Einstein detailed hissecond postulate of special relativity.</p>
+<p class="prose">Second Postulate of Special Relativity</p>
+<p class="prose">The speed of light \(c\) is a constant, independent of the relative motion of the source.</p>
+<p class="prose">Deceptively simple and counterintuitive, this and the first postulate leave all else open for change. Some fundamental concepts do change. Among the changes are the loss of agreement on the elapsed time for an event, the variation of distance with speed, and the realization that matter and energy can be converted into one another. You will read about these concepts in the following sections.</p>
+<p class="prose">Misconception Alert: Constancy of the Speed of Light</p>
+<p class="prose">The speed of light is a constant \(c = 3.00 \times 10^{8} m/s\)in a vacuum.If you remember the effect of the index of refraction fromThe Law of Refraction, the speed of light is lower in matter.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Explain how special relativity differs from general relativity.</p>
+<p class="prose">Special relativity applies only to unaccelerated motion, but general relativity applies to accelerated motion.</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.1. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp1"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Which of Einstein’s postulates of special relativity includes a concept that does not fit with the ideas of classical physics? Explain.</div><textarea class="cp-textarea" id="cpt1" placeholder="Write your answer here..." oninput="cpCheck(1)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc1">Characters: <span id="cpn1">0</span> / 80 required</div><button class="cp-btn" id="cpb1" onclick="cpUnlock(1)">Unlock Quiz →</button></div><div class="cp-done" id="cpd1">✅ Unlocked!</div></div>
+    <div id="quiz-wrap1" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.1 Quiz</h3><p>4 questions</p></div></div><div id="q1">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the primary difference between special relativity and general relativity as developed by Albert Einstein?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Special relativity deals with observers at constant velocity, while general relativity deals with accelerated observers.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Special relativity deals with gravity, while general relativity deals with electricity and magnetism.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Special relativity only applies to subatomic particles, while general relativity applies to macroscopic objects.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Special relativity describes motion at slow speeds, while general relativity describes motion near the speed of light.</li>
+</ul><div class="qexp">According to the prelude, special relativity deals with constant velocity frames, whereas general relativity addresses acceleration.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In the "classical limit," relativistic mechanics becomes essentially the same as classical mechanics. At approximately what speed does this limit occur?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>At speeds exceeding 99% of the speed of light.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>At speeds exactly equal to the speed of light in a vacuum.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>At speeds slower than about 1% of the speed of light.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>At speeds slower than the speed of sound in air.</li>
+</ul><div class="qexp">The text states that relativistic mechanics becomes the same as classical mechanics for objects moving slower than about 1% of the speed of light.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following is the most accurate definition of "relativity" in a physical context?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study of how objects increase in mass as they move through a medium.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The study of how different observers measure the same event.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The theory that all motion in the universe is determined by the observer's location.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The principle that time is a constant that never changes for any observer.</li>
+</ul><div class="qexp">The text defines relativity as the study of how different observers measure the same event.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">An inertial frame of reference is defined as a coordinate system where:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Newton’s second law includes fictitious forces to account for rotation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The observer is undergoing constant radial acceleration.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The velocity of all objects is measured relative to the center of the Sun.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A body at rest remains at rest and a body in motion moves at a constant speed in a straight line unless acted on by an outside force.</li>
+</ul><div class="qexp">An inertial frame is one in which Newton’s first law, the law of inertia, holds exactly.</div></div>
+    </div><div class="qscore" id="sc1"><div class="score-n" id="scn1">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">← Previous</button><button class="mc-btn" onclick="markDone(1,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(2)">Next →</button></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.2</span></div><div class="h-title">28.2: Simultaneity and Time Dilation</div><div class="h-desc">Do time intervals depend on who observes them? Intuitively, we expect the time for a process, such as the elapsed time for a foot race, to be the same for all observers. Our experience has been that d...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.2</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe simultaneity.</li>
+      <li>Describe time dilation.</li>
+      <li>Calculate γ.</li>
+      <li>Compare proper time and the observer’s measured time.</li>
+      <li>Explain why the twin paradox is a false paradox.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">time dilation</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the phenomenon of time passing slower to an observer who is moving relative to another observer</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.2</div>
+<p class="prose">Do time intervals depend on who observes them? Intuitively, we expect the time for a process, such as the elapsed time for a foot race, to be the same for all observers. Our experience has been that disagreements over elapsed time have to do with the accuracy of measuring time. When we carefully consider just how time is measured, however, we will find that elapsed time depends on the relative motion of an observer with respect to the process being measured.</p>
+<div class="diagram"><img src="images/ch28/fig28-4-a-runner-crossing-a-finishing-line-on-a-.jpg" alt="A runner crossing a finishing line on a road with a clock showing his finish time."><div class="d-cap">A runner crossing a finishing line on a road with a clock showing his finish time. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Simultaneity</div>
+<p class="prose">Consider how we measure elapsed time. If we use a stopwatch, for example, how do we know when to start and stop the watch? One method is to use the arrival of light from the event, such as observing a light turning green to start a drag race. The timing will be more accurate if some sort of electronic detection is used, avoiding human reaction times and other complications.</p>
+<p class="prose">Now suppose we use this method to measure the time interval between two flashes of light produced by flash lamps (Figure . Two flash lamps with observer A midway between them are on a rail car that moves to the right relative to observer B. Observer B arranges for the light flashes to be emitted just as A passes B, so that both A and B are equidistant from the lamps when the light is emitted. Observer B measures the time interval between the arrival of the light flashes. According to postulate 2, the speed of light is not affected by the motion of the lamps relative to B. Therefore, light travels equal distances to him at equal speeds. Thus observer B measures the flashes to be simultaneous.</p>
+<div class="diagram"><img src="images/ch28/fig28-5-a-girl-as-observer-a-is-sitting-down-mid.jpg" alt="A girl as observer A is sitting down midway on a rail car with two flash lamps at opposite sides equidistant from her. Multiple light rays that are emitted from respective flash lamps towards observer A are shown with arrows. A velocity vector arrow for the rail car is shown towards the right. A male observer B standing on the platform is facing her. Now observer A moves with the lamps on a rail car that is as the rail car moves towards the right of observer B. Observer B receives the light flashes simultaneously, but he notes that observer A receives the flash from the right first. B observes the flashes to be simultaneous to him but not to A."><div class="d-cap">A girl as observer A is sitting down midway on a rail car with two flash lamps at opposite sides equidistant from her. Multiple light rays that are emitted from respective flash lamps towards observer A are shown with arrows. A velocity vector arrow for the rail car is shown towards the right. A male observer B standing on the platform is facing her. Now observer A moves with the lamps on a rail car that is as the rail car moves towards the right of observer B. Observer B receives the light flashes simultaneously, but he notes that observer A receives the flash from the right first. B observes the flashes to be simultaneous to him but not to A. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Now consider what observer B sees happen to observer A. Observer B views light from the right reaching observer A before light from the left, because she has moved toward that flash lamp, lessening the distance the light must travel and reducing the time it takes to get to her. Light travels at speed \(c\) relative to both observers, but observer B remains equidistant between the points where the flashes were emitted, while A gets closer to the emission point on the right. From observer B’s point of view, then, there is a time interval between the arrival of the flashes to observer A. Observer B measures the flashes to arrive simultaneously relative to him but not relative to A.</p>
+<p class="prose">Now consider what observer A sees happening. She sees the light from the right at the same time that she sees the light from the left. Since both lamps are the same distance from her in her reference frame, from her perspective, the flashes occurred at the same time. Here a relative velocity between observers affects whether two events are observed to be simultaneous.</p>
+<p class="prose">Simultaneity is not absolute.</p>
+<p class="prose">This illustrates the power of clear thinking. We might have guessed incorrectly that if light is emitted simultaneously, then two observers halfway between the sources would see the flashes simultaneously. But careful analysis shows this not to be the case. Einstein was brilliant at this type ofthought experiment(in German, “Gedankenexperiment”). He very carefully considered how an observation is made and disregarded what might seem obvious. The validity of thought experiments, of course, is determined by actual observation. The genius of Einstein is evidenced by the fact that experiments have repeatedly confirmed his theory of relativity.</p>
+<p class="prose">In summary: Two events are defined to be simultaneous if an observer measures them as occurring at the same time (such as by receiving light from the events). Two events are not necessarily simultaneous to all observers.</p>
+<div class="sh2">Time Dilation</div>
+<p class="prose">The consideration of the measurement of elapsed time and simultaneity leads to an important relativistic effect.</p>
+<p class="prose">Definition: Time Dilation</p>
+<p class="prose">Time dilationis the phenomenon of time passing slower for an observer who is moving relative to another observer.</p>
+<p class="prose">Suppose, for example, an astronaut measures the time it takes for light to cross her ship, bounce off a mirror, and return (Figure . How does the elapsed time the astronaut measures compare with the elapsed time measured for the same event by a person on the Earth? Asking this question (another thought experiment) produces a profound result. We find that the elapsed time for a process depends on who is measuring it. In this case, the time measured by the astronaut is smaller than the time measured by the Earth-bound observer. The passage of time is different for the observers because the distance the light travels in the astronaut’s frame is smaller than in the Earth-bound frame. Light travels at the same speed in each frame, and so it will take longer to travel the greater distance in the Earth-bound frame.</p>
+<div class="diagram"><img src="images/ch28/fig28-6-for-part-a-an-astronaut-is-standing-insi.jpg" alt="For part a, an astronaut is standing inside the spaceship with an electronic timer. The timer is showing the time delta-t-zero. The astronaut has to measure time for an activity which has a mirror, the Sun as a source of light, and a receiver. A ray from the light source is striking the mirror and getting reflected back to the receiver. The distance between the source of light and mirror is given by d. For part b, the same activity is observed by a man standing on Earth. He has an electronic timer showing the time as delta-t. For the observer on earth the activity is fragmented into three portions. In the first portion, the ray of light is travelling a distance of and strikes the mirror in the second portion. The third portion shows the reflected ray of light striking the receiver represented by s and having a vertical distance of d. The horizontal distance L observed by the man from the beginning of the event till the end portion is given as L equals to velocity v into delta t upon two."><div class="d-cap">For part a, an astronaut is standing inside the spaceship with an electronic timer. The timer is showing the time delta-t-zero. The astronaut has to measure time for an activity which has a mirror, the Sun as a source of light, and a receiver. A ray from the light source is striking the mirror and getting reflected back to the receiver. The distance between the source of light and mirror is given by d. For part b, the same activity is observed by a man standing on Earth. He has an electronic timer showing the time as delta-t. For the observer on earth the activity is fragmented into three portions. In the first portion, the ray of light is travelling a distance of and strikes the mirror in the second portion. The third portion shows the reflected ray of light striking the receiver represented by s and having a vertical distance of d. The horizontal distance L observed by the man from the beginning of the event till the end portion is given as L equals to velocity v into delta t upon two. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">To quantitatively verify that time depends on the observer, consider the paths followed by light as seen by each observer (Figure \(\PageIndex{3c}\)). The astronaut sees the light travel straight across and back for a total distance of \(2D\), twice the width of her ship. The Earth-bound observer sees the light travel a total distance \(2s\). Since the ship is moving at speed \(v\) to the right relative to the Earth, light moving to the right hits the mirror in this frame. Light travels at a speed \(c\) in both frames, and because time is the distance divided by speed, the time measured by the astronaut is \[\Delta t_{0} = \frac{2D}{c}.\label{28.3.1}\] This time has a separate name to distinguish it from the time measured by the Earth-bound observer.</p>
+<p class="prose">Definition: Proper Time</p>
+<p class="prose">Proper time\(\Delta t_{0}\) is the time measured by an observer at rest relative to the event being observed.</p>
+<p class="prose">In the case of the astronaut observe the reflecting light, the astronaut measures proper time. The time measured by the Earth-bound observer is</p>
+<div class="math-display">\[\Delta t = \frac{2s}{c}\label{28.3.2}. \nonumber\]</div>
+<p class="prose">To find the relationship between \(\Delta t_{0}\) and \(\Delta t\), consider the triangles formed by \(D\) and \(s\) (Figure \(\PageIndex{3c}\).) The third side of these similar triangles is \(L\), the distance the astronaut moves as the light goes across her ship. In the frame of the Earth-bound observer,</p>
+<div class="math-display">\[L = \frac{v\Delta t}{2}\label{28.3.3}. \nonumber\]</div>
+<p class="prose">Using thePythagorean Theorem, the distance \(s\) is found to be</p>
+<div class="math-display">\[s = \sqrt{D^{2} + \left(\dfrac{v\Delta t}{2} \right) ^{2}}.\label{28.3.4} \nonumber\]</div>
+<p class="prose">Substituting \(s\) into the expression for the time interval \(\Delta t\) gives</p>
+<div class="math-display">\[\Delta t = \dfrac{2s}{c} = \dfrac{2 \sqrt{D^{2} + \left( \dfrac{v\Delta t}{2} \right) ^{2}}}{c}.\label{28.3.5} \nonumber\]</div>
+<p class="prose">We square this equation, which yields</p>
+<div class="math-display">\[\begin{align*} (\Delta t)^2 &= \dfrac{4\left(D^2 + \dfrac{v^2(\Delta t)^2}{4}\right)}{c^2} \\[4pt] &= \dfrac{4D^2}{c^2} + \dfrac{v^2}{c^2}(\Delta t)^2. \end{align*}\]</div>
+<p class="prose">Note that if we square the first expression we had for \(\Delta t_0\) we get \((\Delta t_0)^2 = \frac{4D^2}{c^2}\). This term appears in the preceding equation, giving us a means to relate the two time intervals. Thus,</p>
+<div class="math-display">\[(\Delta t)^2 = (\Delta t_0)^2 + \dfrac{v^2}{c^2}(\Delta t)^2. \nonumber\]</div>
+<p class="prose">Gathering terms, we solve for \(\Delta t\):</p>
+<div class="math-display">\[(\Delta t)^2 \left(1 - \dfrac{v^2}{c^2}\right) = (\Delta t_0)^2. \nonumber\]</div>
+<div class="math-display">\[(\Delta t)^2 = \dfrac{(\Delta t_0)^2}{1 - \dfrac{v^2}{c^2}}. \nonumber\]</div>
+<p class="prose">Taking the square root yields an important relationship between elapsed times:</p>
+<div class="math-display">\[\begin{align*} \Delta t &= \dfrac{\Delta t_0}{\sqrt{1 - \frac{v^2}{c^2}}} \\[4pt] &= \gamma \Delta t_0, \end{align*}\]</div>
+<div class="math-display">\[\gamma = \dfrac{1}{\sqrt{1 - \frac{v^2}{c^2}}}. \nonumber\]</div>
+<p class="prose">This equation for \(\Delta t\) is truly remarkable. First, as contended, elapsed time is not the same for different observers moving relative to one another, even though both are in inertial frames. Proper time \(\Delta t\) measured by an observer, like the astronaut moving with the apparatus, is smaller than time measured by other observers. Since those other observers measure a longer time \(\Delta t\), the effect is called time dilation. The Earth-bound observer sees time dilate (get longer) for a system moving relative to the Earth. Alternatively, according to the Earth-bound observer, time slows in the moving frame, since less time passes there. All clocks moving relative to an observer, including biological clocks such as aging, are observed to run slow compared with a clock stationary relative to the observer.</p>
+<p class="prose">Note that if the relative velocity is much less than the speed of light \((v \ll c)\), then \(\frac{v^2}{c^2}\) is extremely small, and the elapsed times \(\Delta t\) and \(\Delta t_0\) are nearly equal. At low velocities, modern relativity approaches classical physics—our everyday experiences have very small relativistic effects.</p>
+<p class="prose">The equation \(\Delta t = \gamma \delta t_0\) also implies that relative velocity cannot exceed the speed of light. As \(v\) approaches \(c\), \(\Delta t\) also implies that relative velocity cannot exceed the speed of light. As \(v\) exceeded \(c\), then we would be taking the square root of a negative number, producing an imaginary value for \(\Delta t\).</p>
+<p class="prose">There is considerable experimental evidence that the equation \(\delta t = \gamma \Delta t_0\) is correct. One example is found in cosmic ray particles that continuously rain down on the Earth from deep space. Some collisions of these particles with nuclei in the upper atmosphere result in short-lived particles called muons. The half-life (amount of time for half of a material to decay) of a muon is \(1.52 \, \mu s\) when it is at rest relative to the observer who measures the half-life. This is the proper time \(\Delta t_0\). Muons produced by cosmic ray particles have a range of velocities, with some moving near the speed of light. It has been found that the muon’s half-life as measured by an Earth-bound observer \((\Delta t)\) varies with velocity exactly as predicted by the equation \(\delta t = \gamma \Delta t_0\). The faster the muon moves, the longer it lives. We on the Earth see the muon’s half-life time dilated—as viewed from our frame, the muon decays more slowly than it does when at rest relative to us.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating \(\Delta t\) for a Relativistic Event: How Long Does a Speedy Muon Live?</span></div><div class="example-body">
+<p class="prose">Suppose a cosmic ray colliding with a nucleus in the Earth’s upper atmosphere produces a muon that has a velocity \(v = 0.950 \, c\). The muon then travels at constant velocity and lives \(1.52 \, \mu s\) as measured in the muon’s frame of reference. (You can imagine this as the muon’s internal clock.) How long does the muon live as measured by an Earth-bound observer (Figure ?</p>
+<div class="diagram"><img src="images/ch28/fig28-7-a-muon-is-moving-far-above-the-earth-a-t.jpg" alt="A muon is moving far above the earth. A teenage boy is looking towards the muon. A velocity vector arrow V starting from Muon is pointing toward the boy. A clock depicting time delta-t-zero is shown near the muon, and another time clock depicting the time delta-t is shown near the boy."><div class="d-cap">A muon is moving far above the earth. A teenage boy is looking towards the muon. A velocity vector arrow V starting from Muon is pointing toward the boy. A clock depicting time delta-t-zero is shown near the muon, and another time clock depicting the time delta-t is shown near the boy. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">A clock moving with the system being measured observes the proper time, so the time we are given is \(\Delta t_0 = 1.52 \, \mu s\). The Earth-bound observer measures \(\Delta t\) as given by the equation \(\delta t = \gamma \Delta t_0\).</p>
+<p class="prose">Since we know the velocity, the calculation is straightforward.</p>
+<p class="prose">One implication of this example is that since \(\gamma = 3.20\) at \(95.0\%\) of the speed of light (\(v = 0.950c\)), the relativistic effects are significant. The two time intervals differ by this factor of 3.20, where classically they would be the same. Something moving at \(0.950 c\) is said to be highly relativistic.</p>
+<p class="prose">Another implication of the preceding example is that everything an astronaut does when moving at \(95.0\%\) of the speed of light relative to the Earth takes 3.20 times longer when observed from the Earth. Does the astronaut sense this? Only if she looks outside her spaceship. All methods of measuring time in her frame will be affected by the same factor of 3.20. This includes her wristwatch, heart rate, cell metabolism rate, nerve impulse rate, and so on. She will have no way of telling, since all of her clocks will agree with one another because their relative velocities are zero. Motion is relative, not absolute. But what if she does look out the window?</p>
+<p class="prose">Real World Connections</p>
+<p class="prose">It may seem that special relativity has little effect on your life, but it is probably more important than you realize. One of the most common effects is through theGlobal Positioning System(GPS). Emergency vehicles, package delivery services, electronic maps, and communications devices are just a few of the common uses of GPS, and the GPS system could not work without taking into account relativistic effects. GPS satellites rely on precise time measurements to communicate. The signals travel at relativistic speeds. Without corrections for time dilation, the satellites could not communicate, and the GPS system would fail within minutes.</p>
+</div></div>
+<div class="sh2">The Twin Paradox</div>
+<p class="prose">An intriguing consequence of time dilation is that a space traveler moving at a high velocity relative to the Earth would age less than her Earth-bound twin. Imagine the astronaut moving at such a velocity that \(\gamma = 30.0\) as in Figure . A trip that takes 2.00 years in her frame would take 60.0 years in her Earth-bound twin’s frame. Suppose the astronaut traveled 1.00 year to another star system. She briefly explored the area, and then traveled 1.00 year back. If the astronaut was 40 years old when she left, she would be 42 upon her return. Everything on the Earth, however, would have aged 60.0 years. Her twin, if still alive, would be 100 years old.</p>
+<p class="prose">The situation would seem different to the astronaut. Because motion is relative, the spaceship would seem to be stationary and the Earth would appear to move. (This is the sensation you have when flying in a jet.) If the astronaut looks out the window of the spaceship, she will see time slow down on the Earth by a factor of \(\gamma = 30.0\). To her, the Earth-bound sister will have aged only 2/30 (1/15) of a year, while she aged 2.00 years. The two sisters cannot both be correct.</p>
+<p class="prose">As with all paradoxes, the premise is faulty and leads to contradictory conclusions. In fact, the astronaut’s motion is significantly different from that of the Earth-bound twin. The astronaut accelerates to a high velocity and then decelerates to view the star system. To return to the Earth, she again accelerates and decelerates. The Earth-bound twin does not experience these accelerations. So the situation is not symmetric, and it is not correct to claim that the astronaut will observe the same effects as her Earth-bound twin. If you use special relativity to examine the twin paradox, you must keep in mind that the theory is expressly based on inertial frames, which by definition are not accelerated or rotating. Einstein developed general relativity to deal with accelerated frames and with gravity, a prime source of acceleration. You can also use general relativity to address the twin paradox and, according to general relativity, the astronaut will age less. Some important conceptual aspects of general relativity are discussed in the Section onGeneral Relativity and Quantum Gravityof this course.</p>
+<p class="prose">In 1971, American physicists Joseph Hafele and Richard Keating verified time dilation at low relative velocities by flying extremely accurate atomic clocks around the Earth on commercial aircraft. They measured elapsed time to an accuracy of a few nanoseconds and compared it with the time measured by clocks left behind. Hafele and Keating’s results were within experimental uncertainties of the predictions of relativity. Both special and general relativity had to be taken into account, since gravity and accelerations were involved as well as relative motion.</p>
+<p class="prose">Exercise</p>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">Real World ConnectionsIt may seem that special relativity has little effect on your life, but it is probably more important than you realize. One of the most common effects is through theGlobal Positioning System(GPS). Emergency vehicles, package delivery services, electronic maps, and communications devices are just a few of the common uses of GPS, and the GPS system could not work without taking into account relativistic effects. GPS satellites rely on precise time measurements to communicate. The signals travel at relativistic speeds. Without corrections for time dilation, the satellites could not communicate, and the GPS system would fail within minutes.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.2. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp2"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Is Earth an inertial frame of reference? Is the Sun? Justify your response.</div><textarea class="cp-textarea" id="cpt2" placeholder="Write your answer here..." oninput="cpCheck(2)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc2">Characters: <span id="cpn2">0</span> / 80 required</div><button class="cp-btn" id="cpb2" onclick="cpUnlock(2)">Unlock Quiz →</button></div><div class="cp-done" id="cpd2">✅ Unlocked!</div></div>
+    <div id="quiz-wrap2" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.2 Quiz</h3><p>4 questions</p></div></div><div id="q2">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What does Einstein’s first postulate of special relativity state about the laws of physics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They only apply to observers who are at absolute rest in the universe.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are the same and can be stated in their simplest form in all inertial frames of reference.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They change depending on the relative velocity of the observer to the source.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are only valid for objects larger than submicroscopic scales.</li>
+</ul><div class="qexp">The first postulate asserts that the laws of physics are identical in all inertial frames.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">According to Einstein’s second postulate, how does the speed of light in a vacuum behave?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is a constant \(c\), independent of the relative motion of the source.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It increases if the source of light is moving toward the observer.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It decreases when measured by an observer moving at a high constant velocity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It depends on the medium or "ether" that carries the light waves.</li>
+</ul><div class="qexp">The second postulate states that the speed of light is constant and independent of the motion of the source or observer.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">3</span><span class="qt-inner">What was the major conclusion drawn from the Michelson-Morley experiment?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Light requires a medium called the "ether" to travel through a vacuum.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The speed of light changes as the Earth orbits the Sun.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Light travels faster when moving in the same direction as the Earth's rotation.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed of light is independent of the motion of the Earth.</li>
+</ul><div class="qexp">The Michelson-Morley experiment demonstrated that the speed of light is independent of the Earth’s motion, implying no medium is needed.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why did Maxwell’s equations create a contradiction with Newton’s laws of motion?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Maxwell predicted light was a particle, while Newton proved it was a wave.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton’s laws required light to have mass, but Maxwell’s equations did not.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Maxwell predicted a fixed speed for light without specifying a reference frame, while Newton’s laws suggested velocities should add.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Newton’s laws only worked in accelerated frames, but Maxwell’s equations only worked in inertial frames.</li>
+</ul><div class="qexp">Maxwell’s equations predict a constant speed \(c\), which contradicts the classical Newtonian addition of velocities.</div></div>
+    </div><div class="qscore" id="sc2"><div class="score-n" id="scn2">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">← Previous</button><button class="mc-btn" onclick="markDone(2,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(3)">Next →</button></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.3</span></div><div class="h-title">28.3: Length Contraction</div><div class="h-desc">Have you ever driven on a road that seems like it goes on forever? If you look ahead, you might say you have about 10 km left to go. Another traveler might say the road ahead looks like it’s about 15 ...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.3</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Describe proper length.</li>
+      <li>Calculate length contraction.</li>
+      <li>Explain why we don’t notice these effects at everyday scales.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">proper length</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">\(L_0\) the distance between two points measured by an observer who is at rest relative to both of the points; Earth-bound observers measure proper length when measuring the distance between two points that are stationary relative to the Earth</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.3</div>
+<p class="prose">Have you ever driven on a road that seems like it goes on forever? If you look ahead, you might say you have about 10 km left to go. Another traveler might say the road ahead looks like it’s about 15 km long. If you both measured the road, however, you would agree. Traveling at everyday speeds, the distance you both measure would be the same. You will read in this section, however, that this is not true at relativistic speeds. Close to the speed of light, distances measured are not the same when measured by different observers.</p>
+<div class="diagram"><img src="images/ch28/fig28-8-a-long-isolated-double-lane-road-banked-.jpg" alt="A long isolated double-lane road banked by barren land on both sides."><div class="d-cap">A long isolated double-lane road banked by barren land on both sides. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Proper Length</div>
+<p class="prose">One thing all observers agree upon is relative speed. Even though clocks measure different elapsed times for the same process, they still agree that relative speed, which is distance divided by elapsed time, is the same. This implies that distance, too, depends on the observer’s relative motion. If two observers see different times, then they must also see different distances for relative speed to be the same to each of them.</p>
+<p class="prose">The muonillustrates this concept. To an observer on the Earth, the muon travels at \(0.950c\) for \(7.05 \mu s\) from the time it is produced until it decays. Thus it travels a distance \[L_{0} = v \Delta t = \left(0.950\right)\left(3.00 \times 10^{8} m/s\right)\left(7.05 \times 10^{-6} s\right) = 2.01 km \label{28.4.1}\] relative to the Earth. In the muon’s frame of reference, its lifetime is only \(2.20 \mu s\). It has enough time to travel only \[L = v \Delta t_{0} = \left(0.950\right)\left(3.00 \times 10^{8} m/s\right)\left(2.20 \times 10^{-6} s\right) = 0.627 km. \label{28.4.2}\] The distance between the same two events (production and decay of a muon) depends on who measures it and how they are moving relative to it.</p>
+<p class="prose">Proper length \(L_{0}\)is the distance between two points measured by an observer who is at rest relative to both of the points.</p>
+<p class="prose">The Earth-bound observer measures the proper length \(L_{0}\), because the points at which the muon is produced and decays are stationary relative to the Earth. To the muon, the Earth, air, and clouds are moving, and so the distance \(L\) it sees is not the proper length.</p>
+<div class="diagram"><img src="images/ch28/fig28-9-in-part-a-observer-observes-from-ground-.jpg" alt="In part a observer observes from ground frame of reference a muon above earth with speed v in the rightward direction. The distance between the muon and the place where it disintegrates is two point zero one. In part b the system is shown in motion having velocity v in the leftward direction. So, the cloud and ground are displaced zero point six two seven kilo meter in the opposite direction."><div class="d-cap">In part a observer observes from ground frame of reference a muon above earth with speed v in the rightward direction. The distance between the muon and the place where it disintegrates is two point zero one. In part b the system is shown in motion having velocity v in the leftward direction. So, the cloud and ground are displaced zero point six two seven kilo meter in the opposite direction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Length Contraction</div>
+<p class="prose">To develop an equation relating distances measured by different observers, we note that the velocity relative to the Earth-bound observer in our muon example is given by \[v = \frac{L_{0}}{\Delta t}.\label{28.4.3}\] The time relative to the Earth-bound observer is \(\Delta t\), since the object being timed is moving relative to this observer. The velocity relative to the moving observer is given by \[v = \frac{L}{\Delta t_{0}}.\label{28.4.4}\] The moving observer travels with the muon and therefore observes the proper time \(\Delta t_{0}\). The two velocities are identical; thus, \[\frac{L_{0}}{\Delta t} = \frac{L}{\Delta t_{0}}.\label{28..4.5}\] We know that \(\Delta t = \gamma \Delta t_{0}\). Substituting this equation into the relationship above gives \[L = \frac{L_{0}}{\gamma}.\label{28.4.6}\] Substituting for \(\gamma\) gives an equation relating the distances measured by different observers.</p>
+<p class="prose">Length contraction \(L\)is the shortening of the measured length of an object moving relative to the observer’s frame. \[L = L_{0} \sqrt{1-\frac{v^{2}}{c^{2}}}.\label{28.4.7}\]</p>
+<p class="prose">If we measure the length of anything moving relative to our frame, we find its length \(L\) to be smaller than the proper length \(L_{0}\) that would be measured if the object were stationary. For example, in the muon’s reference frame, the distance between the points where it was produced and where it decayed is shorter. Those points are fixed relative to the Earth but moving relative to the muon. Clouds and other objects are also contracted along the direction of motion in the muon’s reference frame.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example :Calculating Length Contraction: The Distance between Stars Contracts when You Travel at High Velocity:</span></div><div class="example-body">
+<p class="prose">Suppose an astronaut, such as the twin discussed in "Simultaneity and Time Dilation," travels so fast that \(\gamma = 30.00\). (a) She travels from the Earth to the nearest star system, Alpha Centauri, 4.300 light years (ly) away as measured by an Earth-bound observer. How far apart are the Earth and Alpha Centauri as measured by the astronaut? (b) In terms of \(c\), what is her velocity relative to the Earth? You may neglect the motion of the Earth relative to the Sun. (See Figure 3.)</p>
+<div class="diagram"><img src="images/ch28/fig28-10-in-part-a-the-distance-between-the-earth.jpg" alt="In part a the distance between the earth and the alpha centauri is measured as L-zero. A clock given in this figure is showing a time delta-t. A spaceship flying with velocity of v equals L-zero over delta-t from the earth to the star is shown. Part b shows the spaceship frame of reference from which the distance L between the earth and star is contracted as they seem to move with same velocity in opposite direction. In part b the clock shows less time elapsed than the clock in part a."><div class="d-cap">In part a the distance between the earth and the alpha centauri is measured as L-zero. A clock given in this figure is showing a time delta-t. A spaceship flying with velocity of v equals L-zero over delta-t from the earth to the star is shown. Part b shows the spaceship frame of reference from which the distance L between the earth and star is contracted as they seem to move with same velocity in opposite direction. In part b the clock shows less time elapsed than the clock in part a. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">First note that a light year (ly) is a convenient unit of distance on an astronomical scale—it is the distance light travels in a year. For part (a), note that the 4.300 ly distance between the Alpha Centauri and the Earth is the proper distance \(l_0\), because it is measured by an Earth-bound observer to whom both stars are (approximately) stationary. To the astronaut, the Earth and the Alpha Centauri are moving by at the same velocity, and so the distance between them is the contracted length \(L\). In part (b), we are given \(\gamma\), and so we can find \(v\) by rearranging the definition of \(\gamma\) to express \(v\) in terms of \(c\).</p>
+<p class="prose">Squaring both sides of the equation and rearranging terms gives: \[900.0 = \dfrac{1}{1 - \frac{v^2}{c^2}}\]</p>
+<p class="prose">so that \[1 - \dfrac{v^2}{c^2} = \dfrac{1}{900.0}\] and \[\dfrac{v^2}{c^2} = 1 - \dfrac{1}{900.0} = 0.99888....\]</p>
+<p class="prose">Taking the square root, we find \[\dfrac{v}{c} = 0.99944,\] which is rearranged to produce a value for the velocity \[v = 0.9994c.\]</p>
+<p class="prose">First, remember that you should not round off calculations until the final result is obtained, or you could get erroneous results. This is especially true for special relativity calculations, where the differences might only be revealed after several decimal places. The relativistic effect is large here (γ=30.00), and we see that is approaching (not equaling) the speed of light. Since the distance as measured by the astronaut is so much smaller, the astronaut can travel it in much less time in her frame.</p>
+<p class="prose">People could be sent very large distances (thousands or even millions of light years) and age only a few years on the way if they traveled at extremely high velocities. But, like emigrants of centuries past, they would leave the Earth they know forever. Even if they returned, thousands to millions of years would have passed on the Earth, obliterating most of what now exists. There is also a more serious practical obstacle to traveling at such velocities; immensely greater energies than classical physics predicts would be needed to achieve such high velocities. This will be discussed inRelatavistic Energy.</p>
+<p class="prose">Why don’t we notice length contraction in everyday life? The distance to the grocery shop does not seem to depend on whether we are moving or not. Examining the equation \(L = L_0\sqrt{1 - \frac{v^2}{c^2}}\), we see that at low velocities \((v <<c)\) the lengths are nearly equal, the classical expectation. But length contraction is real, if not commonly experienced. For example, a charged particle, like an electron, traveling at relativistic velocity has electric field lines that are compressed along the direction of motion as seen by a stationary observer. (SeeFigure.) As the electron passes a detector, such as a coil of wire, its field interacts much more briefly, an effect observed at particle accelerators such as the 3 km long Stanford Linear Accelerator (SLAC). In fact, to an electron traveling down the beam pipe at SLAC, the accelerator and the Earth are all moving by and are length contracted. The relativistic effect is so great than the accelerator is only 0.5 m long to the electron. It is actually easier to get the electron beam down the pipe, since the beam does not have to be as precisely aimed to get down a short pipe as it would down one 3 km long. This, again, is an experimental verification of the Special Theory of Relativity.</p>
+<div class="diagram"><img src="images/ch28/fig28-11-an-electron-traveling-with-velocity-v-to.jpg" alt="An electron traveling with velocity v to the right through a horizontal pipe. The electric field lines enter it radially."><div class="d-cap">An electron traveling with velocity v to the right through a horizontal pipe. The electric field lines enter it radially. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Exercise</p>
+<p class="prose">A particle is traveling through the Earth’s atmosphere at a speed of \(0.750c\). To an Earth-bound observer, the distance it travels is 2.50 km. How far does the particle travel in the particle’s frame of reference?</p>
+<div class="math-display">\[L = L_0\sqrt{1 - \dfrac{v^2}{c^2}} = (2.50 \, km)\sqrt{1 - \dfrac{(0.750c)^2}{c^2}} = 1.65 \, km\]</div>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="sh3">Contributor</div>
+<p class="prose">Paul Peter Urone (Professor Emeritus at California State University, Sacramento) and Roger Hinrichs (State University of New York, College at Oswego) with Contributing Authors: Kim Dirks (University of Auckland) and Manjula Sharma (University of Sydney). This work is licensed by OpenStax University Physics under aCreative Commons Attribution License (by 4.0).</p>
+<p class="prose">Paul Peter Urone (Professor Emeritus at California State University, Sacramento) and Roger Hinrichs (State University of New York, College at Oswego) with Contributing Authors: Kim Dirks (University of Auckland) and Manjula Sharma (University of Sydney). This work is licensed by OpenStax University Physics under aCreative Commons Attribution License (by 4.0).</p>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.3. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp3"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">When you are flying in a commercial jet, it may appear to you that the airplane is stationary and the Earth is moving beneath you. Is this point of view valid? Discuss briefly.</div><textarea class="cp-textarea" id="cpt3" placeholder="Write your answer here..." oninput="cpCheck(3)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc3">Characters: <span id="cpn3">0</span> / 80 required</div><button class="cp-btn" id="cpb3" onclick="cpUnlock(3)">Unlock Quiz →</button></div><div class="cp-done" id="cpd3">✅ Unlocked!</div></div>
+    <div id="quiz-wrap3" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.3 Quiz</h3><p>4 questions</p></div></div><div id="q3">
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">1</span><span class="qt-inner">Two events are observed to occur at the same time by Observer A. Under what condition might Observer B see these events occur at different times?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>If Observer B is at rest relative to Observer A.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>If both observers are in the same inertial frame of reference.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>If Observer B is moving at a relative velocity compared to Observer A.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>If the events occur at the exact same location in space.</li>
+</ul><div class="qexp">Simultaneity is not absolute; relative motion between observers affects whether two events are seen as occurring at the same time.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is the definition of time dilation?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The phenomenon of time passing slower for an observer who is moving relative to another observer.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The process of synchronizing clocks in different inertial frames.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The increase in the frequency of a clock as it approaches the speed of light.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The requirement that all observers measure the same elapsed time for a foot race.</li>
+</ul><div class="qexp">Time dilation describes the lengthening of time intervals for a system in motion relative to an observer.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which observer measures the "proper time" \(\Delta t_{0}\) for a specific process?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The observer who is moving at the highest possible velocity relative to the event.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The observer who is at rest relative to the event being observed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>An Earth-bound observer measuring a process occurring on a fast-moving spaceship.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The observer who measures the longest possible duration for the event.</li>
+</ul><div class="qexp">Proper time is defined as the time interval measured by an observer who is at rest relative to the process.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">If a system is moving at 60% of the speed of light (\(v = 0.600c\)), what is the relativistic factor \(\gamma\)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.80</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.00</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.15</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.25</li>
+</ul><div class="qexp">\(\gamma = 1 / \sqrt{1 - (0.6)^2} = 1 / \sqrt{0.64} = 1 / 0.8 = 1.25\).</div></div>
+    </div><div class="qscore" id="sc3"><div class="score-n" id="scn3">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">← Previous</button><button class="mc-btn" onclick="markDone(3,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(4)">Next →</button></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.4</span></div><div class="h-title">28.4: Relativistic Addition of Velocities</div><div class="h-desc">If you’ve ever seen a kayak move down a fast-moving river, you know that remaining in the same place would be hard. The river current pulls the kayak along. Pushing the oars back against the water can...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.4</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate relativistic velocity addition.</li>
+      <li>Explain when relativistic velocity addition should be used instead of classical addition of velocities.</li>
+      <li>Calculate relativistic Doppler shift.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">classical velocity addition</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">the method of adding velocities when \(v << c\), velocities add like regular numbers in one-dimensional motion: \(u = v + u'\), where \(v\) is the velocity between two observers, \(u\) is the velocity of an object relative to one observer, and \(u'\) is the velocity relative to the other observer.</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.4</div>
+<p class="prose">If you’ve ever seen a kayak move down a fast-moving river, you know that remaining in the same place would be hard. The river current pulls the kayak along. Pushing the oars back against the water can move the kayak forward in the water, but that only accounts for part of the velocity. The kayak’s motion is an example of classical addition of velocities. In classical physics, velocities add as vectors. The kayak’s velocity is the vector sum of its velocity relative to the water and the water’s velocity relative to the riverbank.</p>
+<div class="diagram"><img src="images/ch28/fig28-12-a-man-with-oar-in-his-hand-is-kayaking-d.jpg" alt="A man with oar in his hand is kayaking downstream in a shallow fast-flowing river."><div class="d-cap">A man with oar in his hand is kayaking downstream in a shallow fast-flowing river. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="sh2">Classical Velocity Addition</div>
+<p class="prose">For simplicity, we restrict our consideration of velocity addition to one-dimensional motion. Classically, velocities add like regular numbers in one-dimensional motion (Figure . Suppose, for example, a girl is riding in a sled at a speed 1.0 m/s relative to an observer. She throws a snowball first forward, then backward at a speed of 1.5 m/s relative to the sled. We denote direction with plus and minus signs in one dimension; in this example, forward is positive. Let \(v\) be the velocity of the sled relative to the Earth, \(u\) the velocity of the snowball relative to the Earth-bound observer, and \(u'\) the velocity of the snowball relative to the sled.</p>
+<div class="diagram"><img src="images/ch28/fig28-13-in-part-a-a-man-is-pulling-a-sled-toward.jpg" alt="In part a, a man is pulling a sled towards the right with a velocity v equals one point zero meters per second. A girl sitting on the sled facing forward throws a snowball toward a boy on the far right of the picture. The snowball is labeled u primed equals one point five meters per second in the direction the sled is being pulled. The boy is labelled two point five meters per second. In figure b, a similar figure is shown, but the man’s velocity is one point zero meters per second, the girl is facing backward and throwing the snowball behind the sled. The snowball is labelled u primed equals negative one point five meters per second, and the boy is labelled u equals negative zero point five meters per second."><div class="d-cap">In part a, a man is pulling a sled towards the right with a velocity v equals one point zero meters per second. A girl sitting on the sled facing forward throws a snowball toward a boy on the far right of the picture. The snowball is labeled u primed equals one point five meters per second in the direction the sled is being pulled. The boy is labelled two point five meters per second. In figure b, a similar figure is shown, but the man’s velocity is one point zero meters per second, the girl is facing backward and throwing the snowball behind the sled. The snowball is labelled u primed equals negative one point five meters per second, and the boy is labelled u equals negative zero point five meters per second. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">CLASSICAL VELOCITY ADDITION</p>
+<p class="prose">Thus, when the girl throws the snowball forward, \(U = 1.0 \, m/s + 1.5 \, m/s = 2.5 \, m/s\). It makes good intuitive sense that the snowball will head towards the Earth-bound observer faster, because it is thrown forward from a moving vehicle. When the girl throws the snowball backward, \(u = 1.0 \, m/s + (-1.5 \, m/s) = -0.5 \, m/s\). The minus sign means the snowball moves away from the Earth-bound observer.</p>
+<div class="sh2">Relativistic Velocity Addition</div>
+<p class="prose">The second postulate of relativity (verified by extensive experimental observation) says that classical velocity addition does not apply to light. Imagine a car traveling at night along a straight road, as in Figure . If classical velocity addition applied to light, then the light from the car’s headlights would approach the observer on the sidewalk at a speed \(u = v + c\). But we know that light will move away from the car at speed \(c\) relative to the driver of the car, and light will move towards the observer on the sidewalk at speed \(c\), too.</p>
+<div class="diagram"><img src="images/ch28/fig28-14-a-car-is-moving-towards-right-with-veloc.jpg" alt="A car is moving towards right with velocity v. A boy standing on the side-walk observes the car. The velocity of light u primed is shown to be c as observed by the girl in the car and the velocity of light u is also c as observed by the boy."><div class="d-cap">A car is moving towards right with velocity v. A boy standing on the side-walk observes the car. The velocity of light u primed is shown to be c as observed by the girl in the car and the velocity of light u is also c as observed by the boy. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">RELATIVISTIC VELOCITY ADDITION</p>
+<p class="prose">Either light is an exception, or the classical velocity addition formula only works at low velocities. The latter is the case. The correct formula for one-dimensionalrelativistic velocity additionis</p>
+<div class="math-display">\[u = \dfrac{v + u'}{1 + \frac{vu'}{c^2}},\]</div>
+<p class="prose">where \(v\) is the relative velocity between two observers, \(u\) is the velocity of an object relative to one observer, and \(u'\) is the velocity relative to the other observer. (For ease of visualization, we often choose to measure \(u\) in our reference frame, while someone moving at \(v\) relative to us measures \(u'\).) Note that the term \(\frac{vu'}{c^2}\) becomes very small at low velocities, and \(u = \frac{v + u}{1 + \frac{vu'}{v^2}}\) gives a result very close to classical velocity addition. As before, we see that classical velocity addition is an excellent approximation to the correct relativistic formula for small velocities. No wonder that it seems correct in our experience.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Showing that the Speed of Light towards an Observer is Constant (in a Vacuum): The Speed of Light is the Speed of Light</span></div><div class="example-body">
+<p class="prose">Suppose a spaceship heading directly towards the Earth at half the speed of light sends a signal to us on a laser-produced beam of light. Given that the light leaves the ship at speed as observed from the ship, calculate the speed at which it approaches the Earth.</p>
+<div class="diagram"><img src="images/ch28/fig28-15-a-spacecraft-is-heading-towards-earth-v-.jpg" alt="A spacecraft is heading towards earth v equals zero point five zero zero times c. A laser beam from the ship travels towards the Earth with velocity c as shown by a vector. A second spaceship traveling away from the Earth. The velocity of the second ship and second laser are the same as the first, but in the opposite direction."><div class="d-cap">A spacecraft is heading towards earth v equals zero point five zero zero times c. A laser beam from the ship travels towards the Earth with velocity c as shown by a vector. A second spaceship traveling away from the Earth. The velocity of the second ship and second laser are the same as the first, but in the opposite direction. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Because the light and the spaceship are moving at relativistic speeds, we cannot use simple velocity addition. Instead, we can determine the speed at which the light approaches the Earth using relativistic velocity addition.</p>
+<p class="prose">Relativistic velocity addition gives the correct result. Light leaves the ship at speed</p>
+<p class="prose">and approaches the Earth at speed \(c\). The speed of light is independent of the relative motion of source and observer, whether the observer is on the ship or Earth-bound.</p>
+<p class="prose">Velocities cannot add to greater than the speed of light, provided that \(v\) is less than \(c\) and \(u'\) does not exceed \(c\). The following example illustrates that relativistic velocity addition is not as symmetric as classical velocity addition.</p>
+</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Comparing the Speed of Light towards and away from an Observer: Relativistic Package Delivery</span></div><div class="example-body">
+<p class="prose">Suppose the spaceship in the previous example is approaching the Earth at half the speed of light and shoots a canister at a speed of \(0.750 c\).</p>
+<div class="diagram"><img src="images/ch28/fig28-16-in-part-a-a-spaceship-is-moving-towards-.jpg" alt="In part a, a spaceship is moving towards the earth from left to right with a velocity v equals to zero point five zero times c. The spaceships shoots a canister towards earth with velocity u prime equals zero point seven five times c. A man stands stationary on earth observing. In part b, the spaceship shoots the canister away from earth with same velocity. In both the cases, the velocity of the ship is v equals 0 point five zero times c toward left."><div class="d-cap">In part a, a spaceship is moving towards the earth from left to right with a velocity v equals to zero point five zero times c. The spaceships shoots a canister towards earth with velocity u prime equals zero point seven five times c. A man stands stationary on earth observing. In part b, the spaceship shoots the canister away from earth with same velocity. In both the cases, the velocity of the ship is v equals 0 point five zero times c toward left. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Because the canister and the spaceship are moving at relativistic speeds, we must determine the speed of the canister by an Earth-bound observer using relativistic velocity addition instead of simple velocity addition.</p>
+<p class="prose">The minus sign indicates velocity away from the Earth (in the opposite direction from \(v\)), which means the canister is heading towards the Earth in part (a) and away in part (b), as expected. But relativistic velocities do not add as simply as they do classically. In part (a), the canister does approach the Earth faster, but not at the simple sum of \(1.250 c\). The total velocity is less than you would get classically. And in part (b), the canister moves away from the Earth at a velocity of \(-0.400c\), which isfasterthan the \(-0.250 c\) you would expect classically. The velocities are not even symmetric. In part (a) the canister moves \(0.409 c\) faster than the ship relative to the Earth, whereas in part (b) it moves \(0.900 c\) slower than the ship.</p>
+</div></div>
+<div class="sh2">Doppler Shift</div>
+<p class="prose">Although the speed of light does not change with relative velocity, the frequencies and wavelengths of light do. First discussed for sound waves, a Doppler shift occurs in any wave when there is relative motion between source and observer.</p>
+<p class="prose">RELATIVISTIC DOPPLER EFFECTS</p>
+<p class="prose">The observed wavelength of electromagnetic radiation is longer (called a red shift) than that emitted by the source when the source moves away from the observer and shorter (called a blue shift) when the source moves towards the observer.</p>
+<div class="math-display">\[\lambda_{obs} = \lambda_s \sqrt{\dfrac{1 + \frac{u}{c}}{1 - \frac{u}{c}}}\]</div>
+<p class="prose">In the Doppler equation \(\lambda_{obs}\) is the observed wavelength, \(\lambda_s\) is the source wavelength, and \(u\) is the relative velocity of the source to the observer. The velocity \(u\) is positive for motion away from an observer and negative for motion toward an observer. In terms of source frequency and observed frequency, this equation can be written \[f_{obs} = f_s \sqrt{\dfrac{1 - \frac{u}{c}}{1 + \frac{u}{c}}}.\] Notice that the – and + signs are different than in the wavelength equation.</p>
+<p class="prose">CAREER CONNECTION: ASTRONOMER</p>
+<p class="prose">If you are interested in a career that requires a knowledge of special relativity, there’s probably no better connection than astronomy. Astronomers must take into account relativistic effects when they calculate distances, times, and speeds of black holes, galaxies, quasars, and all other astronomical objects. To have a career in astronomy, you need at least an undergraduate degree in either physics or astronomy, but a Master’s or doctoral degree is often required. You also need a good background in high-level mathematics.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating a Doppler Shift: Radio Waves from a Receding Galaxy</span></div><div class="example-body">
+<p class="prose">Suppose a galaxy is moving away from the Earth at a speed \(0.825 c\). It emits radio waves with a wavelength of \(0.525 \, m\).</p>
+<p class="prose">What wavelength would we detect on the Earth?</p>
+<p class="prose">Because the galaxy is moving at a relativistic speed, we must determine the Doppler shift of the radio waves using the relativistic Doppler shift instead of the classical Doppler shift.</p>
+<p class="prose">Because the galaxy is moving away from the Earth, we expect the wavelengths of radiation it emits to be redshifted. The wavelength we calculated is 1.70 m, which is redshifted from the original wavelength of 0.525 m.</p>
+<p class="prose">The relativistic Doppler shift is easy to observe. This equation has everyday applications ranging from Doppler-shifted radar velocity measurements of transportation to Doppler-radar storm monitoring. In astronomical observations, the relativistic Doppler shift provides velocity information such as the motion and distance of stars.</p>
+<p class="prose">Exercise</p>
+<p class="prose">Suppose a space probe moves away from the Earth at a speed \(0.350 c\). It sends a radio wave message back to the Earth at a frequency of 1.50 GHz. At what frequency is the message received on the Earth?</p>
+<div class="math-display">\[f_{obs} = f_c \sqrt{\dfrac{1 - \frac{u}{c}}{1 + \frac{u}{c}}} = (1.50 \, GHz) \sqrt{\dfrac{1 - \frac{0.350 c}{c}}{1 + \frac{0.350 c}{c}}} = 1.04 \, GHz \nonumber\]</div>
+</div></div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">CAREER CONNECTION: ASTRONOMERIf you are interested in a career that requires a knowledge of special relativity, there’s probably no better connection than astronomy. Astronomers must take into account relativistic effects when they calculate distances, times, and speeds of black holes, galaxies, quasars, and all other astronomical objects. To have a career in astronomy, you need at least an undergraduate degree in either physics or astronomy, but a Master’s or doctoral degree is often required. You also need a good background in high-level mathematics.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.4. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp4"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">Does motion affect the rate of a clock as measured by an observer moving with it? Does motion affect how an observer moving relative to a clock measures its rate?</div><textarea class="cp-textarea" id="cpt4" placeholder="Write your answer here..." oninput="cpCheck(4)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc4">Characters: <span id="cpn4">0</span> / 80 required</div><button class="cp-btn" id="cpb4" onclick="cpUnlock(4)">Unlock Quiz →</button></div><div class="cp-done" id="cpd4">✅ Unlocked!</div></div>
+    <div id="quiz-wrap4" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.4 Quiz</h3><p>4 questions</p></div></div><div id="q4">
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A muon has a lifetime of \(1.52 \, \mu s\) in its own rest frame. If it travels at \(0.950c\) (\(\gamma = 3.20\)), how long does it live according to an Earth-bound observer?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(4.86 \, \mu s\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(0.475 \, \mu s\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(1.52 \, \mu s\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(3.20 \, \mu s\)</li>
+</ul><div class="qexp">Using \(\Delta t = \gamma \Delta t_{0}\), the observed time is \(3.20 \times 1.52 \, \mu s = 4.864 \, \mu s\).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">2</span><span class="qt-inner">Why is the "Twin Paradox" considered a false paradox in the context of special relativity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because time dilation only affects mechanical clocks, not biological aging.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because the astronaut twin travels at a speed greater than light.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because the Earth twin is actually the one moving through the galaxy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because the situation is not symmetric; the traveling twin undergoes acceleration and deceleration.</li>
+</ul><div class="qexp">The traveling twin is not in a single inertial frame because they must accelerate and decelerate, breaking the symmetry of the frames.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Proper length \(L_{0}\) is defined as the distance between two points measured by an observer who:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Is moving at a constant velocity \(v\) relative to the points.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Is moving at the speed of light relative to the points.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Is at rest relative to both of the points.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Measures the shortest possible distance between the points.</li>
+</ul><div class="qexp">Proper length is measured by an observer at rest relative to the distance being measured.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">4</span><span class="qt-inner">In which direction does length contraction occur for a moving object?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only along the direction of the object's motion.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only in the direction perpendicular to the object's motion.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>In all three spatial dimensions equally.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In the direction opposite to the vector of its acceleration.</li>
+</ul><div class="qexp">Length contraction is only observed in the dimension parallel to the relative motion of the observers.</div></div>
+    </div><div class="qscore" id="sc4"><div class="score-n" id="scn4">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">← Previous</button><button class="mc-btn" onclick="markDone(4,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(5)">Next →</button></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.5</span></div><div class="h-title">28.5: Relativistic Momentum</div><div class="h-desc">In classical physics, momentum is a simple product of mass and velocity. However, we saw in the last section that when special relativity is taken into account, massive objects have a speed limit. Wha...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.5</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Calculate relativistic momentum.</li>
+      <li>Explain why the only mass it makes sense to talk about is rest mass.</li>
+    </ul></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.5</div>
+<p class="prose">In classical physics, momentum is a simple product of mass and velocity. However, we saw in the last section that when special relativity is taken into account, massive objects have a speed limit. What effect do you think mass and velocity have on the momentum of objects moving at relativistic speeds?</p>
+<div class="diagram"><img src="images/ch28/fig28-17-action-photo-from-a-college-football-gam.jpg" alt="Action photo from a college football game."><div class="d-cap">Action photo from a college football game. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Momentum is one of the most important concepts in physics. The broadest form of Newton’s second law is stated in terms of momentum. Momentum is conserved whenever the net external force on a system is zero. This makes momentum conservation a fundamental tool for analyzing collisions. All ofWork, Energy, and Energy Resourcesis devoted to momentum, and momentum has been important for many other topics as well, particularly where collisions were involved. We will see that momentum has the same importance in modern physics. Relativistic momentum is conserved, and much of what we know about subatomic structure comes from the analysis of collisions of accelerator-produced relativistic particles.</p>
+<p class="prose">The first postulate of relativity states that the laws of physics are the same in all inertial frames. Does the law of conservation of momentum survive this requirement at high velocities? The answer is yes, provided that the momentum is defined as follows.</p>
+<p class="prose">Definition: Relativistic Momentum</p>
+<p class="prose">Relativistic momentum\(p\) is classical momentum multiplied by the relativistic factor \(\gamma\)</p>
+<p class="prose">where \(m\) is the rest mass of the object, \(u\) is its velocity relative to an observer, and the relativistic factor</p>
+<div class="math-display">\[\gamma = \dfrac{1}{\sqrt{1 - \dfrac{u^2}{c^2}}}.\]</div>
+<p class="prose">Note that we use \(u\) for velocity here to distinguish it from relative velocity \(v\) between observers. Only one observer is being considered here. With \(p\) defined in this way, total momentum \(p_{tot}\) is conserved whenever the net external force is zero, just as in classical physics. Again we see that the relativistic quantity becomes virtually the same as the classical at low velocities. That is, relativistic momentum \(\gamma mu\) becomes the classical \(mu\) at low velocities, because \(\gamma\) is very nearly equal to 1 at low velocities.</p>
+<p class="prose">Relativistic momentum has the same intuitive feel as classical momentum. It is greatest for large masses moving at high velocities, but, because of the factor \(\gamma\), relativistic momentum approaches infinity as \(u\) approaches \(c\) (Figure . This is another indication that an object with mass cannot reach the speed of light. If it did, its momentum would become infinite, an unreasonable value.</p>
+<div class="diagram"><img src="images/ch28/fig28-18-in-this-figure-a-graph-is-shown-on-a-coo.jpg" alt="In this figure a graph is shown on a coordinate system of axes. The x-axis is labelled as speed u meter per second. On x-axis velocity of the object is shown in terms of the speed of light starting from zero at origin to one point zero c where c is the speed of light. The y-axis is labelled as momentum p rel kilogram meter per second. On y-axis relativistic momentum is shown in terms of kilogram meter per starting from zero at origin to four point zero. The graph in the given figure is concave up and moving upward along the vertical line at x is equal to one point zero c. This graph shows that relativistic momentum approaches infinity as the velocity of an object approaches the speed of light."><div class="d-cap">In this figure a graph is shown on a coordinate system of axes. The x-axis is labelled as speed u meter per second. On x-axis velocity of the object is shown in terms of the speed of light starting from zero at origin to one point zero c where c is the speed of light. The y-axis is labelled as momentum p rel kilogram meter per second. On y-axis relativistic momentum is shown in terms of kilogram meter per starting from zero at origin to four point zero. The graph in the given figure is concave up and moving upward along the vertical line at x is equal to one point zero c. This graph shows that relativistic momentum approaches infinity as the velocity of an object approaches the speed of light. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">MISCONCEPTION ALERT: RELATIVISTIC MASS AND MOMENTUM</p>
+<p class="prose">The relativistically correct definition of momentum as \(p = \gamma mu\), is sometimes taken to imply that mass varies with velocity: \(m_{var} = \gamma m\), particularly in older textbooks. However, note that \(m\) is the mass of the object as measured by a person at rest relative to the object. Thus, \(m\) is defined to be the rest mass, which could be measured at rest, perhaps using gravity. When a mass is moving relative to an observer, the only way that its mass can be determined is through collisions or other means in which momentum is involved. Since the mass of a moving object cannot be determined independently of momentum, the only meaningful mass is rest mass. Thus, when we use the term mass, assume it to be identical to rest mass.</p>
+<p class="prose">Relativistic momentum is defined in such a way that the conservation of momentum will hold in all inertial frames. Whenever the net external force on a system is zero, relativistic momentum is conserved, just as is the case for classical momentum. This has been verified in numerous experiments.</p>
+<p class="prose">In Section onRelativistic Energy, the relationship of relativistic momentum to energy is explored. That subject will produce our first inkling that objects without mass may also have momentum.</p>
+<p class="prose">Exercise</p>
+<p class="prose">What is the momentum of an electron traveling at a speed \(0.985 c\)? The rest mass of the electron is \(9.11 \times 10^{-31} \, kg\).</p>
+<div class="math-display">\[ \begin{align*} p &= \gamma mu \\[5pt] &= \dfrac{mu}{\sqrt{1 - \frac{u^2}{c^2}}} \\[5pt] &= \dfrac{(9.11 \times 10^{-31} kg) (0.985 c)(3.00 \times 10^8 m/s)}{\sqrt{1 - \frac{(0.985 c)2}{c^2}}} \\[5pt] &= 1.56 \times 10^{-21} kg \cdot m/s \end{align*} \]</div>
+<div class="sh2">Summary</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">MISCONCEPTION ALERT: RELATIVISTIC MASS AND MOMENTUMThe relativistically correct definition of momentum as \(p = \gamma mu\), is sometimes taken to imply that mass varies with velocity: \(m_{var} = \gamma m\), particularly in older textbooks. However, note that \(m\) is the mass of the object as measured by a person at rest relative to the object. Thus, \(m\) is defined to be the rest mass, which could be measured at rest, perhaps using gravity. When a mass is moving relative to an observer, the only way that its mass can be determined is through collisions or other means in which momentum is involved. Since the mass of a moving object cannot be determined independently of momentum, the only meaningful mass is rest mass. Thus, when we use the term mass, assume it to be identical to rest mass.</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.5. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp5"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">To whom does the elapsed time for a process seem to be longer, an observer moving relative to the process or an observer moving with the process? Which observer measures proper time?</div><textarea class="cp-textarea" id="cpt5" placeholder="Write your answer here..." oninput="cpCheck(5)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc5">Characters: <span id="cpn5">0</span> / 80 required</div><button class="cp-btn" id="cpb5" onclick="cpUnlock(5)">Unlock Quiz →</button></div><div class="cp-done" id="cpd5">✅ Unlocked!</div></div>
+    <div id="quiz-wrap5" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.5 Quiz</h3><p>4 questions</p></div></div><div id="q5">
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">1</span><span class="qt-inner">A spaceship is measured to be 100 m long at rest. If it flies past the Earth at \(0.800c\) (\(\gamma = 1.67\)), what is its length as measured by an Earth-bound observer?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>167 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>125 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>80 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>60 m</li>
+</ul><div class="qexp">\(L = L_{0} / \gamma = 100 / 1.67 \approx 59.9\) m. Using the exact \(\gamma\) for \(0.8c\) (which is \(1.666...\)) yields exactly 60 m.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">2</span><span class="qt-inner">What is a real-world experimental verification of length contraction mentioned in the text?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The synchronization of atomic clocks on commercial jets.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The compression of a 3 km long particle accelerator to only 0.5 m from the perspective of a relativistic electron.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The observation of red-shifted light from receding galaxies.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The increase in a car battery's mass after it has been fully charged.</li>
+</ul><div class="qexp">To an electron at SLAC, the 3 km accelerator is length-contracted to about 0.5 m due to the electron's relativistic speed.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Why does the classical velocity addition formula \(u = v + u'\) fail for objects moving near the speed of light?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It predicts that light would be blue-shifted regardless of direction.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It allows the resulting velocity to exceed the speed of light \(c\).</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It does not account for the fictitious forces in inertial frames.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It only applies to sound waves traveling through a physical medium.</li>
+</ul><div class="qexp">Classical addition can result in speeds greater than \(c\), which violates the second postulate of special relativity.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">4</span><span class="qt-inner">A spaceship approaching Earth at \(0.500c\) fires a canister forward at \(0.500c\) relative to the ship. What is the canister's speed relative to Earth?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(1.000c\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(0.750c\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(0.800c\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(0.500c\)</li>
+</ul><div class="qexp">Using \(u = (v + u') / (1 + vu'/c^{2})\), we get \((0.5 + 0.5) / (1 + 0.25) = 1 / 1.25 = 0.800c\).</div></div>
+    </div><div class="qscore" id="sc5"><div class="score-n" id="scn5">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">← Previous</button><button class="mc-btn" onclick="markDone(5,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(6)">Next →</button></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="hero hero-sec"><div class="h-crumb">Chapter 28 · <span>Section 28.6</span></div><div class="h-title">28.6: Relativistic Energy</div><div class="h-desc">A tokamak is a form of experimental fusion reactor, which can change mass to energy. Accomplishing this requires an understanding of relativistic energy. Nuclear reactors are proof of the conservation...</div><div class="h-meta"><div class="h-chip">📖 OpenStax College Physics, 28.6</div></div></div>
+  <div class="lc">
+    <div class="obj-box"><div class="obj-label">🎯 Learning Objectives</div><ul class="obj-list">
+      <li>Compute total energy of a relativistic object.</li>
+      <li>Compute the kinetic energy of a relativistic object.</li>
+      <li>Describe rest energy, and explain how it can be converted to other forms.</li>
+      <li>Explain why massive particles cannot reach C.</li>
+    </ul></div>
+<div class="cs"><div class="eyebrow">Key Vocabulary</div><div class="sh2">Click Every Card to Flip It</div>
+<div class="vocab-hint">👆 Click each card — then complete the checkpoint to unlock the quiz</div>
+<div class="vocab-grid">
+<div class="vcard" onclick="this.classList.toggle('flipped')"><div class="vcard-inner"><div class="vfront"><div><div class="vterm">total energy</div><div class="vhint">tap</div></div></div><div class="vback"><div class="vdef">defined as \(E = \gamma mc^2\), where \(\gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}}\)</div></div></div></div>
+</div></div>
+    <div class="cs"><div class="eyebrow">Core Content — OpenStax College Physics, 28.6</div>
+<p class="prose">A tokamak is a form of experimental fusion reactor, which can change mass to energy. Accomplishing this requires an understanding of relativistic energy. Nuclear reactors are proof of the conservation of relativistic energy.</p>
+<div class="diagram"><img src="images/ch28/fig28-19-this-photo-shows-the-outside-of-the-fusi.jpg" alt="This photo shows the outside of the fusion reactor of the National Spherical Torus Experiment at the Princeton Plasma Physics Laboratory. The reactor, which sits in a large room, is connected to numerous tubes and instruments."><div class="d-cap">This photo shows the outside of the fusion reactor of the National Spherical Torus Experiment at the Princeton Plasma Physics Laboratory. The reactor, which sits in a large room, is connected to numerous tubes and instruments. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Conservation of energy is one of the most important laws in physics. Not only does energy have many important forms, but each form can be converted to any other. We know that classically the total amount of energy in a system remains constant. Relativistically, energy is still conserved, provided its definition is altered to include the possibility of mass changing to energy, as in the reactions that occur within a nuclear reactor. Relativistic energy is intentionally defined so that it will be conserved in all inertial frames, just as is the case for relativistic momentum. As a consequence, we learn that several fundamental quantities are related in ways not known in classical physics. All of these relationships are verified by experiment and have fundamental consequences. The altered definition of energy contains some of the most fundamental and spectacular new insights into nature found in recent history.</p>
+<div class="sh2">Total Energy and Rest Energy</div>
+<p class="prose">The first postulate of relativity states that the laws of physics are the same in all inertial frames. Einstein showed that the law of conservation of energy is valid relativistically, if we define energy to include a relativistic factor.</p>
+<p class="prose">Definition: Total Energy</p>
+<p class="prose">Total energy\(E\) is defined to be</p>
+<p class="prose">where \(m\) is mass, \(c\) is the speed of light, \(\gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}}\), and \(v\) is the velocity of the mass relative to an observer.</p>
+<p class="prose">There are many aspects of the total energy \(E\) that we will discuss—among them are how kinetic and potential energies are included in \(E\), and how \(E\) is related to relativistic momentum. But first, note that at rest, total energy is not zero. Rather, when \(v = 0\), we have \(\gamma = 1\), and an object has rest energy.</p>
+<p class="prose">Definition: Rest Energy</p>
+<p class="prose">This is the correct form of Einstein’s most famous equation, which for the first time showed that energy is related to the mass of an object at rest. For example, if energy is stored in the object, its rest mass increases. This also implies that mass can be destroyed to release energy. The implications of these first two equations regarding relativistic energy are so broad that they were not completely recognized for some years after Einstein published them in 1907, nor was the experimental proof that they are correct widely recognized at first. Einstein, it should be noted, did understand and describe the meanings and implications of his theory.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Rest Energy: Rest Energy is Very Large</span></div><div class="example-body">
+<p class="prose">Calculate the rest energy of a 1.00-g mass.</p>
+<p class="prose">One gram is a small mass—less than half the mass of a penny. We can multiply this mass, in SI units, by the speed of light squared to find the equivalent rest energy.</p>
+<p class="prose">Noting that \(1 \, kg\cdotm^2/s^2 = 1 \, J\), we see the rest mass energy is \[E_0 = 9.00 \times 10^{13} \, J.\]</p>
+<p class="prose">This is an enormous amount of energy for a 1.00-g mass. We do not notice this energy, because it is generally not available. Rest energy is large because the speed of light \(c^2\) is a very large number, so that \(mc^2\) is huge for any macroscopic mass. The \(9.00 \times 10^{13} \, J\) rest mass energy for 1.00 g is about twice the energy released by the Hiroshima atomic bomb and about 10,000 times the kinetic energy of a large aircraft carrier. If a way can be found to convert rest mass energy into some other form (and all forms of energy can be converted into one another), then huge amounts of energy can be obtained from the destruction of mass.</p>
+<p class="prose">Today, the practical applications ofthe conversion of mass into another form of energy, such as in nuclear weapons and nuclear power plants, are well known. But examples also existed when Einstein first proposed the correct form of relativistic energy, and he did describe some of them. Nuclear radiation had been discovered in the previous decade, and it had been a mystery as to where its energy originated. The explanation was that, in certain nuclear processes, a small amount of mass is destroyed and energy is released and carried by nuclear radiation. But the amount of mass destroyed is so small that it is difficult to detect that any is missing. Although Einstein proposed this as the source of energy in the radioactive salts then being studied, it was many years before there was broad recognition that mass could be and, in fact, commonly is converted to energy (Figure .</p>
+<div class="diagram"><img src="images/ch28/fig28-20-part-a-of-the-figure-shows-a-solar-storm.jpg" alt="Part a of the figure shows a solar storm on the Sun. Part b of the figure shows the Susquehanna Steam Electric Station, which produces electricity by nuclear fission."><div class="d-cap">Part a of the figure shows a solar storm on the Sun. Part b of the figure shows the Susquehanna Steam Electric Station, which produces electricity by nuclear fission. (OpenStax College Physics, CC BY 4.0)</div></div>
+<p class="prose">Because of the relationship of rest energy to mass, we now consider mass to be a form of energy rather than something separate. There had not even been a hint of this prior to Einstein’s work. Such conversion is now known to be the source of the Sun’s energy, the energy of nuclear decay, and even the source of energy keeping Earth’s interior hot.</p>
+</div></div>
+<div class="sh2">Stored Energy and Potential Energy</div>
+<p class="prose">What happens to energy stored in an object at rest, such as the energy put into a battery by charging it, or the energy stored in a toy gun’s compressed spring? The energy input becomes part of the total energy of the object and, thus, increases its rest mass. All stored and potential energy becomes mass in a system. Why is it we don’t ordinarily notice this? In fact, conservation of mass (meaning total mass is constant) was one of the great laws verified by 19th-century science. Why was it not noticed to be incorrect? The following example helps answer these questions.</p>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Calculating Rest Mass: A Small Mass Increase due to Energy Input</span></div><div class="example-body">
+<p class="prose">A car battery is rated to be able to move 600 ampere-hours \(( \cdot h)\) of charge at 12.0 V.</p>
+<p class="prose">In part (a), we first must find the energy stored in the battery, which equals what the battery can supply in the form of electrical potential energy. Since \(PE_{elec} = qV\), we have to calculate the charge \(q\) in \(600 \, A \cdot h\), which is the product of the current \(I\) and the time \(t\). We then multiply the result by 12.0 V. We can then calculate the battery’s increase in mass using \(\Delta E = PE_{elec} = (\Delta m)c^2\).</p>
+<p class="prose">Part (b) is a simple ratio converted to a percentage.</p>
+<p class="prose">Both the actual increase in mass and the percent increase are very small, since energy is divided by \(c^2\), a very large number. We would have to be able to measure the mass of the battery to a precision of a billionth of a percent, or 1 part in \(10^{11}\), to notice this increase. It is no wonder that the mass variation is not readily observed. In fact, this change in mass is so small that we may question how you could verify it is real. The answer is found in nuclear processes in which the percentage of mass destroyed is large enough to be measured. The mass of the fuel of a nuclear reactor, for example, is measurably smaller when its energy has been used. In that case, stored energy has been released (converted mostly to heat and electricity) and the rest mass has decreased. This is also the case when you use the energy stored in a battery, except that the stored energy is much greater in nuclear processes, making the change in mass measurable in practice as well as in theory.</p>
+</div></div>
+<div class="sh2">Kinetic Energy and the Ultimate Speed Limit</div>
+<p class="prose">Kinetic energy is energy of motion. Classically, kinetic energy has the familiar expression \(\frac{1}{2} mv^2\). The relativistic expression for kinetic energy is obtained from the work-energy theorem. This theorem states that the net work on a system goes into kinetic energy. If our system starts from rest, then the work-energy theorem is</p>
+<p class="prose">Relativistically, at rest we have rest energy \(E_0 = mc^2\). The work increases this to the total energy \(E = \gamma mc^2\). Thus,</p>
+<div class="math-display">\[W_{net} = E - E_0 = \gamma mc^2 - mc^2 = (\gamma - 1)mc^2.\]</div>
+<p class="prose">Relativistically, we have \(W_{net} = KE_{rel}.\)</p>
+<p class="prose">Definition: Relativistic Kinetic Energy</p>
+<p class="prose">Relativistic kinetic energy is</p>
+<div class="math-display">\[KE_{rel} = (\gamma - 1)mc^2.\]</div>
+<p class="prose">When motionless, we have \(v = 0\) and</p>
+<div class="math-display">\[\gamma = \dfrac{1}{\sqrt{1 - \frac{v^2}{c^2}}} = 1,\]</div>
+<p class="prose">so that \(KE_{rel} = 0\) at rest, as expected. But the expression for relativistic kinetic energy (such as total energy and rest energy) does not look much like the classical \(\frac{1}{2}mv^2\) To show that the classical expression for kinetic energy is obtained at low velocities, we note that the binomial expansion for \(\gamma\) at low velocities gives</p>
+<div class="math-display">\[\gamma = 1 + \dfrac{1}{2} \dfrac{v^2}{c^2}.\]</div>
+<p class="prose">Entering this into the expression for relativistic kinetic energy gives</p>
+<div class="math-display">\[KE_{rel} = \left[\dfrac{1}{2} \dfrac{v^2}{c^2} \right] mc^2 = \dfrac{1}{2}mv^2 = KE_{class}.\]</div>
+<p class="prose">So, in fact, relativistic kinetic energy does become the same as classical kinetic energy when \(v < < c\).</p>
+<p class="prose">It is even more interesting to investigate what happens to kinetic energy when the velocity of an object approaches the speed of light. We know that \(\gamma\) becomes infinite as \(v\) approaches \(c\), so that \(KE_{rel}\) also becomes infinite as the velocity approaches the speed of light (Figure . An infinite amount of work (and, hence, an infinite amount of energy input) is required to accelerate a mass to the speed of light.</p>
+<p class="prose">Definition: Speed of Light</p>
+<p class="prose">No object with mass can attain the speed of light.</p>
+<p class="prose">So the speed of light is the ultimate speed limit for any particle having mass. All of this is consistent with the fact that velocities less than \(c\) always add to less than \(c\). Both the relativistic form for kinetic energy and the ultimate speed limit being \(c\) have been confirmed in detail in numerous experiments. No matter how much energy is put into accelerating a mass, its velocity can only approach—not reach—the speed of light.</p>
+<div class="diagram"><img src="images/ch28/fig28-21-in-this-figure-a-graph-is-shown-on-a-coo.jpg" alt="In this figure a graph is shown on a coordinate system of axes. The x-axis is labeled as speed v (m/s). On the x-axis, velocity of the object is shown in terms of the speed of light starting from zero at origin to c, where c is the speed of light. The y-axis is labeled as Kinetic Energy K E (J). On the y-axis, relativistic kinetic energy is shown starting from 0 at origin to 1.0. The graph K sub r e l of relativistic kinetic energy is concave up and moving upward along the vertical line at x equals c. This graph shows that relativistic kinetic energy approaches infinity as the velocity of an object approaches the speed of light. Also shown is that when the speed of the object is equal to the speed of light c the kinetic energy is known as classical kinetic energy, which is denoted as K E sub class."><div class="d-cap">In this figure a graph is shown on a coordinate system of axes. The x-axis is labeled as speed v (m/s). On the x-axis, velocity of the object is shown in terms of the speed of light starting from zero at origin to c, where c is the speed of light. The y-axis is labeled as Kinetic Energy K E (J). On the y-axis, relativistic kinetic energy is shown starting from 0 at origin to 1.0. The graph K sub r e l of relativistic kinetic energy is concave up and moving upward along the vertical line at x equals c. This graph shows that relativistic kinetic energy approaches infinity as the velocity of an object approaches the speed of light. Also shown is that when the speed of the object is equal to the speed of light c the kinetic energy is known as classical kinetic energy, which is denoted as K E sub class. (OpenStax College Physics, CC BY 4.0)</div></div>
+<div class="example-box"><div class="example-header"><span class="example-icon">✏️</span><span class="example-title">Example : Comparing Kinetic Energy: Relativistic Energy Versus Classical Kinetic Energy</span></div><div class="example-body">
+<p class="prose">An electron has a velocity \(v = 0.990 c\).</p>
+<p class="prose">The expression for relativistic kinetic energy is always correct, but for (a) it must be used since the velocity is highly relativistic (close to \(c\)). First, we will calculate the relativistic factor \(\gamma\), and then use it to determine the relativistic kinetic energy. For (b), we will calculate the classical kinetic energy (which would be close to the relativistic value if \(v\) were less than a few percent of \(c\)) and see that it is not the same.</p>
+<p class="prose">First calculate \(\gamma\). We will carry extra digits because this is an intermediate calculation.</p>
+<div class="math-display">\[\gamma = \dfrac{1}{\sqrt{1 - \frac{v^2}{c^2}}} = \dfrac{1}{\sqrt{1 - \frac{(0.990 c)^2}{c^2}}} = \dfrac{1}{\sqrt{1 - (0.990)^2}} = 7.0888\]</div>
+<p class="prose">Next, we use this value to calculate the kinetic energy.</p>
+<div class="math-display">\[KE_{rel} = (\gamma - 1)mc^2 = (7.0888 -1)(9.11 \times 10^{-31} \, kg)(3.00 \times 10^8 \, m/s)^2 = 4.99 \times 10^{-13} \, J\]</div>
+<div class="math-display">\[KE_{rel} = (4.99 \times 10^{-13} \, J)\left( \dfrac{1 \, MeV}{1.60 \times 10^{-13} \, J} \right) = 3.12 \, MeV\]</div>
+<p class="prose">As might be expected, since the velocity is 99.0% of the speed of light, the classical kinetic energy is significantly off from the correct relativistic value. Note also that the classical value is much smaller than the relativistic value. In fact, \(KE_{rel}/KE_{class} = 12.4\) here. This is some indication of how difficult it is to get a mass moving close to the speed of light. Much more energy is required than predicted classically. Some people interpret this extra energy as going into increasing the mass of the system, but, as discussed inRelativistic Momentum, this cannot be verified unambiguously. What is certain is that ever-increasing amounts of energy are needed to get the velocity of a mass a little closer to that of light. An energy of 3 MeV is a very small amount for an electron, and it can be achieved with present-day particle accelerators. SLAC, for example, can accelerate electrons to over \(50 \times 10^9 \, eV = 50,000 MeV\).</p>
+<p class="prose">Is there any point in getting \(v\) a little closer to c than 99.0% or 99.9%? The answer is yes. We learn a great deal by doing this. The energy that goes into a high-velocity mass can be converted to any other form, including into entirely new masses. (SeeFigure.) Most of what we know about the substructure of matter and the collection of exotic short-lived particles in nature has been learned this way. Particles are accelerated to extremely relativistic energies and made to collide with other particles, producing totally new species of particles. Patterns in the characteristics of these previously unknown particles hint at a basic substructure for all matter. These particles and some of their characteristics will be covered inParticle Physics.</p>
+<div class="diagram"><img src="images/ch28/fig28-22-an-aerial-view-of-the-fermi-national-acc.jpg" alt="An aerial view of the Fermi National Accelerator Laboratory. The accelerator has two large, ring shaped structures. There are circular ponds near the rings."><div class="d-cap">An aerial view of the Fermi National Accelerator Laboratory. The accelerator has two large, ring shaped structures. There are circular ponds near the rings. (OpenStax College Physics, CC BY 4.0)</div></div>
+</div></div>
+<div class="sh2">Relativistic Energy and Momentum</div>
+<p class="prose">We know classically that kinetic energy and momentum are related to each other, since \[KE_{class} = \dfrac{p^2}{2m} = \dfrac{(mv)^2}{2m} = \dfrac{1}{2} mv^2.\]</p>
+<p class="prose">Relativistically, we can obtain a relationship between energy and momentum by algebraically manipulating their definitions. This produces</p>
+<div class="math-display">\[E^2 = (pc)^2 + (mc^2)^2,\]</div>
+<p class="prose">where \(E\) is the relativistic total energy and \(p\) is the relativistic momentum. This relationship between relativistic energy and relativistic momentum is more complicated than the classical, but we can gain some interesting new insights by examining it. First, total energy is related to momentum and rest mass. At rest, momentum is zero, and the equation gives the total energy to be the rest energy \(mc^2\) (so this equation is consistent with the discussion of rest energy above). However, as the mass is accelerated, its momentum \(p\) increases, thus increasing the total energy. At sufficiently high velocities, the rest energy term \((mc^2)^2\) becomes negligible compared with the momentum term \((pc)^2\); thus, \(E = pc\) at extremely relativistic velocities.</p>
+<p class="prose">If we consider momentum \(p\) to be distinct from mass, we can determine the implications of the equation \(E^2 = (pc)^2 + (mc^2)^2\), for a particle that has no mass. If we take \(m\) to be zero in this equation, then \(E = pc\), or \(p = E/c\). Massless particles have this momentum. There are several massless particles found in nature, including photons (these are quanta of electromagnetic radiation). Another implication is that a massless particle must travel at speed \(c\) and only at speed \(c\). While it is beyond the scope of this text to examine the relationship in the equation \(E^2 = (pc)^2 + (mc^2)^2\), in detail, we can see that the relationship has important implications in special relativity.</p>
+<p class="prose">PROBLEM-SOLVING STRATEGIES FOR RELATIVITY</p>
+<p class="prose">Exercise</p>
+<p class="prose">A photon decays into an electron-positron pair. What is the kinetic energy of the electron if its speed is \(0.992 c\)?</p>
+<div class="math-display">\[\begin{align*} KE_{rel} &= (\gamma -1)mc^2 \\[5pt] &= \left(\dfrac{1}{\sqrt{1 - \frac{v^2}{c^2}}} - 1\right) mc^2 \\[5pt] &= \left( \dfrac{1}{\sqrt{1 - \frac{(0.992 c)^2}{c^2}}} - 1\right) (9.11 \times 10^{-31} \, kg)(3.00 \times 10^8 \, m/s)^2 \\[5pt] &= 5.67 \times 10^{-13} \, J \end{align*}\]</div>
+<div class="sh2">Glossary</div>
+<div class="callout info"><div class="ci">ℹ️</div><div class="cb"><div class="ct">Note</div><div class="cx">PROBLEM-SOLVING STRATEGIES FOR RELATIVITYExamine the situation to determine that it is necessary to use relativity. Relativistic effects are related to \(\gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}}\), the quantitative relativistic factor. If \(\gamma\) is very close to 1, then relativistic effects are small and differ very little from the usually easier classical calculations.Identify exactly what needs to be determined in the problem (identify the unknowns).Make a list of what is given or can be inferred from the problem as stated (identify the knowns).Look in particular for information on relative velocity \(v\).Make certain you understand the conceptual aspects of the problem before making any calculations.Decide, for example, which observer sees time dilated or length contracted before plugging into equations. If you have thought about who sees what, who is moving with the event being observed, who sees proper time, and so on, you will find it much easier to determine if your calculation is reasonable.Determine the primary type of calculation to be done to find the unknowns identified above.You will find the section summary helpful in determining whether a length contraction, relativistic kinetic energy, or some other concept is involved.Do not round off during the calculation.As noted in the text, you must often perform your calculations to many digits to see the desired effect. You may round off at the very end of the problem, but do not use a rounded number in a subsequent calculation.Check the answer to see if it is reasonable: Does it make sense?This may be more difficult for relativity, since we do not encounter it directly. But you can look for velocities greater than \(c\) or relativistic effects that are in the wrong direction (such as a time contraction where a dilation was expected).</div></div></div>
+    <p class="os-credit">📖 OpenStax College Physics, Section 28.6. openstax.org · CC BY 4.0</p>
+    </div>
+<div class="checkpoint-box" id="cp6"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Checkpoint — Before the Quiz</div><div class="cp-sub">80+ characters required</div></div></div><div class="cp-question">How could you travel far into the future without aging significantly? Could this method also allow you to travel into the past?</div><textarea class="cp-textarea" id="cpt6" placeholder="Write your answer here..." oninput="cpCheck(6)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc6">Characters: <span id="cpn6">0</span> / 80 required</div><button class="cp-btn" id="cpb6" onclick="cpUnlock(6)">Unlock Quiz →</button></div><div class="cp-done" id="cpd6">✅ Unlocked!</div></div>
+    <div id="quiz-wrap6" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Section 28.6 Quiz</h3><p>4 questions</p></div></div><div id="q6">
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the "red shift" in the context of the relativistic Doppler effect?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A decrease in observed wavelength when a source moves toward the observer.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>An increase in observed wavelength when a source moves away from the observer.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A change in the color of an object due to its high rest mass.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The conversion of mass into radiant energy during a solar storm.</li>
+</ul><div class="qexp">A red shift occurs when the observed wavelength of electromagnetic radiation is longer than the source wavelength because the source is receding.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">2</span><span class="qt-inner">A space probe moves away from Earth at \(0.350c\) and sends a message at a frequency of 1.50 GHz. At what frequency is the message received on Earth?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.04 GHz</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.50 GHz</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.16 GHz</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.95 GHz</li>
+</ul><div class="qexp">As shown in the exercise, \(f_{obs} = 1.50 \sqrt{(1 - 0.35) / (1 + 0.35)} \approx 1.04\) GHz.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">3</span><span class="qt-inner">How does relativistic momentum \(p\) differ from classical momentum?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is measured as \(mu^{2}\) instead of \(mu\).</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It remains constant even when a net external force acts on the system.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is the classical momentum multiplied by the relativistic factor \(\gamma\).</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is only applicable to massless particles like photons.</li>
+</ul><div class="qexp">Relativistic momentum is defined as \(p = \gamma mu\), which ensures conservation of momentum in all inertial frames.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">Why do modern physicists prefer to use "rest mass" rather than "relativistic mass"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because rest mass is always equal to zero for subatomic particles.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because relativistic mass only applies to objects moving slower than 1% of \(c\).</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because rest mass is more difficult to measure in a laboratory setting.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because mass cannot be determined independently of momentum for a moving object, making rest mass the only meaningful value.</li>
+</ul><div class="qexp">The text notes that the only meaningful, independently determined mass is the rest mass \(m\).</div></div>
+    </div><div class="qscore" id="sc6"><div class="score-n" id="scn6">-</div><div class="score-l">out of 4 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">← Previous</button><button class="mc-btn" onclick="markDone(6,this)">✓ Mark Complete</button><button class="nbtn next" onclick="goTo(7)">Next →</button></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="hero hero-rev"><div class="h-crumb">Review · <span>Chapter 28</span></div><div class="h-title">Chapter Review &amp; Practice Test</div><div class="h-desc">Comprehensive review of Chapter 28: Special Relativity.</div><div class="h-meta"><div class="h-chip">📝 28 Questions</div><div class="h-chip">⏱ ~40 min</div></div></div>
+  <div class="lc">
+    <div class="cs"><div class="eyebrow">Review Summary</div><div class="sh2">Chapter at a Glance</div>
+    <table class="dt"><tr><th>Section</th><th>Title</th></tr>
+    <tr><td><strong>28.1</strong></td><td>28.1: Einstein’s Postulates</td></tr>
+    <tr><td><strong>28.2</strong></td><td>28.2: Simultaneity and Time Dilation</td></tr>
+    <tr><td><strong>28.3</strong></td><td>28.3: Length Contraction</td></tr>
+    <tr><td><strong>28.4</strong></td><td>28.4: Relativistic Addition of Velocities</td></tr>
+    <tr><td><strong>28.5</strong></td><td>28.5: Relativistic Momentum</td></tr>
+    <tr><td><strong>28.6</strong></td><td>28.6: Relativistic Energy</td></tr>
+    </table></div>
+<div class="checkpoint-box" id="cp7"><div class="cp-header"><div class="cp-icon">✍️</div><div><div class="cp-title">Final Checkpoint</div><div class="cp-sub">100+ characters required</div></div></div><div class="cp-question">Pick any three sections from this chapter and write one key concept from each that you found most important. Explain why.</div><textarea class="cp-textarea" id="cpt7" placeholder="Write your answer here..." oninput="cpCheck(7)"></textarea><div class="cp-footer"><div class="cp-counter" id="cpc7">Characters: <span id="cpn7">0</span> / 100 required</div><button class="cp-btn" id="cpb7" onclick="cpUnlock(7)">Unlock Practice Test →</button></div><div class="cp-done" id="cpd7">✅ Unlocked!</div></div>
+    <div id="quiz-wrap7" style="display:none;"><div class="quiz-box"><div class="qh"><div class="q-icon">📝</div><div><h3>Chapter 28 Practice Test</h3><p>28 questions · All OpenStax Review Questions</p></div></div><div id="q7">
+    <div class="callout info"><div class="ci">📋</div><div class="cb"><div class="ct">About This Test</div><div class="cx">This practice test contains all 28 review questions from OpenStax College Physics, Chapter 28. Take your time — there is no time limit.</div></div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">1</span><span class="qt-inner">What is the primary difference between special relativity and general relativity as developed by Albert Einstein?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Special relativity deals with observers at constant velocity, while general relativity deals with accelerated observers.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Special relativity deals with gravity, while general relativity deals with electricity and magnetism.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Special relativity only applies to subatomic particles, while general relativity applies to macroscopic objects.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Special relativity describes motion at slow speeds, while general relativity describes motion near the speed of light.</li>
+</ul><div class="qexp">According to the prelude, special relativity deals with constant velocity frames, whereas general relativity addresses acceleration.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">2</span><span class="qt-inner">In the "classical limit," relativistic mechanics becomes essentially the same as classical mechanics. At approximately what speed does this limit occur?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>At speeds exceeding 99% of the speed of light.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>At speeds exactly equal to the speed of light in a vacuum.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>At speeds slower than about 1% of the speed of light.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>At speeds slower than the speed of sound in air.</li>
+</ul><div class="qexp">The text states that relativistic mechanics becomes the same as classical mechanics for objects moving slower than about 1% of the speed of light.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">3</span><span class="qt-inner">Which of the following is the most accurate definition of "relativity" in a physical context?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The study of how objects increase in mass as they move through a medium.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The study of how different observers measure the same event.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The theory that all motion in the universe is determined by the observer's location.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The principle that time is a constant that never changes for any observer.</li>
+</ul><div class="qexp">The text defines relativity as the study of how different observers measure the same event.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">4</span><span class="qt-inner">An inertial frame of reference is defined as a coordinate system where:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Newton’s second law includes fictitious forces to account for rotation.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The observer is undergoing constant radial acceleration.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The velocity of all objects is measured relative to the center of the Sun.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>A body at rest remains at rest and a body in motion moves at a constant speed in a straight line unless acted on by an outside force.</li>
+</ul><div class="qexp">An inertial frame is one in which Newton’s first law, the law of inertia, holds exactly.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">5</span><span class="qt-inner">What does Einstein’s first postulate of special relativity state about the laws of physics?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>They only apply to observers who are at absolute rest in the universe.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>They are the same and can be stated in their simplest form in all inertial frames of reference.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>They change depending on the relative velocity of the observer to the source.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>They are only valid for objects larger than submicroscopic scales.</li>
+</ul><div class="qexp">The first postulate asserts that the laws of physics are identical in all inertial frames.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">6</span><span class="qt-inner">According to Einstein’s second postulate, how does the speed of light in a vacuum behave?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is a constant \(c\), independent of the relative motion of the source.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It increases if the source of light is moving toward the observer.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It decreases when measured by an observer moving at a high constant velocity.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It depends on the medium or "ether" that carries the light waves.</li>
+</ul><div class="qexp">The second postulate states that the speed of light is constant and independent of the motion of the source or observer.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">7</span><span class="qt-inner">What was the major conclusion drawn from the Michelson-Morley experiment?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Light requires a medium called the "ether" to travel through a vacuum.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The speed of light changes as the Earth orbits the Sun.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Light travels faster when moving in the same direction as the Earth's rotation.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The speed of light is independent of the motion of the Earth.</li>
+</ul><div class="qexp">The Michelson-Morley experiment demonstrated that the speed of light is independent of the Earth’s motion, implying no medium is needed.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">8</span><span class="qt-inner">Why did Maxwell’s equations create a contradiction with Newton’s laws of motion?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Maxwell predicted light was a particle, while Newton proved it was a wave.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Newton’s laws required light to have mass, but Maxwell’s equations did not.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Maxwell predicted a fixed speed for light without specifying a reference frame, while Newton’s laws suggested velocities should add.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Newton’s laws only worked in accelerated frames, but Maxwell’s equations only worked in inertial frames.</li>
+</ul><div class="qexp">Maxwell’s equations predict a constant speed \(c\), which contradicts the classical Newtonian addition of velocities.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">9</span><span class="qt-inner">Two events are observed to occur at the same time by Observer A. Under what condition might Observer B see these events occur at different times?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>If Observer B is at rest relative to Observer A.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>If both observers are in the same inertial frame of reference.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>If Observer B is moving at a relative velocity compared to Observer A.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>If the events occur at the exact same location in space.</li>
+</ul><div class="qexp">Simultaneity is not absolute; relative motion between observers affects whether two events are seen as occurring at the same time.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">10</span><span class="qt-inner">What is the definition of time dilation?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The phenomenon of time passing slower for an observer who is moving relative to another observer.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The process of synchronizing clocks in different inertial frames.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The increase in the frequency of a clock as it approaches the speed of light.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The requirement that all observers measure the same elapsed time for a foot race.</li>
+</ul><div class="qexp">Time dilation describes the lengthening of time intervals for a system in motion relative to an observer.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">11</span><span class="qt-inner">Which observer measures the "proper time" \(\Delta t_{0}\) for a specific process?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The observer who is moving at the highest possible velocity relative to the event.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The observer who is at rest relative to the event being observed.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>An Earth-bound observer measuring a process occurring on a fast-moving spaceship.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The observer who measures the longest possible duration for the event.</li>
+</ul><div class="qexp">Proper time is defined as the time interval measured by an observer who is at rest relative to the process.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">12</span><span class="qt-inner">If a system is moving at 60% of the speed of light (\(v = 0.600c\)), what is the relativistic factor \(\gamma\)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>0.80</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.00</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>1.15</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>1.25</li>
+</ul><div class="qexp">\(\gamma = 1 / \sqrt{1 - (0.6)^2} = 1 / \sqrt{0.64} = 1 / 0.8 = 1.25\).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">13</span><span class="qt-inner">A muon has a lifetime of \(1.52 \, \mu s\) in its own rest frame. If it travels at \(0.950c\) (\(\gamma = 3.20\)), how long does it live according to an Earth-bound observer?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(4.86 \, \mu s\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(0.475 \, \mu s\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(1.52 \, \mu s\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(3.20 \, \mu s\)</li>
+</ul><div class="qexp">Using \(\Delta t = \gamma \Delta t_{0}\), the observed time is \(3.20 \times 1.52 \, \mu s = 4.864 \, \mu s\).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">14</span><span class="qt-inner">Why is the "Twin Paradox" considered a false paradox in the context of special relativity?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because time dilation only affects mechanical clocks, not biological aging.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because the astronaut twin travels at a speed greater than light.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because the Earth twin is actually the one moving through the galaxy.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because the situation is not symmetric; the traveling twin undergoes acceleration and deceleration.</li>
+</ul><div class="qexp">The traveling twin is not in a single inertial frame because they must accelerate and decelerate, breaking the symmetry of the frames.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">15</span><span class="qt-inner">Proper length \(L_{0}\) is defined as the distance between two points measured by an observer who:</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Is moving at a constant velocity \(v\) relative to the points.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Is moving at the speed of light relative to the points.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Is at rest relative to both of the points.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Measures the shortest possible distance between the points.</li>
+</ul><div class="qexp">Proper length is measured by an observer at rest relative to the distance being measured.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">16</span><span class="qt-inner">In which direction does length contraction occur for a moving object?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Only along the direction of the object's motion.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Only in the direction perpendicular to the object's motion.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>In all three spatial dimensions equally.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>In the direction opposite to the vector of its acceleration.</li>
+</ul><div class="qexp">Length contraction is only observed in the dimension parallel to the relative motion of the observers.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">17</span><span class="qt-inner">A spaceship is measured to be 100 m long at rest. If it flies past the Earth at \(0.800c\) (\(\gamma = 1.67\)), what is its length as measured by an Earth-bound observer?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>167 m</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>125 m</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>80 m</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>60 m</li>
+</ul><div class="qexp">\(L = L_{0} / \gamma = 100 / 1.67 \approx 59.9\) m. Using the exact \(\gamma\) for \(0.8c\) (which is \(1.666...\)) yields exactly 60 m.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">18</span><span class="qt-inner">What is a real-world experimental verification of length contraction mentioned in the text?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>The synchronization of atomic clocks on commercial jets.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>The compression of a 3 km long particle accelerator to only 0.5 m from the perspective of a relativistic electron.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>The observation of red-shifted light from receding galaxies.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The increase in a car battery's mass after it has been fully charged.</li>
+</ul><div class="qexp">To an electron at SLAC, the 3 km accelerator is length-contracted to about 0.5 m due to the electron's relativistic speed.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">19</span><span class="qt-inner">Why does the classical velocity addition formula \(u = v + u'\) fail for objects moving near the speed of light?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It predicts that light would be blue-shifted regardless of direction.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It allows the resulting velocity to exceed the speed of light \(c\).</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It does not account for the fictitious forces in inertial frames.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It only applies to sound waves traveling through a physical medium.</li>
+</ul><div class="qexp">Classical addition can result in speeds greater than \(c\), which violates the second postulate of special relativity.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">20</span><span class="qt-inner">A spaceship approaching Earth at \(0.500c\) fires a canister forward at \(0.500c\) relative to the ship. What is the canister's speed relative to Earth?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(1.000c\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(0.750c\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(0.800c\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(0.500c\)</li>
+</ul><div class="qexp">Using \(u = (v + u') / (1 + vu'/c^{2})\), we get \((0.5 + 0.5) / (1 + 0.25) = 1 / 1.25 = 0.800c\).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">21</span><span class="qt-inner">What is the "red shift" in the context of the relativistic Doppler effect?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>A decrease in observed wavelength when a source moves toward the observer.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>An increase in observed wavelength when a source moves away from the observer.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>A change in the color of an object due to its high rest mass.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>The conversion of mass into radiant energy during a solar storm.</li>
+</ul><div class="qexp">A red shift occurs when the observed wavelength of electromagnetic radiation is longer than the source wavelength because the source is receding.</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">22</span><span class="qt-inner">A space probe moves away from Earth at \(0.350c\) and sends a message at a frequency of 1.50 GHz. At what frequency is the message received on Earth?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>1.04 GHz</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>1.50 GHz</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>2.16 GHz</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>0.95 GHz</li>
+</ul><div class="qexp">As shown in the exercise, \(f_{obs} = 1.50 \sqrt{(1 - 0.35) / (1 + 0.35)} \approx 1.04\) GHz.</div></div>
+<div class="qq" data-ans="c"><div class="qt"><span class="qnum">23</span><span class="qt-inner">How does relativistic momentum \(p\) differ from classical momentum?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is measured as \(mu^{2}\) instead of \(mu\).</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It remains constant even when a net external force acts on the system.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is the classical momentum multiplied by the relativistic factor \(\gamma\).</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is only applicable to massless particles like photons.</li>
+</ul><div class="qexp">Relativistic momentum is defined as \(p = \gamma mu\), which ensures conservation of momentum in all inertial frames.</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">24</span><span class="qt-inner">Why do modern physicists prefer to use "rest mass" rather than "relativistic mass"?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because rest mass is always equal to zero for subatomic particles.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because relativistic mass only applies to objects moving slower than 1% of \(c\).</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because rest mass is more difficult to measure in a laboratory setting.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because mass cannot be determined independently of momentum for a moving object, making rest mass the only meaningful value.</li>
+</ul><div class="qexp">The text notes that the only meaningful, independently determined mass is the rest mass \(m\).</div></div>
+<div class="qq" data-ans="a"><div class="qt"><span class="qnum">25</span><span class="qt-inner">What is the momentum of an electron traveling at \(0.985c\) (\(\gamma = 5.79\)) if its rest mass is \(9.11 \times 10^{-31} \, kg\)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(1.56 \times 10^{-21} \, kg \cdot m/s\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(2.69 \times 10^{-22} \, kg \cdot m/s\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(8.97 \times 10^{-31} \, kg \cdot m/s\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(5.27 \times 10^{-21} \, kg \cdot m/s\)</li>
+</ul><div class="qexp">\(p = \gamma mu = 5.79 \times (9.11 \times 10^{-31} \, kg) \times (0.985 \times 3.00 \times 10^{8} \, m/s) \approx 1.56 \times 10^{-21} \, kg \cdot m/s\).</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">26</span><span class="qt-inner">Which of the following statements about rest energy \(E_{0}\) is correct?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>It is the energy an object possesses due to its acceleration.</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>It is defined by the equation \(E_{0} = mc^{2}\), relating mass and energy at rest.</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>It is always zero for any object with a measurable mass.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>It is the kinetic energy of an object moving at the speed of light.</li>
+</ul><div class="qexp">Einstein’s equation \(E_{0} = mc^{2}\) shows that mass itself is a form of energy even when an object is at rest.</div></div>
+<div class="qq" data-ans="b"><div class="qt"><span class="qnum">27</span><span class="qt-inner">Approximately how much rest energy is contained in a 1.00 mg mass (one-thousandth of a gram)?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>\(9.00 \times 10^{13} \, J\)</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>\(9.00 \times 10^{10} \, J\)</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>\(3.00 \times 10^{5} \, J\)</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>\(9.00 \times 10^{7} \, J\)</li>
+</ul><div class="qexp">\(E_{0} = mc^{2} = (1.00 \times 10^{-6} \, kg) \times (3.00 \times 10^{8} \, m/s)^{2} = 9.00 \times 10^{10} \, J\).</div></div>
+<div class="qq" data-ans="d"><div class="qt"><span class="qnum">28</span><span class="qt-inner">Why is the speed of light considered the "ultimate speed limit" for any object with mass?</span></div><ul class="qopts">
+<li class="qo" data-v="a" onclick="pick(this)"><div class="ol">A</div>Because time stops completely once an object reaches 90% of \(c\).</li>
+<li class="qo" data-v="b" onclick="pick(this)"><div class="ol">B</div>Because Maxwell's equations do not work at speeds greater than \(c\).</li>
+<li class="qo" data-v="c" onclick="pick(this)"><div class="ol">C</div>Because the relativistic factor \(\gamma\) becomes zero at the speed of light.</li>
+<li class="qo" data-v="d" onclick="pick(this)"><div class="ol">D</div>Because it would require an infinite amount of work and energy to accelerate a massive object to \(c\).</li>
+</ul><div class="qexp">As \(v\) approaches \(c\), \(\gamma\) and kinetic energy approach infinity, requiring infinite energy to reach the speed of light.</div></div>
+    </div><div class="qscore" id="sc7"><div class="score-n" id="scn7">-</div><div class="score-l">out of 28 correct</div></div></div></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">← Previous</button><button class="mc-btn" onclick="markDone(7,this)">✓ Mark Complete</button><button class="nbtn next" disabled>End of Chapter →</button></div>
+</div>
+
+</main>
+<script src="../shared/portal-quiz.js"></script>
+<script>
+window.MODULE_CONFIG={name:'Special Relativity',appsScriptUrl:'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec',panelCount:8,lessonCount:7,cpMin:80,lessons:['Overview','28.1 28.1: Einstein’s Postulates','28.2 28.2: Simultaneity and Time Dilation','28.3 28.3: Length Contraction','28.4 28.4: Relativistic Addition of Velocities','28.5 28.5: Relativistic Momentum','28.6 28.6: Relativistic Energy','Chapter Review']};
+
+window.cpCheck=function(id){
+  var min=id===7?100:80;
+  var ta=document.getElementById('cpt'+id);
+  var n=ta.value.length;
+  document.getElementById('cpc'+id).innerHTML='Characters: <span id="cpn'+id+'" style="font-weight:700;color:'+(n>=min?'var(--teal)':'var(--amber)')+'">'+n+'</span> / '+min+' required';
+  var btn=document.getElementById('cpb'+id);
+  if(n>=min){btn.classList.add('ready');}else{btn.classList.remove('ready');}
+};
+</script>
+</body>
+</html>
