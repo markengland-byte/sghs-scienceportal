@@ -70,9 +70,13 @@ def auto_sidebar_groups(ch_num, extracted_path):
     with open(extracted_path, 'r', encoding='utf-8') as f:
         text = f.read()
 
-    sections = re.findall(r'^=== SECTION ([\d.]+) ===\n.*?TITLE:\s*(.+)', text, re.MULTILINE)
-    if not sections:
+    # Find section numbers and their titles (may be on different lines)
+    sec_nums = re.findall(r'^=== SECTION ([\d.]+) ===', text, re.MULTILINE)
+    sec_titles = re.findall(r'^TITLE:\s*(.+)', text, re.MULTILINE)
+    if not sec_nums:
         return {}
+    # Pair them up (same order)
+    sections = list(zip(sec_nums, sec_titles[:len(sec_nums)]))
 
     # Group sections into chunks of 2-3 for sidebar
     groups = {}
