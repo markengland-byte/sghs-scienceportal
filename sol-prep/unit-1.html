@@ -6,6 +6,7 @@
 <title>BIO SOL Prep · Unit 1: Scientific Investigation</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="dsm-player.css">
 <style>
 /* ── DESIGN TOKENS ─────────────────────────────────────────────────── */
 :root{
@@ -315,7 +316,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   </div>
 </header>
 
-<!-- STEP PROGRESS BAR (11 steps) -->
+<!-- STEP PROGRESS BAR (12 steps) -->
 <nav class="steps-bar" id="steps-bar">
   <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
   <div class="step-sep"></div>
@@ -333,11 +334,13 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   <div class="step-sep"></div>
   <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Vocab Lock-In</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Study Guide</button></div>
+  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Mastery</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Practice Test</button></div>
+  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Study Guide</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(10)" id="sb10"><span class="step-num">11</span>Results</button></div>
+  <div class="step"><button class="step-btn" onclick="goTo(10)" id="sb10"><span class="step-num">11</span>Practice Test</button></div>
+  <div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(11)" id="sb11"><span class="step-num">12</span>Results</button></div>
 </nav>
 <div class="steps-prog" id="steps-prog"></div>
 
@@ -1463,9 +1466,9 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 <!-- PANEL 7: VOCAB LOCK-IN (FLASHCARDS + VOCAB QUIZ) -->
 <div class="panel" id="p7">
   <div class="lc">
-    <div class="eyebrow">Step 8 of 11 — Vocab Lock-In</div>
+    <div class="eyebrow">Step 8 of 12 — Vocab Lock-In</div>
     <div class="sh2">Vocabulary Mastery Check</div>
-    <div class="callout sol"><div class="ci">🔒</div><div class="cb"><div class="ct">Pass 80% to Unlock the Practice Test</div><div class="cx">Review all 18 flashcards, then take the 10-question vocab quiz. Score 8 out of 10 or better to unlock your 20-question SOL Practice Test. If you don't pass, review the missed terms and retry.</div></div></div>
+    <div class="callout sol"><div class="ci">🔒</div><div class="cb"><div class="ct">Pass 80% to Unlock the Mastery Module</div><div class="cx">Review all 18 flashcards, then take the 10-question vocab quiz. Score 8 out of 10 or better to unlock the Mastery Module. If you don't pass, review the missed terms and retry.</div></div></div>
 
     <div class="section">
       <div class="eyebrow">Flip Cards — Review All 18</div>
@@ -1644,20 +1647,32 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
 
-    <!-- PRACTICE LOCKED (shown until vocab passed) -->
+    <!-- MASTERY MODULE LOCKED (shown until vocab passed) -->
     <div class="practice-locked" id="practice-locked">
       <div class="practice-locked-icon">🔒</div>
-      <div class="practice-locked-title">SOL Practice Test Locked</div>
-      <div class="practice-locked-sub">Pass the vocabulary quiz above (8/10 or better) to unlock your 20-question SOL Practice Test.</div>
+      <div class="practice-locked-title">Mastery Module Locked</div>
+      <div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the Mastery Module.</div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Evaluating Sources</button><button class="nbtn next" onclick="goTo(8)" id="to-study-btn">Study Guide &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Evaluating Sources</button><button class="nbtn next" onclick="goTo(8)" id="to-study-btn">Mastery Module &rarr;</button></div>
 </div>
 
-<!-- PANEL 8: STUDY GUIDE / CHEAT SHEET -->
+<!-- =================================================================
+     PANEL 8: MASTERY MODULE (DSM)
+     ================================================================= -->
 <div class="panel" id="p8">
   <div class="lc">
-    <div class="eyebrow">Step 9 of 11 — Study Guide</div>
+    <div class="eyebrow">Step 9 of 12 &mdash; Mastery Module</div>
+    <div class="sh2">BIO.1 Concept Mastery</div>
+    <div id="dsm-container"></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(9)">Study Guide &rarr;</button></div>
+</div>
+
+<!-- PANEL 9: STUDY GUIDE / CHEAT SHEET -->
+<div class="panel" id="p9">
+  <div class="lc">
+    <div class="eyebrow">Step 10 of 12 — Study Guide</div>
     <div class="sh2">BIO.1 One-Page Cheat Sheet</div>
     <div class="callout tip"><div class="ci">🖨</div><div class="cb"><div class="ct">Print-Friendly Reference</div><div class="cx">This page covers ALL 6 sub-standards (BIO.1a through BIO.1f). Use the print button at the bottom to create a hard copy for your binder.</div></div></div>
 
@@ -1796,13 +1811,13 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
     <button onclick="window.print()" class="nbtn next" style="margin:20px auto;display:block">&#128424; Print This Study Guide</button>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(9)">Practice Test &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Mastery Module</button><button class="nbtn next" onclick="goTo(10)">Practice Test &rarr;</button></div>
 </div>
 
-<!-- PANEL 9: SOL PRACTICE TEST (20 Questions) -->
-<div class="panel" id="p9">
+<!-- PANEL 10: SOL PRACTICE TEST (20 Questions) -->
+<div class="panel" id="p10">
   <div class="lc">
-    <div class="eyebrow">Step 10 of 11 — SOL Practice Test</div>
+    <div class="eyebrow">Step 11 of 12 — SOL Practice Test</div>
     <div class="sh2">20 SOL-Style Questions</div>
     <div class="callout sol"><div class="ci">📝</div><div class="cb"><div class="ct">Virginia SOL Format &middot; BIO.1a–BIO.1f</div><div class="cx">Every question is tagged to a specific BIO.1 substandard. Read carefully — these are based on real released Virginia SOL questions. After you finish all 20, you will get your Danger Zone score.</div></div></div>
 
@@ -1810,7 +1825,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="practice-locked" id="practice-test-locked">
       <div class="practice-locked-icon">🔒</div>
       <div class="practice-locked-title">Practice Test Locked</div>
-      <div class="practice-locked-sub">Pass the vocabulary quiz on Step 8 (8/10 or better) to unlock this Practice Test.</div>
+      <div class="practice-locked-sub">Complete the Mastery Module to unlock the Practice Test.</div>
     </div>
 
     <div class="quiz-box" id="sol-practice-box" style="display:none;">
@@ -2069,13 +2084,13 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
     </div><!-- end quiz-box -->
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(10)" id="to-results-btn" disabled>Results &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(11)" id="to-results-btn" disabled>Results &rarr;</button></div>
 </div>
 
-<!-- PANEL 10: RESULTS & DANGER ZONE -->
-<div class="panel" id="p10">
+<!-- PANEL 11: RESULTS & DANGER ZONE -->
+<div class="panel" id="p11">
   <div class="lc">
-    <div class="eyebrow">Step 11 of 11 — Results</div>
+    <div class="eyebrow">Step 12 of 12 — Results</div>
     <div class="sh2">Your Danger Zone Score</div>
 
     <div class="dz-box" id="dz-result">
@@ -2097,25 +2112,26 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div style="font-size:2.5rem;margin-bottom:10px;">📊</div>
       <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gray-600);margin-bottom:6px;">Complete all 20 practice questions first</div>
       <div style="font-size:.85rem;color:var(--muted);">Go back to the Practice Test and answer every question. Your Danger Zone score will appear here automatically.</div>
-      <button class="nbtn next" onclick="goTo(9)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button>
+      <button class="nbtn next" onclick="goTo(10)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#127881;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(10)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#127881;</button></div>
 </div>
 
 </main>
 
 <script src="sol-api.js"></script>
+<script src="dsm-player.js"></script>
 <script>
 /* ================================================================
-   SOL PREP — Unit 1: Scientific Investigation (v2 — 11 panels)
+   SOL PREP — Unit 1: Scientific Investigation (v2 — 12 panels)
    Complete JavaScript
    ================================================================ */
 
 // CONFIG
 const UNIT = 'unit1';
 // SOL_DATE loaded from solAPI.getExamDate()
-const TOTAL_PANELS = 11;  // panels 0-10
+const TOTAL_PANELS = 12;  // panels 0-11
 const TOTAL_SOL_Q = 20;
 const VQ_TOTAL = 10;
 const VQ_PASS = 8;
@@ -2349,26 +2365,42 @@ function restoreProgress(data) {
         nEl.textContent = vqScore + '/' + VQ_TOTAL;
         box.style.display = 'block';
         if (vocabPassed) {
-          msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+          msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
         } else {
           msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
         }
       }
     }
-    // Unlock practice if passed
+    // Init DSM if vocab passed
     if (vocabPassed) {
-      var pl = document.getElementById('practice-locked');
-      if (pl) pl.style.display = 'none';
-      var tl = document.getElementById('practice-test-locked');
-      if (tl) tl.style.display = 'none';
-      var sb = document.getElementById('sol-practice-box');
-      if (sb) sb.style.display = 'block';
+      unlockedPanels.add(8);
+      DSMPlayer.init({
+        unitNumber: 1,
+        standard: 'BIO.1',
+        unitKey: UNIT,
+        panelId: 8,
+        containerId: 'dsm-container',
+        unlockPanels: [9, 10, 11],
+        onComplete: function() {
+          unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+          document.getElementById('practice-locked').style.display = 'none';
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          saveProgress();
+        },
+        onSkip: function() {
+          unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+          document.getElementById('practice-locked').style.display = 'none';
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        }
+      });
     }
   }
 
   // Replay practice test answers
   if (questionDetail.length > 0) {
-    var solQs = document.querySelectorAll('#p9 .qq');
+    var solQs = document.querySelectorAll('#p10 .qq');
     questionDetail.forEach(function(detail, i) {
       var qq = solQs[i];
       if (!qq) return;
@@ -2467,7 +2499,7 @@ function proceedStart(nameInput) {
 /* ── NAVIGATION ───────────────────────────────────── */
 var unlockedPanels = new Set([0]); // panel 0 always accessible
 
-var stepNames = ['SOL Focus','Hypotheses & Variables','Planning Investigations','Data Tables & Graphs','Conclusions & Evidence','Scientific Models','Evaluating Sources','Vocab Lock-In','Study Guide','Practice Test','Results'];
+var stepNames = ['SOL Focus','Hypotheses & Variables','Planning Investigations','Data Tables & Graphs','Conclusions & Evidence','Scientific Models','Evaluating Sources','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
 
 function goTo(n) {
   // Block navigation to locked panels (unless going backward)
@@ -2713,19 +2745,32 @@ function gradeVocab() {
   nEl.textContent = vqScore + '/' + VQ_TOTAL;
   box.style.display = 'block';
   if (vqScore >= VQ_PASS) {
-    msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+    msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
     vocabPassed = true;
-    unlockedPanels.add(8);  // Study Guide
-    unlockedPanels.add(9);  // Practice Test
-    unlockedPanels.add(10); // Results
-    document.getElementById('practice-locked').style.display = 'none';
-    // Unlock practice test panel
-    var testLocked = document.getElementById('practice-test-locked');
-    if (testLocked) testLocked.style.display = 'none';
-    var testBox = document.getElementById('sol-practice-box');
-    if (testBox) testBox.style.display = 'block';
+    unlockedPanels.add(8);
     localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
     send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
+    DSMPlayer.init({
+      unitNumber: 1,
+      standard: 'BIO.1',
+      unitKey: UNIT,
+      panelId: 8,
+      containerId: 'dsm-container',
+      unlockPanels: [9, 10, 11],
+      onComplete: function() {
+        unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        saveProgress();
+      },
+      onSkip: function() {
+        unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+      }
+    });
   } else {
     msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
     retryBtn.style.display = 'inline-block';
@@ -2860,7 +2905,7 @@ function solPick(opt) {
   if (pracAnswered === TOTAL_SOL_Q) {
     document.getElementById('to-results-btn').disabled = false;
     showDangerZone();
-    setTimeout(function(){ goTo(10); }, 800);
+    setTimeout(function(){ goTo(11); }, 800);
   }
   saveProgress();
 }
@@ -2919,8 +2964,8 @@ function showDangerZone() {
   localStorage.setItem('sol_' + UNIT + '_done', 'true');
 
   // Mark step done
-  var sb10 = document.getElementById('sb10');
-  if (sb10) sb10.classList.add('done');
+  var sb11 = document.getElementById('sb11');
+  if (sb11) sb11.classList.add('done');
   saveProgress();
 }
 
@@ -2973,11 +3018,11 @@ function retakePractice() {
   pracCorrect = 0;
   missedStds = {};
   questionDetail = [];
-  // Reset all question UI in panel 9
-  document.querySelectorAll('#p9 .qq .qo').forEach(function(o) {
+  // Reset all question UI in panel 10
+  document.querySelectorAll('#p10 .qq .qo').forEach(function(o) {
     o.classList.remove('revealed', 'correct', 'incorrect');
   });
-  document.querySelectorAll('#p9 .qexp').forEach(function(e) {
+  document.querySelectorAll('#p10 .qexp').forEach(function(e) {
     e.classList.remove('show', 'qexp-wrong');
   });
   // Reset danger zone
@@ -2993,7 +3038,7 @@ function retakePractice() {
   var progMsg = document.getElementById('sol-progress-msg');
   if (progMsg) progMsg.textContent = '';
   // Go to practice test
-  goTo(9);
+  goTo(10);
   send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
 }
 
@@ -3078,12 +3123,28 @@ document.addEventListener('DOMContentLoaded', function() {
   // Restore vocab pass
   if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
     vocabPassed = true;
-    var pl = document.getElementById('practice-locked');
-    if (pl) pl.style.display = 'none';
-    var tl = document.getElementById('practice-test-locked');
-    if (tl) tl.style.display = 'none';
-    var sb = document.getElementById('sol-practice-box');
-    if (sb) sb.style.display = 'block';
+    unlockedPanels.add(8);
+    DSMPlayer.init({
+      unitNumber: 1,
+      standard: 'BIO.1',
+      unitKey: UNIT,
+      panelId: 8,
+      containerId: 'dsm-container',
+      unlockPanels: [9, 10, 11],
+      onComplete: function() {
+        unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        saveProgress();
+      },
+      onSkip: function() {
+        unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+      }
+    });
   }
   // Restore stored class code
   var storedClass = solAPI.getStored();

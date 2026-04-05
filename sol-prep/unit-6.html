@@ -6,6 +6,7 @@
 <title>BIO SOL Prep · Unit 6: Classification & Diversity</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="dsm-player.css">
 <style>
 /* ── DESIGN TOKENS ─────────────────────────────────────────────────── */
 :root{
@@ -317,9 +318,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Domains &amp; Kingdoms</button></div><div class="step-sep"></div>
   <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Eukarya Diversity</button></div><div class="step-sep"></div>
   <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Study Guide</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Practice Test</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Results</button></div>
+  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Mastery</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
 </nav>
 <div class="steps-prog" id="steps-prog"></div>
 
@@ -880,7 +882,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
      ================================================================= -->
 <div class="panel" id="p5">
   <div class="lc">
-    <div class="eyebrow">Step 6 of 9 &mdash; Vocab Lock-In</div>
+    <div class="eyebrow">Step 6 of 10 &mdash; Vocab Lock-In</div>
     <div class="sh2">Flip Every Card, Then Pass the Vocab Quiz</div>
     <p class="prose">Flip ALL 22 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
     <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 22 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 22 cards studied</div></div>
@@ -925,15 +927,27 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
         <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
       </div>
     </div>
-    <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div>
+    <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Mastery Module Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the Mastery Module.</div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Eukarya Diversity</button><button class="nbtn next" onclick="goTo(6)">Study Guide &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Eukarya Diversity</button><button class="nbtn next" onclick="goTo(6)">Mastery Module &rarr;</button></div>
 </div>
 
-<!-- PANEL 6: STUDY GUIDE -->
+<!-- =================================================================
+     PANEL 6: MASTERY MODULE (DSM)
+     ================================================================= -->
 <div class="panel" id="p6">
   <div class="lc">
-    <div class="eyebrow">Step 7 of 9 &mdash; Study Guide</div>
+    <div class="eyebrow">Step 7 of 10 &mdash; Mastery Module</div>
+    <div class="sh2">BIO.6 Concept Mastery</div>
+    <div id="dsm-container"></div>
+  </div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Study Guide &rarr;</button></div>
+</div>
+
+<!-- PANEL 7: STUDY GUIDE -->
+<div class="panel" id="p7">
+  <div class="lc">
+    <div class="eyebrow">Step 8 of 10 &mdash; Study Guide</div>
     <div class="sh2">BIO.6 One-Page Cheat Sheet</div>
     <p class="prose">Print for quick reference. <button class="nbtn next" onclick="window.print()" style="display:inline-flex;padding:5px 14px;font-size:.8rem;">&#x1F5A8; Print</button></p>
     <div class="section">
@@ -949,15 +963,15 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <p class="prose" style="font-size:.85rem;"><strong>Plants:</strong> mosses (no vascular) &rarr; ferns (vascular, spores) &rarr; conifers (seeds in cones) &rarr; flowering (seeds in fruits). <strong>Classification adapts</strong> to new discoveries (BIO.6f).</p>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Practice Test &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Mastery Module</button><button class="nbtn next" onclick="goTo(8)">Practice Test &rarr;</button></div>
 </div>
 
-<!-- PANEL 7: PRACTICE TEST (20 Qs) -->
-<div class="panel" id="p7">
+<!-- PANEL 8: PRACTICE TEST (20 Qs) -->
+<div class="panel" id="p8">
   <div class="lc">
-    <div class="eyebrow">Step 8 of 9 &mdash; SOL Practice Test</div>
+    <div class="eyebrow">Step 9 of 10 &mdash; SOL Practice Test</div>
     <div class="sh2">20 Questions in SOL Exam Format</div>
-    <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock.</div></div></div>
+    <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Complete the Mastery Module to unlock the Practice Test.</div></div></div>
     <div class="quiz-box" id="sol-practice-box">
       <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.6 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
       <div class="qq" data-ans="c" data-std="BIO.6c"><div class="q-stem"><span class="q-num">1</span> (2003-48) A chart shows vertebrate embryo development. The organism LEAST related to the others would be the one whose embryo &mdash; <span class="q-tag">BIO.6c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>develops gill slits first</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>has the most similar early stages to the others</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>shows the most differences from the others at every stage</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>develops a tail last</li></ul><div class="qexp">Embryos that look LEAST similar to the others at every developmental stage are the LEAST related. More similar embryos = more closely related (shared common ancestor).</div></div>
@@ -980,29 +994,30 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq" data-ans="b" data-std="BIO.6b"><div class="q-stem"><span class="q-num">18</span> On a cladogram, organisms that share the most recent branching point are &mdash; <span class="q-tag">BIO.6b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>identical species</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>most closely related</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>least closely related</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>in the same kingdom but different phylum</li></ul><div class="qexp">Most recent branch point = most recent common ancestor = most closely related.</div></div>
       <div class="qq" data-ans="c" data-std="BIO.6c"><div class="q-stem"><span class="q-num">19</span> Similar embryonic stages in fish, birds, and mammals suggest they &mdash; <span class="q-tag">BIO.6c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>live in similar environments</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>eat the same food</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>share a common ancestor</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>will look similar as adults</li></ul><div class="qexp">Similar embryonic development across species is strong evidence for shared evolutionary ancestry.</div></div>
       <div class="qq" data-ans="d" data-std="BIO.6d"><div class="q-stem"><span class="q-num">20</span> Archaea differ from Bacteria primarily in their &mdash; <span class="q-tag">BIO.6d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>ability to reproduce</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>presence of DNA</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>need for energy</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>cell membrane chemistry and RNA sequences</li></ul><div class="qexp">Both Archaea and Bacteria are prokaryotic, reproduce, have DNA, and need energy. They differ in cell membrane chemistry and RNA sequences, which is why they're in separate domains.</div></div>
-      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(8)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(8)" disabled>Results &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(9)" disabled>Results &rarr;</button></div>
 </div>
 
-<!-- PANEL 8: RESULTS -->
-<div class="panel" id="p8">
+<!-- PANEL 9: RESULTS -->
+<div class="panel" id="p9">
   <div class="lc">
-    <div class="eyebrow">Step 9 of 9 &mdash; Results</div>
+    <div class="eyebrow">Step 10 of 10 &mdash; Results</div>
     <div class="sh2">Your BIO.6 Score &amp; Danger Zone Report</div>
-    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(7)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
     <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
 </div>
 
 </main>
 <script src="sol-api.js"></script>
+<script src="dsm-player.js"></script>
 <script>
 /* ── CONSTANTS ───────────────────────────────────── */
 const UNIT = 'unit6';
-const TOTAL_PANELS = 9;
+const TOTAL_PANELS = 10;
 const TOTAL_SOL_Q = 20;
 const TOTAL_CARDS = 22;
 const VQ_TOTAL = 10;
@@ -1194,13 +1209,28 @@ function restoreProgress(data) {
       var scoreBox = document.getElementById('vquiz-score');
       scoreBox.style.display = 'block';
       document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
-      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! SOL Practice Test unlocked.';
-      var pl = document.getElementById('practice-locked');
-      if (pl) pl.style.display = 'none';
-      var tl = document.getElementById('practice-test-locked');
-      if (tl) tl.style.display = 'none';
-      var sb = document.getElementById('sol-practice-box');
-      if (sb) sb.style.display = 'block';
+      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! Mastery Module unlocked.';
+      DSMPlayer.init({
+        unitNumber: 6,
+        standard: 'BIO.6',
+        unitKey: UNIT,
+        panelId: 6,
+        containerId: 'dsm-container',
+        unlockPanels: [7, 8, 9],
+        onComplete: function() {
+          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+          document.getElementById('practice-locked').style.display = 'none';
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          saveProgress();
+        },
+        onSkip: function() {
+          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+          document.getElementById('practice-locked').style.display = 'none';
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        }
+      });
     }
   }
 
@@ -1291,7 +1321,7 @@ function proceedStart(nameInput) {
 /* ── NAVIGATION ───────────────────────────────────── */
 var unlockedPanels = new Set([0]);
 
-var stepNames = ['SOL Focus','Taxonomy','Cladograms','Domains & Kingdoms','Eukarya Diversity','Vocab Lock-In','Study Guide','Practice Test','Results'];
+var stepNames = ['SOL Focus','Taxonomy','Cladograms','Domains & Kingdoms','Eukarya Diversity','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
 
 function goTo(n) {
   if (n > currentPanel && !unlockedPanels.has(n)) {
@@ -1452,18 +1482,32 @@ function gradeVocab() {
   nEl.textContent = vqScore + '/' + VQ_TOTAL;
   box.style.display = 'block';
   if (vqScore >= VQ_PASS) {
-    msgEl.textContent = '\u2705 Passed! SOL Practice Test unlocked.';
+    msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
     vocabPassed = true;
-    unlockedPanels.add(6);  // Study Guide
-    unlockedPanels.add(7);  // Practice Test
-    unlockedPanels.add(8);  // Results
-    document.getElementById('practice-locked').style.display = 'none';
-    var testLocked = document.getElementById('practice-test-locked');
-    if (testLocked) testLocked.style.display = 'none';
-    var testBox = document.getElementById('sol-practice-box');
-    if (testBox) testBox.style.display = 'block';
+    unlockedPanels.add(6);
     localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
     send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
+    DSMPlayer.init({
+      unitNumber: 6,
+      standard: 'BIO.6',
+      unitKey: UNIT,
+      panelId: 6,
+      containerId: 'dsm-container',
+      unlockPanels: [7, 8, 9],
+      onComplete: function() {
+        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        saveProgress();
+      },
+      onSkip: function() {
+        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+      }
+    });
   } else {
     msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
     retryBtn.style.display = 'inline-block';
@@ -1572,7 +1616,7 @@ function solPick(opt) {
   if (pracAnswered === TOTAL_SOL_Q) {
     document.getElementById('to-results-btn').disabled = false;
     showDangerZone();
-    setTimeout(function(){ goTo(8); }, 800);
+    setTimeout(function(){ goTo(9); }, 800);
   }
   saveProgress();
 }
@@ -1628,8 +1672,8 @@ function showDangerZone() {
   localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
   localStorage.setItem('sol_' + UNIT + '_done', 'true');
 
-  var sb8 = document.getElementById('sb8');
-  if (sb8) sb8.classList.add('done');
+  var sb9 = document.getElementById('sb9');
+  if (sb9) sb9.classList.add('done');
   saveProgress();
 }
 
@@ -1670,7 +1714,7 @@ function retakePractice() {
   if (waiting) waiting.style.display = 'block';
   var progMsg = document.getElementById('sol-progress-msg');
   if (progMsg) progMsg.textContent = '';
-  goTo(7);
+  goTo(8);
   send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
 }
 
@@ -1714,12 +1758,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
     vocabPassed = true;
-    var pl = document.getElementById('practice-locked');
-    if (pl) pl.style.display = 'none';
-    var tl = document.getElementById('practice-test-locked');
-    if (tl) tl.style.display = 'none';
-    var sb = document.getElementById('sol-practice-box');
-    if (sb) sb.style.display = 'block';
+    unlockedPanels.add(6);
+    DSMPlayer.init({
+      unitNumber: 6,
+      standard: 'BIO.6',
+      unitKey: UNIT,
+      panelId: 6,
+      containerId: 'dsm-container',
+      unlockPanels: [7, 8, 9],
+      onComplete: function() {
+        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        saveProgress();
+      },
+      onSkip: function() {
+        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
+        document.getElementById('practice-locked').style.display = 'none';
+        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+      }
+    });
   }
   var saved = localStorage.getItem('sol_unit6_progress');
   if (saved) {
