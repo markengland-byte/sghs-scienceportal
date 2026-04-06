@@ -28,7 +28,6 @@ from pathlib import Path
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
-APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSUJK9p5MjE5LOfQIqyRn3lQlBpALpBiQQ4OIijeAXUP5Vjy9Cj8Bz6MyIBDayqxcM8A/exec'
 
 # Course mode — set from input file path
 IS_PHYSICS = False
@@ -837,7 +836,7 @@ def generate_module_config(config, panel_count, lesson_names):
     return f'''<script src="../shared/portal-api.js"></script>
 <script src="../shared/portal-quiz.js"></script>
 <script>
-window.MODULE_CONFIG={{name:'{title}',appsScriptUrl:'{APPS_SCRIPT_URL}',panelCount:{panel_count},lessonCount:{panel_count - 1},cpMin:80,lessons:[{lessons_str}]}};
+window.MODULE_CONFIG={{name:'{title}',panelCount:{panel_count},lessonCount:{panel_count - 1},cpMin:80,lessons:[{lessons_str}]}};
 
 window.cpCheck=function(id){{
   var min=id==={review_panel}?100:80;

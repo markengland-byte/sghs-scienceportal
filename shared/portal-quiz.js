@@ -27,7 +27,6 @@
   'use strict';
 
   var CFG = window.MODULE_CONFIG || {};
-  var API = CFG.appsScriptUrl || '';
   var CP_MIN = CFG.cpMin || 100;
 
   var studentName = '';
@@ -109,28 +108,15 @@
   }
 
   /* ══════════════════════════════════════
-     SEND DATA — Supabase primary, Google Sheets fallback
+     SEND DATA — Supabase via portalAPI
      ══════════════════════════════════════ */
   function send(payload) {
     if (!studentName) return;
     payload.student = studentName;
     payload.module = CFG.name || 'Unknown';
 
-    // Primary: Supabase via portalAPI
     if (window.portalAPI && portalAPI.getClassId()) {
       portalAPI.submit(payload);
-    }
-
-    // Fallback: Google Sheets (kept during transition)
-    if (API) {
-      try {
-        fetch(API, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(function() {});
-      } catch(e) {}
     }
   }
 
@@ -656,14 +642,6 @@
       }
     }
 
-    // Google Sheets fallback beacon
-    if (duration > 2 && navigator.sendBeacon && API) {
-      navigator.sendBeacon(API, JSON.stringify({ action: 'activity', student: studentName, module: CFG.name || 'Unknown', lesson: label, event: 'page_view', duration: duration }));
-    }
-    if (moduleStartTime && navigator.sendBeacon && API) {
-      var sessionDur2 = Math.round((Date.now() - moduleStartTime) / 1000);
-      navigator.sendBeacon(API, JSON.stringify({ action: 'activity', student: studentName, module: CFG.name || 'Unknown', lesson: 'Session Total', event: 'session_end', duration: sessionDur2 }));
-    }
   });
 
 })();
