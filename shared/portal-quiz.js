@@ -32,6 +32,79 @@
   var totalQuestions = {};  // { panelId: total }
 
   /* ══════════════════════════════════════
+     LOCAL PROGRESS PERSISTENCE
+     ══════════════════════════════════════ */
+  var STORE_KEY = 'sghs_' + (CFG.name || 'module').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+
+  function saveProgress() {
+    if (!studentName) return;
+    try {
+      var data = {
+        studentName: studentName,
+        currentPanel: currentPanel,
+        completedLessons: Array.from(completedLessons),
+        timestamp: Date.now()
+      };
+      // Save checkpoint text so students don't lose typed answers
+      var cpTexts = {};
+      document.querySelectorAll('.cp-textarea').forEach(function(ta) {
+        if (ta.value.trim().length > 0) {
+          var id = ta.id || ta.closest('.checkpoint-box, .checkpoint')?.id || '';
+          if (id) cpTexts[id] = ta.value;
+        }
+      });
+      if (Object.keys(cpTexts).length > 0) data.checkpoints = cpTexts;
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    } catch(e) {}
+  }
+
+  function loadProgress() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      // Expire after 30 days
+      if (data.timestamp && (Date.now() - data.timestamp) > 30 * 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(STORE_KEY);
+        return null;
+      }
+      return data;
+    } catch(e) { return null; }
+  }
+
+  function restoreProgress(data) {
+    // Restore completed lessons in sidebar
+    if (data.completedLessons) {
+      data.completedLessons.forEach(function(n) {
+        completedLessons.add(n);
+        var links = document.querySelectorAll('.sb-link');
+        if (links[n]) links[n].classList.add('done');
+      });
+    }
+    // Restore checkpoint text
+    if (data.checkpoints) {
+      Object.keys(data.checkpoints).forEach(function(id) {
+        var ta = document.getElementById(id);
+        if (ta) {
+          ta.value = data.checkpoints[id];
+          // Trigger the cpCheck to re-evaluate unlock state
+          var panelId = id.replace(/\D/g, '');
+          if (panelId && window.cpCheck) window.cpCheck(parseInt(panelId));
+        }
+      });
+    }
+    updateProgress();
+    // Navigate to last panel
+    if (data.currentPanel > 0) {
+      window.goTo(data.currentPanel);
+    }
+  }
+
+  function clearProgress() {
+    try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+  }
+
+  /* ══════════════════════════════════════
      SEND DATA TO GOOGLE SHEET
      ══════════════════════════════════════ */
   function send(payload) {
@@ -69,8 +142,15 @@
     var badge = document.getElementById('student-badge') || document.querySelector('.tb-badge');
     if (badge) badge.textContent = studentName;
 
-    // Log module start
-    send({ action: 'activity', lesson: 'Overview', event: 'module_start', duration: '' });
+    // Check for saved progress
+    var saved = loadProgress();
+    if (saved && saved.studentName === studentName && saved.currentPanel > 0) {
+      restoreProgress(saved);
+      send({ action: 'activity', lesson: 'Overview', event: 'module_resume', duration: '' });
+    } else {
+      if (saved && saved.studentName !== studentName) clearProgress();
+      send({ action: 'activity', lesson: 'Overview', event: 'module_start', duration: '' });
+    }
     panelEnterTime = Date.now();
   };
 
@@ -80,6 +160,18 @@
       input.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') window.startModule();
       });
+
+      // Check for saved progress — show "Welcome Back!" prompt
+      var saved = loadProgress();
+      if (saved && saved.studentName) {
+        input.value = saved.studentName;
+        var title = document.querySelector('.nm-title');
+        if (title) title.textContent = 'Welcome Back!';
+        var sub = document.querySelector('.nm-sub');
+        if (sub) sub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
+        var btn = document.querySelector('.nm-btn');
+        if (btn) btn.textContent = 'Resume →';
+      }
     }
   });
 
@@ -112,6 +204,7 @@
     currentPanel = n;
     panelEnterTime = Date.now();
     updateProgress();
+    saveProgress();
 
     // Log lesson entry
     if (studentName) {
@@ -455,6 +548,7 @@
     });
 
     showToast('Score sent! ' + correct + '/' + total + ' (' + pct + '%) — ' + label);
+    saveProgress();
   }
 
   /* ══════════════════════════════════════
@@ -469,6 +563,7 @@
     var links = document.querySelectorAll('.sb-link');
     if (links[n]) links[n].classList.add('done');
     updateProgress();
+    saveProgress();
   };
 
   /* ══════════════════════════════════════
@@ -523,6 +618,7 @@
      TRACK PAGE EXIT (beforeunload)
      ══════════════════════════════════════ */
   window.addEventListener('beforeunload', function() {
+    saveProgress();
     if (!studentName || !panelEnterTime) return;
     var duration = Math.round((Date.now() - panelEnterTime) / 1000);
     var lessons = CFG.lessons || [];
