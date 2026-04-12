@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SGHS Science Portal &mdash; Teacher Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;color:#0f2240;min-height:100vh}
@@ -472,7 +472,7 @@ tr:hover td{background:#f8fafc}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0" integrity="sha384-PsnFqJ58vyp7buRfuvdS2SrjRdUYinBv6lWwJXx3xQ17hWefo/UkwXowVBT53ubG" crossorigin="anonymous"></script>
 <script>
 /* ══════════════════════════════════════════════
    SUPABASE CLIENT
@@ -480,6 +480,20 @@ tr:hover td{background:#f8fafc}
 var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
 var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
 var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ══════════════════════════════════════════════
+   AUDIT LOGGING — logs teacher data access
+   ══════════════════════════════════════════════ */
+function logAccess(action, details) {
+  if (!teacher) return;
+  sb.from('access_logs').insert({
+    user_id: teacher.auth_user_id,
+    user_email: teacher.email,
+    action: action,
+    target_class_id: selectedClassId || null,
+    details: details || null
+  }).then(function(){}).catch(function(){});
+}
 
 /* ══════════════════════════════════════════════
    GLOBAL STATE
@@ -664,6 +678,8 @@ async function loadAllData() {
   DATA.quizDetail = detailRes.data || [];
   DATA.checkpoints = checkRes.data || [];
   DATA.activity = actRes.data || [];
+
+  logAccess('view_dashboard', { class_ids: classIds, score_count: DATA.scores.length, student_count: new Set(DATA.scores.map(function(r){return r.student_name})).size });
 
   renderAll();
   populateModuleFilters();
@@ -1129,6 +1145,7 @@ function populateModuleFilters() {
    CSV EXPORT
    ══════════════════════════════════════════════ */
 function exportCSV(type) {
+  logAccess('export_csv', { export_type: type });
   var rows = [];
   var headers = [];
   var filename = 'export.csv';

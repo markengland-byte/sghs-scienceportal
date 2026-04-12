@@ -51,7 +51,7 @@ body{font-family:'Source Sans 3',sans-serif;background:#0f2240;min-height:100vh;
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0" integrity="sha384-PsnFqJ58vyp7buRfuvdS2SrjRdUYinBv6lWwJXx3xQ17hWefo/UkwXowVBT53ubG" crossorigin="anonymous"></script>
 <script>
 var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
 var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
@@ -115,6 +115,14 @@ async function doLogin() {
       spinner.style.display = 'none';
       return;
     }
+
+    // Log login event
+    sb.from('access_logs').insert({
+      user_id: data.user.id,
+      user_email: email,
+      action: 'teacher_login',
+      details: { display_name: teacher.display_name }
+    }).then(function(){}).catch(function(){});
 
     // Success — redirect to dashboard
     window.location.href = 'dashboard.html';

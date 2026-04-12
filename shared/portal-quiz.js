@@ -5,7 +5,6 @@
    USAGE: Each module sets window.MODULE_CONFIG before loading:
    window.MODULE_CONFIG = {
      name: 'Module Name',
-     appsScriptUrl: 'https://script.google.com/...',  // legacy fallback
      panelCount: N,
      lessonCount: N-1,
      cpMin: 100,
