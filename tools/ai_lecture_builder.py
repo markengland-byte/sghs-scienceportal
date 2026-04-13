@@ -154,7 +154,7 @@ body{{font-family:'Segoe UI',sans-serif;background:#1a1a2e;display:flex;flex-dir
 
         html += f'\n<div class="slide-wrap{active}" id="page-{pg_num}">\n'
         html += f'  <svg viewBox="0 0 1224 1584" xmlns="http://www.w3.org/2000/svg">\n'
-        html += f'    <image href="images/{img_path.name}" x="0" y="0" width="1224" height="1584"/>\n'
+        html += f'    <image href="images/{ch_label}/pages/{img_path.name}" x="0" y="0" width="1224" height="1584"/>\n'
 
         for a in answers:
             x = a.get('x', 0)
