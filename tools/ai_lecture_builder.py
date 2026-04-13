@@ -115,7 +115,7 @@ def analyze_page_with_ai(img_path, api_key, page_num, pdf_blanks=None):
         return entries
 
 
-def generate_html(pages_dir, all_answers, output_path, title='Lecture'):
+def generate_html(pages_dir, all_answers, output_path, title='Lecture', ch_label='lecture'):
     page_images = sorted(pages_dir.glob('page-*.png'))
 
     html = f'''<!DOCTYPE html>
@@ -327,8 +327,17 @@ def main():
 
     # Step 3: Generate HTML
     print('[3/3] Generating interactive HTML...')
+    # Derive title from PDF filename: "Ch. 29 - Plant Diversity I_ How Plants..." → "Ch. 29 — Plant Diversity I"
+    pdf_stem = pdf_path.stem  # filename without extension
+    lecture_title = f'Ch. {ch} Lecture' if ch else 'Lecture'
+    if pdf_stem:
+        # Clean up: remove "Ch. N - " prefix, replace underscores, trim
+        clean = re.sub(r'^Ch\.\s*\d+\s*[-–—]\s*', '', pdf_stem).replace('_', ' ').strip()
+        if clean:
+            lecture_title = f'Ch. {ch} — {clean}' if ch else clean
+
     total = generate_html(pages_dir, all_answers, output_html,
-        title=f'Ch. {ch} — Bacteria and Archaea' if ch else 'Lecture')
+        title=lecture_title, ch_label=ch_label)
 
     print(f'  Total answers: {total}')
     print(f'  Output: {output_html}')
