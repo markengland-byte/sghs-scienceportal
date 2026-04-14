@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch. 27 Blank Calibrator</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; padding: 20px; }
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.header h1 { font-size: 1.2rem; }
+.header select, .header button, .header input {
+  padding: 8px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.1); color: #fff; font-family: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.header input { width: 280px; background: rgba(255,255,255,.15); }
+.header button:hover { background: rgba(255,255,255,.25); }
+.header .count { color: #0B8F8C; font-weight: 700; font-size: 0.9rem; }
+.btn-primary { background: #0B8F8C !important; font-weight: 600; }
+.btn-primary:hover { background: #0aa89e !important; }
+.btn-danger { background: #dc2626 !important; }
+
+.nav-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.nav-row button { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.1); color: #fff; cursor: pointer; font-size: 0.85rem; }
+.nav-row button:hover { background: rgba(255,255,255,.25); }
+.nav-row .page-label { color: #0B8F8C; font-weight: 700; font-size: 1rem; min-width: 80px; text-align: center; }
+.nav-row .page-status { color: rgba(255,255,255,.5); font-size: 0.8rem; }
+
+.canvas-wrap {
+  position: relative; display: inline-block; cursor: crosshair;
+  border: 2px solid #0B8F8C; border-radius: 8px; overflow: hidden;
+}
+.canvas-wrap svg { display: block; }
+
+.marker { cursor: pointer; }
+.marker rect { fill: rgba(11,143,140,0.15); stroke: #0B8F8C; stroke-width: 2; }
+.marker text { fill: #c0392b; font-family: 'Segoe UI', sans-serif; font-weight: 700; font-size: 22px; }
+.marker:hover rect { fill: rgba(220,38,38,0.2); stroke: #dc2626; }
+
+/* Existing (auto-detected) markers — dimmer */
+.marker-auto rect { fill: rgba(0,0,0,0.06); stroke: rgba(100,100,100,.5); stroke-width: 1; }
+.marker-auto text { fill: #c0392b; font-weight: 600; font-size: 22px; }
+
+.guide-h, .guide-v {
+  position: absolute; background: rgba(11,143,140,0.4); pointer-events: none; z-index: 100;
+}
+.guide-h { height: 1px; width: 100%; left: 0; }
+.guide-v { width: 1px; height: 100%; top: 0; }
+.coords {
+  position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,.8);
+  padding: 8px 16px; border-radius: 6px; font-family: monospace; font-size: 0.9rem; z-index: 200;
+}
+
+.panels { display: flex; gap: 16px; margin-top: 16px; }
+.panel {
+  flex: 1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px; padding: 12px; max-height: 350px; overflow-y: auto;
+}
+.panel h3 { font-size: 0.85rem; color: #0B8F8C; margin-bottom: 8px; }
+.entry { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 0.82rem; }
+.entry .num { color: #0B8F8C; font-weight: 700; width: 24px; }
+.entry .pos { font-family: monospace; color: rgba(255,255,255,.5); width: 120px; font-size: 0.75rem; }
+.entry .ans-text { color: #c0392b; font-weight: 600; flex: 1; }
+.entry .ans-auto { color: rgba(255,255,255,.4); }
+.entry button { background: #dc2626; border: none; color: #fff; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+pre { font-size: 0.75rem; color: #0B8F8C; white-space: pre-wrap; margin-top: 8px; max-height: 150px; overflow-y: auto; }
+
+.instructions {
+  background: rgba(11,143,140,.1); border: 1px solid rgba(11,143,140,.3); border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 16px; font-size: 0.85rem; line-height: 1.5;
+}
+.instructions strong { color: #0B8F8C; }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <strong>How to use:</strong> Type an answer in the input box, then click the blank on the image where it belongs.
+  Gray text shows blanks already found by the automated pipeline. You're adding the ones it missed (tables, diagrams).
+  When done, click <strong>Export JSON</strong> and <strong>Copy</strong>, then paste into <code>tools/ai_answers_ch52.json</code>.
+</div>
+
+<div class="header">
+  <h1>Ch. 52 Calibrator</h1>
+  <select id="page-select" onchange="loadPage()"></select>
+  <input type="text" id="answer-input" placeholder="Type answer, then click the blank..." autofocus>
+  <span class="count" id="count">0 placed</span>
+  <button onclick="undoLast()">Undo</button>
+  <button class="btn-primary" onclick="exportJSON()">Export JSON</button>
+  <button class="btn-primary" onclick="copyExport()">Copy</button>
+</div>
+
+<div class="nav-row">
+  <button onclick="prevPage()">&larr; Prev</button>
+  <span class="page-label" id="page-label">Page 1</span>
+  <button onclick="nextPage()">Next &rarr;</button>
+  <span class="page-status" id="page-status"></span>
+</div>
+
+<div class="canvas-wrap" id="canvas-wrap">
+  <svg id="svg" viewBox="0 0 1224 1584" xmlns="http://www.w3.org/2000/svg" width="816" height="1056">
+    <image id="page-img" href="" x="0" y="0" width="1224" height="1584"/>
+  </svg>
+  <div class="guide-h" id="guide-h"></div>
+  <div class="guide-v" id="guide-v"></div>
+</div>
+
+<div class="coords" id="coords">x: 0, y: 0</div>
+
+<div class="panels">
+  <div class="panel">
+    <h3>Manual (your additions)</h3>
+    <div id="manual-entries"></div>
+  </div>
+  <div class="panel">
+    <h3>Auto-detected (already in pipeline)</h3>
+    <div id="auto-entries"></div>
+  </div>
+</div>
+
+<div id="export-wrap" style="display:none; margin-top:16px; background:rgba(0,0,0,.3); padding:12px; border-radius:8px; position:relative;">
+  <button onclick="document.getElementById('export-wrap').style.display='none'" style="position:absolute;top:8px;right:8px;background:#dc2626;border:none;color:#fff;padding:2px 10px;border-radius:4px;cursor:pointer;font-size:0.8rem;">Close</button>
+  <pre id="export-output" style="margin:0;"></pre>
+</div>
+
+<script>
+var TOTAL_PAGES = 39;
+var IMG_BASE = 'images/ch52/pages/';
+
+// Manual placements by the user
+var manual = {};   // { pageNum: [ {x, y, answer, fs} ] }
+
+// Auto-detected answers from the pipeline (loaded from cache)
+var auto = {};     // same format
+
+var currentPage = 1;
+
+// Build page dropdown
+(function() {
+  var sel = document.getElementById('page-select');
+  for (var i = 1; i <= TOTAL_PAGES; i++) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = 'Page ' + i;
+    sel.appendChild(opt);
+  }
+})();
+
+// Embedded auto-detected answers from ai_answers_ch52.json
+var AUTO_DATA = {"2":[{"x":400,"y":237,"answer":"interact","fs":18},{"x":860,"y":237,"answer":"environment","fs":18},{"x":901,"y":359,"answer":"past","fs":16},{"x":191,"y":273,"answer":"living","fs":18},{"x":203,"y":313,"answer":"non","fs":16},{"x":382,"y":970,"answer":"all","fs":16},{"x":861,"y":1010,"answer":"lives","fs":16},{"x":303,"y":1051,"answer":"role","fs":16}],"3":[],"4":[{"x":332,"y":230,"answer":"multiple","fs":16},{"x":233,"y":331,"answer":"individual","fs":18},{"x":610,"y":428,"answer":"a single","fs":16},{"x":572,"y":568,"answer":"different","fs":18},{"x":158,"y":755,"answer":"abiotic","fs":16},{"x":168,"y":910,"answer":"multiple","fs":18},{"x":541,"y":1024,"answer":"all","fs":16}],"5":[],"6":[{"x":308,"y":231,"answer":"where","fs":18},{"x":563,"y":272,"answer":"distributed","fs":18},{"x":215,"y":308,"answer":"movement","fs":18},{"x":483,"y":347,"answer":"one","fs":16},{"x":327,"y":424,"answer":"South","fs":18}],"7":[{"x":211,"y":264,"answer":"Biotic","fs":16},{"x":769,"y":264,"answer":"Abiotic","fs":16}],"8":[{"x":710,"y":236,"answer":"Net","fs":16},{"x":333,"y":277,"answer":"NPP","fs":16},{"x":341,"y":314,"answer":"greater","fs":18}],"9":[{"x":258,"y":237,"answer":"short","fs":16},{"x":206,"y":277,"answer":"long","fs":16},{"x":852,"y":277,"answer":"more","fs":16}],"10":[{"x":460,"y":237,"answer":"angle","fs":16},{"x":156,"y":318,"answer":"most direct","fs":16},{"x":544,"y":318,"answer":"directly overhead","fs":18},{"x":816,"y":359,"answer":"warm","fs":16},{"x":496,"y":458,"answer":"Cold","fs":16}],"11":[{"x":323,"y":237,"answer":"tilted","fs":16},{"x":767,"y":273,"answer":"seasons","fs":18},{"x":473,"y":355,"answer":"opposite","fs":18}],"12":[{"x":454,"y":274,"answer":"low pressure","fs":16},{"x":651,"y":274,"answer":"high pressure","fs":16},{"x":316,"y":314,"answer":"wet","fs":16},{"x":613,"y":314,"answer":"dry","fs":16},{"x":808,"y":396,"answer":"30","fs":14}],"13":[{"x":631,"y":318,"answer":"high","fs":18},{"x":527,"y":355,"answer":"low","fs":18},{"x":428,"y":277,"answer":"curves","fs":16},{"x":667,"y":277,"answer":"east","fs":16},{"x":487,"y":394,"answer":"west","fs":18}],"14":[{"x":510,"y":682,"answer":"climate","fs":16},{"x":373,"y":804,"answer":"circular","fs":18},{"x":357,"y":845,"answer":"moderate","fs":16},{"x":357,"y":718,"answer":"match","fs":18}],"15":[{"x":530,"y":823,"answer":"barrier","fs":18},{"x":573,"y":864,"answer":"windward","fs":16},{"x":912,"y":864,"answer":"Shadow","fs":18},{"x":263,"y":901,"answer":"Cool","fs":16}],"16":[{"x":256,"y":319,"answer":"microclimate","fs":18},{"x":674,"y":359,"answer":"carbon dioxide","fs":16},{"x":504,"y":400,"answer":"water vapor","fs":16}],"17":[{"x":763,"y":942,"answer":"Less","fs":18},{"x":280,"y":982,"answer":"H\u2082O","fs":18}],"18":[{"x":478,"y":237,"answer":"biological communities","fs":18},{"x":379,"y":277,"answer":"land","fs":16},{"x":280,"y":318,"answer":"distinct","fs":16},{"x":671,"y":359,"answer":"mixed","fs":16}],"19":[{"x":414,"y":237,"answer":"changes","fs":18},{"x":940,"y":319,"answer":"depends","fs":18},{"x":575,"y":277,"answer":"composition","fs":18}],"20":[{"x":195,"y":237,"answer":"high","fs":16},{"x":177,"y":1001,"answer":"dry","fs":16},{"x":463,"y":1001,"answer":"fires","fs":18}],"21":[{"x":207,"y":237,"answer":"low","fs":16},{"x":316,"y":274,"answer":"variable","fs":18},{"x":414,"y":315,"answer":"conserve","fs":18}],"22":[],"23":[{"x":594,"y":237,"answer":"Mediterranean","fs":18},{"x":327,"y":317,"answer":"fires","fs":18},{"x":343,"y":1004,"answer":"limited","fs":18}],"24":[{"x":229,"y":237,"answer":"deciduous","fs":18},{"x":473,"y":277,"answer":"cold winters","fs":18}],"25":[{"x":809,"y":235,"answer":"temperature","fs":18},{"x":933,"y":276,"answer":"precipitation","fs":18}],"26":[{"x":168,"y":237,"answer":"largest","fs":18},{"x":587,"y":237,"answer":"conifers","fs":16},{"x":102,"y":319,"answer":"Low","fs":16}],"27":[{"x":102,"y":277,"answer":"Low","fs":16},{"x":488,"y":277,"answer":"permanently frozen","fs":16},{"x":149,"y":1071,"answer":"a","fs":16},{"x":153,"y":1112,"answer":"f","fs":16},{"x":255,"y":1153,"answer":"c","fs":16},{"x":431,"y":1194,"answer":"d","fs":16},{"x":278,"y":1234,"answer":"e","fs":16},{"x":457,"y":1275,"answer":"b","fs":16}],"28":[{"x":513,"y":1241,"answer":"Tropical rainforest","fs":18},{"x":116,"y":1282,"answer":"largest","fs":18}],"29":[{"x":356,"y":237,"answer":"water","fs":16},{"x":881,"y":237,"answer":"factors","fs":18},{"x":431,"y":277,"answer":"two","fs":16},{"x":428,"y":318,"answer":"low","fs":16},{"x":391,"y":359,"answer":"high","fs":16}],"30":[{"x":654,"y":643,"answer":"zones","fs":16},{"x":787,"y":889,"answer":"Nearshore","fs":14},{"x":801,"y":993,"answer":"Offshore","fs":14},{"x":910,"y":1202,"answer":"bottom","fs":14}],"31":[{"x":214,"y":283,"answer":"O","fs":16},{"x":191,"y":324,"answer":"OL","fs":16},{"x":197,"y":364,"answer":"L","fs":16},{"x":237,"y":405,"answer":"O","fs":16},{"x":562,"y":283,"answer":"O","fs":16},{"x":559,"y":324,"answer":"OL","fs":16},{"x":568,"y":364,"answer":"L","fs":16},{"x":914,"y":283,"answer":"OL","fs":16},{"x":905,"y":324,"answer":"O","fs":16},{"x":911,"y":364,"answer":"O","fs":16}],"32":[{"x":397,"y":237,"answer":"sink","fs":16},{"x":127,"y":277,"answer":"Mixing","fs":14},{"x":441,"y":318,"answer":"mixing","fs":18},{"x":594,"y":400,"answer":"density","fs":16},{"x":481,"y":359,"answer":"rises","fs":18}],"33":[],"34":[{"x":173,"y":237,"answer":"large","fs":18},{"x":293,"y":277,"answer":"two","fs":14},{"x":415,"y":318,"answer":"poor","fs":16},{"x":602,"y":318,"answer":"rich","fs":16},{"x":698,"y":359,"answer":"abundant","fs":18},{"x":339,"y":961,"answer":"flow","fs":18},{"x":190,"y":1043,"answer":"lower","fs":18},{"x":206,"y":1002,"answer":"higher","fs":18}],"35":[{"x":864,"y":237,"answer":"water","fs":16},{"x":455,"y":318,"answer":"above","fs":16},{"x":716,"y":952,"answer":"a mix of","fs":16}],"36":[],"37":[{"x":624,"y":237,"answer":"tide","fs":16},{"x":375,"y":277,"answer":"covered","fs":18},{"x":520,"y":1011,"answer":"increasing","fs":18}],"38":[{"x":500,"y":237,"answer":"corals","fs":16},{"x":170,"y":277,"answer":"high","fs":18},{"x":479,"y":951,"answer":"floor","fs":16},{"x":689,"y":991,"answer":"vents","fs":16},{"x":198,"y":1032,"answer":"rich","fs":16}]};
+
+function loadAutoAnswers() {
+  Object.keys(AUTO_DATA).forEach(function(k) {
+    auto[parseInt(k)] = AUTO_DATA[k] || [];
+  });
+  console.log('Loaded auto answers for', Object.keys(auto).length, 'pages');
+  loadPage();
+}
+
+function loadPage() {
+  currentPage = parseInt(document.getElementById('page-select').value);
+  var img = document.getElementById('page-img');
+  img.setAttribute('href', IMG_BASE + 'page-' + String(currentPage).padStart(2, '0') + '.png');
+
+  document.getElementById('page-label').textContent = 'Page ' + currentPage + ' / ' + TOTAL_PAGES;
+
+  // Clear SVG markers
+  var svg = document.getElementById('svg');
+  svg.querySelectorAll('.marker, .marker-auto').forEach(function(m) { m.remove(); });
+
+  // Draw auto-detected answers (dimmed)
+  var autoItems = auto[currentPage] || [];
+  autoItems.forEach(function(item) { drawMarker(item.x, item.y, item.answer, -1, true); });
+
+  // Draw manual placements
+  var manualItems = manual[currentPage] || [];
+  manualItems.forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, false); });
+
+  updateCount();
+  updateStatus();
+  document.getElementById('answer-input').focus();
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    document.getElementById('page-select').value = currentPage - 1;
+    loadPage();
+  }
+}
+
+function nextPage() {
+  if (currentPage < TOTAL_PAGES) {
+    document.getElementById('page-select').value = currentPage + 1;
+    loadPage();
+  }
+}
+
+function updateStatus() {
+  var autoCount = (auto[currentPage] || []).length;
+  var manualCount = (manual[currentPage] || []).length;
+  var status = autoCount + ' auto-detected';
+  if (manualCount > 0) status += ', ' + manualCount + ' manual';
+  document.getElementById('page-status').textContent = status;
+}
+
+function getSVGCoords(e) {
+  var svg = document.getElementById('svg');
+  var pt = svg.createSVGPoint();
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+  var svgPt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  return { x: Math.round(svgPt.x), y: Math.round(svgPt.y) };
+}
+
+// Crosshair guides
+document.getElementById('canvas-wrap').addEventListener('mousemove', function(e) {
+  var rect = this.getBoundingClientRect();
+  document.getElementById('guide-h').style.top = (e.clientY - rect.top) + 'px';
+  document.getElementById('guide-v').style.left = (e.clientX - rect.left) + 'px';
+  var svgC = getSVGCoords(e);
+  document.getElementById('coords').textContent = 'SVG: x=' + svgC.x + ', y=' + svgC.y;
+});
+
+// Click to place
+document.getElementById('svg').addEventListener('click', function(e) {
+  if (e.target.closest('.marker')) return; // don't place when clicking existing marker
+
+  var inputEl = document.getElementById('answer-input');
+  var answer = inputEl.value.trim();
+  if (!answer) {
+    answer = prompt('Enter the answer for this blank:');
+    if (!answer || !answer.trim()) return;
+    answer = answer.trim();
+  }
+
+  var coords = getSVGCoords(e);
+  if (!manual[currentPage]) manual[currentPage] = [];
+  var idx = manual[currentPage].length;
+  manual[currentPage].push({ x: coords.x, y: coords.y, answer: answer, fs: 18 });
+
+  drawMarker(coords.x, coords.y, answer, idx, false);
+  updateCount();
+  updateStatus();
+  inputEl.value = '';
+  inputEl.focus();
+});
+
+function drawMarker(x, y, answer, idx, isAuto) {
+  var svg = document.getElementById('svg');
+  var ns = 'http://www.w3.org/2000/svg';
+
+  var g = document.createElementNS(ns, 'g');
+  g.classList.add(isAuto ? 'marker-auto' : 'marker');
+  if (!isAuto) g.dataset.idx = idx;
+
+  var r = document.createElementNS(ns, 'rect');
+  var textWidth = answer.length * 11 + 10;
+  r.setAttribute('x', x - 2);
+  r.setAttribute('y', y - 18);
+  r.setAttribute('width', textWidth);
+  r.setAttribute('height', 22);
+  r.setAttribute('rx', 3);
+  g.appendChild(r);
+
+  var t = document.createElementNS(ns, 'text');
+  t.setAttribute('x', x);
+  t.setAttribute('y', y);
+  t.setAttribute('font-size', '18');
+  t.textContent = answer;
+  g.appendChild(t);
+
+  // Click manual marker to delete
+  if (!isAuto) {
+    g.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (confirm('Delete "' + answer + '"?')) {
+        manual[currentPage].splice(idx, 1);
+        reloadMarkers();
+      }
+    });
+  }
+
+  svg.appendChild(g);
+}
+
+function reloadMarkers() {
+  var svg = document.getElementById('svg');
+  svg.querySelectorAll('.marker, .marker-auto').forEach(function(m) { m.remove(); });
+  (auto[currentPage] || []).forEach(function(item) { drawMarker(item.x, item.y, item.answer, -1, true); });
+  (manual[currentPage] || []).forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, false); });
+  updateCount();
+  updateStatus();
+}
+
+function undoLast() {
+  if (!manual[currentPage] || manual[currentPage].length === 0) return;
+  manual[currentPage].pop();
+  reloadMarkers();
+}
+
+function updateCount() {
+  var totalManual = 0;
+  Object.keys(manual).forEach(function(k) { totalManual += manual[k].length; });
+  var pageManual = (manual[currentPage] || []).length;
+  document.getElementById('count').textContent = pageManual + ' on page, ' + totalManual + ' total manual';
+  renderEntries();
+}
+
+function renderEntries() {
+  // Manual entries
+  var items = manual[currentPage] || [];
+  var html = '';
+  items.forEach(function(item, i) {
+    html += '<div class="entry">';
+    html += '<span class="num">' + (i+1) + '</span>';
+    html += '<span class="pos">(' + item.x + ', ' + item.y + ')</span>';
+    html += '<span class="ans-text">' + item.answer + '</span>';
+    html += '<button onclick="deleteManual(' + i + ')">X</button>';
+    html += '</div>';
+  });
+  document.getElementById('manual-entries').innerHTML = html || '<div style="color:rgba(255,255,255,.3)">No manual blanks on this page yet</div>';
+
+  // Auto entries
+  var autoItems = auto[currentPage] || [];
+  var autoHtml = '';
+  autoItems.forEach(function(item, i) {
+    autoHtml += '<div class="entry">';
+    autoHtml += '<span class="num" style="color:rgba(255,255,255,.4)">' + (i+1) + '</span>';
+    autoHtml += '<span class="pos">(' + item.x + ', ' + item.y + ')</span>';
+    autoHtml += '<span class="ans-text ans-auto">' + item.answer + '</span>';
+    autoHtml += '</div>';
+  });
+  document.getElementById('auto-entries').innerHTML = autoHtml || '<div style="color:rgba(255,255,255,.3)">No auto-detected blanks on this page</div>';
+}
+
+function deleteManual(idx) {
+  manual[currentPage].splice(idx, 1);
+  reloadMarkers();
+}
+
+function exportJSON() {
+  // Merge auto + manual into final output
+  var merged = {};
+  // Start with all auto
+  Object.keys(auto).forEach(function(k) {
+    merged[k] = (auto[k] || []).slice();
+  });
+  // Add manual entries
+  Object.keys(manual).forEach(function(k) {
+    if (!merged[k]) merged[k] = [];
+    manual[k].forEach(function(item) {
+      merged[k].push(item);
+    });
+  });
+  var output = JSON.stringify(merged, null, 2);
+  document.getElementById('export-output').textContent = output;
+  document.getElementById('export-wrap').style.display = 'block';
+}
+
+function copyExport() {
+  exportJSON();
+  var text = document.getElementById('export-output').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    alert('Copied! Paste this into tools/ai_answers_ch52.json to replace its contents, then re-run:\n\npython tools/ai_lecture_builder.py "path/to/notes.pdf" --chapter 27 --skip-pages "1"');
+  });
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT') return; // don't intercept typing
+  if (e.key === 'ArrowLeft') prevPage();
+  else if (e.key === 'ArrowRight') nextPage();
+});
+
+// Init
+loadAutoAnswers();
+</script>
+</body>
+</html>
