@@ -230,6 +230,18 @@ maps = {
     2015: build_2015_map(),
 }
 
+# Per-question crop overrides for cases where the generic layout misses content.
+# Format: {(year, qnum): (page, (x1, y1, x2, y2))}
+# Typical reason: unequal vertical split on a page (e.g., a question with a big
+# data table needs more height than the auto-layout's equal slots allow).
+OVERRIDES = {
+    # 2001 p9: Q16 is small + Q17 has a big cell-features table that needs 2/3 of
+    # the left column. Auto-halves put Q17's crop too low, missing the table.
+    (2001, 17): (9, (0, 420, 640, 1220)),
+}
+for (year, qnum), mapping in OVERRIDES.items():
+    maps.setdefault(year, {})[qnum] = mapping
+
 # ── Crop each image-bearing question ──
 success = 0
 failed = []
