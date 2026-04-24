@@ -203,8 +203,8 @@ renders natively instead of the PNG crop:
 - `imageUrl`: fallback for illustrations / photographs when neither `chart`
   nor `table` is present.
 
-As of 2026-04-24, 22 bank entries have `chart` configs and 5 have `table`
-configs. See `add-native-renderings.py` below.
+As of 2026-04-24, **22 bank entries have `chart` configs and 10 have `table`
+configs** (32 native renderings total). See `add-native-renderings.py` below.
 
 ### Adding / regenerating Chart.js and HTML-table configs
 
@@ -238,9 +238,26 @@ another bank entry:
   current PNG crop is misaligned (shows Q44 Chincoteague ponies text question
   instead, due to 2015 TEI-item page-offset). Need to find correct page in
   `BiologySOL2015.pdf` and either re-crop or extract data into an HTML table.
-- **176 "unclear" images** — the regex classifier in `add-native-renderings.py`
-  can't tell from stem/imageNote alone whether these are graphs or illustrations.
-  A vision-based LLM classifier pass would likely surface a few more candidates.
+- **~160 "unclear" images** — after today's second classifier pass surfaced
+  15 more table + 2 chart candidates, a vision-based LLM pass would still likely
+  find a handful more. Diminishing returns after this point.
+
+### Bank data quality issue — misassigned imageNotes
+
+During the second-pass classification (2026-04-24), multiple bank entries were
+found to have `imageNote` strings that describe a DIFFERENT question's image.
+Examples: 2007-39 imageNote says "Population growth curve with sections..."
+but the actual PNG + stem is about lady beetles variation; 2007-23 says "Cell
+Structures and Functions table" but the actual content is a Fluid Mosaic Model
+diagram; 2008-39 says "Geologic Time Scale" but the actual crop is a Bacterial
+Culture Experiment. These misassignments likely happened when imageNote strings
+were batch-authored (via LLM vision or manual tagging) and indices got
+off-by-N in some stretch. The classifier built in `add-native-renderings.py`
+is therefore **unreliable when used alone** — always verify by viewing the
+actual PNG before converting. Known affected entries include: 2007-9 / 2007-11
+(same "Island Species" imageNote), 2007-23, 2007-39, 2008-21, 2008-39, 2015-29.
+The underlying bank `stem` and `correct` fields appear correct; only the
+`imageNote` field was affected.
 
 Decision owner: Mark. Revisit if practice-test visual quality becomes a
 complaint from students, or during the next major content pass.

@@ -466,6 +466,60 @@ TABLES = {
             ['4', '53', '11'],
         ],
     },
+    # 2005-31: Flower Characteristics.
+    '2005-31': {
+        'title': 'Flower Characteristics',
+        'headers': ['Characteristics', 'Insect-Pollinated Plants', 'Wind- or Water-Pollinated Plants'],
+        'rows': [
+            ['Appearance', 'often colorful', 'plain'],
+            ['Reproductive parts', 'sometimes hidden', 'exposed'],
+        ],
+    },
+    # 2005-44: Field Data (duckweed pH study).
+    '2005-44': {
+        'title': 'Field Data',
+        'headers': ['Pond', 'pH of Pond Water', 'Number of Duckweed Plants'],
+        'rows': [
+            ['A', '6', '150'],
+            ['B', '12', '300'],
+            ['C', '8', '500'],
+            ['D', '4', '80'],
+        ],
+    },
+    # 2006-14: Heart Chambers in Different Animals.
+    '2006-14': {
+        'title': 'Heart Chambers in Different Animals',
+        'headers': ['', 'Fish', 'Bird', 'Turtle', 'Frog', 'Dog'],
+        'rows': [
+            ['Number of atria', '1', '2', '2', '2', '2'],
+            ['Number of ventricles', '1', '2', '2', '1', '2'],
+            ['Separation of ventricles', '\u2014', 'Total', 'Partial', '\u2014', 'Total'],
+        ],
+    },
+    # 2006-39: Representative Animals from a Local Ecosystem.
+    '2006-39': {
+        'title': 'Representative Animals from a Local Ecosystem',
+        'headers': ['Type of Organism', 'Number of Individual Species Collected'],
+        'rows': [
+            ['Grasses', '11'],
+            ['Trees', '1'],
+            ['Fish', '16'],
+            ['Amphibians', '12'],
+            ['Reptiles', '8'],
+            ['Mammals', '3'],
+        ],
+    },
+    # 2007-17: Amino-Acid Differences Compared with Human Hemoglobin.
+    '2007-17': {
+        'title': 'Amino-Acid Differences Compared with Human Hemoglobin',
+        'headers': ['Species', 'Number of amino-acid differences'],
+        'rows': [
+            ['Lamprey', '125'],
+            ['Frog', '67'],
+            ['Dog', '32'],
+            ['Macaque', '8'],
+        ],
+    },
 }
 
 
