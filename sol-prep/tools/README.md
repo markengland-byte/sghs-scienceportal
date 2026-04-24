@@ -161,6 +161,56 @@ python sol-prep/tools/merge-into-bank.py
 
 ## Future work — parked for later consideration
 
+### Pull in missing exam years + review documents (ready-to-run, just need PDFs)
+
+The source VDOE page lists more released content than we've currently ingested.
+To complete the bank Mark needs to drop the missing PDFs into `SOL Questions/`,
+then re-run the pipeline.
+
+**Missing released exams** (would add ~150 questions):
+
+- `BiologySOL2000.pdf`
+- `BiologySOL2009.pdf`
+- `BiologySOL2018.pdf`
+
+Once added, run:
+```bash
+python sol-prep/tools/render-exam-pdfs.py 2000 2009 2018
+python sol-prep/tools/parse-sol-exam.py 2000 2009 2018
+python sol-prep/tools/crop-images-v2.py
+python sol-prep/tools/merge-into-bank.py 2000 2009 2018
+```
+
+Note: 2018 uses a newer format (shorter exam, ~40 questions instead of 50). May
+need a dedicated `build_2018_map()` in `crop-images-v2.py` if the auto-derived
+layout from the parser's `page` field doesn't produce clean crops — same
+pattern as the 2015 addition.
+
+**Missing SOL review documents** (would add ~18 questions):
+
+- `BIO-SOL-Review-17-Fossils-ANSWERS.pdf` (8 questions)
+- `BIO-SOL-Review-18-Human-Body-ANSWERS.pdf` (10 questions)
+
+These use a different extraction path than released exams — they're textbook-
+style review booklets, not SOL exam format. The existing 16 reviews were
+processed into `sol-review-1.txt` through `sol-review-16.txt` files in
+`sol-prep/`, and question entries went into the bank via a separate
+(not-yet-recreated-as-tool) workflow. To add 17 and 18 consistently:
+
+1. Extract text from each PDF (`pymupdf` — same approach as
+   `render-exam-pdfs.py`).
+2. Save as `sol-review-17.txt` and `sol-review-18.txt` in `sol-prep/`.
+3. Parse into bank entries using the same schema as existing review entries
+   (year="review", std=corresponding BIO.N). `extract-review-questions.py`
+   is the closest template but it operates on unit HTML, not raw review text —
+   a new parser (or LLM-assisted pass) may be simpler.
+
+**Current bank counts (as of 2026-04-23):**
+- Released exams: 440 (2001-2008 + 2015)
+- Review questions: 318 (from Reviews 1-16)
+- Total: 758
+- After pulling the missing content: ~925
+
 ### Chart.js / HTML-table conversion of bank entries (not yet decided)
 
 As of 2026-04-23, the unit review pages (`unit-1.html` ... `unit-8.html`) render
