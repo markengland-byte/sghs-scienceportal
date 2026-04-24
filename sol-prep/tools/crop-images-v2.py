@@ -238,6 +238,11 @@ OVERRIDES = {
     # 2001 p9: Q16 is small + Q17 has a big cell-features table that needs 2/3 of
     # the left column. Auto-halves put Q17's crop too low, missing the table.
     (2001, 17): (9, (0, 420, 640, 1220)),
+    # 2004 p10: Q29's Population Fluctuations graph sits above the stem, taking
+    # more vertical space than auto-halves allow. Extend crop upward to capture
+    # the graph title + full y-axis range + legend; bottom stretches to include
+    # all four options.
+    (2004, 29): (10, (0, 400, 628, 1400)),
 }
 for (year, qnum), mapping in OVERRIDES.items():
     maps.setdefault(year, {})[qnum] = mapping
