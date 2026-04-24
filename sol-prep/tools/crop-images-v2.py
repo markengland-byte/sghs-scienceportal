@@ -238,6 +238,20 @@ OVERRIDES = {
     # 2001 p9: Q16 is small + Q17 has a big cell-features table that needs 2/3 of
     # the left column. Auto-halves put Q17's crop too low, missing the table.
     (2001, 17): (9, (0, 420, 640, 1220)),
+    # 2001 p11: Q27 amylase graph's title is just above the auto-layout's slot
+    # start. Extend up ~60px to include "Effect of Amylase Enzyme..." heading.
+    (2001, 27): (11, (637, 750, 1275, 1590)),
+    # 2001 p16: Q38 osmosis — content extends slightly past the auto-half, cutting
+    # off option J. Extend bottom ~90px.
+    (2001, 38): (16, (0, 30, 640, 900)),
+    # 2003 p9: 6-Q page, Q32 "Number of Mice Born by Week" graph + options need
+    # more vertical space than auto-thirds allow. Extend up to include graph title
+    # and full y-axis; extend down to include options.
+    (2003, 32): (9, (0, 1020, 703, 1720)),
+    # 2003 p13: 3-Q page where Q48 embryo chart actually occupies the ENTIRE left
+    # column (not just half). Auto-layout assumes n_left >= n_right but this
+    # page is flipped (1 left, 2 right).
+    (2003, 48): (13, (0, 30, 703, 1720)),
     # 2004 p10: Q29's Population Fluctuations graph sits above the stem, taking
     # more vertical space than auto-halves allow. Extend crop upward to capture
     # the graph title + full y-axis range + legend; bottom stretches to include
