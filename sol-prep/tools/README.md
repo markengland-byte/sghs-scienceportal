@@ -156,3 +156,57 @@ python sol-prep/tools/parse-sol-exam.py
 python sol-prep/tools/crop-images-v2.py
 python sol-prep/tools/merge-into-bank.py
 ```
+
+---
+
+## Future work — parked for later consideration
+
+### Chart.js / HTML-table conversion of bank entries (not yet decided)
+
+As of 2026-04-23, the unit review pages (`unit-1.html` ... `unit-8.html`) render
+9 SOL questions natively — 7 as Chart.js canvases (amylase, pepsin/trypsin,
+mice, lynx/hare, bluegill, Tasmanian sheep, plus 2001-27 duplicate) and 3 as
+HTML data tables (sparrow/jay, UV/wheat, cell organelles).
+
+The bank itself (`sol-prep/question-bank.json`, used by `practice-test.html`)
+still holds **278 questions with `hasImage: true`**, all of which render as
+`<img src={imageUrl}>` in the practice test. Of those:
+
+- ~28 entries are **graph-type** (candidates for Chart.js). Examples:
+  2001-3, 2001-8, 2001-26, 2001-47, 2002-48, 2003-25, 2006-1, 2007-9, 2007-33,
+  2007-46, 2015-3, 2015-10, 2015-13, plus others.
+- ~3 entries are **data tables** (candidates for HTML table). Examples:
+  2005-24 (vertebrate embryo table), 2005-44 (field data pH), 2005-50
+  (disinfectants).
+- ~71 are illustrations — diagrams, photographs, cladograms, Punnett squares,
+  dichotomous keys, anatomical drawings. Must stay as PNG.
+- ~176 are **unclassified** by regex-based classifier — would need manual or
+  vision-based review. Some are likely additional graph/table candidates; most
+  are probably illustrations.
+
+**What a full bank conversion would require:**
+
+1. **Schema change**: bank entries gain a `chart` field (`{type, data, options}`)
+   instead of / alongside `imageUrl`.
+2. **`practice-test.html` update** — detect `chart`, render `<canvas>` + inline
+   Chart.js init; fall back to `<img>` for illustrations.
+3. **Per-question data extraction** — read each source PNG, estimate axis
+   values, write Chart.js config. Roughly 10–15 min per graph.
+
+**Options for scope:**
+
+- **A — Full conversion**: schema + practice-test.html change + ~30 entries
+  converted. ~2 hours. Uniform quality across unit pages and practice test.
+- **B — Partial**: convert only the 2005+ bank entries (highest-volume in the
+  bank since that's where released exam coverage started). ~10–15 conversions,
+  ~1 hour.
+- **C — Keep as PNG**: practice test uses PNG crops as-is. Students do deep
+  study on unit pages (polished) and quick drill on practice test (less
+  visual-critical). Zero new work, minor visual inconsistency.
+
+Also parked: classifying the 176 "unclear" PNGs. An LLM-vision pass could
+categorize these correctly but consumes tokens. Regex classification caught
+the obvious data-viz and illustration cases; the unclear ones are mixed.
+
+Decision owner: Mark. Revisit if practice-test visual quality becomes a
+complaint from students, or during the next major content pass.
