@@ -191,52 +191,56 @@ python sol-prep/tools/extract-instructor-questions.py --apply # write
 The script filters out questions that carry a `(YYYY-NN)` SOL citation
 since those are paraphrases of released-exam entries already in the bank.
 
-### Chart.js / HTML-table conversion of bank entries (not yet decided)
+### Native rendering in practice-test.html (Chart.js / HTML table)
 
-As of 2026-04-24, the unit review pages (`unit-1.html` ... `unit-8.html`) render
-9 SOL questions natively — 7 as Chart.js canvases (amylase, pepsin/trypsin,
-mice, lynx/hare, bluegill, Tasmanian sheep, plus 2001-27 duplicate) and 3 as
-HTML data tables (sparrow/jay, UV/wheat, cell organelles).
+Bank entries can carry optional `chart` or `table` fields that practice-test
+renders natively instead of the PNG crop:
 
-The bank itself (`sol-prep/question-bank.json`, used by `practice-test.html`)
-still holds **278 questions with `hasImage: true`**, all of which render as
-`<img src={imageUrl}>` in the practice test. Of those:
+- `chart`: a Chart.js config object (`{type, data, options}`). Renders as a
+  `<canvas>` with Chart.js. The `practice-test.html` render loop detects this
+  field, inserts a canvas, and runs `new Chart(el, q.chart)` after DOM insert.
+- `table`: `{title, headers: [...], rows: [[...]]}`. Renders as an HTML table.
+- `imageUrl`: fallback for illustrations / photographs when neither `chart`
+  nor `table` is present.
 
-- ~28 entries are **graph-type** (candidates for Chart.js). Examples:
-  2001-3, 2001-8, 2001-26, 2001-47, 2002-48, 2003-25, 2006-1, 2007-9, 2007-33,
-  2007-46, 2015-3, 2015-10, 2015-13, plus others.
-- ~3 entries are **data tables** (candidates for HTML table). Examples:
-  2005-24 (vertebrate embryo table), 2005-44 (field data pH), 2005-50
-  (disinfectants).
-- ~71 are illustrations — diagrams, photographs, cladograms, Punnett squares,
-  dichotomous keys, anatomical drawings. Must stay as PNG.
-- ~176 are **unclassified** by regex-based classifier — would need manual or
-  vision-based review. Some are likely additional graph/table candidates; most
-  are probably illustrations.
+As of 2026-04-24, 22 bank entries have `chart` configs and 5 have `table`
+configs. See `add-native-renderings.py` below.
 
-**What a full bank conversion would require:**
+### Adding / regenerating Chart.js and HTML-table configs
 
-1. **Schema change**: bank entries gain a `chart` field (`{type, data, options}`)
-   instead of / alongside `imageUrl`.
-2. **`practice-test.html` update** — detect `chart`, render `<canvas>` + inline
-   Chart.js init; fall back to `<img>` for illustrations.
-3. **Per-question data extraction** — read each source PNG, estimate axis
-   values, write Chart.js config. Roughly 10–15 min per graph.
+```bash
+python sol-prep/tools/add-native-renderings.py          # preview
+python sol-prep/tools/add-native-renderings.py --apply  # write to bank
+```
 
-**Options for scope:**
+The script holds `CHARTS`, `TABLES`, and `CHART_ALIASES` dicts. To convert
+another bank entry:
 
-- **A — Full conversion**: schema + practice-test.html change + ~30 entries
-  converted. ~2 hours. Uniform quality across unit pages and practice test.
-- **B — Partial**: convert only the 2005+ bank entries (highest-volume in the
-  bank since that's where released exam coverage started). ~10–15 conversions,
-  ~1 hour.
-- **C — Keep as PNG**: practice test uses PNG crops as-is. Students do deep
-  study on unit pages (polished) and quick drill on practice test (less
-  visual-critical). Zero new work, minor visual inconsistency.
+1. Inspect the source PNG at `sol-prep/images/questions/{id}.png`.
+2. Add an entry to `CHARTS` (for graphs) or `TABLES` (for data tables) keyed
+   by the bank `id`. Data values for Chart.js configs are visual estimates —
+   match the shape and relative scale of the source graph, not exact values.
+3. `CHART_ALIASES` maps `review-N` duplicate IDs to their canonical SOL IDs
+   so the same config is reused.
+4. Run `--apply`. Re-running overwrites prior `chart`/`table` fields
+   (idempotent).
 
-Also parked: classifying the 176 "unclear" PNGs. An LLM-vision pass could
-categorize these correctly but consumes tokens. Regex classification caught
-the obvious data-viz and illustration cases; the unclear ones are mixed.
+### Remaining bank conversion parking lot
+
+- **~240 illustration PNGs** (diagrams, photographs, cladograms, Punnett
+  squares, dichotomous keys, anatomical drawings) stay as `imageUrl` — Chart.js
+  can't render drawings.
+- **5 unconverted non-candidates**: 2001-41 (picture-option with 4 answer
+  graphs), 2007-33 (chromosome crossing-over illustration), 2007-39 (lady
+  beetles variation illustration), 2005-50 (disinfectant table — couldn't
+  extract values from the crop).
+- **2015-44 Elodea** — bank stem describes an Elodea data table but the
+  current PNG crop is misaligned (shows Q44 Chincoteague ponies text question
+  instead, due to 2015 TEI-item page-offset). Need to find correct page in
+  `BiologySOL2015.pdf` and either re-crop or extract data into an HTML table.
+- **176 "unclear" images** — the regex classifier in `add-native-renderings.py`
+  can't tell from stem/imageNote alone whether these are graphs or illustrations.
+  A vision-based LLM classifier pass would likely surface a few more candidates.
 
 Decision owner: Mark. Revisit if practice-test visual quality becomes a
 complaint from students, or during the next major content pass.

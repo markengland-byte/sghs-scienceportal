@@ -91,6 +91,15 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 .qexp.qexp-wrong{background:var(--red-pale);border-left-color:var(--red);color:#991b1b;}
 .q-img{margin:10px 0 14px;text-align:center;background:var(--gray-100);border-radius:8px;padding:8px;border:1px solid var(--border);}
 .q-img img{max-width:100%;height:auto;max-height:400px;border-radius:4px;}
+.q-chart{margin:10px 0 14px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;}
+.q-chart-wrap{position:relative;width:100%;height:340px;}
+.q-table{margin:10px 0 14px;}
+.q-table-title{text-align:center;font-weight:700;color:var(--navy);font-size:.92rem;margin-bottom:8px;}
+.q-table table{width:100%;border-collapse:collapse;font-size:.88rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.q-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:.78rem;font-weight:600;}
+.q-table td{padding:9px 14px;border-bottom:1px solid var(--border);}
+.q-table tr:nth-child(even) td{background:#f9fafb;}
+.q-table tr:last-child td{border-bottom:none;}
 .q-source{font-size:.65rem;color:var(--muted);margin-top:8px;font-style:italic;}
 
 /* GENERATE BTN */
@@ -506,7 +515,14 @@ function renderQuestions() {
     html += '<div class="qq" id="qq-' + idx + '" data-ans="' + q.correct + '" data-std="' + q.std + '" data-idx="' + idx + '">';
     html += '<div class="q-num">QUESTION ' + num + ' <span class="q-std">' + parentStd + '</span></div>';
     html += '<div class="q-stem">' + escHtml(q.stem) + '</div>';
-    if (q.imageUrl) {
+    // Native renderings take priority over imageUrl (chart/table fields added in
+    // the bank schema for graph-type and data-table questions; imageUrl remains
+    // as fallback for illustrations/photos).
+    if (q.chart) {
+      html += '<div class="q-chart"><div class="q-chart-wrap"><canvas id="q-chart-' + idx + '"></canvas></div></div>';
+    } else if (q.table) {
+      html += renderQuestionTable(q.table);
+    } else if (q.imageUrl) {
       html += '<div class="q-img"><img src="' + q.imageUrl + '" alt="' + escHtml(q.imageNote || 'Question figure') + '" loading="lazy"></div>';
     }
     html += '<div class="q-opts">';
@@ -522,6 +538,33 @@ function renderQuestions() {
     html += '</div>';
   });
   container.innerHTML = html;
+
+  // Initialize Chart.js instances after the canvases are in the DOM.
+  if (window.Chart) {
+    testQuestions.forEach(function(q, idx) {
+      if (!q.chart) return;
+      var el = document.getElementById('q-chart-' + idx);
+      if (el) {
+        try { new Chart(el, q.chart); }
+        catch(e) { console.error('Chart init failed for ' + q.id + ':', e); }
+      }
+    });
+  }
+}
+
+function renderQuestionTable(t) {
+  var h = '<div class="q-table">';
+  if (t.title) h += '<div class="q-table-title">' + escHtml(t.title) + '</div>';
+  h += '<table><thead><tr>';
+  (t.headers || []).forEach(function(col) { h += '<th>' + escHtml(col) + '</th>'; });
+  h += '</tr></thead><tbody>';
+  (t.rows || []).forEach(function(row) {
+    h += '<tr>';
+    row.forEach(function(cell) { h += '<td>' + escHtml(String(cell)) + '</td>'; });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
 }
 
 function escHtml(s) {
