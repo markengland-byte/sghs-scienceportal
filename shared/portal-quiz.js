@@ -28,6 +28,12 @@
   var CFG = window.MODULE_CONFIG || {};
   var CP_MIN = CFG.cpMin || 100;
 
+  // Auth mode flag — controls whether the name modal offers Google SSO.
+  //   'legacy' (default): name + class code only (current honor-system flow)
+  //   'sso'             : Google sign-in + class code (SSO-only)
+  //   'both'            : both options offered (transition period)
+  var AUTH_MODE = window.PORTAL_AUTH_MODE || 'legacy';
+
   var studentName = '';
   var completedLessons = new Set();
   var currentPanel = 0;
@@ -261,6 +267,73 @@
     panelEnterTime = Date.now();
   }
 
+  /* ══════════════════════════════════════
+     GOOGLE SSO — modal sign-in button + post-redirect bootstrap
+     Only active when window.PORTAL_AUTH_MODE is 'sso' or 'both'.
+     ══════════════════════════════════════ */
+  function injectGoogleSignIn() {
+    var nameInput = document.getElementById('student-name');
+    if (!nameInput || document.getElementById('sso-signin-btn')) return;
+
+    // In SSO-only mode, hide the name input + its label.
+    if (AUTH_MODE === 'sso') {
+      nameInput.style.display = 'none';
+      var lbl = nameInput.previousElementSibling;
+      if (lbl && lbl.tagName === 'LABEL') lbl.style.display = 'none';
+      var nameErr = document.getElementById('name-err');
+      if (nameErr) nameErr.style.display = 'none';
+    }
+
+    // Google sign-in button placed above the class-code wrapper (which
+    // injectClassCode adds after name-err). Insert before that anchor.
+    var anchor = document.getElementById('name-err') || nameInput;
+    var container = anchor.parentElement;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'sso-wrap';
+    wrap.style.cssText = 'margin:' + (AUTH_MODE === 'both' ? '16px 0;text-align:center;' : '0 0 8px 0;');
+    if (AUTH_MODE === 'both') {
+      wrap.innerHTML = '<div style="font-size:.78rem;color:#5e6e8a;margin-bottom:8px;">— or —</div>';
+    }
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'sso-signin-btn';
+    btn.style.cssText = 'width:100%;padding:12px 16px;background:#fff;color:#1f2937;border:2px solid #dde3ef;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit;';
+    btn.innerHTML =
+      '<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">' +
+      '<path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>' +
+      '<path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>' +
+      '<path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>' +
+      '<path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>' +
+      '</svg>' +
+      '<span>Sign in with Google</span>';
+    btn.addEventListener('click', function() {
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Redirecting\u2026';
+      portalAPI.signInWithGoogle().catch(function() {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Sign in with Google';
+      });
+    });
+    wrap.appendChild(btn);
+
+    container.insertBefore(wrap, anchor);
+  }
+
+  function bootstrapSSO() {
+    if (!window.portalAPI || !portalAPI.initAuth) return;
+    portalAPI.initAuth().then(function(student) {
+      if (!student) return;
+      // Signed in — enroll in stored class (if any) and proceed.
+      var classId = portalAPI.getClassId();
+      var enrollPromise = classId ? portalAPI.enrollInClass(classId) : Promise.resolve();
+      enrollPromise.then(function() {
+        var name = portalAPI.getStudentDisplayName() || 'Student';
+        proceedStart(name);
+      });
+    }).catch(function() { /* silent — fall back to legacy modal */ });
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     var input = document.getElementById('student-name');
     if (input) {
@@ -270,6 +343,11 @@
 
       // Inject class code field into modal
       injectClassCode();
+
+      // Inject Google sign-in option (no-op in legacy mode)
+      if (AUTH_MODE !== 'legacy') {
+        injectGoogleSignIn();
+      }
 
       // Check for saved progress — show "Welcome Back!" prompt
       var saved = loadProgress();
@@ -283,6 +361,11 @@
         var btn = document.querySelector('.nm-btn') || document.querySelector('#name-modal button[onclick*="startModule"]');
         if (btn) btn.textContent = 'Resume \u2192';
       }
+    }
+
+    // Pick up post-OAuth session if SSO is active
+    if (AUTH_MODE !== 'legacy') {
+      bootstrapSSO();
     }
   });
 
