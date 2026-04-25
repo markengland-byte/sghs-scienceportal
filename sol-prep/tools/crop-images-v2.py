@@ -257,6 +257,16 @@ OVERRIDES = {
     # the graph title + full y-axis range + legend; bottom stretches to include
     # all four options.
     (2004, 29): (10, (0, 400, 628, 1400)),
+    # 2006-2008 image-bearing questions where the formula-based page maps put
+    # the crop on the wrong page or wrong region. Identified via Gemini vision
+    # pass + manual page inspection (2026-04-24).
+    (2006, 41): (12, (606, 30, 1212, 770)),     # Cellular metabolic process diagram (right col top)
+    (2007, 12): (9, (0, 30, 1212, 1500)),       # Monarch/viceroy butterflies — full page
+    (2007, 20): (14, (0, 30, 1212, 1500)),      # Wildflower dichotomous key + plant — full page
+    (2008, 12): (10, (0, 30, 1224, 850)),       # Hooke cork microscope — top half of page 10 (extended for options)
+    (2008, 35): (23, (0, 30, 1224, 1500)),      # Bacterial culture experiment — full page 23
+    (2008, 38): (25, (0, 30, 1224, 1500)),      # DNA fingerprinting experiment — full page 25
+    (2008, 44): (29, (0, 250, 1224, 1500)),     # Hawaiian honeycreepers — bottom half of page 29 (extended)
 }
 for (year, qnum), mapping in OVERRIDES.items():
     maps.setdefault(year, {})[qnum] = mapping
