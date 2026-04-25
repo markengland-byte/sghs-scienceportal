@@ -539,8 +539,31 @@ function renderQuestions() {
   });
   container.innerHTML = html;
 
-  // Initialize Chart.js instances after the canvases are in the DOM.
-  if (window.Chart) {
+  // Lazy-init Chart.js instances via IntersectionObserver — each chart
+  // only constructs when its canvas is about to scroll into the viewport.
+  // Saves blocking JS work on first render (matters on low-end devices
+  // running long practice tests with many charts).
+  if (window.Chart && window.IntersectionObserver) {
+    var chartObs = new IntersectionObserver(function(entries, obs) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        var canvas = entry.target;
+        var idx = parseInt(canvas.id.replace('q-chart-', ''), 10);
+        var q = testQuestions[idx];
+        if (q && q.chart) {
+          try { new Chart(canvas, q.chart); }
+          catch(e) { console.error('Chart init failed for ' + q.id + ':', e); }
+        }
+        obs.unobserve(canvas);
+      });
+    }, { rootMargin: '200px' });
+    testQuestions.forEach(function(q, idx) {
+      if (!q.chart) return;
+      var el = document.getElementById('q-chart-' + idx);
+      if (el) chartObs.observe(el);
+    });
+  } else if (window.Chart) {
+    // Fallback for old browsers without IntersectionObserver — eager init.
     testQuestions.forEach(function(q, idx) {
       if (!q.chart) return;
       var el = document.getElementById('q-chart-' + idx);
