@@ -635,6 +635,21 @@ TABLES = {
             ['Gorilla', 'AGG', 'CCC', 'TTT', 'CCA', 'ACC', 'AGG', 'CCA'],
         ],
     },
+    # 2015-44: Length of Elodea Stems. Question asks which trial has
+    # questionable data. Source page is "46 of 46" in BiologySOL2015.pdf
+    # (page 49 of the PDF) — bank's "2015-44" ID does not match VDOE
+    # sequence numbering, but its stem/answer/std are internally
+    # consistent. Trial Z jumps 4->7->17->13, breaking monotonic growth.
+    '2015-44': {
+        'title': 'Length of Elodea Stems (cm)',
+        'headers': ['Trial', 'Day 1', 'Day 8', 'Day 15', 'Day 22'],
+        'rows': [
+            ['W', '3', '6', '10', '14'],
+            ['X', '5', '7', '10', '14'],
+            ['Y', '2', '4', '9',  '12'],
+            ['Z', '4', '7', '17', '13'],
+        ],
+    },
 }
 
 

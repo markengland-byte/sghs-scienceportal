@@ -268,10 +268,12 @@ before converting.
   graphs), 2007-33 (chromosome crossing-over illustration), 2007-39 (lady
   beetles variation illustration), 2005-50 (disinfectant table — couldn't
   extract values from the crop).
-- **2015-44 Elodea** — bank stem describes an Elodea data table but the
-  current PNG crop is misaligned (shows Q44 Chincoteague ponies text question
-  instead, due to 2015 TEI-item page-offset). Need to find correct page in
-  `BiologySOL2015.pdf` and either re-crop or extract data into an HTML table.
+- **2015-44 Elodea — RESOLVED 2026-04-25.** The Elodea data table is on
+  page 49 of `BiologySOL2015.pdf` ("46 of 46" in VDOE pagination); the
+  bank's `2015-44` ID does not match VDOE's #44 (which is the Chincoteague
+  ponies question), but its stem/answer are internally consistent. Now
+  rendered natively via `add-native-renderings.py` TABLES dict. The
+  orphaned PNG at `images/questions/2015-44.png` is no longer referenced.
 - **~160 "unclear" images** — after today's second classifier pass surfaced
   15 more table + 2 chart candidates, a vision-based LLM pass would still likely
   find a handful more. Diminishing returns after this point.
