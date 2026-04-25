@@ -121,15 +121,20 @@ var portalAPI = (function() {
   }
 
   // ── SUBMIT DATA ──
+  // Returns a Promise so callers (e.g. portal-quiz.js) can show a
+  // confirmation toast only after the network round-trip succeeds.
+  // The Promise resolves with the response on success or with `undefined`
+  // on permanent failure (after retry). Callers should test the resolved
+  // value before showing positive confirmation.
   function submit(payload) {
-    if (!_classId) return;
+    if (!_classId) return Promise.resolve();
 
     var action = payload.action;
     var student = payload.student;
     var module = payload.module;
 
     if (action === 'score') {
-      _postWithRetry('scores', {
+      return _postWithRetry('scores', {
         class_id: _classId,
         student_id: _studentId,
         student_name: student,
@@ -158,11 +163,12 @@ var portalAPI = (function() {
         };
       });
       if (rows.length > 0) {
-        _postWithRetry('quiz_detail', rows, 'quiz answers');
+        return _postWithRetry('quiz_detail', rows, 'quiz answers');
       }
+      return Promise.resolve();
     }
     else if (action === 'checkpoint') {
-      _postWithRetry('checkpoints', {
+      return _postWithRetry('checkpoints', {
         class_id: _classId,
         student_id: _studentId,
         student_name: student,
@@ -178,7 +184,7 @@ var portalAPI = (function() {
       Object.keys(payload).forEach(function(k) {
         if (!skip[k]) meta[k] = payload[k];
       });
-      _postBestEffort('activity', {
+      return _postBestEffort('activity', {
         class_id: _classId,
         student_id: _studentId,
         student_name: student,
@@ -189,6 +195,7 @@ var portalAPI = (function() {
         metadata: Object.keys(meta).length > 0 ? meta : null
       }, 'activity');
     }
+    return Promise.resolve();
   }
 
   // ── BEACON (page unload — keepalive fetch) ──

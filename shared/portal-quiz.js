@@ -116,13 +116,14 @@
      SEND DATA — Supabase via portalAPI
      ══════════════════════════════════════ */
   function send(payload) {
-    if (!studentName) return;
+    if (!studentName) return Promise.resolve();
     payload.student = studentName;
     payload.module = CFG.name || 'Unknown';
 
     if (window.portalAPI && portalAPI.getClassId()) {
-      portalAPI.submit(payload);
+      return portalAPI.submit(payload) || Promise.resolve();
     }
+    return Promise.resolve();
   }
 
   /* ══════════════════════════════════════
@@ -652,10 +653,17 @@
     if (links[pid]) links[pid].classList.add('done');
     updateProgress();
 
-    send({ action: 'score', lesson: label, score: correct, total: total, pct: pct, timeOnQuiz: timeOnQuiz });
+    showToast('Saving score\u2026');
+    var scorePromise = send({ action: 'score', lesson: label, score: correct, total: total, pct: pct, timeOnQuiz: timeOnQuiz });
     send({ action: 'quizDetail', lesson: label, questions: quizDetails[pid] || [] });
-
-    showToast('Score sent! ' + correct + '/' + total + ' (' + pct + '%) \u2014 ' + label);
+    // Only show "saved" once Supabase confirms. _postWithRetry's permanent-
+    // failure branch already triggers its own "Could not save" toast, so on
+    // a falsy result here we stay silent rather than overwrite that toast.
+    Promise.resolve(scorePromise).then(function(result) {
+      if (result) {
+        showToast('\u2713 Score saved: ' + correct + '/' + total + ' (' + pct + '%) \u2014 ' + label);
+      }
+    });
     saveProgress();
   }
 
