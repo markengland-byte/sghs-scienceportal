@@ -740,7 +740,7 @@ function newTest() {
 function send(payload) {
   payload.student = studentName;
   payload.module = 'SOL Prep \u2014 Practice Test Generator';
-  solAPI.submit(payload);
+  return solAPI.submit(payload) || Promise.resolve();
 }
 
 /* ── SUBMIT SCORE ─── */
@@ -752,8 +752,10 @@ function submitScore() {
 
   var lessonLabel = assignmentData ? assignmentData.title : 'Practice Test (Generated)';
 
-  // 1. Score summary
-  send({
+  showToast('Saving score\u2026');
+
+  // 1. Score summary — wait for confirmation before showing "saved"
+  var scorePromise = send({
     action: 'score',
     lesson: lessonLabel,
     score: correct,
@@ -793,9 +795,20 @@ function submitScore() {
   });
 
   var btn = document.getElementById('submit-btn');
-  btn.textContent = '\u2705 Score Submitted';
   btn.disabled = true;
-  showToast('Score submitted!');
+  // Only confirm "Submitted" once Supabase actually accepts the row.
+  // _postWithRetry surfaces its own "Could not save" toast on failure;
+  // stay silent here to avoid overwriting it.
+  Promise.resolve(scorePromise).then(function(result) {
+    if (result) {
+      btn.textContent = '\u2705 Score Submitted';
+      showToast('\u2713 Score saved: ' + correct + '/' + testQuestions.length + ' (' + pct + '%)');
+    } else {
+      btn.textContent = '\u26A0 Save failed \u2014 retry?';
+      btn.disabled = false;
+      submitted = false;  // allow retry
+    }
+  });
 }
 
 /* ── TOAST ─── */

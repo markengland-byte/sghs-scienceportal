@@ -2178,10 +2178,14 @@ function getAnswerText(el) {
 }
 
 /* ── SEND HELPER ─────────────────────────────────── */
+var __lastScorePromise = null;
+
 function send(payload) {
   payload.student = studentName;
   payload.module = 'SOL Prep \u2014 Unit 1: Scientific Investigation';
-  solAPI.submit(payload);
+  var __p = solAPI.submit(payload) || Promise.resolve();
+  if (payload.action === 'score') __lastScorePromise = __p;
+  return __p;
 }
 
 /* ── STREAK & COUNTDOWN ─────────────────────────── */
@@ -3021,9 +3025,18 @@ function submitFinalScore() {
     duration: Math.round((Date.now() - sessionStart) / 1000)
   });
 
-  showToast('Score sent to Mr. England \u2713');
-  document.getElementById('dz-submit-btn').textContent = '\u2705 Score Sent!';
-  document.getElementById('dz-submit-btn').disabled = true;
+  showToast('Saving score\u2026');
+  var __dzBtn = document.getElementById('dz-submit-btn');
+  __dzBtn.disabled = true;
+  Promise.resolve(__lastScorePromise).then(function(result) {
+    if (result) {
+      __dzBtn.textContent = '\u2705 Score Sent!';
+      showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
+    } else {
+      __dzBtn.textContent = '\u26A0 Save failed \u2014 retry?';
+      __dzBtn.disabled = false;
+    }
+  });
 }
 
 /* ── RETAKE PRACTICE TEST ────────────────────────── */
