@@ -404,8 +404,9 @@ CHART_ALIASES = {
     'review-36': '2003-32',   # mice bar chart
     'review-38': '2003-19',   # pepsin/trypsin pH
     'review-39': '2005-37',   # Tasmanian sheep
-    # review-37 and review-328 both describe a generic "population leveling off"
-    # S-curve. Generate a simple logistic curve reaching a plateau.
+    # review-37 describes a generic "population leveling off" S-curve.
+    # (review-328 was a duplicate of review-37 in the old buggy bank;
+    # consolidated into review-37 during the 2026-04-25 review re-extraction.)
 }
 # Generic S-curve for "population leveling off" questions.
 GENERIC_S_CURVE = {
@@ -427,7 +428,6 @@ GENERIC_S_CURVE = {
     },
 }
 CHARTS['review-37'] = GENERIC_S_CURVE
-CHARTS['review-328'] = GENERIC_S_CURVE
 
 # ── HTML TABLE CONFIGS ──
 TABLES = {
