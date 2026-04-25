@@ -370,6 +370,27 @@ CHARTS = {
             },
         },
     },
+    # 2004-10: Turkey Growth Data — weight gain vs % vitamin supplement.
+    # Bell-ish curve peaking around x=10 (slight dip 11, second bump 14),
+    # then declining. Question asks optimal supplement %.
+    '2004-10': {
+        'type': 'line',
+        'data': {
+            'labels': [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
+            'datasets': [{'label': 'Average Weight Gain', 'data': [5, 10, 18, 30, 48, 35, 42, 38, 36, 33, 28, 22], 'borderColor': NAVY, 'borderWidth': 2.5, 'tension': 0.35, 'pointRadius': 0, 'fill': False}],
+        },
+        'options': {
+            'responsive': True, 'maintainAspectRatio': False,
+            'plugins': {
+                'title': {'display': True, 'text': 'Turkey Growth Data', 'font': {'size': 13, 'weight': 'bold'}},
+                'legend': {'display': False},
+            },
+            'scales': {
+                'x': {'title': {'display': True, 'text': 'Percent of Vitamin Supplement'}},
+                'y': {'title': {'display': True, 'text': 'Average Weight Gain'}, 'ticks': {'display': False}},
+            },
+        },
+    },
     # Review-N duplicates that match released-exam graphs. Use same configs as the
     # SOL entries so students see identical Chart.js whether random drill pulls
     # from the SOL id or the review duplicate id.
@@ -518,6 +539,100 @@ TABLES = {
             ['Frog', '67'],
             ['Dog', '32'],
             ['Macaque', '8'],
+        ],
+    },
+    # 2001-33: Photosynthesis vs Respiration comparison.
+    '2001-33': {
+        'title': 'Comparison of Photosynthesis and Respiration',
+        'headers': ['', 'Photosynthesis', 'Respiration'],
+        'rows': [
+            ['Raw Materials', 'water and CO\u2082', 'glucose and oxygen'],
+            ['Products', 'glucose and oxygen', 'water and CO\u2082'],
+            ['Purpose', 'store energy', 'release energy'],
+        ],
+    },
+    # 2002-32: Experimental Results (bean plants + fertilizers).
+    '2002-32': {
+        'title': 'Experimental Results',
+        'headers': ['Fertilizer', 'Plant 1', 'Plant 2'],
+        'rows': [
+            ['1', '10 mm', '8 mm'],
+            ['2', '6 mm', '3 mm'],
+            ['3', '13 mm', '10 mm'],
+            ['4', '9 mm', '4 mm'],
+        ],
+    },
+    # 2003-15: Test Paper Results — Chart A (pH calibration) + Chart B (substance
+    # results). Using two rows merged with a section header convention.
+    '2003-15': {
+        'title': 'Test Paper Results \u2014 Chart A (calibration) & Chart B (substances)',
+        'headers': ['Row', 'Red Litmus', 'Blue Litmus', 'pH Paper'],
+        'rows': [
+            ['Chart A: Acid pH 2', 'red', 'red', 'red'],
+            ['Chart A: Acid pH 4', 'red', 'red', 'orange'],
+            ['Chart A: Acid pH 6', 'red', 'red', 'yellow'],
+            ['Chart A: Base pH 8', 'blue', 'blue', 'green'],
+            ['Chart A: Base pH 10', 'blue', 'blue', 'blue'],
+            ['Chart B: Water', 'red', 'blue', 'yellow-green'],
+            ['Chart B: Apples', 'red', 'red', 'red-orange'],
+            ['Chart B: Beans', 'red', 'red', 'yellow'],
+            ['Chart B: Milk', 'red', 'blue', 'yellow'],
+        ],
+    },
+    # 2003-23: Planaria stimulus responses.
+    '2003-23': {
+        'title': 'Planaria Responses to Stimuli',
+        'headers': ['Stimuli', 'Movements Toward', 'Movements Away From', 'No Response'],
+        'rows': [
+            ['light', '0', '10', '0'],
+            ['sound', '5', '4', '1'],
+            ['magnetism', '4', '4', '2'],
+            ['gravity', '7', '2', '1'],
+        ],
+    },
+    # 2004-26: Sandy Beach and Dune Wildlife Locator Chart (feeds x nests).
+    '2004-26': {
+        'title': 'Sandy Beach and Dune Wildlife Locator Chart',
+        'headers': ['Species', 'Feeds in Dunes', 'Feeds on Wet Sand or Beach', 'Feeds at High-tide Mark', 'Nests in Tree Canopy or Shrubs'],
+        'rows': [
+            ['Yellow-billed Cuckoo', '', '', '', '\u2713'],
+            ['American Robin', '\u2713', '', '', '\u2713'],
+            ['Cedar Waxwing', '', '', '', '\u2713'],
+            ['Fish Crow', '', '\u2713', '\u2713', '\u2713'],
+        ],
+    },
+    # 2004-50: Plant Growth Conditions.
+    '2004-50': {
+        'title': 'Plant Growth Conditions',
+        'headers': ['Seedlings', 'Water (mL/week)', 'Temp (\u00b0C)', 'Daylight Hours', 'Relative Humidity', 'Avg New Leaves / Week'],
+        'rows': [
+            ['50', '50', '19', '12', '85', '4'],
+            ['50', '50', '20', '12', '85', '8'],
+            ['50', '50', '21', '12', '85', '10'],
+            ['50', '50', '22', '12', '85', '5'],
+        ],
+    },
+    # 2005-15: Flea shampoo brand comparison (Brand X/Y/Z, before/after for 4 sets).
+    # The source image shows 4 data sets labeled A, B, C, D; each compares number
+    # of dogs with fleas before/after using each brand.
+    '2005-15': {
+        'title': 'Flea Shampoo Effectiveness \u2014 Number of Dogs With Fleas',
+        'headers': ['Set', 'Brand X Before', 'Brand X After', 'Brand Y Before', 'Brand Y After', 'Brand Z Before', 'Brand Z After'],
+        'rows': [
+            ['A', '25', '4', '25', '1', '25', '10'],
+            ['B', '25', '2', '25', '12', '25', '5'],
+            ['C', '25', '10', '25', '4', '25', '12'],
+            ['D', '25', '15', '25', '18', '25', '20'],
+        ],
+    },
+    # 2005-35: DNA Base Sequence Comparison (3 primates, 7 codons).
+    '2005-35': {
+        'title': 'DNA Base Sequence Comparison',
+        'headers': ['Species', '1', '2', '3', '4', '5', '6', '7'],
+        'rows': [
+            ['Human', 'AGG', 'CAT', 'AAA', 'CCA', 'ACG', 'GAT', 'TAA'],
+            ['Chimpanzee', 'AGG', 'CCC', 'CTT', 'CCA', 'ACC', 'GAT', 'TAA'],
+            ['Gorilla', 'AGG', 'CCC', 'TTT', 'CCA', 'ACC', 'AGG', 'CCA'],
         ],
     },
 }

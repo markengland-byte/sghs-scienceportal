@@ -203,8 +203,8 @@ renders natively instead of the PNG crop:
 - `imageUrl`: fallback for illustrations / photographs when neither `chart`
   nor `table` is present.
 
-As of 2026-04-24, **22 bank entries have `chart` configs and 10 have `table`
-configs** (32 native renderings total). See `add-native-renderings.py` below.
+As of 2026-04-24, **23 bank entries have `chart` configs and 18 have `table`
+configs** (41 native renderings total). See `add-native-renderings.py` below.
 
 ### Adding / regenerating Chart.js and HTML-table configs
 
@@ -225,11 +225,45 @@ another bank entry:
 4. Run `--apply`. Re-running overwrites prior `chart`/`table` fields
    (idempotent).
 
+### Gemini vision classification (`classify-bank-images-gemini.py`)
+
+For surfacing any missed CHART/TABLE/PUNNETT/DICHOTOMOUS_KEY candidates that
+the regex classifier in `add-native-renderings.py` can't detect (especially
+entries with missing or misleading `imageNote` strings).
+
+```bash
+python sol-prep/tools/classify-bank-images-gemini.py              # full pass
+python sol-prep/tools/classify-bank-images-gemini.py --limit 10   # sample
+python sol-prep/tools/classify-bank-images-gemini.py --resume     # pick up
+```
+
+Uses `gemini-2.5-flash-lite` (vision-capable, cheap, high quota) with the
+`GEMINI_API_KEY` from `C:/Users/Mark England/Desktop/biology_sol_platform/backend/.env`.
+Saves results incrementally to `build-temp/gemini-classification.json`.
+
+A 2026-04-24 pass on 246 remaining PNGs returned:
+- 100 ILLUSTRATION, 90 PICTURE_OPTIONS (both correctly stay as PNG)
+- 22 BLANK (crop failed — questions have no usable image)
+- 14 TABLE + 7 CHART + 5 DICHOTOMOUS_KEY + 4 PUNNETT + 4 MIXED (potential
+  native-render candidates, though ~half were crop-adjacent artifacts where
+  Gemini saw the wrong question's image)
+
+**Important:** Gemini classifies what the PNG shows, not what the bank entry
+asks. Many bank PNGs have crop overlaps from adjacent questions on the same
+exam page. Always cross-reference the bank `stem` with Gemini's description
+before converting.
+
 ### Remaining bank conversion parking lot
 
-- **~240 illustration PNGs** (diagrams, photographs, cladograms, Punnett
+- **~230 illustration PNGs** (diagrams, photographs, cladograms, Punnett
   squares, dichotomous keys, anatomical drawings) stay as `imageUrl` — Chart.js
   can't render drawings.
+- **22 BLANK bank entries** (crop failed) identified by the Gemini pass —
+  practice-test currently renders these as empty images. Should either
+  re-crop from the source PDF page, OR remove `hasImage: true` so practice-test
+  renders the stem+options without a broken image placeholder.
+- **1 wired-into-unit blank: 2006-41** — the metabolic-process diagram wired
+  into unit-2.html L1668 points to a blank crop. Needs page re-crop.
 - **5 unconverted non-candidates**: 2001-41 (picture-option with 4 answer
   graphs), 2007-33 (chromosome crossing-over illustration), 2007-39 (lady
   beetles variation illustration), 2005-50 (disinfectant table — couldn't
