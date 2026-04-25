@@ -50,6 +50,57 @@ var portalAPI = (function() {
     return fetch(url, fetchOpts);
   }
 
+  // ── ERROR-AWARE WRITE HELPERS ──
+  // _postWithRetry: for time-sensitive student writes (score, quiz_detail,
+  //   checkpoint). Validates HTTP status, retries once after 2s on failure,
+  //   logs to console at every step, and surfaces a toast to the student
+  //   via window.showToast when both attempts fail. Returns a promise that
+  //   resolves on success and rejects on permanent failure.
+  // _postBestEffort: for high-frequency non-critical writes (activity logs,
+  //   beacon). Validates HTTP status and logs warnings but does not retry
+  //   or notify the student. Always resolves (errors are swallowed after
+  //   logging) so it never blocks downstream code.
+  function _postWithRetry(table, body, label) {
+    function attempt() {
+      return _rest('POST', table, { body: body, prefer: 'return=minimal' })
+        .then(function(r) {
+          if (!r.ok) {
+            throw new Error('HTTP ' + r.status + ' ' + (r.statusText || ''));
+          }
+          return r;
+        });
+    }
+    return attempt().catch(function(err1) {
+      console.warn('[portalAPI] ' + label + ' first attempt failed:', err1.message);
+      return new Promise(function(resolve) { setTimeout(resolve, 2000); })
+        .then(attempt)
+        .then(function(r) {
+          console.log('[portalAPI] ' + label + ' retry succeeded');
+          return r;
+        })
+        .catch(function(err2) {
+          console.error('[portalAPI] ' + label + ' FAILED after retry:', err2.message);
+          if (typeof window.showToast === 'function') {
+            window.showToast('\u26A0 Could not save ' + label + ' \u2014 please tell your teacher');
+          }
+          // Error already surfaced — swallow to avoid unhandled-rejection warning.
+        });
+    });
+  }
+
+  function _postBestEffort(table, body, label, opts) {
+    var fetchOpts = { body: body, prefer: 'return=minimal' };
+    if (opts && opts.keepalive) fetchOpts.keepalive = true;
+    return _rest('POST', table, fetchOpts)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r;
+      })
+      .catch(function(err) {
+        console.warn('[portalAPI] ' + label + ' failed (non-critical):', err.message);
+      });
+  }
+
   // ── VALIDATE CLASS CODE ──
   function validateCode(code) {
     code = code.trim().toUpperCase();
@@ -78,20 +129,17 @@ var portalAPI = (function() {
     var module = payload.module;
 
     if (action === 'score') {
-      _rest('POST', 'scores', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          score: payload.score,
-          total: payload.total,
-          pct: payload.pct,
-          time_on_quiz: payload.timeOnQuiz || null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postWithRetry('scores', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        score: payload.score,
+        total: payload.total,
+        pct: payload.pct,
+        time_on_quiz: payload.timeOnQuiz || null
+      }, 'score');
     }
     else if (action === 'quizDetail') {
       var questions = payload.questions || [];
@@ -110,25 +158,19 @@ var portalAPI = (function() {
         };
       });
       if (rows.length > 0) {
-        _rest('POST', 'quiz_detail', {
-          body: rows,
-          prefer: 'return=minimal'
-        }).catch(function(){});
+        _postWithRetry('quiz_detail', rows, 'quiz answers');
       }
     }
     else if (action === 'checkpoint') {
-      _rest('POST', 'checkpoints', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          response_text: payload.response || payload.responseText || payload.text || '',
-          score: payload.score || null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postWithRetry('checkpoints', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        response_text: payload.response || payload.responseText || payload.text || '',
+        score: payload.score || null
+      }, 'checkpoint');
     }
     else if (action === 'activity') {
       var meta = {};
@@ -136,20 +178,16 @@ var portalAPI = (function() {
       Object.keys(payload).forEach(function(k) {
         if (!skip[k]) meta[k] = payload[k];
       });
-
-      _rest('POST', 'activity', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          event: payload.event || 'unknown',
-          duration: payload.duration || null,
-          metadata: Object.keys(meta).length > 0 ? meta : null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postBestEffort('activity', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        event: payload.event || 'unknown',
+        duration: payload.duration || null,
+        metadata: Object.keys(meta).length > 0 ? meta : null
+      }, 'activity');
     }
   }
 
@@ -163,20 +201,16 @@ var portalAPI = (function() {
       if (!skip[k]) meta[k] = payload[k];
     });
 
-    _rest('POST', 'activity', {
-      body: {
-        class_id: _classId,
-        student_id: _studentId,
-        student_name: payload.student || '',
-        module: payload.module || '',
-        lesson: payload.lesson || '',
-        event: payload.event || 'session_end',
-        duration: payload.duration || null,
-        metadata: Object.keys(meta).length > 0 ? meta : null
-      },
-      prefer: 'return=minimal',
-      keepalive: true
-    }).catch(function(){});
+    _postBestEffort('activity', {
+      class_id: _classId,
+      student_id: _studentId,
+      student_name: payload.student || '',
+      module: payload.module || '',
+      lesson: payload.lesson || '',
+      event: payload.event || 'session_end',
+      duration: payload.duration || null,
+      metadata: Object.keys(meta).length > 0 ? meta : null
+    }, 'beacon', { keepalive: true });
   }
 
   // ── LOCAL STORAGE (class info persists across modules) ──

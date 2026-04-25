@@ -51,6 +51,53 @@ var solAPI = (function() {
     return fetch(url, fetchOpts);
   }
 
+  // ── ERROR-AWARE WRITE HELPERS ──
+  // _postWithRetry: critical student writes (score, quiz_detail, checkpoint).
+  //   Validates HTTP status, retries once after 2s, surfaces toast via
+  //   window.showToast on permanent failure, logs every step.
+  // _postBestEffort: high-frequency non-critical writes (activity, beacon).
+  //   Validates and logs, no retry, never blocks downstream code.
+  function _postWithRetry(table, body, label) {
+    function attempt() {
+      return _rest('POST', table, { body: body, prefer: 'return=minimal' })
+        .then(function(r) {
+          if (!r.ok) {
+            throw new Error('HTTP ' + r.status + ' ' + (r.statusText || ''));
+          }
+          return r;
+        });
+    }
+    return attempt().catch(function(err1) {
+      console.warn('[solAPI] ' + label + ' first attempt failed:', err1.message);
+      return new Promise(function(resolve) { setTimeout(resolve, 2000); })
+        .then(attempt)
+        .then(function(r) {
+          console.log('[solAPI] ' + label + ' retry succeeded');
+          return r;
+        })
+        .catch(function(err2) {
+          console.error('[solAPI] ' + label + ' FAILED after retry:', err2.message);
+          if (typeof window.showToast === 'function') {
+            window.showToast('\u26A0 Could not save ' + label + ' \u2014 please tell your teacher');
+          }
+          // Error already surfaced — swallow to avoid unhandled-rejection warning.
+        });
+    });
+  }
+
+  function _postBestEffort(table, body, label, opts) {
+    var fetchOpts = { body: body, prefer: 'return=minimal' };
+    if (opts && opts.keepalive) fetchOpts.keepalive = true;
+    return _rest('POST', table, fetchOpts)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r;
+      })
+      .catch(function(err) {
+        console.warn('[solAPI] ' + label + ' failed (non-critical):', err.message);
+      });
+  }
+
   // ── VALIDATE CLASS CODE ──────────────────────────────────────
   // Returns a promise: { valid: true, teacher, label } or { valid: false }
   function validateCode(code) {
@@ -86,21 +133,18 @@ var solAPI = (function() {
     var module = payload.module;
 
     if (action === 'score') {
-      _rest('POST', 'scores', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          score: payload.score,
-          total: payload.total,
-          pct: payload.pct,
-          time_on_quiz: payload.timeOnQuiz || null,
-          assignment_id: payload.assignmentId || null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postWithRetry('scores', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        score: payload.score,
+        total: payload.total,
+        pct: payload.pct,
+        time_on_quiz: payload.timeOnQuiz || null,
+        assignment_id: payload.assignmentId || null
+      }, 'score');
     }
     else if (action === 'quizDetail') {
       var questions = payload.questions || [];
@@ -121,25 +165,19 @@ var solAPI = (function() {
         };
       });
       if (rows.length > 0) {
-        _rest('POST', 'quiz_detail', {
-          body: rows,
-          prefer: 'return=minimal'
-        }).catch(function(){});
+        _postWithRetry('quiz_detail', rows, 'quiz answers');
       }
     }
     else if (action === 'checkpoint') {
-      _rest('POST', 'checkpoints', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          response_text: payload.response || payload.responseText || payload.text || '',
-          score: payload.score || null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postWithRetry('checkpoints', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        response_text: payload.response || payload.responseText || payload.text || '',
+        score: payload.score || null
+      }, 'checkpoint');
     }
     else if (action === 'activity') {
       // Collect extra fields into metadata
@@ -148,20 +186,16 @@ var solAPI = (function() {
       Object.keys(payload).forEach(function(k) {
         if (!skip[k]) meta[k] = payload[k];
       });
-
-      _rest('POST', 'activity', {
-        body: {
-          class_id: _classId,
-          student_id: _studentId,
-          student_name: student,
-          module: module,
-          lesson: payload.lesson || '',
-          event: payload.event || 'unknown',
-          duration: payload.duration || null,
-          metadata: Object.keys(meta).length > 0 ? meta : null
-        },
-        prefer: 'return=minimal'
-      }).catch(function(){});
+      _postBestEffort('activity', {
+        class_id: _classId,
+        student_id: _studentId,
+        student_name: student,
+        module: module,
+        lesson: payload.lesson || '',
+        event: payload.event || 'unknown',
+        duration: payload.duration || null,
+        metadata: Object.keys(meta).length > 0 ? meta : null
+      }, 'activity');
     }
   }
 
@@ -176,20 +210,16 @@ var solAPI = (function() {
       if (!skip[k]) meta[k] = payload[k];
     });
 
-    _rest('POST', 'activity', {
-      body: {
-        class_id: _classId,
-        student_id: _studentId,
-        student_name: payload.student || '',
-        module: payload.module || '',
-        lesson: payload.lesson || '',
-        event: payload.event || 'session_end',
-        duration: payload.duration || null,
-        metadata: Object.keys(meta).length > 0 ? meta : null
-      },
-      prefer: 'return=minimal',
-      keepalive: true
-    }).catch(function(){});
+    _postBestEffort('activity', {
+      class_id: _classId,
+      student_id: _studentId,
+      student_name: payload.student || '',
+      module: payload.module || '',
+      lesson: payload.lesson || '',
+      event: payload.event || 'session_end',
+      duration: payload.duration || null,
+      metadata: Object.keys(meta).length > 0 ? meta : null
+    }, 'beacon', { keepalive: true });
   }
 
   // ── LOCAL STORAGE (class info persists across units) ──────────
@@ -272,7 +302,12 @@ var solAPI = (function() {
       query: 'id=eq.' + attemptId,
       body: data,
       prefer: 'return=minimal'
-    }).catch(function(){});
+    }).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r;
+    }).catch(function(err) {
+      console.warn('[solAPI] DSM attempt update failed:', err.message);
+    });
   }
 
   // ── SSO (Google Workspace) ─────────────────────────────────
