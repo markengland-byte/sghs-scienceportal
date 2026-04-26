@@ -51,10 +51,85 @@ var solAPI = (function() {
     return fetch(url, fetchOpts);
   }
 
+  // ── OFFLINE BUFFER (failed critical writes queued in localStorage) ──
+  // After _postWithRetry exhausts its retry, the row is parked in
+  // localStorage and re-attempted on the next page load (when getStored()
+  // restores the class). Caps + age limit prevent runaway accumulation
+  // on a permanently-broken setup.
+  var BUFFER_KEY = 'sol_pending_writes';
+  var MAX_BUFFER_ROWS = 50;
+  var MAX_BUFFER_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+  var _drainPromise = null;
+
+  function _readBuffer() {
+    try {
+      var raw = localStorage.getItem(BUFFER_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch(e) { return []; }
+  }
+
+  function _writeBuffer(rows) {
+    try {
+      localStorage.setItem(BUFFER_KEY, JSON.stringify(rows));
+    } catch(e) {
+      try {
+        localStorage.setItem(BUFFER_KEY, JSON.stringify(rows.slice(Math.floor(rows.length / 2))));
+      } catch(e2) {
+        console.error('[solAPI] localStorage buffer write failed:', e2.message);
+      }
+    }
+  }
+
+  function _bufferFailedWrite(table, body, label) {
+    var rows = _readBuffer();
+    rows.push({ table: table, body: body, label: label, savedAt: Date.now() });
+    while (rows.length > MAX_BUFFER_ROWS) rows.shift();
+    _writeBuffer(rows);
+    console.log('[solAPI] buffered ' + label + ' for retry on next page load (' + rows.length + ' pending)');
+  }
+
+  function _drainBuffer() {
+    if (_drainPromise) return _drainPromise;
+    var rows = _readBuffer();
+    if (rows.length === 0) return Promise.resolve(0);
+    var now = Date.now();
+    rows = rows.filter(function(r) {
+      return r && r.table && r.body && r.savedAt && (now - r.savedAt) < MAX_BUFFER_AGE_MS;
+    });
+    var remaining = [];
+    var succeeded = 0;
+    function processOne(i) {
+      if (i >= rows.length) {
+        _writeBuffer(remaining);
+        if (succeeded > 0) {
+          console.log('[solAPI] drained ' + succeeded + ' offline write(s); ' + remaining.length + ' still pending');
+          if (typeof window.showToast === 'function') {
+            window.showToast('\u2713 Saved ' + succeeded + ' offline ' + (succeeded === 1 ? 'submission' : 'submissions'));
+          }
+        }
+        return succeeded;
+      }
+      var r = rows[i];
+      return _rest('POST', r.table, { body: r.body, prefer: 'return=minimal' })
+        .then(function(resp) {
+          if (resp && resp.ok) succeeded++;
+          else remaining.push(r);
+        })
+        .catch(function() { remaining.push(r); })
+        .then(function() { return processOne(i + 1); });
+    }
+    _drainPromise = processOne(0).then(function(n) {
+      _drainPromise = null;
+      return n;
+    });
+    return _drainPromise;
+  }
+
   // ── ERROR-AWARE WRITE HELPERS ──
   // _postWithRetry: critical student writes (score, quiz_detail, checkpoint).
-  //   Validates HTTP status, retries once after 2s, surfaces toast via
-  //   window.showToast on permanent failure, logs every step.
+  //   Validates HTTP status, retries once after 2s. On permanent failure,
+  //   buffers the row to localStorage for re-attempt on next page load.
   // _postBestEffort: high-frequency non-critical writes (activity, beacon).
   //   Validates and logs, no retry, never blocks downstream code.
   function _postWithRetry(table, body, label) {
@@ -77,8 +152,9 @@ var solAPI = (function() {
         })
         .catch(function(err2) {
           console.error('[solAPI] ' + label + ' FAILED after retry:', err2.message);
+          _bufferFailedWrite(table, body, label);
           if (typeof window.showToast === 'function') {
-            window.showToast('\u26A0 Could not save ' + label + ' \u2014 please tell your teacher');
+            window.showToast('\u26A0 Saved ' + label + ' offline \u2014 will retry when you reload');
           }
           // Error already surfaced — swallow to avoid unhandled-rejection warning.
         });
@@ -237,6 +313,9 @@ var solAPI = (function() {
         _className = data.label;
         _teacherName = data.teacher;
         _examDate = data.examDate || null;
+        // Class restored — kick off any buffered offline writes.
+        // Fire-and-forget; failures stay in the buffer for next reload.
+        setTimeout(function() { _drainBuffer(); }, 0);
         return data;
       }
     } catch(e) {}
@@ -443,7 +522,10 @@ var solAPI = (function() {
     isAuthenticated: function() { return !!_session; },
     getStudentId: function() { return _studentId; },
     getStudentEmail: function() { return _studentEmail; },
-    getStudentDisplayName: function() { return _studentDisplayName; }
+    getStudentDisplayName: function() { return _studentDisplayName; },
+    // Offline buffer (failed _postWithRetry writes)
+    drainBuffer: _drainBuffer,
+    getPendingWrites: function() { return _readBuffer().length; }
   };
 
 })();
