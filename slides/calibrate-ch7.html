@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch. 7 Blank Calibrator</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; padding: 20px; }
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.header h1 { font-size: 1.2rem; }
+.header select, .header button, .header input {
+  padding: 8px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.1); color: #fff; font-family: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.header input { width: 280px; background: rgba(255,255,255,.15); }
+.header button:hover { background: rgba(255,255,255,.25); }
+.header .count { color: #0B8F8C; font-weight: 700; font-size: 0.9rem; }
+.btn-primary { background: #0B8F8C !important; font-weight: 600; }
+.btn-primary:hover { background: #0aa89e !important; }
+.btn-danger { background: #dc2626 !important; }
+
+.nav-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.nav-row button { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.1); color: #fff; cursor: pointer; font-size: 0.85rem; }
+.nav-row button:hover { background: rgba(255,255,255,.25); }
+.nav-row .page-label { color: #0B8F8C; font-weight: 700; font-size: 1rem; min-width: 80px; text-align: center; }
+.nav-row .page-status { color: rgba(255,255,255,.5); font-size: 0.8rem; }
+
+.canvas-wrap {
+  position: relative; display: inline-block; cursor: crosshair;
+  border: 2px solid #0B8F8C; border-radius: 8px; overflow: hidden;
+}
+.canvas-wrap svg { display: block; }
+
+.marker { cursor: pointer; }
+.marker rect { fill: rgba(11,143,140,0.15); stroke: #0B8F8C; stroke-width: 2; }
+.marker text { fill: #c0392b; font-family: 'Segoe UI', sans-serif; font-weight: 700; font-size: 22px; }
+.marker:hover rect { fill: rgba(220,38,38,0.2); stroke: #dc2626; }
+
+/* Existing (auto-detected) markers — dimmer */
+.marker-auto rect { fill: rgba(0,0,0,0.06); stroke: rgba(100,100,100,.5); stroke-width: 1; }
+.marker-auto text { fill: #c0392b; font-weight: 600; font-size: 22px; }
+
+.guide-h, .guide-v {
+  position: absolute; background: rgba(11,143,140,0.4); pointer-events: none; z-index: 100;
+}
+.guide-h { height: 1px; width: 100%; left: 0; }
+.guide-v { width: 1px; height: 100%; top: 0; }
+.coords {
+  position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,.8);
+  padding: 8px 16px; border-radius: 6px; font-family: monospace; font-size: 0.9rem; z-index: 200;
+}
+
+.panels { display: flex; gap: 16px; margin-top: 16px; }
+.panel {
+  flex: 1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px; padding: 12px; max-height: 350px; overflow-y: auto;
+}
+.panel h3 { font-size: 0.85rem; color: #0B8F8C; margin-bottom: 8px; }
+.entry { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 0.82rem; }
+.entry .num { color: #0B8F8C; font-weight: 700; width: 24px; }
+.entry .pos { font-family: monospace; color: rgba(255,255,255,.5); width: 120px; font-size: 0.75rem; }
+.entry .ans-text { color: #c0392b; font-weight: 600; flex: 1; }
+.entry .ans-auto { color: rgba(255,255,255,.4); }
+.entry button { background: #dc2626; border: none; color: #fff; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+pre { font-size: 0.75rem; color: #0B8F8C; white-space: pre-wrap; margin-top: 8px; max-height: 150px; overflow-y: auto; }
+
+.instructions {
+  background: rgba(11,143,140,.1); border: 1px solid rgba(11,143,140,.3); border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 16px; font-size: 0.85rem; line-height: 1.5;
+}
+.instructions strong { color: #0B8F8C; }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <strong>How to use:</strong> Type an answer in the input box, then click the blank on the image where it belongs.
+  Gray text shows blanks already found by the automated pipeline. You're adding the ones it missed (tables, diagrams).
+  When done, click <strong>Export JSON</strong> and <strong>Copy</strong>, then paste into <code>tools/ai_answers_ch7.json</code>.
+</div>
+
+<div class="header">
+  <h1>Ch. 7 Calibrator</h1>
+  <select id="page-select" onchange="loadPage()"></select>
+  <input type="text" id="answer-input" placeholder="Type answer, then click the blank..." autofocus>
+  <span class="count" id="count">0 placed</span>
+  <button onclick="undoLast()">Undo</button>
+  <button class="btn-primary" onclick="exportJSON()">Export JSON</button>
+  <button class="btn-primary" onclick="copyExport()">Copy</button>
+</div>
+
+<div class="nav-row">
+  <button onclick="prevPage()">&larr; Prev</button>
+  <span class="page-label" id="page-label">Page 1</span>
+  <button onclick="nextPage()">Next &rarr;</button>
+  <span class="page-status" id="page-status"></span>
+</div>
+
+<div class="canvas-wrap" id="canvas-wrap">
+  <svg id="svg" viewBox="0 0 1224 1584" xmlns="http://www.w3.org/2000/svg" width="816" height="1056">
+    <image id="page-img" href="" x="0" y="0" width="1224" height="1584"/>
+  </svg>
+  <div class="guide-h" id="guide-h"></div>
+  <div class="guide-v" id="guide-v"></div>
+</div>
+
+<div class="coords" id="coords">x: 0, y: 0</div>
+
+<div class="panels">
+  <div class="panel">
+    <h3>Manual (your additions)</h3>
+    <div id="manual-entries"></div>
+  </div>
+  <div class="panel">
+    <h3>Auto-detected (already in pipeline)</h3>
+    <div id="auto-entries"></div>
+  </div>
+</div>
+
+<div id="export-wrap" style="display:none; margin-top:16px; background:rgba(0,0,0,.3); padding:12px; border-radius:8px; position:relative;">
+  <button onclick="document.getElementById('export-wrap').style.display='none'" style="position:absolute;top:8px;right:8px;background:#dc2626;border:none;color:#fff;padding:2px 10px;border-radius:4px;cursor:pointer;font-size:0.8rem;">Close</button>
+  <pre id="export-output" style="margin:0;"></pre>
+</div>
+
+<script>
+var TOTAL_PAGES = 28;
+var IMG_BASE = 'images/ch7/pages/';
+
+// Manual placements by the user
+var manual = {};   // { pageNum: [ {x, y, answer, fs} ] }
+
+// Auto-detected answers from the pipeline (loaded from cache)
+var auto = {};     // same format
+
+var currentPage = 1;
+
+// Build page dropdown
+(function() {
+  var sel = document.getElementById('page-select');
+  for (var i = 1; i <= TOTAL_PAGES; i++) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = 'Page ' + i;
+    sel.appendChild(opt);
+  }
+})();
+
+// Embedded auto-detected answers from ai_answers_ch7.json
+var AUTO_DATA = {"2":[{"x":186,"y":263,"answer":"206","fs":16},{"x":349,"y":305,"answer":"age","fs":16},{"x":445,"y":346,"answer":"ribs & sternum","fs":16},{"x":509,"y":429,"answer":"pelvic","fs":18},{"x":203,"y":471,"answer":"movement","fs":18}],"3":[],"4":[{"x":186,"y":263,"answer":"206","fs":16},{"x":349,"y":305,"answer":"age","fs":16},{"x":445,"y":346,"answer":"ribs","fs":16},{"x":509,"y":429,"answer":"pelvic","fs":18},{"x":203,"y":471,"answer":"movement","fs":18}],"5":[{"x":449,"y":300,"answer":"brain","fs":16},{"x":407,"y":342,"answer":"face","fs":18},{"x":450,"y":384,"answer":"hearing","fs":18},{"x":317,"y":425,"answer":"air-filled spaces","fs":18},{"x":183,"y":570,"answer":"brain","fs":16},{"x":326,"y":570,"answer":"facial","fs":16},{"x":558,"y":570,"answer":"air","fs":14},{"x":926,"y":570,"answer":"sensory","fs":16}],"6":[{"x":289,"y":378,"answer":"forehead","fs":16},{"x":648,"y":1143,"answer":"Frontal, Parietal","fs":18},{"x":648,"y":1265,"answer":"Occipital","fs":18},{"x":240,"y":438,"answer":"back","fs":16},{"x":1001,"y":309,"answer":"ears","fs":16},{"x":354,"y":539,"answer":"butterfly","fs":14},{"x":349,"y":623,"answer":"pituitary gland","fs":18},{"x":711,"y":570,"answer":"spongy","fs":16},{"x":895,"y":653,"answer":"attachment","fs":18},{"x":306,"y":249,"answer":"8","fs":18},{"x":237,"y":303,"answer":"sides","fs":18}],"7":[],"8":[{"x":290,"y":234,"answer":"14","fs":18},{"x":299,"y":332,"answer":"upper teeth","fs":18},{"x":258,"y":401,"answer":"lower","fs":18},{"x":258,"y":521,"answer":"cheek","fs":18},{"x":776,"y":290,"answer":"Nasal","fs":18},{"x":1023,"y":357,"answer":"eye socket","fs":18},{"x":747,"y":515,"answer":"nasal","fs":18},{"x":1002,"y":584,"answer":"septum","fs":18},{"x":560,"y":708,"answer":"roof","fs":18}],"9":[],"10":[{"x":160,"y":259,"answer":"and","fs":14},{"x":812,"y":310,"answer":"7","fs":18},{"x":227,"y":311,"answer":"7","fs":18},{"x":278,"y":813,"answer":"correct","fs":18}],"11":[],"12":[{"x":509,"y":259,"answer":"within","fs":18},{"x":201,"y":360,"answer":"Lighten","fs":18},{"x":574,"y":360,"answer":"humidify","fs":18},{"x":216,"y":1157,"answer":"Frontal sinus","fs":18},{"x":216,"y":1199,"answer":"Inflammation and pressure changes","fs":18}],"13":[{"x":363,"y":259,"answer":"neck","fs":18},{"x":506,"y":384,"answer":"ribs","fs":16},{"x":352,"y":426,"answer":"lower","fs":18},{"x":289,"y":467,"answer":"pelvis","fs":16},{"x":411,"y":467,"answer":"fused","fs":18},{"x":217,"y":509,"answer":"tailbone","fs":16},{"x":686,"y":592,"answer":"spring","fs":18},{"x":452,"y":634,"answer":"pads","fs":18},{"x":281,"y":676,"answer":"atlas","fs":16},{"x":396,"y":676,"answer":"axis","fs":16}],"14":[],"15":[{"x":235,"y":217,"answer":"Rib","fs":16},{"x":394,"y":217,"answer":"encloses","fs":18},{"x":571,"y":384,"answer":"sternum","fs":16},{"x":486,"y":426,"answer":"not","fs":14},{"x":139,"y":1135,"answer":"10","fs":16},{"x":695,"y":1135,"answer":"11","fs":16},{"x":199,"y":1176,"answer":"Longer, connects indirectly to sternum","fs":18},{"x":755,"y":1176,"answer":"Shorter, does not connect to sternum","fs":18},{"x":245,"y":300,"answer":"pairs","fs":18},{"x":368,"y":342,"answer":"directly","fs":18},{"x":253,"y":467,"answer":"flat","fs":16},{"x":158,"y":634,"answer":"Costal cartilage","fs":18},{"x":346,"y":634,"answer":"Hyaline","fs":18}],"16":[],"17":[{"x":205,"y":344,"answer":"collar","fs":18},{"x":638,"y":345,"answer":"shoulder","fs":18},{"x":881,"y":489,"answer":"humerus","fs":16},{"x":246,"y":217,"answer":"shoulder","fs":18},{"x":655,"y":217,"answer":"axial","fs":18},{"x":195,"y":259,"answer":"appendicular","fs":18},{"x":534,"y":1008,"answer":"shallow socket, allowing for extensive movement of the humerus","fs":18},{"x":477,"y":1074,"answer":"highly mobile, providing a broad range of motion for the arm","fs":18},{"x":474,"y":1139,"answer":"acts as a strut, holding the scapula and arm away from the trunk","fs":18}],"18":[],"19":[{"x":258,"y":342,"answer":"proximal","fs":18},{"x":328,"y":481,"answer":"thumb","fs":18},{"x":450,"y":565,"answer":"Medial","fs":16},{"x":246,"y":676,"answer":"notch","fs":14},{"x":246,"y":718,"answer":"joint","fs":16},{"x":246,"y":300,"answer":"single","fs":18},{"x":226,"y":440,"answer":"Lateral","fs":18},{"x":204,"y":634,"answer":"forearm","fs":18}],"20":[{"x":402,"y":669,"answer":"knuckles","fs":18},{"x":288,"y":711,"answer":"thumb","fs":18},{"x":230,"y":305,"answer":"short","fs":18},{"x":360,"y":259,"answer":"3","fs":16},{"x":504,"y":1102,"answer":"Phalanx","fs":18},{"x":866,"y":305,"answer":"finger","fs":18},{"x":756,"y":434,"answer":"middle","fs":18},{"x":873,"y":517,"answer":"2","fs":16},{"x":762,"y":559,"answer":"proximal","fs":18},{"x":923,"y":559,"answer":"distal","fs":18}],"21":[],"22":[{"x":278,"y":317,"answer":"lateral","fs":16},{"x":270,"y":469,"answer":"posterior","fs":18},{"x":326,"y":598,"answer":"sit","fs":16},{"x":735,"y":560,"answer":"anterior","fs":18},{"x":829,"y":601,"answer":"fibrocartilage","fs":16},{"x":299,"y":708,"answer":"socket","fs":18},{"x":591,"y":750,"answer":"side","fs":18},{"x":697,"y":217,"answer":"sacrum","fs":18},{"x":210,"y":259,"answer":"hip bone","fs":14},{"x":490,"y":259,"answer":"3","fs":14},{"x":214,"y":1045,"answer":"d) A-C are all correct","fs":18}],"23":[],"24":[{"x":132,"y":259,"answer":"structure","fs":18},{"x":267,"y":391,"answer":"heavier","fs":18},{"x":668,"y":363,"answer":"Wider","fs":18},{"x":258,"y":458,"answer":"acute","fs":18},{"x":673,"y":458,"answer":"Wider","fs":18},{"x":242,"y":532,"answer":"heart-shaped","fs":18},{"x":663,"y":532,"answer":"rounder","fs":16},{"x":333,"y":638,"answer":"childbirth","fs":18},{"x":129,"y":971,"answer":"Female","fs":18},{"x":379,"y":971,"answer":"Male","fs":18},{"x":658,"y":971,"answer":"Male","fs":18},{"x":955,"y":971,"answer":"Female","fs":18}],"25":[{"x":203,"y":273,"answer":"thigh bone","fs":18},{"x":277,"y":314,"answer":"ball","fs":16},{"x":198,"y":385,"answer":"Kneecap","fs":18},{"x":408,"y":385,"answer":"sesamoid","fs":18},{"x":518,"y":385,"answer":"triangular","fs":16},{"x":241,"y":448,"answer":"medial","fs":18},{"x":308,"y":489,"answer":"knee","fs":16},{"x":187,"y":559,"answer":"smaller","fs":18},{"x":628,"y":873,"answer":"Tibia","fs":18},{"x":691,"y":966,"answer":"Tibia","fs":18},{"x":694,"y":1057,"answer":"Fibula","fs":18}],"26":[],"27":[{"x":302,"y":510,"answer":"7","fs":18},{"x":205,"y":556,"answer":"Talus","fs":18},{"x":124,"y":681,"answer":"heel","fs":16},{"x":649,"y":257,"answer":"hand","fs":18},{"x":648,"y":955,"answer":"The big toe (hallux) only has two phalanges.","fs":18},{"x":648,"y":1015,"answer":"The other four toes have three phalanges each.","fs":18},{"x":189,"y":307,"answer":"long","fs":14},{"x":153,"y":353,"answer":"phalanx","fs":18},{"x":259,"y":436,"answer":"Big","fs":18},{"x":731,"y":348,"answer":"instep","fs":18}],"28":[]};
+
+function loadAutoAnswers() {
+  Object.keys(AUTO_DATA).forEach(function(k) {
+    auto[parseInt(k)] = AUTO_DATA[k] || [];
+  });
+  console.log('Loaded auto answers for', Object.keys(auto).length, 'pages');
+  loadPage();
+}
+
+function loadPage() {
+  currentPage = parseInt(document.getElementById('page-select').value);
+  var img = document.getElementById('page-img');
+  img.setAttribute('href', IMG_BASE + 'page-' + String(currentPage).padStart(2, '0') + '.png');
+
+  document.getElementById('page-label').textContent = 'Page ' + currentPage + ' / ' + TOTAL_PAGES;
+
+  // Clear SVG markers
+  var svg = document.getElementById('svg');
+  svg.querySelectorAll('.marker, .marker-auto').forEach(function(m) { m.remove(); });
+
+  // Draw auto-detected answers (dimmed)
+  var autoItems = auto[currentPage] || [];
+  autoItems.forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, true); });
+
+  // Draw manual placements
+  var manualItems = manual[currentPage] || [];
+  manualItems.forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, false); });
+
+  updateCount();
+  updateStatus();
+  document.getElementById('answer-input').focus();
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    document.getElementById('page-select').value = currentPage - 1;
+    loadPage();
+  }
+}
+
+function nextPage() {
+  if (currentPage < TOTAL_PAGES) {
+    document.getElementById('page-select').value = currentPage + 1;
+    loadPage();
+  }
+}
+
+function updateStatus() {
+  var autoCount = (auto[currentPage] || []).length;
+  var manualCount = (manual[currentPage] || []).length;
+  var status = autoCount + ' auto-detected';
+  if (manualCount > 0) status += ', ' + manualCount + ' manual';
+  document.getElementById('page-status').textContent = status;
+}
+
+function getSVGCoords(e) {
+  var svg = document.getElementById('svg');
+  var pt = svg.createSVGPoint();
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+  var svgPt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  return { x: Math.round(svgPt.x), y: Math.round(svgPt.y) };
+}
+
+// Crosshair guides
+document.getElementById('canvas-wrap').addEventListener('mousemove', function(e) {
+  var rect = this.getBoundingClientRect();
+  document.getElementById('guide-h').style.top = (e.clientY - rect.top) + 'px';
+  document.getElementById('guide-v').style.left = (e.clientX - rect.left) + 'px';
+  var svgC = getSVGCoords(e);
+  document.getElementById('coords').textContent = 'SVG: x=' + svgC.x + ', y=' + svgC.y;
+});
+
+// Click to place
+document.getElementById('svg').addEventListener('click', function(e) {
+  if (e.target.closest('.marker')) return; // don't place when clicking existing marker
+
+  var inputEl = document.getElementById('answer-input');
+  var answer = inputEl.value.trim();
+  if (!answer) {
+    answer = prompt('Enter the answer for this blank:');
+    if (!answer || !answer.trim()) return;
+    answer = answer.trim();
+  }
+
+  var coords = getSVGCoords(e);
+  if (!manual[currentPage]) manual[currentPage] = [];
+  var idx = manual[currentPage].length;
+  manual[currentPage].push({ x: coords.x, y: coords.y, answer: answer, fs: 18 });
+
+  drawMarker(coords.x, coords.y, answer, idx, false);
+  updateCount();
+  updateStatus();
+  inputEl.value = '';
+  inputEl.focus();
+});
+
+function drawMarker(x, y, answer, idx, isAuto) {
+  var svg = document.getElementById('svg');
+  var ns = 'http://www.w3.org/2000/svg';
+
+  var g = document.createElementNS(ns, 'g');
+  g.classList.add(isAuto ? 'marker-auto' : 'marker');
+  if (!isAuto) g.dataset.idx = idx;
+
+  var r = document.createElementNS(ns, 'rect');
+  var textWidth = answer.length * 11 + 10;
+  r.setAttribute('x', x - 2);
+  r.setAttribute('y', y - 18);
+  r.setAttribute('width', textWidth);
+  r.setAttribute('height', 22);
+  r.setAttribute('rx', 3);
+  g.appendChild(r);
+
+  var t = document.createElementNS(ns, 'text');
+  t.setAttribute('x', x);
+  t.setAttribute('y', y);
+  t.setAttribute('font-size', '18');
+  t.textContent = answer;
+  g.appendChild(t);
+
+  // Click marker to delete (auto or manual)
+  g.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var label = isAuto ? 'auto' : 'manual';
+    if (confirm('Delete ' + label + ' answer "' + answer + '"?')) {
+      var arr = isAuto ? auto[currentPage] : manual[currentPage];
+      arr.splice(idx, 1);
+      reloadMarkers();
+    }
+  });
+
+  svg.appendChild(g);
+}
+
+function reloadMarkers() {
+  var svg = document.getElementById('svg');
+  svg.querySelectorAll('.marker, .marker-auto').forEach(function(m) { m.remove(); });
+  (auto[currentPage] || []).forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, true); });
+  (manual[currentPage] || []).forEach(function(item, i) { drawMarker(item.x, item.y, item.answer, i, false); });
+  updateCount();
+  updateStatus();
+}
+
+function undoLast() {
+  if (!manual[currentPage] || manual[currentPage].length === 0) return;
+  manual[currentPage].pop();
+  reloadMarkers();
+}
+
+function updateCount() {
+  var totalManual = 0;
+  Object.keys(manual).forEach(function(k) { totalManual += manual[k].length; });
+  var pageManual = (manual[currentPage] || []).length;
+  document.getElementById('count').textContent = pageManual + ' on page, ' + totalManual + ' total manual';
+  renderEntries();
+}
+
+function renderEntries() {
+  // Manual entries
+  var items = manual[currentPage] || [];
+  var html = '';
+  items.forEach(function(item, i) {
+    html += '<div class="entry">';
+    html += '<span class="num">' + (i+1) + '</span>';
+    html += '<span class="pos">(' + item.x + ', ' + item.y + ')</span>';
+    html += '<span class="ans-text">' + item.answer + '</span>';
+    html += '<button onclick="deleteManual(' + i + ')">X</button>';
+    html += '</div>';
+  });
+  document.getElementById('manual-entries').innerHTML = html || '<div style="color:rgba(255,255,255,.3)">No manual blanks on this page yet</div>';
+
+  // Auto entries
+  var autoItems = auto[currentPage] || [];
+  var autoHtml = '';
+  autoItems.forEach(function(item, i) {
+    autoHtml += '<div class="entry">';
+    autoHtml += '<span class="num" style="color:rgba(255,255,255,.4)">' + (i+1) + '</span>';
+    autoHtml += '<span class="pos">(' + item.x + ', ' + item.y + ')</span>';
+    autoHtml += '<span class="ans-text ans-auto">' + item.answer + '</span>';
+    autoHtml += '<button onclick="deleteAuto(' + i + ')">X</button>';
+    autoHtml += '</div>';
+  });
+  document.getElementById('auto-entries').innerHTML = autoHtml || '<div style="color:rgba(255,255,255,.3)">No auto-detected blanks on this page</div>';
+}
+
+function deleteManual(idx) {
+  manual[currentPage].splice(idx, 1);
+  reloadMarkers();
+}
+
+function deleteAuto(idx) {
+  var item = (auto[currentPage] || [])[idx];
+  if (!item) return;
+  if (!confirm('Delete auto answer "' + item.answer + '"?')) return;
+  auto[currentPage].splice(idx, 1);
+  reloadMarkers();
+}
+
+function exportJSON() {
+  // Merge auto + manual into final output
+  var merged = {};
+  // Start with all auto
+  Object.keys(auto).forEach(function(k) {
+    merged[k] = (auto[k] || []).slice();
+  });
+  // Add manual entries
+  Object.keys(manual).forEach(function(k) {
+    if (!merged[k]) merged[k] = [];
+    manual[k].forEach(function(item) {
+      merged[k].push(item);
+    });
+  });
+  var output = JSON.stringify(merged, null, 2);
+  document.getElementById('export-output').textContent = output;
+  document.getElementById('export-wrap').style.display = 'block';
+}
+
+function copyExport() {
+  exportJSON();
+  var text = document.getElementById('export-output').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    alert('Copied! Paste this into tools/ai_answers_ch7.json to replace its contents, then re-run:\n\npython tools/ai_lecture_builder.py "path/to/notes.pdf" --chapter 7 --skip-pages "1"');
+  });
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT') return; // don't intercept typing
+  if (e.key === 'ArrowLeft') prevPage();
+  else if (e.key === 'ArrowRight') nextPage();
+});
+
+// Init
+loadAutoAnswers();
+</script>
+</body>
+</html>
