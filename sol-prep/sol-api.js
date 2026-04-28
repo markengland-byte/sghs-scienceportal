@@ -280,6 +280,98 @@ var solAPI = (function() {
     return Promise.resolve();
   }
 
+  // ── CROSS-DEVICE PROGRESS SYNC ──────────────────────────────
+  // Saves a JSON snapshot of in-progress quiz state to Supabase
+  // keyed by (class_id, student_name, module). Lets a student
+  // resume on a different machine after restoring the same name.
+  // Save calls are debounced (1.5s) to coalesce rapid panel
+  // transitions into one network round-trip.
+  var _progressTimers = {};
+  var PROGRESS_DEBOUNCE_MS = 1500;
+
+  // Persist immediately (no debounce). Returns the fetch promise.
+  function _saveProgressNow(module, studentName, progressData, keepalive) {
+    if (!_classId || !studentName || !module) return Promise.resolve();
+    var body = {
+      class_id: _classId,
+      student_name: studentName,
+      module: module,
+      progress_data: progressData
+    };
+    // UPSERT on (class_id, student_name, module) unique constraint
+    return _rest('POST', 'quiz_progress', {
+      query: 'on_conflict=class_id,student_name,module',
+      body: body,
+      prefer: 'resolution=merge-duplicates,return=minimal',
+      keepalive: !!keepalive
+    }).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r;
+    }).catch(function(err) {
+      console.warn('[solAPI] saveProgress failed:', err.message);
+    });
+  }
+
+  // Public: debounced save. Coalesces bursts of state changes.
+  function saveProgress(module, studentName, progressData) {
+    if (!_classId || !studentName || !module) return;
+    var key = module + '|' + studentName;
+    if (_progressTimers[key]) clearTimeout(_progressTimers[key]);
+    _progressTimers[key] = setTimeout(function() {
+      _progressTimers[key] = null;
+      _saveProgressNow(module, studentName, progressData);
+    }, PROGRESS_DEBOUNCE_MS);
+  }
+
+  // Public: fetch latest remote progress for this student/module.
+  // Returns Promise<{progress_data, updated_at} | null>.
+  function getProgress(module, studentName) {
+    if (!_classId || !studentName || !module) return Promise.resolve(null);
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent(module)
+      + '&select=progress_data,updated_at&limit=1';
+    return _rest('GET', 'quiz_progress', { query: q })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(rows) { return (rows && rows[0]) || null; })
+      .catch(function(err) {
+        console.warn('[solAPI] getProgress failed:', err.message);
+        return null;
+      });
+  }
+
+  // Public: delete remote progress (called on quiz completion or
+  // an explicit "start fresh").
+  function clearProgress(module, studentName) {
+    if (!_classId || !studentName || !module) return Promise.resolve();
+    // Cancel any pending debounced save first.
+    var key = module + '|' + studentName;
+    if (_progressTimers[key]) {
+      clearTimeout(_progressTimers[key]);
+      _progressTimers[key] = null;
+    }
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent(module);
+    return _rest('DELETE', 'quiz_progress', { query: q, prefer: 'return=minimal' })
+      .catch(function(err) {
+        console.warn('[solAPI] clearProgress failed:', err.message);
+      });
+  }
+
+  // Public: synchronous flush — fire any pending debounced save
+  // immediately. Use on page hide / quiz finish to avoid losing
+  // the last few seconds of state.
+  function flushProgress(module, studentName, progressData) {
+    var key = module + '|' + studentName;
+    if (_progressTimers[key]) {
+      clearTimeout(_progressTimers[key]);
+      _progressTimers[key] = null;
+    }
+    // keepalive=true so the request survives page-unload
+    return _saveProgressNow(module, studentName, progressData, true);
+  }
+
   // ── BEACON (page unload) ─────────────────────────────────────
   // Uses fetch with keepalive (sendBeacon can't set custom headers).
   function beacon(payload) {
@@ -525,7 +617,12 @@ var solAPI = (function() {
     getStudentDisplayName: function() { return _studentDisplayName; },
     // Offline buffer (failed _postWithRetry writes)
     drainBuffer: _drainBuffer,
-    getPendingWrites: function() { return _readBuffer().length; }
+    getPendingWrites: function() { return _readBuffer().length; },
+    // Cross-device progress sync
+    saveProgress: saveProgress,
+    getProgress: getProgress,
+    clearProgress: clearProgress,
+    flushProgress: flushProgress
   };
 
 })();
