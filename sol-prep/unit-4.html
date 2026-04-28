@@ -288,7 +288,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="code-err">Please enter your class code.</div>
     <button class="nm-btn" onclick="startUnit()">Start Unit 4 &#x2192;</button>
-    <div style="margin-top:12px;text-align:center"><a href="#" onclick="localStorage.removeItem('sol_unit4_progress');localStorage.removeItem('sol_unit4_vocab');solAPI.clearClass();location.reload();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <div style="margin-top:12px;text-align:center"><a href="#" onclick="startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
     <div style="margin-top:4px;text-align:center"><a href="#" onclick="solAPI.clearClass();document.getElementById('class-code').value='';document.getElementById('class-info').style.display='none';return false" style="font-size:.72rem;color:var(--muted);text-decoration:underline">Change class code</a></div>
   </div>
 </div>
@@ -1252,7 +1252,12 @@ function saveProgress() {
     unlockedPanels: Array.from(unlockedPanels),
     flippedCards: Array.from(flippedCards)
   };
+  data.savedAt = Date.now();
   localStorage.setItem('sol_unit4_progress', JSON.stringify(data));
+  // Cross-device sync — push to Supabase (debounced 1.5s).
+  if (studentName && solAPI.saveProgress) {
+    solAPI.saveProgress('unit-4', studentName, data);
+  }
 }
 
 function restoreProgress(data) {
@@ -1379,6 +1384,20 @@ function restoreProgress(data) {
   goTo(data.currentPanel || 0);
 }
 
+/* ── START FRESH (clear local + remote progress) ───── */
+function startFresh() {
+  var saved = localStorage.getItem('sol_unit4_progress');
+  var name = '';
+  try { name = saved ? (JSON.parse(saved).studentName || '') : ''; } catch(e) {}
+  if (name && solAPI.clearProgress) {
+    solAPI.clearProgress('unit-4', name);
+  }
+  localStorage.removeItem('sol_unit4_progress');
+  localStorage.removeItem('sol_unit4_vocab');
+  solAPI.clearClass();
+  location.reload();
+}
+
 /* ── START ────────────────────────────────────────── */
 function startUnit() {
   var nameInput = document.getElementById('student-name').value.trim();
@@ -1420,21 +1439,33 @@ function startUnit() {
 function proceedStart(nameInput) {
   studentName = nameInput;
 
+  // Check local + remote progress, prefer whichever is newer.
   var saved = localStorage.getItem('sol_unit4_progress');
-  if (saved) {
-    var data = JSON.parse(saved);
-    if (data.studentName === studentName) {
-      restoreProgress(data);
+  var localData = saved ? JSON.parse(saved) : null;
+  if (localData && localData.studentName !== studentName) localData = null;
+
+  var remoteP = (solAPI.getProgress ? solAPI.getProgress('unit-4', studentName) : Promise.resolve(null));
+  remoteP.then(function(remote) {
+    var remoteData = remote ? remote.progress_data : null;
+    var chosen = null;
+    if (remoteData && localData) {
+      var remoteAt = new Date(remote.updated_at).getTime();
+      var localAt = localData.savedAt || localData.sessionStart || 0;
+      chosen = (remoteAt > localAt + 1000) ? remoteData : localData;
+    } else {
+      chosen = remoteData || localData;
+    }
+    if (chosen) {
+      localStorage.setItem('sol_unit4_progress', JSON.stringify(chosen));
+      restoreProgress(chosen);
       return;
     }
-  }
-  localStorage.removeItem('sol_unit4_progress');
-
-  document.getElementById('name-modal').style.display = 'none';
-  initMeta();
-  sessionStart = Date.now();
-  panelStartTime = Date.now();
-  send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });
+    localStorage.removeItem('sol_unit4_progress');
+    document.getElementById('name-modal').style.display = 'none';
+    initMeta();
+    sessionStart = Date.now();
+    panelStartTime = Date.now();
+    send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });  });
 }
 
 /* ── NAVIGATION ───────────────────────────────────── */
@@ -1868,6 +1899,11 @@ function showToast(msg) {
 window.addEventListener('beforeunload', function() {
   if (!studentName) return;
   saveProgress();
+  // Flush cross-device snapshot synchronously (keepalive) — survives unload.
+  if (solAPI.flushProgress) {
+    var snap = localStorage.getItem('sol_unit4_progress');
+    if (snap) solAPI.flushProgress('unit-4', studentName, JSON.parse(snap));
+  }
   var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
   var duration = Math.round((Date.now() - panelStartTime) / 1000);
   if (duration > 2) {
