@@ -315,6 +315,82 @@ var questionDetail = [];
 var testStart = 0;
 var submitted = false;
 
+/* ── PROGRESS SNAPSHOT (cross-device resume) ─── */
+function getModuleKey() {
+  return assignmentId ? 'practice-test:' + assignmentId : 'practice-test';
+}
+function getLocalKey() {
+  return assignmentId ? 'sol_practice_progress:' + assignmentId : 'sol_practice_progress';
+}
+
+function buildSnapshot() {
+  return {
+    studentName: studentName,
+    classCode: solAPI.getClassCode(),
+    testQuestions: testQuestions,
+    answered: answered,
+    correct: correct,
+    stdCorrect: stdCorrect,
+    stdTotal: stdTotal,
+    questionDetail: questionDetail,
+    testStart: testStart,
+    submitted: submitted,
+    assignmentId: assignmentId,
+    savedAt: Date.now()
+  };
+}
+
+function saveProgressLocal() {
+  if (!studentName || !testQuestions.length) return;
+  var snap = buildSnapshot();
+  try { localStorage.setItem(getLocalKey(), JSON.stringify(snap)); } catch(e) {}
+  if (solAPI.saveProgress) solAPI.saveProgress(getModuleKey(), studentName, snap);
+}
+
+function clearProgressAll() {
+  try { localStorage.removeItem(getLocalKey()); } catch(e) {}
+  if (studentName && solAPI.clearProgress) solAPI.clearProgress(getModuleKey(), studentName);
+}
+
+function restoreFromSnapshot(snap) {
+  studentName = snap.studentName || studentName;
+  testQuestions = snap.testQuestions || [];
+  answered = snap.answered || 0;
+  correct = snap.correct || 0;
+  stdCorrect = snap.stdCorrect || {};
+  stdTotal = snap.stdTotal || {};
+  questionDetail = snap.questionDetail || [];
+  testStart = snap.testStart || Date.now();
+  submitted = !!snap.submitted;
+
+  document.getElementById('name-modal').style.display = 'none';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('prog-bar').style.display = 'flex';
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = !!submitted;
+  btn.textContent = submitted ? '\u2705 Score Submitted' : 'Submit Score';
+
+  renderQuestions();
+  document.getElementById('prog-total').textContent = testQuestions.length;
+
+  questionDetail.forEach(function(qd) {
+    var qq = document.getElementById('qq-' + (qd.qNum - 1));
+    if (!qq) return;
+    qq.querySelectorAll('.qo').forEach(function(o) {
+      o.classList.add('revealed');
+      if (o.dataset.v === qd.correct) o.classList.add('correct');
+      else if (o.dataset.v === qd.chosen && !qd.isCorrect) o.classList.add('incorrect');
+    });
+    qq.classList.add(qd.isCorrect ? 'answered' : 'answered-wrong');
+  });
+  updateProgress();
+
+  if (submitted || answered === testQuestions.length) {
+    setTimeout(showResults, 100);
+  }
+  showToast('\u2713 Resumed from where you left off');
+}
+
 /* ── INIT ─── */
 (function init() {
   // Enable start button when name + period filled
@@ -413,6 +489,33 @@ function startTest() {
     document.getElementById('code-err').style.display = 'block';
     return;
   }
+  // Check local + remote for in-progress test before regenerating.
+  var savedRaw = localStorage.getItem(getLocalKey());
+  var localSnap = savedRaw ? JSON.parse(savedRaw) : null;
+  if (localSnap && localSnap.studentName !== studentName) localSnap = null;
+  var remoteP = solAPI.getProgress
+    ? solAPI.getProgress(getModuleKey(), studentName)
+    : Promise.resolve(null);
+  remoteP.then(function(remote) {
+    var remoteSnap = remote ? remote.progress_data : null;
+    if (remoteSnap && remoteSnap.studentName !== studentName) remoteSnap = null;
+    var chosen = null;
+    if (remoteSnap && localSnap) {
+      var remoteAt = new Date(remote.updated_at).getTime();
+      var localAt = localSnap.savedAt || 0;
+      chosen = (remoteAt > localAt + 1000) ? remoteSnap : localSnap;
+    } else {
+      chosen = remoteSnap || localSnap;
+    }
+    if (chosen && chosen.testQuestions && chosen.testQuestions.length && chosen.answered > 0) {
+      restoreFromSnapshot(chosen);
+      return;
+    }
+    actuallyGenerateTest();
+  });
+}
+
+function actuallyGenerateTest() {
   document.getElementById('name-modal').style.display = 'none';
 
   // Reset state
@@ -636,6 +739,7 @@ function pickAnswer(opt) {
     chosen: chosen
   });
 
+  saveProgressLocal();
   updateProgress();
 
   // Auto-scroll to next unanswered
@@ -755,6 +859,7 @@ function showResults() {
 function newTest() {
   document.getElementById('questions-container').innerHTML = '';
   document.getElementById('results-section').style.display = 'none';
+  clearProgressAll();
   startTest();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -826,6 +931,7 @@ function submitScore() {
     if (result) {
       btn.textContent = '\u2705 Score Submitted';
       showToast('\u2713 Score saved: ' + correct + '/' + testQuestions.length + ' (' + pct + '%)');
+      clearProgressAll();
     } else {
       btn.textContent = '\u26A0 Save failed \u2014 retry?';
       btn.disabled = false;
@@ -833,6 +939,16 @@ function submitScore() {
     }
   });
 }
+
+/* ── PAGE EXIT — flush snapshot for cross-device resume ─── */
+window.addEventListener('beforeunload', function() {
+  if (!studentName || !testQuestions.length) return;
+  var snap = buildSnapshot();
+  try { localStorage.setItem(getLocalKey(), JSON.stringify(snap)); } catch(e) {}
+  if (solAPI.flushProgress) {
+    solAPI.flushProgress(getModuleKey(), studentName, snap);
+  }
+});
 
 /* ── TOAST ─── */
 function showToast(msg) {
