@@ -475,9 +475,16 @@ var solAPI = (function() {
   }
 
   // ── DSM (Dynamic Study Modules) ───────────────────────────────
-  // Fetch published DSM questions for a given standard
+  // Fetch published DSM questions for a given standard.
+  // Bounded by a 5s wall-clock timeout: if Supabase doesn't respond in
+  // time, we resolve to the same "no module" shape so the unit page's
+  // onSkip path fires and panels 9/10/11 unlock anyway. Without this,
+  // a hung fetch left students stuck at the mastery screen with the
+  // Practice Test button greyed out forever (no retry, no fallback).
+  var DSM_FETCH_TIMEOUT_MS = 5000;
+
   function getDSMQuestions(standard) {
-    return _rest('GET', 'dsm_modules', {
+    var fetchChain = _rest('GET', 'dsm_modules', {
       query: 'standard=eq.' + encodeURIComponent(standard) + '&status=eq.published&select=id,question_count,title&limit=1&order=created_at.desc'
     })
     .then(function(r) { return r.json(); })
@@ -493,6 +500,19 @@ var solAPI = (function() {
       });
     })
     .catch(function() { return { module: null, questions: [] }; });
+
+    var timeout = new Promise(function(resolve) {
+      setTimeout(function() {
+        resolve({ module: null, questions: [], timedOut: true });
+      }, DSM_FETCH_TIMEOUT_MS);
+    });
+
+    return Promise.race([fetchChain, timeout]).then(function(result) {
+      if (result && result.timedOut) {
+        console.warn('[solAPI] DSM fetch timed out after ' + DSM_FETCH_TIMEOUT_MS + 'ms; falling through to onSkip');
+      }
+      return result;
+    });
   }
 
   // Create a DSM attempt record
