@@ -202,6 +202,19 @@ tr:hover td{background:#f8fafc}
 .gb-red     { background: #fee2e2; color: #991b1b; font-weight: 700; }
 .gb-empty   { color: #cbd5e1; }
 
+/* Module Releases */
+.release-panel { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.release-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+.release-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.release-btn { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; font-size: .85rem; font-weight: 600; transition: all .15s; user-select: none; }
+.release-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+.release-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+.release-btn.open { background: #dcfce7; border-color: #16a34a; color: #166534; }
+.release-btn.locked { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+.release-btn .rb-icon { font-size: 1rem; }
+.release-btn .rb-label { flex: 1; text-align: left; margin-left: 8px; }
+.release-btn .rb-state { font-size: .7rem; opacity: .7; }
+
 /* Live Pulse status pills */
 .pulse-active  { color:#16a34a; font-weight:700; }
 .pulse-stalled { color:#ca8a04; font-weight:700; }
@@ -255,6 +268,17 @@ tr:hover td{background:#f8fafc}
 
   <!-- OVERVIEW TAB -->
   <div class="panel active" id="tab-overview">
+    <!-- Module Release Controls -->
+    <div class="release-panel">
+      <div class="release-header">
+        <div>
+          <h3 style="margin:0;font-size:1rem">Module Access</h3>
+          <div style="font-size:.78rem;color:#64748b;margin-top:2px">Click to lock or unlock student access. Locked modules show "Not yet open" to students.</div>
+        </div>
+        <div id="release-status" style="font-size:.75rem;color:#94a3b8"></div>
+      </div>
+      <div class="release-grid" id="release-grid"></div>
+    </div>
     <div class="stats" id="overview-stats"></div>
 
     <!-- Exam Date Setting -->
@@ -616,6 +640,8 @@ var classLabelMap = {};
 
   await loadAllData();
   loadExamDate();
+  loadReleaseStates();
+  startReleaseAutoRefresh();
 })();
 
 /* ══════════════════════════════════════════════
@@ -1777,6 +1803,70 @@ function exportGradebookCSV() {
   a.download = 'gradebook-' + ((cls && cls.code) || 'class') + '-' + new Date().toISOString().slice(0, 10) + '.csv';
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+/* ══════════════════════════════════════════════
+   MODULE RELEASES (lock/unlock controls)
+   ══════════════════════════════════════════════ */
+var RELEASE_MODULES = ['unit-1','unit-2','unit-3','unit-4','unit-5','unit-6','unit-7','unit-8','practice-test'];
+var releaseStateCache = {};
+var releaseRefreshInterval = null;
+
+function moduleLabel(key) {
+  if (key === 'practice-test') return 'Practice Test';
+  var m = key.match(/^unit-(\d+)$/);
+  return m ? ('Unit ' + m[1]) : key;
+}
+
+async function loadReleaseStates() {
+  var { data, error } = await sb.from('module_releases').select('module_key,unlocked,unlocked_at');
+  if (error) {
+    document.getElementById('release-status').textContent = 'Error: ' + error.message;
+    return;
+  }
+  releaseStateCache = {};
+  (data || []).forEach(function(r) { releaseStateCache[r.module_key] = r; });
+  renderReleaseGrid();
+  document.getElementById('release-status').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+function renderReleaseGrid() {
+  var grid = document.getElementById('release-grid');
+  if (!grid) return;
+  grid.innerHTML = RELEASE_MODULES.map(function(key) {
+    var row = releaseStateCache[key];
+    var open = row && row.unlocked === true;
+    var cls = open ? 'open' : 'locked';
+    var icon = open ? '\ud83d\udfe2' : '\ud83d\udd12';
+    var state = open ? 'Open' : 'Locked';
+    return '<button class="release-btn ' + cls + '" onclick="toggleRelease(\'' + key + '\', this)">'
+      + '<span class="rb-icon">' + icon + '</span>'
+      + '<span class="rb-label">' + esc(moduleLabel(key)) + '</span>'
+      + '<span class="rb-state">' + state + '</span>'
+      + '</button>';
+  }).join('');
+}
+
+async function toggleRelease(moduleKey, btn) {
+  if (btn) btn.disabled = true;
+  var current = releaseStateCache[moduleKey];
+  var newState = !(current && current.unlocked === true);
+  var { error } = await sb.from('module_releases').update({
+    unlocked: newState,
+    unlocked_at: newState ? new Date().toISOString() : null
+  }).eq('module_key', moduleKey);
+  if (error) {
+    showToast('Update failed: ' + error.message);
+    if (btn) btn.disabled = false;
+    return;
+  }
+  showToast((newState ? 'Opened' : 'Locked') + ' ' + moduleLabel(moduleKey));
+  await loadReleaseStates();
+}
+
+function startReleaseAutoRefresh() {
+  if (releaseRefreshInterval) return;
+  releaseRefreshInterval = setInterval(loadReleaseStates, 30000);
 }
 
 function showTab(id, el) {
