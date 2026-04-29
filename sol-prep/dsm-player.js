@@ -143,8 +143,6 @@ var DSMPlayer = (function() {
     html += '<button class="dsm-next-btn" id="dsm-next-btn" style="display:none" onclick="DSMPlayer.nextQuestion()">Next Question &rarr;</button>';
     html += '</div>';
 
-    html += '<div style="text-align:center;margin-top:16px"><button class="dsm-quit-btn" onclick="DSMPlayer.quit()">Quit Early (score: 0)</button></div>';
-
     container.innerHTML = html;
   }
 
@@ -464,6 +462,9 @@ var DSMPlayer = (function() {
   }
 
   // ── PUBLIC API ────────────────────────────────────────────────
+  // quit() exists in this module but is intentionally NOT exposed —
+  // students must complete mastery before proceeding. Restoring the
+  // quit option means re-adding it here.
   return {
     init: init,
     start: start,
@@ -471,7 +472,6 @@ var DSMPlayer = (function() {
     nextQuestion: nextQuestion,
     startNextRound: startNextRound,
     startFreshFullAttempt: startFreshFullAttempt,
-    quit: quit,
     isCompleted: function() { return completed; }
   };
 
