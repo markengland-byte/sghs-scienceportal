@@ -3194,6 +3194,11 @@ function submitFinalScore() {
     if (result) {
       __dzBtn.textContent = '\u2705 Score Sent!';
       showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
+      /* PRACTICE-RETAKE-IN-SESSION-LOCK */
+      practiceAlreadySubmitted = true;
+      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
+      var _rbtn = document.getElementById('dz-retake-btn');
+      if (_rbtn) _rbtn.style.display = 'none';
     } else {
       __dzBtn.textContent = '\u26A0 Save failed \u2014 retry?';
       __dzBtn.disabled = false;
@@ -3203,6 +3208,10 @@ function submitFinalScore() {
 
 /* ── RETAKE PRACTICE TEST ────────────────────────── */
 function retakePractice() {
+  if (practiceAlreadySubmitted) {
+    showToast('You\'ve already submitted this test. Talk to your teacher to retake.');
+    return;
+  }
   pracAnswered = 0;
   pracCorrect = 0;
   missedStds = {};
