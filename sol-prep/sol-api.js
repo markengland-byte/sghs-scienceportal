@@ -199,6 +199,19 @@ var solAPI = (function() {
     });
   }
 
+  // ── NAME NORMALIZATION ──────────────────────────────────────
+  // Canonicalize a student-entered name to a stable form so that
+  // "wade clevinger" / "WADE CLEVINGER" / "  Wade Clevinger  " all
+  // resolve to the same identity in the database. Without this, the
+  // honor-system flow creates a new gradebook row per capitalization
+  // variant. SSO eliminates this; until then, this is the patch.
+  function canonicalizeName(s) {
+    return (s || '').trim()
+      .replace(/\s+/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+  }
+
   // ── SUBMIT DATA ──────────────────────────────────────────────
   // Drop-in replacement for the old send() logic.
   // Receives the full payload with: student, module, action, lesson, etc.
@@ -703,6 +716,7 @@ var solAPI = (function() {
     clearProgress: clearProgress,
     flushProgress: flushProgress,
     pingProgress: pingProgress,
+    canonicalizeName: canonicalizeName,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
     hasPriorPracticeScore: hasPriorPracticeScore,

@@ -508,7 +508,9 @@ function startTest() {
     setTimeout(startTest, 500);
     return;
   }
-  studentName = document.getElementById('sname').value.trim();
+  /* canonicalizeName: */
+  var _rawName = document.getElementById('sname').value;
+  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(_rawName) : (_rawName || '').trim());
   startHeartbeat(typeof getModuleKey === 'function' ? getModuleKey() : 'practice-test', studentName);
   var codeInput = document.getElementById('scode').value.trim();
   if (!codeInput) {
