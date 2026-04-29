@@ -1694,7 +1694,16 @@ function renderGradebook() {
   // Unique students who have any score in this class
   var studentSet = {};
   rows.forEach(function(r) { if (r.student_name) studentSet[r.student_name] = true; });
-  var students = Object.keys(studentSet).sort(function(a,b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
+  // Sort by last name (last whitespace-separated token), tiebreak on full name.
+  function _lastName(s) {
+    var parts = (s || '').trim().split(/\s+/);
+    return (parts.length > 1 ? parts[parts.length - 1] : (s || '')).toLowerCase();
+  }
+  var students = Object.keys(studentSet).sort(function(a, b) {
+    var la = _lastName(a), lb = _lastName(b);
+    if (la !== lb) return la < lb ? -1 : 1;
+    return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+  });
   if (filterText) students = students.filter(function(s) { return s.toLowerCase().indexOf(filterText) >= 0; });
 
   // Assignment columns from scores with assignment_id set
