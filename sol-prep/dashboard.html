@@ -1793,6 +1793,7 @@ function showToast(msg) {
    ══════════════════════════════════════════════ */
 var dsmPreviewQuestions = [];
 var dsmPreviewStandard = '';
+var dsmPreviewStandardName = '';
 var dsmPreviewUnitNumber = 0;
 
 var STD_UNIT_MAP = {
@@ -1907,6 +1908,7 @@ async function generateDSM() {
 
     dsmPreviewQuestions = data.questions;
     dsmPreviewStandard = standard;
+    dsmPreviewStandardName = data.standardName || '';
     dsmPreviewUnitNumber = STD_UNIT_MAP[standard] || 0;
 
     renderDSMPreview();
@@ -2014,9 +2016,13 @@ async function saveDSM() {
 
   try {
     // Create the module
+    var titleStr = dsmPreviewStandardName
+      ? (dsmPreviewStandard + ' — ' + dsmPreviewStandardName)
+      : dsmPreviewStandard;
     var { data: modData, error: modErr } = await sb.from('dsm_modules').insert({
       standard: dsmPreviewStandard,
       unit_number: dsmPreviewUnitNumber,
+      title: titleStr,
       question_count: dsmPreviewQuestions.length,
       status: 'published',
       created_by: teacher.id
