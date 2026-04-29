@@ -24,6 +24,7 @@ var solAPI = (function() {
   var _className = '';
   var _teacherName = '';
   var _examDate = null;
+  var _allowRetakes = true;
 
   // SSO session state (null when student is using legacy name-modal flow).
   var _session = null;
@@ -179,7 +180,7 @@ var solAPI = (function() {
   function validateCode(code) {
     code = code.trim().toUpperCase();
     return _rest('GET', 'classes', {
-      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name,exam_date'
+      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name,exam_date,allow_retakes'
     })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
@@ -190,7 +191,8 @@ var solAPI = (function() {
       _className = c.label;
       _teacherName = c.teacher_name;
       _examDate = c.exam_date || null;
-      return { valid: true, teacher: c.teacher_name, label: c.label, examDate: c.exam_date };
+      _allowRetakes = (c.allow_retakes !== false);
+      return { valid: true, teacher: c.teacher_name, label: c.label, examDate: c.exam_date, allowRetakes: _allowRetakes };
     })
     .catch(function() {
       return { valid: false };
@@ -405,6 +407,7 @@ var solAPI = (function() {
         _className = data.label;
         _teacherName = data.teacher;
         _examDate = data.examDate || null;
+        _allowRetakes = (data.allowRetakes !== false);
         // Class restored — kick off any buffered offline writes.
         // Fire-and-forget; failures stay in the buffer for next reload.
         setTimeout(function() { _drainBuffer(); }, 0);
@@ -420,7 +423,8 @@ var solAPI = (function() {
       code: _classCode,
       label: _className,
       teacher: _teacherName,
-      examDate: _examDate
+      examDate: _examDate,
+      allowRetakes: _allowRetakes
     }));
   }
 
@@ -430,7 +434,29 @@ var solAPI = (function() {
     _className = '';
     _teacherName = '';
     _examDate = null;
+    _allowRetakes = true;
     localStorage.removeItem('sol_class');
+  }
+
+  // ── PRIOR PRACTICE SCORE LOOKUP ────────────────────────────
+  // Returns Promise<{score, total, pct, created_at} | null>.
+  // Used by practice-test.html to enforce a one-attempt-per-student
+  // policy when the class has allow_retakes=false.
+  function hasPriorPracticeScore(studentName, assignmentId) {
+    if (!_classId || !studentName) return Promise.resolve(null);
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent('SOL Prep \u2014 Practice Test Generator');
+    if (assignmentId) {
+      q += '&assignment_id=eq.' + encodeURIComponent(assignmentId);
+    } else {
+      q += '&assignment_id=is.null';
+    }
+    q += '&select=score,total,pct,created_at&order=created_at.desc&limit=1';
+    return _rest('GET', 'scores', { query: q })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(rows) { return (rows && rows[0]) || null; })
+      .catch(function() { return null; });
   }
 
   // ── DSM (Dynamic Study Modules) ───────────────────────────────
@@ -622,7 +648,10 @@ var solAPI = (function() {
     saveProgress: saveProgress,
     getProgress: getProgress,
     clearProgress: clearProgress,
-    flushProgress: flushProgress
+    flushProgress: flushProgress,
+    // Practice-test retake policy
+    getAllowRetakes: function() { return _allowRetakes; },
+    hasPriorPracticeScore: hasPriorPracticeScore
   };
 
 })();

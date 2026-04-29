@@ -489,29 +489,61 @@ function startTest() {
     document.getElementById('code-err').style.display = 'block';
     return;
   }
-  // Check local + remote for in-progress test before regenerating.
-  var savedRaw = localStorage.getItem(getLocalKey());
-  var localSnap = savedRaw ? JSON.parse(savedRaw) : null;
-  if (localSnap && localSnap.studentName !== studentName) localSnap = null;
-  var remoteP = solAPI.getProgress
-    ? solAPI.getProgress(getModuleKey(), studentName)
+  // Retake policy: when the class has allow_retakes=false, block any
+  // student who already submitted a practice-test score in this class.
+  var retakePolicy = solAPI.getAllowRetakes ? solAPI.getAllowRetakes() : true;
+  var priorP = (!retakePolicy && solAPI.hasPriorPracticeScore)
+    ? solAPI.hasPriorPracticeScore(studentName, assignmentId || null)
     : Promise.resolve(null);
-  remoteP.then(function(remote) {
-    var remoteSnap = remote ? remote.progress_data : null;
-    if (remoteSnap && remoteSnap.studentName !== studentName) remoteSnap = null;
-    var chosen = null;
-    if (remoteSnap && localSnap) {
-      var remoteAt = new Date(remote.updated_at).getTime();
-      var localAt = localSnap.savedAt || 0;
-      chosen = (remoteAt > localAt + 1000) ? remoteSnap : localSnap;
-    } else {
-      chosen = remoteSnap || localSnap;
-    }
-    if (chosen && chosen.testQuestions && chosen.testQuestions.length && chosen.answered > 0) {
-      restoreFromSnapshot(chosen);
+
+  priorP.then(function(prior) {
+    if (prior) {
+      // Already submitted — show the previous score and refuse to start.
+      document.getElementById('name-modal').style.display = 'none';
+      var section = document.getElementById('results-section');
+      var header = document.getElementById('results-header');
+      header.className = 'results-header dz-box yellow';
+      document.getElementById('res-score').textContent = prior.score + '/' + prior.total;
+      document.getElementById('res-pct').textContent = (prior.pct || 0) + '%';
+      document.getElementById('res-msg').textContent =
+        'You have already submitted this practice test. Talk to your teacher if you need to retake.';
+      // Hide the "Take Another Test" button so they can't retry.
+      var newBtn = document.querySelector('button[onclick="newTest()"]');
+      if (newBtn) newBtn.style.display = 'none';
+      // Hide submit + progress bars too.
+      var submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) submitBtn.style.display = 'none';
+      var progBar = document.getElementById('prog-bar');
+      if (progBar) progBar.style.display = 'none';
+      section.style.display = 'block';
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
-    actuallyGenerateTest();
+
+    // Check local + remote for in-progress test before regenerating.
+    var savedRaw = localStorage.getItem(getLocalKey());
+    var localSnap = savedRaw ? JSON.parse(savedRaw) : null;
+    if (localSnap && localSnap.studentName !== studentName) localSnap = null;
+    var remoteP = solAPI.getProgress
+      ? solAPI.getProgress(getModuleKey(), studentName)
+      : Promise.resolve(null);
+    remoteP.then(function(remote) {
+      var remoteSnap = remote ? remote.progress_data : null;
+      if (remoteSnap && remoteSnap.studentName !== studentName) remoteSnap = null;
+      var chosen = null;
+      if (remoteSnap && localSnap) {
+        var remoteAt = new Date(remote.updated_at).getTime();
+        var localAt = localSnap.savedAt || 0;
+        chosen = (remoteAt > localAt + 1000) ? remoteSnap : localSnap;
+      } else {
+        chosen = remoteSnap || localSnap;
+      }
+      if (chosen && chosen.testQuestions && chosen.testQuestions.length && chosen.answered > 0) {
+        restoreFromSnapshot(chosen);
+        return;
+      }
+      actuallyGenerateTest();
+    });
   });
 }
 
@@ -851,6 +883,12 @@ function showResults() {
   localStorage.setItem('sol_practice_count', testNum);
   localStorage.setItem('sol_practice_last_score', correct + '/' + testQuestions.length);
   localStorage.setItem('sol_practice_last_pct', pct);
+
+  // If retakes are disabled, hide the "Generate New Test" button.
+  if (solAPI.getAllowRetakes && !solAPI.getAllowRetakes()) {
+    var newBtn = document.querySelector('button[onclick="newTest()"]');
+    if (newBtn) newBtn.style.display = 'none';
+  }
 
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
