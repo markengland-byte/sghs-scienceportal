@@ -2213,6 +2213,40 @@ function initMeta() {
   }
 }
 
+/* ── RETAKE-LOCK: practice-test one-attempt block ─── */
+var practiceAlreadySubmitted = false;
+var priorPracticeScore = null;
+
+function checkPracticeRetakeLock() {
+  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
+  if (!studentName || !solAPI.hasPriorScore) return;
+  solAPI.hasPriorScore(studentName, 'SOL Prep \u2014 Unit 1: Scientific Investigation', 'Practice Test')
+    .then(function(prior) {
+      if (!prior) return;
+      practiceAlreadySubmitted = true;
+      priorPracticeScore = prior;
+      applyPracticeLockUI();
+    });
+}
+
+function applyPracticeLockUI() {
+  if (!practiceAlreadySubmitted || !priorPracticeScore) return;
+  var p = priorPracticeScore;
+  var locked = document.getElementById('practice-test-locked');
+  if (locked) {
+    locked.innerHTML =
+      '<div class="practice-locked-icon">\u2713</div>'
+      + '<div class="practice-locked-title">Practice Test Already Submitted</div>'
+      + '<div class="practice-locked-sub">Your score: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). Talk to your teacher if you need to retake.</div>';
+    locked.style.display = '';
+  }
+  var box = document.getElementById('sol-practice-box');
+  if (box) box.style.display = 'none';
+  var rb = document.getElementById('dz-retake-btn');
+  if (rb) rb.style.display = 'none';
+  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(11);
+}
+
 /* ── SAVE / RESTORE PROGRESS ─────────────────────── */
 function saveProgress() {
   var gateObj = {};
@@ -2407,15 +2441,19 @@ function restoreProgress(data) {
         onComplete: function() {
           unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
           document.getElementById('practice-locked').style.display = 'none';
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          if (!practiceAlreadySubmitted) {
+            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          } else { applyPracticeLockUI(); }
           saveProgress();
         },
         onSkip: function() {
           unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
           document.getElementById('practice-locked').style.display = 'none';
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          if (!practiceAlreadySubmitted) {
+            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+          } else { applyPracticeLockUI(); }
         }
       });
     }
@@ -2513,6 +2551,7 @@ function startUnit() {
 
 function proceedStart(nameInput) {
   studentName = nameInput;
+  checkPracticeRetakeLock();
 
   // Check local + remote progress, prefer whichever is newer.
   var saved = localStorage.getItem('sol_unit1_progress');
@@ -2557,6 +2596,7 @@ var unlockedPanels = new Set([0]); // panel 0 always accessible
 var stepNames = ['SOL Focus','Hypotheses & Variables','Planning Investigations','Data Tables & Graphs','Conclusions & Evidence','Scientific Models','Evaluating Sources','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
 
 function goTo(n) {
+  if (n === 10 && practiceAlreadySubmitted) applyPracticeLockUI();
   // Block navigation to locked panels (unless going backward)
   if (n > currentPanel && !unlockedPanels.has(n)) {
     showToast('Complete the questions on this page first!');
@@ -2815,15 +2855,19 @@ function gradeVocab() {
       onComplete: function() {
         unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
         document.getElementById('practice-locked').style.display = 'none';
-        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        if (!practiceAlreadySubmitted) {
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        } else { applyPracticeLockUI(); }
         saveProgress();
       },
       onSkip: function() {
         unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
         document.getElementById('practice-locked').style.display = 'none';
-        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        if (!practiceAlreadySubmitted) {
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        } else { applyPracticeLockUI(); }
       }
     });
   } else {
@@ -3203,15 +3247,19 @@ document.addEventListener('DOMContentLoaded', function() {
       onComplete: function() {
         unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
         document.getElementById('practice-locked').style.display = 'none';
-        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        if (!practiceAlreadySubmitted) {
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        } else { applyPracticeLockUI(); }
         saveProgress();
       },
       onSkip: function() {
         unlockedPanels.add(9); unlockedPanels.add(10); unlockedPanels.add(11);
         document.getElementById('practice-locked').style.display = 'none';
-        var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-        var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        if (!practiceAlreadySubmitted) {
+          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
+          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
+        } else { applyPracticeLockUI(); }
       }
     });
   }

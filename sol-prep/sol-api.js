@@ -442,6 +442,21 @@ var solAPI = (function() {
   // Returns Promise<{score, total, pct, created_at} | null>.
   // Used by practice-test.html to enforce a one-attempt-per-student
   // policy when the class has allow_retakes=false.
+  // Generic helper: most recent score for any (module, lesson) combo.
+  // Returns Promise<{score, total, pct, created_at} | null>.
+  function hasPriorScore(studentName, module, lesson) {
+    if (!_classId || !studentName || !module) return Promise.resolve(null);
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent(module);
+    if (lesson) q += '&lesson=eq.' + encodeURIComponent(lesson);
+    q += '&select=score,total,pct,created_at&order=created_at.desc&limit=1';
+    return _rest('GET', 'scores', { query: q })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(rows) { return (rows && rows[0]) || null; })
+      .catch(function() { return null; });
+  }
+
   function hasPriorPracticeScore(studentName, assignmentId) {
     if (!_classId || !studentName) return Promise.resolve(null);
     var q = 'class_id=eq.' + encodeURIComponent(_classId)
@@ -651,7 +666,8 @@ var solAPI = (function() {
     flushProgress: flushProgress,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
-    hasPriorPracticeScore: hasPriorPracticeScore
+    hasPriorPracticeScore: hasPriorPracticeScore,
+    hasPriorScore: hasPriorScore
   };
 
 })();
