@@ -135,8 +135,11 @@ var solAPI = (function() {
   // _postBestEffort: high-frequency non-critical writes (activity, beacon).
   //   Validates and logs, no retry, never blocks downstream code.
   function _postWithRetry(table, body, label) {
+    // Prefer: return=representation makes RLS rejections surface as 401
+    // with an error body — return=minimal historically masked them as 201s
+    // (the "phantom-state" class of bug that silently lost student data).
     function attempt() {
-      return _rest('POST', table, { body: body, prefer: 'return=minimal' })
+      return _rest('POST', table, { body: body, prefer: 'return=representation' })
         .then(function(r) {
           if (!r.ok) {
             throw new Error('HTTP ' + r.status + ' ' + (r.statusText || ''));

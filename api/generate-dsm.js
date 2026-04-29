@@ -62,16 +62,39 @@ module.exports = async (req, res) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Verify token by querying teachers table with it
-    const teacherRes = await fetch(`${SUPABASE_URL}/rest/v1/teachers?select=id,is_admin`, {
+    // Verify the JWT by hitting Supabase Auth directly. An invalid/expired
+    // token returns non-2xx here — without this check, the teachers query
+    // below returns a {code, message} error object whose .length is undefined,
+    // which the old `length === 0` test treated as "found a teacher."
+    const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        'apikey': process.env.SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!userRes.ok) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+    const user = await userRes.json();
+    if (!user || !user.id) {
+      return res.status(401).json({ error: 'Invalid token payload' });
+    }
+
+    // Look up the teacher row scoped to this verified user. RLS restricts
+    // the response to (auth_user_id = auth.uid() OR is_admin()), so a
+    // non-teacher with a valid JWT gets an empty array.
+    const teacherRes = await fetch(`${SUPABASE_URL}/rest/v1/teachers?select=id,is_admin&auth_user_id=eq.${encodeURIComponent(user.id)}`, {
       headers: {
         'apikey': process.env.SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
+    if (!teacherRes.ok) {
+      return res.status(403).json({ error: 'Not a teacher' });
+    }
     const teachers = await teacherRes.json();
-    if (!teachers || teachers.length === 0) {
+    if (!Array.isArray(teachers) || teachers.length === 0) {
       return res.status(403).json({ error: 'Not a teacher' });
     }
   } catch (e) {
