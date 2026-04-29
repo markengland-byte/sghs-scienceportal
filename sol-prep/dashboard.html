@@ -189,6 +189,19 @@ tr:hover td{background:#f8fafc}
 .dsm-empty h3{font-size:1.1rem;color:#64748b;margin-bottom:8px}
 .dsm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 
+/* Gradebook */
+#gradebook-table { border-collapse: separate; border-spacing: 0; min-width: 100%; }
+#gradebook-table th, #gradebook-table td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; text-align: center; font-size: .82rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#gradebook-table thead th { background: #0f2240; color: #fff; font-weight: 700; position: sticky; top: 0; z-index: 2; }
+.gb-student-col { position: sticky; left: 0; background: #fff; text-align: left !important; z-index: 1; min-width: 180px; box-shadow: 2px 0 4px rgba(0,0,0,0.05); }
+#gradebook-table thead .gb-student-col { background: #0f2240; color: #fff; z-index: 3; box-shadow: 2px 0 4px rgba(0,0,0,0.2); }
+#gradebook-table tbody tr:nth-child(even) .gb-student-col { background: #f8fafc; }
+#gradebook-table tbody tr:hover td { background: #fffbeb; }
+.gb-green   { background: #dcfce7; color: #166534; font-weight: 700; }
+.gb-yellow  { background: #fef9c3; color: #854d0e; font-weight: 700; }
+.gb-red     { background: #fee2e2; color: #991b1b; font-weight: 700; }
+.gb-empty   { color: #cbd5e1; }
+
 /* Live Pulse status pills */
 .pulse-active  { color:#16a34a; font-weight:700; }
 .pulse-stalled { color:#ca8a04; font-weight:700; }
@@ -225,6 +238,7 @@ tr:hover td{background:#f8fafc}
 <!-- TABS -->
 <div class="tabs" id="tab-bar" style="display:none">
   <div class="tab active" onclick="showTab('overview',this)">Overview</div>
+  <div class="tab" onclick="showTab('gradebook',this)">Gradebook</div>
   <div class="tab" onclick="showTab('scores',this)">Scores</div>
   <div class="tab" onclick="showTab('questions',this)">Question Detail</div>
   <div class="tab" onclick="showTab('checkpoints',this)">Checkpoints</div>
@@ -257,6 +271,28 @@ tr:hover td{background:#f8fafc}
         <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.overview=this.value;currentPages.overview=1;renderOverview()">
       </div>
       <table id="overview-table"><thead><tr></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- GRADEBOOK TAB -->
+  <div class="panel" id="tab-gradebook">
+    <div class="tbl-wrap" id="gradebook-wrap">
+      <div class="tbl-header" style="flex-wrap:wrap;gap:8px;align-items:center">
+        <h3>Gradebook <span style="color:#94a3b8;font-size:.78rem;font-weight:400">— students × assessments</span></h3>
+        <input class="filter" type="text" id="gradebook-filter" placeholder="Filter by student..." oninput="renderGradebook()">
+        <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#475569;cursor:pointer;user-select:none">
+          <input type="checkbox" id="gradebook-show-all" onchange="renderGradebook()">
+          Show pretests + mastery as separate columns
+        </label>
+        <button class="btn-export" onclick="exportGradebookCSV()">Export CSV</button>
+      </div>
+      <div id="gradebook-table-wrap" style="overflow-x:auto;max-width:100%">
+        <table id="gradebook-table"><thead></thead><tbody></tbody></table>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:.78rem;color:#64748b;line-height:1.5">
+        <strong style="color:#0f2240">Cell colors:</strong>
+        🟢 ≥80% · 🟡 60–79% · 🔴 &lt;60%   ·   <strong>★</strong> = Mastery completed   ·   — = no submission yet
+      </div>
     </div>
   </div>
 
@@ -1583,12 +1619,163 @@ function stopPulseAutoRefresh() {
   if (pulseInterval) { clearInterval(pulseInterval); pulseInterval = null; }
 }
 
+/* ══════════════════════════════════════════════
+   GRADEBOOK TAB
+   ══════════════════════════════════════════════ */
+var GRADEBOOK_UNITS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+// Detect a unit number from a `module` string like 'SOL Prep — Unit 3: Cells'.
+function _gbUnitFromModule(module) {
+  if (!module) return null;
+  var m = String(module).match(/Unit\s+(\d+)/i);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function _gbColor(pct) {
+  if (pct == null || isNaN(pct)) return '';
+  if (pct >= 80) return 'gb-green';
+  if (pct >= 60) return 'gb-yellow';
+  return 'gb-red';
+}
+
+// Build the assignment columns from any score row that has assignment_id set.
+// Title = the lesson field (the assignment's title is captured there at submit
+// time per practice-test.html); fallback to assignment_id if missing.
+function _gbAssignmentColumns(rows) {
+  var byId = {};
+  rows.forEach(function(r) {
+    if (!r.assignment_id) return;
+    if (!byId[r.assignment_id]) byId[r.assignment_id] = { id: r.assignment_id, title: r.lesson || r.assignment_id, latest: r.created_at };
+    if (r.created_at > byId[r.assignment_id].latest) byId[r.assignment_id].latest = r.created_at;
+  });
+  return Object.values(byId).sort(function(a,b) { return (a.latest > b.latest) ? -1 : (a.latest < b.latest ? 1 : 0); });
+}
+
+// For one student, find the latest score matching (module-contains-Unit-N, lesson).
+function _gbLatestForUnit(studentRows, unitNum, lessonName) {
+  var match = null;
+  studentRows.forEach(function(r) {
+    if (_gbUnitFromModule(r.module) !== unitNum) return;
+    if (r.lesson !== lessonName) return;
+    if (!match || r.created_at > match.created_at) match = r;
+  });
+  return match;
+}
+
+// For one student, find the latest score for a given assignment_id.
+function _gbLatestForAssignment(studentRows, assignmentId) {
+  var match = null;
+  studentRows.forEach(function(r) {
+    if (r.assignment_id !== assignmentId) return;
+    if (!match || r.created_at > match.created_at) match = r;
+  });
+  return match;
+}
+
+function _gbCell(row, label) {
+  if (!row) return '<td class="gb-empty">—</td>';
+  var pct = Number(row.pct);
+  var cls = _gbColor(pct);
+  var text = (label || '') + (isNaN(pct) ? '?' : pct + '%');
+  return '<td class="' + cls + '" title="' + esc(row.score + '/' + row.total + ' · ' + formatTimestamp(row.created_at)) + '">' + text + '</td>';
+}
+
+function renderGradebook() {
+  if (!selectedClassId) {
+    document.querySelector('#gradebook-table thead').innerHTML = '';
+    document.querySelector('#gradebook-table tbody').innerHTML = '<tr><td style="text-align:center;color:#94a3b8;padding:30px">Select a class above.</td></tr>';
+    return;
+  }
+  var rows = (DATA.scores || []).filter(function(r) { return r.class_id === selectedClassId; });
+  var filterText = (document.getElementById('gradebook-filter').value || '').toLowerCase();
+  var showAll = document.getElementById('gradebook-show-all').checked;
+
+  // Unique students who have any score in this class
+  var studentSet = {};
+  rows.forEach(function(r) { if (r.student_name) studentSet[r.student_name] = true; });
+  var students = Object.keys(studentSet).sort(function(a,b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
+  if (filterText) students = students.filter(function(s) { return s.toLowerCase().indexOf(filterText) >= 0; });
+
+  // Assignment columns from scores with assignment_id set
+  var assignments = _gbAssignmentColumns(rows);
+
+  // Build column list
+  var cols = [];
+  GRADEBOOK_UNITS.forEach(function(u) {
+    cols.push({ kind: 'unit-practice', unit: u, label: 'U' + u + ' Practice' });
+    if (showAll) {
+      cols.push({ kind: 'unit-pretest', unit: u, label: 'U' + u + ' Pretest' });
+      cols.push({ kind: 'unit-mastery', unit: u, label: 'U' + u + ' Mastery' });
+    }
+  });
+  assignments.forEach(function(a) {
+    cols.push({ kind: 'assignment', id: a.id, label: a.title });
+  });
+
+  // Build header — sticky student column
+  var thead = '<tr><th class="gb-student-col">Student</th>';
+  cols.forEach(function(c) {
+    thead += '<th title="' + esc(c.label) + '">' + esc(c.label) + '</th>';
+  });
+  thead += '</tr>';
+
+  var tbody = students.map(function(s) {
+    var sRows = rows.filter(function(r) { return r.student_name === s; });
+    var html = '<tr><td class="gb-student-col"><strong>' + esc(s) + '</strong></td>';
+    cols.forEach(function(c) {
+      if (c.kind === 'unit-practice') {
+        var p = _gbLatestForUnit(sRows, c.unit, 'Practice Test');
+        var m = _gbLatestForUnit(sRows, c.unit, 'Mastery Module');
+        var prefix = (m && Number(m.pct) >= 100) ? '★ ' : '';
+        html += _gbCell(p, prefix);
+      } else if (c.kind === 'unit-pretest') {
+        html += _gbCell(_gbLatestForUnit(sRows, c.unit, 'Pretest'));
+      } else if (c.kind === 'unit-mastery') {
+        var mm = _gbLatestForUnit(sRows, c.unit, 'Mastery Module');
+        if (!mm) { html += '<td class="gb-empty">—</td>'; }
+        else if (Number(mm.pct) >= 100) { html += '<td class="gb-green" title="' + esc(formatTimestamp(mm.created_at)) + '">★ done</td>'; }
+        else { html += '<td class="gb-red" title="quit">—</td>'; }
+      } else {
+        html += _gbCell(_gbLatestForAssignment(sRows, c.id));
+      }
+    });
+    html += '</tr>';
+    return html;
+  }).join('');
+
+  if (!students.length) tbody = '<tr><td colspan="' + (cols.length + 1) + '" style="text-align:center;color:#94a3b8;padding:30px">No matching students.</td></tr>';
+  document.querySelector('#gradebook-table thead').innerHTML = thead;
+  document.querySelector('#gradebook-table tbody').innerHTML = tbody;
+}
+
+function exportGradebookCSV() {
+  var table = document.getElementById('gradebook-table');
+  if (!table) return;
+  var lines = [];
+  table.querySelectorAll('tr').forEach(function(tr) {
+    var cells = [];
+    tr.querySelectorAll('th,td').forEach(function(c) {
+      var text = c.textContent.replace(/"/g, '""').replace(/\n/g, ' ').trim();
+      cells.push('"' + text + '"');
+    });
+    lines.push(cells.join(','));
+  });
+  var blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  var cls = teacherClasses.find(function(c) { return c.id === selectedClassId; });
+  a.download = 'gradebook-' + ((cls && cls.code) || 'class') + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 function showTab(id, el) {
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('tab-' + id).classList.add('active');
   el.classList.add('active');
   if (id === 'pulse') startPulseAutoRefresh(); else stopPulseAutoRefresh();
+  if (id === 'gradebook') renderGradebook();
 }
 
 /* ══════════════════════════════════════════════
