@@ -188,6 +188,13 @@ tr:hover td{background:#f8fafc}
 .dsm-empty{text-align:center;padding:60px 20px;color:#94a3b8}
 .dsm-empty h3{font-size:1.1rem;color:#64748b;margin-bottom:8px}
 .dsm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+
+/* Live Pulse status pills */
+.pulse-active  { color:#16a34a; font-weight:700; }
+.pulse-stalled { color:#ca8a04; font-weight:700; }
+.pulse-idle    { color:#dc2626; font-weight:700; }
+.pulse-done    { color:#0b8f8c; font-weight:700; }
+#pulse-table th, #pulse-table td { padding: 10px 14px; }
 </style>
 </head>
 <body>
@@ -222,6 +229,7 @@ tr:hover td{background:#f8fafc}
   <div class="tab" onclick="showTab('questions',this)">Question Detail</div>
   <div class="tab" onclick="showTab('checkpoints',this)">Checkpoints</div>
   <div class="tab" onclick="showTab('activity',this)">Activity / Time</div>
+  <div class="tab" onclick="showTab('pulse',this)">Live Pulse</div>
   <div class="tab" onclick="showTab('analytics',this)">Analytics</div>
   <div class="tab" onclick="showTab('mastery',this)">Mastery Modules</div>
   <div class="tab-sep" id="admin-tab-sep" style="display:none"></div>
@@ -306,6 +314,37 @@ tr:hover td{background:#f8fafc}
         <button class="btn-export" onclick="exportCSV('activity')">Export CSV</button>
       </div>
       <table id="activity-table"><thead><tr><th>Time</th><th>Student</th><th>Class</th><th>Module</th><th>Lesson</th><th>Event</th><th>Duration</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- LIVE PULSE TAB -->
+  <div class="panel" id="tab-pulse">
+    <div class="tbl-wrap">
+      <div class="tbl-header" style="align-items:center">
+        <h3>Live Pulse <span style="color:#94a3b8;font-size:.78rem;font-weight:400">— who's working right now (auto-refresh 30s)</span></h3>
+        <span id="pulse-meta" style="font-size:.75rem;color:#94a3b8;margin-left:auto"></span>
+        <button class="btn-export" onclick="loadPulse()">↻ Refresh</button>
+      </div>
+      <table id="pulse-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Unit</th>
+            <th>Step</th>
+            <th style="text-align:right">Idle</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:.78rem;color:#64748b;line-height:1.5">
+      <strong style="color:#0f2240">Status legend:</strong>
+      🟢 active (idle &lt; 3 min) ·
+      🟡 stalled (3–10 min) ·
+      🔴 way idle (&gt; 10 min) ·
+      ✓ done (on Results step) ·
+      ⚫ no activity today
     </div>
   </div>
 
@@ -1414,11 +1453,131 @@ function renderMostMissed() {
 /* ══════════════════════════════════════════════
    TAB SWITCHING
    ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   LIVE PULSE TAB
+   ══════════════════════════════════════════════ */
+var pulseInterval = null;
+var PULSE_REFRESH_MS = 30000;
+var PULSE_DAY_BOUNDARY_HOUR = 4;  // student "today" starts at 4am local
+var TOTAL_PANELS_PER_UNIT = 12;
+
+// Step names per unit (panel index 0-11). Used to render "Step 8/12 Mastery"
+// instead of just "Step 8/12". MVP: hand-curated; future could pull from
+// a /steps API.
+var UNIT_STEP_NAMES = {
+  '1': ['SOL Focus','Hypotheses & Variables','Planning Investigations','Data Tables & Graphs','Conclusions & Evidence','Scientific Models','Evaluating Sources','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  // Other units use generic step labels — extend later as needed.
+};
+
+function todayStartISO() {
+  var d = new Date();
+  if (d.getHours() < PULSE_DAY_BOUNDARY_HOUR) d.setDate(d.getDate() - 1);
+  d.setHours(PULSE_DAY_BOUNDARY_HOUR, 0, 0, 0);
+  return d.toISOString();
+}
+
+function fmtIdle(seconds) {
+  if (seconds == null) return '—';
+  if (seconds < 60) return seconds + 's';
+  var m = Math.floor(seconds / 60);
+  var s = seconds % 60;
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function pulseStatus(idleSec, panelIdx) {
+  if (panelIdx === 11) return { tag: '✓ done', cls: 'pulse-done' };
+  if (idleSec < 180) return { tag: '🟢 active', cls: 'pulse-active' };
+  if (idleSec < 600) return { tag: '🟡 stalled', cls: 'pulse-stalled' };
+  return { tag: '🔴 way idle', cls: 'pulse-idle' };
+}
+
+function unitFromModule(module) {
+  if (!module) return { num: '?', label: '?' };
+  var m = String(module).match(/Unit\s+(\d+)/i);
+  if (m) return { num: m[1], label: 'U' + m[1] };
+  if (/Practice Test Generator/i.test(module)) return { num: 'PT', label: 'Practice Test' };
+  return { num: '?', label: module.substring(0, 14) };
+}
+
+function stepLabel(unitNum, panelIdx) {
+  if (panelIdx == null) return '—';
+  var names = UNIT_STEP_NAMES[String(unitNum)];
+  var name = (names && names[panelIdx]) ? names[panelIdx] : '';
+  return (panelIdx + 1) + '/' + TOTAL_PANELS_PER_UNIT + (name ? ' ' + name : '');
+}
+
+async function loadPulse() {
+  var tbody = document.querySelector('#pulse-table tbody');
+  var meta = document.getElementById('pulse-meta');
+  if (!selectedClassId) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px">Select a class above.</td></tr>';
+    if (meta) meta.textContent = '';
+    return;
+  }
+  var since = todayStartISO();
+  var { data, error } = await sb
+    .from('quiz_progress')
+    .select('student_name,module,progress_data,updated_at')
+    .eq('class_id', selectedClassId)
+    .gte('updated_at', since)
+    .order('updated_at', { ascending: false });
+  if (error) {
+    tbody.innerHTML = '<tr><td colspan="5" style="color:#dc2626;padding:14px">Error loading: ' + esc(error.message) + '</td></tr>';
+    return;
+  }
+  // Dedupe by student_name (keep latest updated_at row per student).
+  var seen = {};
+  var rows = [];
+  (data || []).forEach(function(r) {
+    if (seen[r.student_name]) return;
+    seen[r.student_name] = true;
+    rows.push(r);
+  });
+  // Sort: active first, then idle ascending
+  var now = Date.now();
+  rows.forEach(function(r) {
+    r._idle = Math.floor((now - new Date(r.updated_at).getTime()) / 1000);
+    r._unit = unitFromModule(r.module);
+    r._panel = (r.progress_data && r.progress_data.currentPanel != null) ? r.progress_data.currentPanel : null;
+    r._status = pulseStatus(r._idle, r._panel);
+  });
+  rows.sort(function(a, b) {
+    var order = { 'pulse-active': 0, 'pulse-stalled': 1, 'pulse-idle': 2, 'pulse-done': 3 };
+    if (order[a._status.cls] !== order[b._status.cls]) return order[a._status.cls] - order[b._status.cls];
+    return a._idle - b._idle;
+  });
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px">No student activity today.</td></tr>';
+  } else {
+    tbody.innerHTML = rows.map(function(r) {
+      return '<tr>'
+        + '<td><strong>' + esc(r.student_name) + '</strong></td>'
+        + '<td>' + esc(r._unit.label) + '</td>'
+        + '<td>' + esc(stepLabel(r._unit.num, r._panel)) + '</td>'
+        + '<td style="text-align:right;font-variant-numeric:tabular-nums">' + fmtIdle(r._idle) + '</td>'
+        + '<td><span class="' + r._status.cls + '">' + r._status.tag + '</span></td>'
+        + '</tr>';
+    }).join('');
+  }
+  if (meta) meta.textContent = rows.length + ' student' + (rows.length === 1 ? '' : 's') + ' active today · last refresh ' + new Date().toLocaleTimeString();
+}
+
+function startPulseAutoRefresh() {
+  if (pulseInterval) return;
+  loadPulse();
+  pulseInterval = setInterval(loadPulse, PULSE_REFRESH_MS);
+}
+function stopPulseAutoRefresh() {
+  if (pulseInterval) { clearInterval(pulseInterval); pulseInterval = null; }
+}
+
 function showTab(id, el) {
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('tab-' + id).classList.add('active');
   el.classList.add('active');
+  if (id === 'pulse') startPulseAutoRefresh(); else stopPulseAutoRefresh();
 }
 
 /* ══════════════════════════════════════════════
