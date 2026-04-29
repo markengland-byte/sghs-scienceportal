@@ -178,8 +178,11 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     </div>
     <div class="modal-body">
       <div class="f-group">
-        <label for="sname">Full Name (First Last)</label>
-        <input type="text" id="sname" placeholder="e.g. Jane Smith" autocomplete="name">
+        <label>Your Name</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="sfirstname" placeholder="First name" autocomplete="given-name" style="flex:1">
+          <input type="text" id="slastname"  placeholder="Last name"  autocomplete="family-name" style="flex:1">
+        </div>
       </div>
       <div class="f-group">
         <label for="scode">Class Code</label>
@@ -427,12 +430,14 @@ function restoreFromSnapshot(snap) {
 /* ── INIT ─── */
 (function init() {
   // Enable start button when name + period filled
-  var nameEl = document.getElementById('sname');
+  var firstEl = document.getElementById('sfirstname');
+  var lastEl = document.getElementById('slastname');
   var codeEl = document.getElementById('scode');
   function check() {
-    document.getElementById('start-btn').disabled = !(nameEl.value.trim() && codeEl.value.trim());
+    document.getElementById('start-btn').disabled = !(firstEl.value.trim() && lastEl.value.trim() && codeEl.value.trim());
   }
-  nameEl.addEventListener('input', check);
+  firstEl.addEventListener('input', check);
+  lastEl.addEventListener('input', check);
   codeEl.addEventListener('input', check);
 
   // Validate class code on blur
@@ -473,7 +478,7 @@ function restoreFromSnapshot(snap) {
   }
 
   // Enter key on name field
-  nameEl.addEventListener('keydown', function(e) {
+  lastEl.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !document.getElementById('start-btn').disabled) startTest();
   });
 
@@ -509,8 +514,10 @@ function startTest() {
     return;
   }
   /* canonicalizeName: */
-  var _rawName = document.getElementById('sname').value;
-  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(_rawName) : (_rawName || '').trim());
+  var _firstRaw = document.getElementById('sfirstname').value;
+  var _lastRaw = document.getElementById('slastname').value;
+  var _rawName = (_firstRaw || '').trim() + ' ' + (_lastRaw || '').trim();
+  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(_rawName) : _rawName.trim());
   startHeartbeat(typeof getModuleKey === 'function' ? getModuleKey() : 'practice-test', studentName);
   var codeInput = document.getElementById('scode').value.trim();
   if (!codeInput) {

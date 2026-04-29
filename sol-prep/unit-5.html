@@ -280,8 +280,11 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="nm-emoji">&#x1F9EC;</div>
     <h2 class="nm-title">Biology SOL Prep</h2>
     <p class="nm-sub">Unit 5: Genetics &amp; Inheritance. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
-    <label class="nm-label">YOUR FULL NAME</label>
-    <input class="nm-input" id="student-name" type="text" placeholder="First Last" autocomplete="name" style="margin-bottom:12px">
+    <label class="nm-label">YOUR NAME</label>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input class="nm-input" id="student-first-name" type="text" placeholder="First name" autocomplete="given-name" style="flex:1">
+      <input class="nm-input" id="student-last-name" type="text" placeholder="Last name" autocomplete="family-name" style="flex:1">
+    </div>
     <label class="nm-label">CLASS CODE</label>
     <input class="nm-input" id="class-code" type="text" placeholder="e.g. ENG-3B" autocomplete="off" style="margin-bottom:4px">
     <div id="class-info" style="display:none;font-size:.8rem;color:var(--green);margin-bottom:8px;padding:2px 0"></div>
@@ -1584,11 +1587,13 @@ function startFresh() {
 
 /* ── START ────────────────────────────────────────── */
 function startUnit() {
-  var nameInput = document.getElementById('student-name').value.trim();
-  if (nameInput.split(/\s+/).length < 2) {
+  var firstName = document.getElementById('student-first-name').value.trim();
+  var lastName = document.getElementById('student-last-name').value.trim();
+  if (!firstName || !lastName) {
     document.getElementById('name-err').style.display = 'block';
     return;
   }
+  var nameInput = firstName + ' ' + lastName;
   var codeInput = document.getElementById('class-code').value.trim();
   if (!codeInput) {
     document.getElementById('code-err').style.display = 'block';
@@ -2143,8 +2148,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (saved) {
     var data = JSON.parse(saved);
     if (data.studentName) {
-      var nameInput = document.getElementById('student-name');
-      nameInput.value = data.studentName;
+      var _parts = data.studentName.trim().split(/\s+/);
+      var _firstEl = document.getElementById('student-first-name');
+      var _lastEl = document.getElementById('student-last-name');
+      if (_firstEl) _firstEl.value = _parts[0] || '';
+      if (_lastEl)  _lastEl.value  = _parts.slice(1).join(' ');
       var modalTitle = document.querySelector('.nm-title');
       if (modalTitle) modalTitle.textContent = 'Welcome Back!';
       var modalSub = document.querySelector('.nm-sub');
