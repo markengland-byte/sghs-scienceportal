@@ -374,6 +374,24 @@ var solAPI = (function() {
     return _saveProgressNow(module, studentName, progressData, true);
   }
 
+  // Heartbeat: tiny PATCH that bumps quiz_progress.updated_at without
+  // resending progress_data. Lets the Live Pulse dashboard tell when
+  // a student is reading vs walked away — the row's updated_at is now
+  // a 'last seen working' signal as long as the page calls this on
+  // a timer while the tab is visible + recently-active.
+  // No-op if no row exists yet (student hasn't done a save).
+  function pingProgress(module, studentName) {
+    if (!_classId || !studentName || !module) return Promise.resolve();
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent(module);
+    return _rest('PATCH', 'quiz_progress', {
+      query: q,
+      body: { updated_at: new Date().toISOString() },
+      prefer: 'return=minimal'
+    }).catch(function() { /* swallow — heartbeats are best-effort */ });
+  }
+
   // ── BEACON (page unload) ─────────────────────────────────────
   // Uses fetch with keepalive (sendBeacon can't set custom headers).
   function beacon(payload) {
@@ -684,6 +702,7 @@ var solAPI = (function() {
     getProgress: getProgress,
     clearProgress: clearProgress,
     flushProgress: flushProgress,
+    pingProgress: pingProgress,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
     hasPriorPracticeScore: hasPriorPracticeScore,

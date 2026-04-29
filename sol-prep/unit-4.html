@@ -1259,6 +1259,39 @@ function applyPracticeLockUI() {
   if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(11);
 }
 
+/* ── HEARTBEAT-PRESENCE: live-pulse signal ─── */
+// Heartbeat keeps the Live Pulse dashboard accurate while a student
+// is reading without clicking. Bumps quiz_progress.updated_at every
+// 60s, but only when the tab is visible AND the user has moved/
+// clicked/typed in the last 90s — so a student who walked away
+// stops looking active after ~90s, while one reading attentively
+// stays green.
+var _hbInterval = null;
+var _hbLastActive = Date.now();
+var HEARTBEAT_MS = 60000;
+var HEARTBEAT_PRESENCE_WINDOW_MS = 90000;
+
+(function bindActivityListeners() {
+  var bump = function() { _hbLastActive = Date.now(); };
+  ['mousemove','keydown','click','touchstart','wheel','scroll'].forEach(function(ev) {
+    document.addEventListener(ev, bump, { passive: true });
+  });
+})();
+
+function startHeartbeat(module, studentName) {
+  if (_hbInterval || !solAPI.pingProgress) return;
+  if (!module || !studentName) return;
+  _hbInterval = setInterval(function() {
+    if (document.visibilityState !== 'visible') return;
+    if (Date.now() - _hbLastActive > HEARTBEAT_PRESENCE_WINDOW_MS) return;
+    solAPI.pingProgress(module, studentName);
+  }, HEARTBEAT_MS);
+}
+function stopHeartbeat() {
+  if (_hbInterval) { clearInterval(_hbInterval); _hbInterval = null; }
+}
+window.addEventListener('pagehide', stopHeartbeat);
+
 /* ── SAVE / RESTORE ──────────────────────────────── */
 function saveProgress() {
   if (!studentName) return;
@@ -1473,6 +1506,7 @@ function startUnit() {
 function proceedStart(nameInput) {
   studentName = nameInput;
   checkPracticeRetakeLock();
+  startHeartbeat('SOL Prep \u2014 Unit 4: Bacteria & Viruses', studentName);
 
   // Check local + remote progress, prefer whichever is newer.
   var saved = localStorage.getItem('sol_unit4_progress');

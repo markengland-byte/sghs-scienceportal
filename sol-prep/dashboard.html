@@ -1459,14 +1459,20 @@ function renderMostMissed() {
 var pulseInterval = null;
 var PULSE_REFRESH_MS = 30000;
 var PULSE_DAY_BOUNDARY_HOUR = 4;  // student "today" starts at 4am local
-var TOTAL_PANELS_PER_UNIT = 12;
 
-// Step names per unit (panel index 0-11). Used to render "Step 8/12 Mastery"
-// instead of just "Step 8/12". MVP: hand-curated; future could pull from
-// a /steps API.
+// Step names per unit, harvested from each unit-N.html's `stepNames` array.
+// Unit panel counts vary (Unit 1 has 12 steps; the others have 10–11).
+// "X / total" comes from each array's length, so adding a panel just means
+// appending to the right unit's array here.
 var UNIT_STEP_NAMES = {
   '1': ['SOL Focus','Hypotheses & Variables','Planning Investigations','Data Tables & Graphs','Conclusions & Evidence','Scientific Models','Evaluating Sources','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
-  // Other units use generic step labels — extend later as needed.
+  '2': ['SOL Focus','Water Chemistry','Macromolecules','Enzymes','Protein Synthesis','Photo. & Resp.','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '3': ['SOL Focus','Cell Theory','Organelles','Cell Cycle','Membrane & Transport','Specialization','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '4': ['SOL Focus','Viruses','Bacteria','Disease & Germ Theory','Vaccines & Antibiotics','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '5': ['SOL Focus','DNA Structure','Meiosis','Mendelian Genetics','Non-Mendelian','Genetic Engineering','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '6': ['SOL Focus','Taxonomy','Cladograms','Domains & Kingdoms','Eukarya Diversity','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '7': ['SOL Focus','Fossil & DNA Evidence','Variation & Selection','Adaptations & Speciation','Scientific Evidence','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'],
+  '8': ['SOL Focus','Populations','Energy & Cycles','Succession','Human Impact','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results']
 };
 
 function todayStartISO() {
@@ -1484,8 +1490,12 @@ function fmtIdle(seconds) {
   return m + ':' + (s < 10 ? '0' : '') + s;
 }
 
-function pulseStatus(idleSec, panelIdx) {
-  if (panelIdx === 11) return { tag: '✓ done', cls: 'pulse-done' };
+function pulseStatus(idleSec, panelIdx, unitNum) {
+  // "Done" = student is on the unit's last panel (Results), regardless
+  // of which unit they're in. Panel counts vary (Unit 1 = 12, others 10–11).
+  var names = UNIT_STEP_NAMES[String(unitNum)];
+  var lastIdx = names ? names.length - 1 : null;
+  if (lastIdx != null && panelIdx === lastIdx) return { tag: '✓ done', cls: 'pulse-done' };
   if (idleSec < 180) return { tag: '🟢 active', cls: 'pulse-active' };
   if (idleSec < 600) return { tag: '🟡 stalled', cls: 'pulse-stalled' };
   return { tag: '🔴 way idle', cls: 'pulse-idle' };
@@ -1502,8 +1512,9 @@ function unitFromModule(module) {
 function stepLabel(unitNum, panelIdx) {
   if (panelIdx == null) return '—';
   var names = UNIT_STEP_NAMES[String(unitNum)];
+  var total = (names && names.length) ? names.length : '?';
   var name = (names && names[panelIdx]) ? names[panelIdx] : '';
-  return (panelIdx + 1) + '/' + TOTAL_PANELS_PER_UNIT + (name ? ' ' + name : '');
+  return (panelIdx + 1) + '/' + total + (name ? ' ' + name : '');
 }
 
 async function loadPulse() {
@@ -1539,7 +1550,7 @@ async function loadPulse() {
     r._idle = Math.floor((now - new Date(r.updated_at).getTime()) / 1000);
     r._unit = unitFromModule(r.module);
     r._panel = (r.progress_data && r.progress_data.currentPanel != null) ? r.progress_data.currentPanel : null;
-    r._status = pulseStatus(r._idle, r._panel);
+    r._status = pulseStatus(r._idle, r._panel, r._unit.num);
   });
   rows.sort(function(a, b) {
     var order = { 'pulse-active': 0, 'pulse-stalled': 1, 'pulse-idle': 2, 'pulse-done': 3 };
