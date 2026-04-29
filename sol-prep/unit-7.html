@@ -1101,6 +1101,45 @@ function getAnswerText(opt) {
   return t.replace(/^[A-D]\s*/, '');
 }
 
+/* ── PRETEST-LOCK: pretest one-attempt block ─── */
+var pretestAlreadySubmitted = false;
+var priorPretestScore = null;
+
+function checkPretestLock() {
+  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
+  if (!studentName || !solAPI.hasPriorScore) return;
+  solAPI.hasPriorScore(studentName, '', 'Pretest')
+    .then(function(prior) {
+      if (!prior) return;
+      pretestAlreadySubmitted = true;
+      priorPretestScore = prior;
+      applyPretestLockUI();
+    });
+}
+
+function applyPretestLockUI() {
+  if (!pretestAlreadySubmitted || !priorPretestScore) return;
+  var p = priorPretestScore;
+  var p0 = document.getElementById('p0');
+  if (p0 && !document.getElementById('pretest-already-banner')) {
+    var banner = document.createElement('div');
+    banner.id = 'pretest-already-banner';
+    banner.style.cssText = 'background:#dcfce7;border:2px solid #16a34a;color:#166534;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
+    banner.innerHTML = '✓ Pretest already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). The pretest is a one-time diagnostic — you can continue to the lesson below.';
+    var lc = p0.querySelector('.lc');
+    if (lc) lc.insertBefore(banner, lc.firstChild);
+  }
+  document.querySelectorAll('#p0 .qq, #p0 .gate-q').forEach(function(qq) { qq.style.display = 'none'; });
+  if (typeof pretestSent !== 'undefined') pretestSent = true;
+  if (typeof gateAnswered !== 'undefined' && typeof gateRequired !== 'undefined') {
+    if (!gateAnswered[0]) gateAnswered[0] = new Set();
+    var req = gateRequired[0] || 5;
+    for (var i = 0; i < req; i++) gateAnswered[0].add('pretest-locked-' + i);
+  }
+  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(1);
+  if (typeof checkGate === 'function') checkGate(0);
+}
+
 /* ── RETAKE-LOCK: practice-test one-attempt block ─── */
 var practiceAlreadySubmitted = false;
 var priorPracticeScore = null;
@@ -1406,6 +1445,7 @@ function proceedStart(nameInput) {
   /* canonicalizeName: */
   studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(nameInput) : (nameInput || '').trim());
   checkPracticeRetakeLock();
+  checkPretestLock();
   startHeartbeat('', studentName);
 
   // Check local + remote progress, prefer whichever is newer.
@@ -1444,6 +1484,7 @@ var stepNames = ['SOL Focus','Fossil & DNA Evidence','Variation & Selection','Ad
 
 function goTo(n) {
   if (n === 10 && practiceAlreadySubmitted) applyPracticeLockUI();
+  if (n === 0 && pretestAlreadySubmitted) applyPretestLockUI();
   if (n > currentPanel && !unlockedPanels.has(n)) {
     showToast('Complete the questions on this page first!');
     return;
