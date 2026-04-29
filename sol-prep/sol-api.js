@@ -405,6 +405,25 @@ var solAPI = (function() {
     }).catch(function() { /* swallow — heartbeats are best-effort */ });
   }
 
+  // ── MODULE RELEASE STATE (teacher-controlled lockout) ────
+  // Returns Promise<bool>. True = students can use this module;
+  // false = show locked overlay. Defaults to TRUE on any failure
+  // (network error, missing row) so we don't accidentally lock the
+  // whole site if Supabase is down.
+  function isModuleUnlocked(moduleKey) {
+    if (!moduleKey) return Promise.resolve(true);
+    return _rest('GET', 'module_releases', {
+      query: 'module_key=eq.' + encodeURIComponent(moduleKey) + '&select=unlocked&limit=1'
+    })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(rows) {
+      // No row = treat as unlocked (safe default).
+      if (!rows || rows.length === 0) return true;
+      return rows[0].unlocked !== false;
+    })
+    .catch(function() { return true; });
+  }
+
   // ── BEACON (page unload) ─────────────────────────────────────
   // Uses fetch with keepalive (sendBeacon can't set custom headers).
   function beacon(payload) {
@@ -717,6 +736,7 @@ var solAPI = (function() {
     flushProgress: flushProgress,
     pingProgress: pingProgress,
     canonicalizeName: canonicalizeName,
+    isModuleUnlocked: isModuleUnlocked,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
     hasPriorPracticeScore: hasPriorPracticeScore,

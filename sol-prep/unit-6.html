@@ -1977,6 +1977,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 });
+/* MODULE-RELEASE-GATE */
+(function moduleReleaseGate() {
+  if (!window.solAPI || !solAPI.isModuleUnlocked) return;
+  solAPI.isModuleUnlocked('unit-6').then(function(open) {
+    if (open) return;
+    // Hide the regular UI — name modal, panels, top bar.
+    var modal = document.getElementById('name-modal');
+    if (modal) modal.style.display = 'none';
+    document.querySelectorAll('.panel, .top-bar, .main, .modal-overlay').forEach(function(el) {
+      el.style.display = 'none';
+    });
+    // Show full-page locked overlay.
+    if (document.getElementById('module-release-lock-overlay')) return;
+    var ov = document.createElement('div');
+    ov.id = 'module-release-lock-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#0f2240,#1e3a6e);color:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;font-family:Source Sans 3,sans-serif';
+    ov.innerHTML =
+      '<div style="font-size:5rem;margin-bottom:20px">\ud83d\udd12</div>' +
+      '<h1 style="font-family:Playfair Display,serif;font-size:2.4rem;font-weight:900;margin-bottom:14px;letter-spacing:-0.5px">Not Yet Open</h1>' +
+      '<p style="font-size:1.1rem;line-height:1.6;max-width:520px;color:rgba(255,255,255,0.78);margin-bottom:28px">This module isn\'t available yet. We open units in class so we can work through them together. See your teacher when it\'s time.</p>' +
+      '<a href="index.html" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-size:.9rem;font-weight:600">\u2190 Back to Portal</a>';
+    document.body.appendChild(ov);
+  });
+})();
 </script>
 </body>
 </html>
