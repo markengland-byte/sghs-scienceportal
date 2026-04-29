@@ -25,6 +25,7 @@ var solAPI = (function() {
   var _teacherName = '';
   var _examDate = null;
   var _allowRetakes = true;
+  var _masteryThreshold = 100;
 
   // SSO session state (null when student is using legacy name-modal flow).
   var _session = null;
@@ -180,7 +181,7 @@ var solAPI = (function() {
   function validateCode(code) {
     code = code.trim().toUpperCase();
     return _rest('GET', 'classes', {
-      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name,exam_date,allow_retakes'
+      query: 'code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&select=id,code,label,teacher_name,exam_date,allow_retakes,mastery_threshold'
     })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
@@ -192,7 +193,8 @@ var solAPI = (function() {
       _teacherName = c.teacher_name;
       _examDate = c.exam_date || null;
       _allowRetakes = (c.allow_retakes !== false);
-      return { valid: true, teacher: c.teacher_name, label: c.label, examDate: c.exam_date, allowRetakes: _allowRetakes };
+      _masteryThreshold = (c.mastery_threshold === 85 || c.mastery_threshold === 90) ? c.mastery_threshold : 100;
+      return { valid: true, teacher: c.teacher_name, label: c.label, examDate: c.exam_date, allowRetakes: _allowRetakes, masteryThreshold: _masteryThreshold };
     })
     .catch(function() {
       return { valid: false };
@@ -458,6 +460,7 @@ var solAPI = (function() {
         _teacherName = data.teacher;
         _examDate = data.examDate || null;
         _allowRetakes = (data.allowRetakes !== false);
+        _masteryThreshold = (data.masteryThreshold === 85 || data.masteryThreshold === 90) ? data.masteryThreshold : 100;
         // Class restored — kick off any buffered offline writes.
         // Fire-and-forget; failures stay in the buffer for next reload.
         setTimeout(function() { _drainBuffer(); }, 0);
@@ -474,7 +477,8 @@ var solAPI = (function() {
       label: _className,
       teacher: _teacherName,
       examDate: _examDate,
-      allowRetakes: _allowRetakes
+      allowRetakes: _allowRetakes,
+      masteryThreshold: _masteryThreshold
     }));
   }
 
@@ -485,6 +489,7 @@ var solAPI = (function() {
     _teacherName = '';
     _examDate = null;
     _allowRetakes = true;
+    _masteryThreshold = 100;
     localStorage.removeItem('sol_class');
   }
 
@@ -739,6 +744,7 @@ var solAPI = (function() {
     isModuleUnlocked: isModuleUnlocked,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
+    getMasteryThreshold: function() { return _masteryThreshold; },
     hasPriorPracticeScore: hasPriorPracticeScore,
     hasPriorScore: hasPriorScore
   };

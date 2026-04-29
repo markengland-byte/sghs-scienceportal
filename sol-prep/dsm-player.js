@@ -25,13 +25,17 @@ var DSMPlayer = (function() {
   var moduleId = null;     // dsm_modules.id
   var pool = [];           // current round's question indices
   var currentIdx = 0;      // position in pool
-  var round = 1;
+  var round = 1;           // 1=full attempt, 2=review missed, 3=full again, ...
+  var attemptNumber = 1;   // counts FULL attempts only (rounds 1, 3, 5, ...)
   var missed = [];         // indices missed this round
   var allMissed = [];      // { round, questionId, questionText } across all rounds
   var attemptId = null;
   var completed = false;
   var started = false;
   var totalAnswered = 0;
+  var bestAttemptScore = 0;       // best % achieved on any FULL attempt
+  var bestAttemptCorrect = 0;     // questions correct on the best full attempt
+  var lastFullAttemptMissed = 0;  // missed.length at end of most-recent FULL attempt
 
   // ── INIT ──────────────────────────────────────────────────────
   function init(opts) {
@@ -70,11 +74,15 @@ var DSMPlayer = (function() {
     if (started) return;
     started = true;
     round = 1;
+    attemptNumber = 1;
     missed = [];
     allMissed = [];
     totalAnswered = 0;
+    bestAttemptScore = 0;
+    bestAttemptCorrect = 0;
+    lastFullAttemptMissed = 0;
 
-    // Shuffle all questions for round 1
+    // Shuffle all questions for round 1 (full attempt)
     pool = shuffleArray(Array.from({ length: questions.length }, function(_, i) { return i; }));
     currentIdx = 0;
 
@@ -181,45 +189,126 @@ var DSMPlayer = (function() {
     currentIdx++;
 
     if (currentIdx >= pool.length) {
-      // Round complete
-      if (missed.length === 0) {
-        // All correct this round — mastery achieved!
-        complete();
+      // Round complete. Two cases:
+      //   - Full attempt (odd rounds: 1, 3, 5, ...) — check threshold
+      //   - Review of missed (even rounds: 2, 4, 6, ...) — show "now retake" prompt
+      var isFullAttempt = (round % 2) === 1;
+      if (isFullAttempt) {
+        var correct = pool.length - missed.length;
+        var pct = Math.round((correct / pool.length) * 100);
+        // Track best score across all full attempts.
+        if (pct > bestAttemptScore) {
+          bestAttemptScore = pct;
+          bestAttemptCorrect = correct;
+        }
+        lastFullAttemptMissed = missed.length;
+        var threshold = (typeof solAPI.getMasteryThreshold === 'function')
+          ? solAPI.getMasteryThreshold() : 100;
+        if (pct >= threshold) {
+          complete();
+          return;
+        }
+        // Below threshold — into review mode (Round 2 = missed only).
+        if (missed.length === 0) {
+          // Edge: somehow 0 missed but still below threshold (only possible
+          // if threshold>100, which the schema disallows). Fail-safe: complete.
+          complete();
+          return;
+        }
+        showFullAttemptReviewPrompt();
       } else {
-        // Start new round with missed questions
-        showRoundInterstitial();
+        // Even round — review of missed just finished.
+        // If they got all missed right, prompt them to retake the full quiz.
+        // If still missed some, give them another review pass.
+        if (missed.length === 0) {
+          showRetakeFullPrompt();
+        } else {
+          showRoundInterstitial();
+        }
       }
     } else {
       showQuestion();
     }
   }
 
-  // ── ROUND INTERSTITIAL ────────────────────────────────────────
+  // ── FULL-ATTEMPT REVIEW PROMPT (after odd round below threshold) ─
+  function showFullAttemptReviewPrompt() {
+    var container = document.getElementById(config.containerId);
+    var correct = pool.length - missed.length;
+    var pct = Math.round((correct / pool.length) * 100);
+    var threshold = (typeof solAPI.getMasteryThreshold === 'function')
+      ? solAPI.getMasteryThreshold() : 100;
+
+    var html = '<div class="dsm-interstitial">';
+    html += '<div class="dsm-inter-icon">📝</div>';
+    html += '<div class="dsm-inter-title">Attempt ' + attemptNumber + ' Complete</div>';
+    html += '<div class="dsm-inter-stat">' + correct + ' / ' + pool.length + ' correct (' + pct + '%)</div>';
+    html += '<div class="dsm-inter-msg">You need <strong>' + threshold + '%</strong> for mastery. Let\'s review the ones you missed before trying again.</div>';
+    html += '<div class="dsm-inter-sub">' + missed.length + ' question' + (missed.length !== 1 ? 's' : '') + ' to review.</div>';
+    html += '<button class="dsm-start-btn" onclick="DSMPlayer.startNextRound()">Begin Review &rarr;</button>';
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    if (typeof send === 'function') {
+      send({ action: 'activity', event: 'dsm_attempt_complete', lesson: 'Mastery Module',
+        metadata: JSON.stringify({ attempt: attemptNumber, correct: correct, total: pool.length, pct: pct, threshold: threshold }) });
+    }
+  }
+
+  // ── RETAKE-FULL PROMPT (after even round, all review correct) ───
+  function showRetakeFullPrompt() {
+    var container = document.getElementById(config.containerId);
+    var threshold = (typeof solAPI.getMasteryThreshold === 'function')
+      ? solAPI.getMasteryThreshold() : 100;
+
+    var html = '<div class="dsm-interstitial">';
+    html += '<div class="dsm-inter-icon">💪</div>';
+    html += '<div class="dsm-inter-title">Review Complete!</div>';
+    html += '<div class="dsm-inter-msg">Nice work on the review. Now try a fresh full attempt to demonstrate mastery.</div>';
+    html += '<div class="dsm-inter-sub">All ' + questions.length + ' questions, fresh shuffle. You need ' + threshold + '% to master.</div>';
+    html += '<button class="dsm-start-btn" onclick="DSMPlayer.startFreshFullAttempt()">Start Attempt ' + (attemptNumber + 1) + ' &rarr;</button>';
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    if (typeof send === 'function') {
+      send({ action: 'activity', event: 'dsm_review_complete', lesson: 'Mastery Module',
+        metadata: JSON.stringify({ attempt: attemptNumber, round: round }) });
+    }
+  }
+
+  // ── ROUND INTERSTITIAL (only fires mid-review when still missing some) ─
   function showRoundInterstitial() {
     var container = document.getElementById(config.containerId);
     var missedCount = missed.length;
 
     var html = '<div class="dsm-interstitial">';
-    html += '<div class="dsm-inter-icon">' + (round === 1 ? '📝' : '💪') + '</div>';
-    html += '<div class="dsm-inter-title">Round ' + round + ' Complete</div>';
-    html += '<div class="dsm-inter-stat">' + (pool.length - missedCount) + ' / ' + pool.length + ' correct</div>';
-    html += '<div class="dsm-inter-msg">' + missedCount + ' question' + (missedCount !== 1 ? 's' : '') + ' missed — they\'ll come back in Round ' + (round + 1) + '.</div>';
-    html += '<div class="dsm-inter-sub">Keep going! You need to get every question right in a single round to achieve mastery.</div>';
-    html += '<button class="dsm-start-btn" onclick="DSMPlayer.startNextRound()">Start Round ' + (round + 1) + ' &rarr;</button>';
+    html += '<div class="dsm-inter-icon">🔁</div>';
+    html += '<div class="dsm-inter-title">Keep Reviewing</div>';
+    html += '<div class="dsm-inter-stat">' + (pool.length - missedCount) + ' / ' + pool.length + ' correct in this review</div>';
+    html += '<div class="dsm-inter-msg">' + missedCount + ' question' + (missedCount !== 1 ? 's' : '') + ' to keep reviewing.</div>';
+    html += '<button class="dsm-start-btn" onclick="DSMPlayer.startNextRound()">Continue &rarr;</button>';
     html += '</div>';
 
     container.innerHTML = html;
-
-    // Log round
-    if (typeof send === 'function') {
-      send({ action: 'activity', event: 'dsm_round_complete', lesson: 'Mastery Module',
-        metadata: JSON.stringify({ round: round, missed: missedCount, total: pool.length }) });
-    }
   }
 
+  // Cycle missed (review). Round increments to next even number.
   function startNextRound() {
     round++;
     pool = shuffleArray(missed.slice());
+    missed = [];
+    currentIdx = 0;
+    showQuestion();
+  }
+
+  // Reshuffle ALL questions for a fresh full attempt. Round increments to
+  // next odd number; attemptNumber increments.
+  function startFreshFullAttempt() {
+    round++;
+    attemptNumber++;
+    pool = shuffleArray(Array.from({ length: questions.length }, function(_, i) { return i; }));
     missed = [];
     currentIdx = 0;
     showQuestion();
@@ -229,6 +318,23 @@ var DSMPlayer = (function() {
   function complete() {
     completed = true;
     localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
+
+    // Score for this completion = best full-attempt score so far. The
+    // student just hit threshold (or got 100% on a perfect attempt).
+    var fullPoolSize = questions.length;
+    var correct = bestAttemptCorrect;
+    var pct = bestAttemptScore;
+    // If complete() is called from a round 1 perfect attempt before
+    // bestAttemptScore is updated (race-safety), recompute from current state.
+    if (correct === 0 && missed.length < fullPoolSize) {
+      correct = fullPoolSize - lastFullAttemptMissed;
+      pct = Math.round((correct / fullPoolSize) * 100);
+    }
+    // Fallback if everything else is 0 (shouldn't happen): treat as 100%.
+    if (correct === 0 && missed.length === 0) {
+      correct = fullPoolSize;
+      pct = 100;
+    }
 
     // Update attempt
     if (attemptId) {
@@ -240,16 +346,16 @@ var DSMPlayer = (function() {
       });
     }
 
-    // Submit score (100%)
+    // Submit score
     if (typeof send === 'function') {
-      send({ action: 'score', lesson: 'Mastery Module', score: questions.length, total: questions.length, pct: 100 });
+      send({ action: 'score', lesson: 'Mastery Module', score: correct, total: fullPoolSize, pct: pct });
       send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
-        metadata: JSON.stringify({ rounds: round, totalMissed: allMissed.length }) });
+        metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
     }
 
     // Show completion screen
     var container = document.getElementById(config.containerId);
-    container.innerHTML = dsmCompleteScreenHTML();
+    container.innerHTML = dsmCompleteScreenHTML(correct, fullPoolSize, pct);
 
     // Unlock next panels
     if (config.onComplete) config.onComplete();
@@ -289,15 +395,17 @@ var DSMPlayer = (function() {
 
   // ── HTML TEMPLATES ────────────────────────────────────────────
   function dsmReadyHTML() {
+    var threshold = (typeof solAPI.getMasteryThreshold === 'function')
+      ? solAPI.getMasteryThreshold() : 100;
     return '<div class="dsm-ready">' +
       '<div class="dsm-ready-icon">🧠</div>' +
       '<div class="dsm-ready-title">Mastery Module</div>' +
       '<div class="dsm-ready-sub">' + questions.length + ' questions · ' + config.standard + '</div>' +
-      '<div class="dsm-ready-desc">Answer every question correctly to achieve mastery. Missed questions will cycle back until you get them all right in a single round.</div>' +
+      '<div class="dsm-ready-desc">Reach <strong>' + threshold + '%</strong> on a full attempt to achieve mastery. Below the threshold? Review the ones you missed, then try a fresh full attempt.</div>' +
       '<div class="dsm-ready-rules">' +
       '<div class="dsm-rule">✓ Correct answers advance automatically</div>' +
-      '<div class="dsm-rule">✗ Wrong answers show the explanation and cycle back</div>' +
-      '<div class="dsm-rule">🏆 100% in a round = Mastery achieved</div>' +
+      '<div class="dsm-rule">✗ Wrong answers show the explanation</div>' +
+      '<div class="dsm-rule">🏆 ' + threshold + '% on a full attempt = Mastery achieved</div>' +
       '</div>' +
       '<button class="dsm-start-btn" onclick="DSMPlayer.start()">Begin Mastery Module &rarr;</button>' +
       '</div>';
@@ -321,12 +429,19 @@ var DSMPlayer = (function() {
       '</div>';
   }
 
-  function dsmCompleteScreenHTML() {
+  function dsmCompleteScreenHTML(correct, total, pct) {
+    correct = (correct == null) ? questions.length : correct;
+    total = (total == null) ? questions.length : total;
+    pct = (pct == null) ? 100 : pct;
+    var perfect = (pct === 100);
+    var subtitle = perfect
+      ? (attemptNumber === 1 ? 'Perfect — first try!' : 'Took ' + attemptNumber + ' attempts, but you nailed it.')
+      : 'You hit the mastery threshold on attempt ' + attemptNumber + '.';
     return '<div class="dsm-complete-screen">' +
       '<div class="dsm-complete-icon">🎉</div>' +
       '<div class="dsm-complete-title">Mastery Achieved!</div>' +
-      '<div class="dsm-complete-stat">' + questions.length + '/' + questions.length + ' correct in Round ' + round + '</div>' +
-      '<div class="dsm-complete-sub">' + (round === 1 ? 'Perfect — first try!' : 'It took ' + round + ' rounds, but you got there!') + '</div>' +
+      '<div class="dsm-complete-stat">' + correct + '/' + total + ' correct (' + pct + '%)</div>' +
+      '<div class="dsm-complete-sub">' + subtitle + '</div>' +
       '<div class="dsm-complete-detail">' +
       (allMissed.length > 0 ? '<div style="margin-top:12px;font-size:.85rem;color:#64748b">Total questions reviewed: ' + totalAnswered + ' · Unique misses: ' + allMissed.length + '</div>' : '') +
       '</div>' +
@@ -355,6 +470,7 @@ var DSMPlayer = (function() {
     handleAnswer: handleAnswer,
     nextQuestion: nextQuestion,
     startNextRound: startNextRound,
+    startFreshFullAttempt: startFreshFullAttempt,
     quit: quit,
     isCompleted: function() { return completed; }
   };

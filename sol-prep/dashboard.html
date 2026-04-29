@@ -202,6 +202,10 @@ tr:hover td{background:#f8fafc}
 .gb-red     { background: #fee2e2; color: #991b1b; font-weight: 700; }
 .gb-empty   { color: #cbd5e1; }
 
+.mastery-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #f1f5f9; margin-top: 4px; flex-wrap: wrap; }
+.mastery-row select { padding: 6px 10px; border: 2px solid #e5e7eb; border-radius: 8px; background: #fff; font-family: inherit; font-size: .85rem; cursor: pointer; }
+.mastery-row select:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
+
 /* Module Releases */
 .release-panel { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
 .release-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -276,6 +280,15 @@ tr:hover td{background:#f8fafc}
           <div style="font-size:.78rem;color:#64748b;margin-top:2px">Click to lock or unlock student access. Locked modules show "Not yet open" to students.</div>
         </div>
         <div id="release-status" style="font-size:.75rem;color:#94a3b8"></div>
+      </div>
+      <div class="mastery-row">
+        <label for="mastery-threshold-select" style="font-size:.82rem;font-weight:600;color:#0f2240">Mastery threshold</label>
+        <select id="mastery-threshold-select" onchange="onMasteryThresholdChange()" disabled>
+          <option value="100">100% (perfect mastery)</option>
+          <option value="90">90%</option>
+          <option value="85">85%</option>
+        </select>
+        <span id="mastery-threshold-status" style="font-size:.75rem;color:#94a3b8"></span>
       </div>
       <div class="release-grid" id="release-grid"></div>
     </div>
@@ -642,6 +655,7 @@ var classLabelMap = {};
   loadExamDate();
   loadReleaseStates();
   startReleaseAutoRefresh();
+  loadMasteryThreshold();
 })();
 
 /* ══════════════════════════════════════════════
@@ -660,6 +674,7 @@ function onClassChange() {
   resetPages();
   loadAllData();
   loadExamDate();
+  loadMasteryThreshold();
 }
 
 /* ── EXAM DATE ── */
@@ -1862,6 +1877,46 @@ async function toggleRelease(moduleKey, btn) {
   }
   showToast((newState ? 'Opened' : 'Locked') + ' ' + moduleLabel(moduleKey));
   await loadReleaseStates();
+}
+
+async function loadMasteryThreshold() {
+  var sel = document.getElementById('mastery-threshold-select');
+  var status = document.getElementById('mastery-threshold-status');
+  if (!selectedClassId) {
+    sel.disabled = true;
+    status.textContent = 'Select a class above';
+    return;
+  }
+  var { data, error } = await sb.from('classes').select('mastery_threshold').eq('id', selectedClassId).single();
+  if (error) {
+    status.textContent = 'Error: ' + error.message;
+    sel.disabled = true;
+    return;
+  }
+  var t = data && data.mastery_threshold;
+  if (t !== 85 && t !== 90 && t !== 100) t = 100;
+  sel.value = String(t);
+  sel.disabled = false;
+  var cls = teacherClasses.find(function(c) { return c.id === selectedClassId; });
+  status.textContent = 'For ' + (cls ? cls.label : 'class');
+}
+
+async function onMasteryThresholdChange() {
+  var sel = document.getElementById('mastery-threshold-select');
+  var status = document.getElementById('mastery-threshold-status');
+  if (!selectedClassId) return;
+  var newVal = parseInt(sel.value, 10);
+  if (![85, 90, 100].includes(newVal)) return;
+  sel.disabled = true;
+  status.textContent = 'Saving...';
+  var { error } = await sb.from('classes').update({ mastery_threshold: newVal }).eq('id', selectedClassId);
+  if (error) {
+    showToast('Update failed: ' + error.message);
+    sel.disabled = false;
+    return;
+  }
+  showToast('Mastery threshold set to ' + newVal + '%');
+  await loadMasteryThreshold();
 }
 
 function startReleaseAutoRefresh() {
