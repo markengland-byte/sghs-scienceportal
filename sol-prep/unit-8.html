@@ -280,6 +280,17 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="nm-emoji">&#x1F30D;</div>
     <h2 class="nm-title">Biology SOL Prep</h2>
     <p class="nm-sub">Unit 8: Ecology &amp; Ecosystems. Your quiz scores will be recorded for Mr. England. Enter your full name and class period to begin.</p>
+    <!-- SSO-MODAL-WIRING -->
+    <div id="sso-signed-in" style="display:none;background:#e9f5ec;border:1px solid #4caf50;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:.85rem;color:#1b5e20">
+      &#10003; Signed in as <strong id="sso-name-display"></strong>
+      <a href="#" id="sso-signout" style="float:right;color:#1976d2;font-size:.78rem;text-decoration:underline">Switch account</a>
+    </div>
+    <button id="sso-signin-btn" type="button" onclick="signInWithGoogle()"
+            style="width:100%;padding:10px;font-size:.95rem;font-weight:600;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:8px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px">
+      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.26c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.71H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="text-align:center;color:var(--muted);font-size:.75rem;margin-bottom:10px">&mdash; or enter your name manually &mdash;</div>
     <label class="nm-label">YOUR NAME</label>
     <div style="display:flex;gap:8px;margin-bottom:12px">
       <input class="nm-input" id="student-first-name" type="text" placeholder="First name" autocomplete="given-name" style="flex:1">
@@ -1388,6 +1399,76 @@ function restoreProgress(data) {
   goTo(data.currentPanel || 0);
 }
 
+/* ── SSO (Google sign-in) ─────────────────────────── */
+/* SSO-HELPERS */
+var _ssoActive = false;
+
+function applySSOSession() {
+  if (!solAPI.isAuthenticated || !solAPI.isAuthenticated()) return false;
+  var fullName = (solAPI.getStudentDisplayName && solAPI.getStudentDisplayName()) || '';
+  var email = (solAPI.getStudentEmail && solAPI.getStudentEmail()) || '';
+  if (!fullName && !email) return false;
+  if (!fullName) fullName = email.split('@')[0];
+  var parts = fullName.trim().split(/\s+/);
+  var first = parts[0] || '';
+  var last = parts.slice(1).join(' ');
+  var f = document.getElementById('student-first-name');
+  var l = document.getElementById('student-last-name');
+  if (f) { f.value = first; f.disabled = true; f.style.opacity = '0.6'; }
+  if (l) { l.value = last;  l.disabled = true; l.style.opacity = '0.6'; }
+  var banner = document.getElementById('sso-signed-in');
+  var nameDisp = document.getElementById('sso-name-display');
+  var btn = document.getElementById('sso-signin-btn');
+  if (banner) banner.style.display = 'block';
+  if (nameDisp) nameDisp.textContent = fullName + (email ? ' (' + email + ')' : '');
+  if (btn) btn.style.display = 'none';
+  _ssoActive = true;
+  return true;
+}
+
+function clearSSOSession() {
+  var f = document.getElementById('student-first-name');
+  var l = document.getElementById('student-last-name');
+  if (f) { f.disabled = false; f.style.opacity = '1'; }
+  if (l) { l.disabled = false; l.style.opacity = '1'; }
+  var banner = document.getElementById('sso-signed-in');
+  var btn = document.getElementById('sso-signin-btn');
+  if (banner) banner.style.display = 'none';
+  if (btn) btn.style.display = 'flex';
+  _ssoActive = false;
+}
+
+function signInWithGoogle() {
+  if (!solAPI.signInWithGoogle) return;
+  var codeEl = document.getElementById('class-code');
+  if (codeEl && codeEl.value.trim()) {
+    sessionStorage.setItem('_sso_pending_code', codeEl.value.trim());
+  }
+  var btn = document.getElementById('sso-signin-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting...'; }
+  solAPI.signInWithGoogle(window.location.href).catch(function(err) {
+    console.error('[unit-8] sign-in failed:', err);
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
+    var ce = document.getElementById('code-err');
+    if (ce) { ce.textContent = 'Sign-in failed: ' + (err.message || 'unknown error'); ce.style.display = 'block'; }
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'sso-signout') {
+    e.preventDefault();
+    if (solAPI.signOut) {
+      solAPI.signOut().then(function() {
+        clearSSOSession();
+        var f = document.getElementById('student-first-name');
+        var l = document.getElementById('student-last-name');
+        if (f) f.value = '';
+        if (l) l.value = '';
+      });
+    }
+  }
+});
+
 /* ── START FRESH (clear local + remote progress) ───── */
 function startFresh() {
   var saved = localStorage.getItem('sol_unit8_progress');
@@ -1443,8 +1524,17 @@ function startUnit() {
 }
 
 function proceedStart(nameInput) {
+  /* SSO-PROCEED-OVERRIDE */
+  if (_ssoActive && solAPI.getStudentDisplayName) {
+    var ssoName = solAPI.getStudentDisplayName();
+    if (ssoName) nameInput = ssoName;
+  }
   /* canonicalizeName: */
   studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(nameInput) : (nameInput || '').trim());
+  /* SSO-ENROLL */
+  if (_ssoActive && solAPI.enrollInClass && solAPI.getClassId) {
+    solAPI.enrollInClass(solAPI.getClassId());
+  }
   checkPracticeRetakeLock();
   checkPretestLock();
   startHeartbeat('', studentName);
@@ -1936,6 +2026,19 @@ window.addEventListener('beforeunload', function() {
 /* ── INIT ON DOM READY ───────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
   initMeta();
+  /* SSO-INIT-AUTH */
+  var pendingCode = sessionStorage.getItem('_sso_pending_code');
+  if (pendingCode) {
+    var codeEl = document.getElementById('class-code');
+    if (codeEl) codeEl.value = pendingCode;
+    sessionStorage.removeItem('_sso_pending_code');
+  }
+  if (solAPI.initAuth) {
+    solAPI.initAuth().then(function(studentRow) {
+      if (studentRow) applySSOSession();
+    }).catch(function(err) { console.warn('initAuth failed:', err); });
+  }
+
   var storedClass = solAPI.getStored();
   if (storedClass) {
     var codeEl = document.getElementById('class-code');
