@@ -1,0 +1,60 @@
+================================================================
+Phase A3 baseline snapshot — prod RLS state on 2026-04-29
+Captured immediately after Phase A code fixes pushed (commit 62535d9)
+================================================================
+
+QUERY 1 — POLICIES (with RESTRICTIVE flag)
+================================================================
+
+| table_name   | polname                 | cmd    | is_permissive | roles | using_expr | check_expr |
+| ------------ | ----------------------- | ------ | ------------- | ----- | ---------- | ---------- |
+| activity     | activity_insert_any     | INSERT | true          | {-}   | null       | true       |
+| activity     | activity_select_any     | SELECT | true          | {-}   | true       | null       |
+| checkpoints  | checkpoints_insert_any  | INSERT | true          | {-}   | null       | true       |
+| checkpoints  | checkpoints_select_any  | SELECT | true          | {-}   | true       | null       |
+| dsm_attempts | dsm_attempts_insert_any | INSERT | true          | {-}   | null       | true       |
+| dsm_attempts | dsm_attempts_select_any | SELECT | true          | {-}   | true       | null       |
+| dsm_attempts | dsm_attempts_update_any | UPDATE | true          | {-}   | true       | true       |
+| quiz_detail  | quiz_detail_insert_any  | INSERT | true          | {-}   | null       | true       |
+| quiz_detail  | quiz_detail_select_any  | SELECT | true          | {-}   | true       | null       |
+| scores       | scores_insert_any       | INSERT | true          | {-}   | null       | true       |
+| scores       | scores_select_any       | SELECT | true          | {-}   | true       | null       |
+
+ANALYSIS:
+  - All 11 policies PERMISSIVE (no RESTRICTIVE policies — rules out
+    that hypothesis for the most recent phantom-state recurrence).
+  - All policies wide open: INSERT check_expr = true, SELECT using_expr = true.
+  - Teacher-scoped policies from migrations/001-rls-lockdown.sql
+    (Teachers read own class scores, Students insert scores for active
+    classes, etc.) are GONE. Replaced by `<table>_<cmd>_any` policies
+    that grant unrestricted access to public role ({-}).
+  - This is the deliberate post-nuclear-cycle state. The teacher-scoping
+    policies were dropped during phantom-state fixes and never restored
+    because reintroducing them would risk triggering phantom-state again.
+  - SECURITY IMPLICATION: anyone with the public anon key (in client
+    code by design) can read every score, quiz_detail row, checkpoint,
+    activity event, and update any dsm_attempts row. No row-level
+    enforcement on these 5 tables.
+  - This is the BASELINE that Phase B (migration consolidation) needs
+    to fix safely — restore teacher scoping in a way that doesn't
+    re-trigger phantom-state.
+
+
+QUERY 2 — RLS enabled state
+================================================================
+[Pending — paste output here]
+
+
+QUERY 3 — Triggers
+================================================================
+[Pending — paste output here]
+
+
+QUERY 4 — Role grants
+================================================================
+[Pending — paste output here]
+
+
+QUERY 5 — Row count sanity
+================================================================
+[Pending — paste output here]
