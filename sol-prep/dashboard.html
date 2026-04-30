@@ -587,6 +587,31 @@ var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
 var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ══════════════════════════════════════════════
+   TEACHER ENDPOINT HELPER
+   Routes student-data reads through /api/teacher/* serverless
+   functions instead of direct Supabase REST. Each call carries the
+   current Supabase Auth access token; the function verifies the JWT
+   server-side and queries with the service-role key. Bypasses RLS
+   reliably (avoids the cross-table-subquery RLS pattern that triggered
+   phantom-state on the data tables earlier this session).
+   ══════════════════════════════════════════════ */
+async function teacherFetch(table, params) {
+  var sess = await sb.auth.getSession();
+  var token = sess && sess.data && sess.data.session && sess.data.session.access_token;
+  if (!token) throw new Error('Not signed in');
+  var qs = new URLSearchParams(params || {});
+  var r = await fetch('/api/teacher/' + table + (qs.toString() ? '?' + qs : ''), {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!r.ok) {
+    var body = '';
+    try { body = await r.text(); } catch (e) {}
+    throw new Error('teacher/' + table + ' failed: ' + r.status + ' ' + body.slice(0, 200));
+  }
+  return r.json();
+}
+
+/* ══════════════════════════════════════════════
    GLOBAL STATE
    ══════════════════════════════════════════════ */
 var teacher = null;
@@ -733,17 +758,33 @@ async function loadAllData() {
     return;
   }
 
-  var [scoresRes, detailRes, checkRes, actRes] = await Promise.all([
-    sb.from('scores').select('*').in('class_id', classIds).order('created_at', { ascending: false }).limit(5000),
-    sb.from('quiz_detail').select('*').in('class_id', classIds).order('created_at', { ascending: false }).limit(5000),
-    sb.from('checkpoints').select('*').in('class_id', classIds).order('created_at', { ascending: false }).limit(5000),
-    sb.from('activity').select('*').in('class_id', classIds).order('created_at', { ascending: false }).limit(5000)
-  ]);
+  // If a specific class is selected, scope the endpoint to it. Otherwise
+  // omit class_id and the endpoint returns data for every class in the
+  // teacher's scope (and all classes for admins).
+  var commonParams = { limit: '5000' };
+  if (selectedClassId) commonParams.class_id = selectedClassId;
 
-  DATA.scores = scoresRes.data || [];
-  DATA.quizDetail = detailRes.data || [];
-  DATA.checkpoints = checkRes.data || [];
-  DATA.activity = actRes.data || [];
+  try {
+    var [scoresRes, detailRes, checkRes, actRes] = await Promise.all([
+      teacherFetch('scores',       commonParams),
+      teacherFetch('quiz-detail',  commonParams),
+      teacherFetch('checkpoints',  commonParams),
+      teacherFetch('activity',     commonParams)
+    ]);
+
+    DATA.scores     = scoresRes.rows || [];
+    DATA.quizDetail = detailRes.rows || [];
+    DATA.checkpoints = checkRes.rows || [];
+    DATA.activity   = actRes.rows   || [];
+  } catch (e) {
+    console.error('[dashboard] loadAllData failed:', e);
+    if (typeof showToast === 'function') {
+      showToast('Could not load class data: ' + (e.message || 'unknown error'));
+    }
+    DATA = { scores: [], quizDetail: [], checkpoints: [], activity: [] };
+    renderAll();
+    return;
+  }
 
   renderAll();
   populateModuleFilters();
@@ -2324,17 +2365,21 @@ async function renderAdminClasses() {
   var teacherMap = {};
   allTeachers.forEach(function(t) { teacherMap[t.id] = t.display_name || t.email; });
 
-  // Count unique students per class from scores table
+  // Count unique students per class from scores. Routes through the
+  // teacher endpoint (admins receive every class). Endpoint returns
+  // full rows; we only use class_id + student_name.
   var studentCounts = {};
   var classIds = allClasses.map(function(c) { return c.id; });
   if (classIds.length > 0) {
-    // We already have scores data for teacher's classes; for admin we need all classes
-    var { data: allScores } = await sb.from('scores').select('class_id, student_name').in('class_id', classIds);
-    if (allScores) {
+    try {
+      var allScoresRes = await teacherFetch('scores', { limit: '10000' });
+      var allScores = allScoresRes.rows || [];
       allScores.forEach(function(s) {
         if (!studentCounts[s.class_id]) studentCounts[s.class_id] = {};
         studentCounts[s.class_id][s.student_name] = true;
       });
+    } catch (e) {
+      console.warn('[dashboard] admin scores fetch failed:', e);
     }
   }
 
