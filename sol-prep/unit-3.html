@@ -1908,13 +1908,14 @@ function goTo(n) {
   var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
   document.getElementById('steps-prog').style.width = pct + '%';
   // Auto-unlock next panel for ungated panels (e.g. Study Guide)
-  if (!(n in gateRequired)) { unlockedPanels.add(n + 1); }
+  if (!(n in gateRequired) && n !== DSM_PANEL) { unlockedPanels.add(n + 1); }
   localStorage.setItem('sol_' + UNIT + '_panel', n);
   saveProgress();
 }
 
 /* ── GATE SYSTEM ─────────────────────────────────── */
 var gateAnswered = {};
+var DSM_PANEL = 7;  // Mastery Module panel — unlocked only by DSMPlayer.onComplete
 var gateRequired = { 0: 5, 1: 4, 2: 6, 3: 4, 4: 6, 5: 4 };
 
 function gateAnswer(opt) {

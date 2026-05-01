@@ -33,9 +33,7 @@ var DSMPlayer = (function() {
   var completed = false;
   var started = false;
   var totalAnswered = 0;
-  var bestAttemptScore = 0;       // best % achieved on any FULL attempt
-  var bestAttemptCorrect = 0;     // questions correct on the best full attempt
-  var lastFullAttemptMissed = 0;  // missed.length at end of most-recent FULL attempt
+  var advancing = false;   // guards against setTimeout double-fire of nextQuestion()
 
   // ── INIT ──────────────────────────────────────────────────────
   function init(opts) {
@@ -78,9 +76,7 @@ var DSMPlayer = (function() {
     missed = [];
     allMissed = [];
     totalAnswered = 0;
-    bestAttemptScore = 0;
-    bestAttemptCorrect = 0;
-    lastFullAttemptMissed = 0;
+    advancing = false;
 
     // Shuffle all questions for round 1 (full attempt)
     pool = shuffleArray(Array.from({ length: questions.length }, function(_, i) { return i; }));
@@ -168,8 +164,10 @@ var DSMPlayer = (function() {
     });
 
     if (isCorrect) {
-      // Correct — auto-advance after delay
-      setTimeout(function() { nextQuestion(); }, 800);
+      // Correct — auto-advance after delay. Flag prevents double-fire
+      // if nextQuestion() is called manually before the timeout.
+      advancing = true;
+      setTimeout(function() { advancing = false; nextQuestion(); }, 800);
     } else {
       // Wrong — show explanation, require manual advance
       missed.push(qIdx);
@@ -184,6 +182,9 @@ var DSMPlayer = (function() {
 
   // ── NEXT QUESTION ─────────────────────────────────────────────
   function nextQuestion() {
+    // Guard: if a correct-answer setTimeout is pending, ignore manual calls.
+    if (advancing) return;
+
     currentIdx++;
 
     if (currentIdx >= pool.length) {
@@ -193,24 +194,20 @@ var DSMPlayer = (function() {
       var isFullAttempt = (round % 2) === 1;
       if (isFullAttempt) {
         var correct = pool.length - missed.length;
-        var pct = Math.round((correct / pool.length) * 100);
-        // Track best score across all full attempts.
-        if (pct > bestAttemptScore) {
-          bestAttemptScore = pct;
-          bestAttemptCorrect = correct;
-        }
-        lastFullAttemptMissed = missed.length;
+        var total = pool.length;
+        var pct = Math.round((correct / total) * 100);
         var threshold = (typeof solAPI.getMasteryThreshold === 'function')
           ? solAPI.getMasteryThreshold() : 100;
         if (pct >= threshold) {
-          complete();
+          // Pass the real score directly — no reconstruction needed.
+          complete(correct, total, pct);
           return;
         }
         // Below threshold — into review mode (Round 2 = missed only).
         if (missed.length === 0) {
-          // Edge: somehow 0 missed but still below threshold (only possible
-          // if threshold>100, which the schema disallows). Fail-safe: complete.
-          complete();
+          // Edge: 0 missed but below threshold (only possible if
+          // threshold>100, which the schema disallows). Fail-safe.
+          complete(correct, total, pct);
           return;
         }
         showFullAttemptReviewPrompt();
@@ -313,26 +310,18 @@ var DSMPlayer = (function() {
   }
 
   // ── COMPLETE ──────────────────────────────────────────────────
-  function complete() {
+  // Receives the actual score from the call site (nextQuestion).
+  // No reconstruction, no fallbacks, no guessing.
+  function complete(correct, total, pct) {
+    if (completed) return;  // guard against double-calls
     completed = true;
     localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
 
-    // Score for this completion = best full-attempt score so far. The
-    // student just hit threshold (or got 100% on a perfect attempt).
-    var fullPoolSize = questions.length;
-    var correct = bestAttemptCorrect;
-    var pct = bestAttemptScore;
-    // If complete() is called from a round 1 perfect attempt before
-    // bestAttemptScore is updated (race-safety), recompute from current state.
-    if (correct === 0 && missed.length < fullPoolSize) {
-      correct = fullPoolSize - lastFullAttemptMissed;
-      pct = Math.round((correct / fullPoolSize) * 100);
-    }
-    // Fallback if everything else is 0 (shouldn't happen): treat as 100%.
-    if (correct === 0 && missed.length === 0) {
-      correct = fullPoolSize;
-      pct = 100;
-    }
+    // Derive pct from correct/total — single source of truth.
+    // The caller should always pass these, but defend against undefined.
+    total = total || questions.length;
+    correct = (correct != null) ? correct : 0;
+    pct = Math.round((correct / total) * 100);
 
     // Update attempt
     if (attemptId) {
@@ -346,14 +335,14 @@ var DSMPlayer = (function() {
 
     // Submit score
     if (typeof send === 'function') {
-      send({ action: 'score', lesson: 'Mastery Module', score: correct, total: fullPoolSize, pct: pct });
+      send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct });
       send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
         metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
     }
 
     // Show completion screen
     var container = document.getElementById(config.containerId);
-    container.innerHTML = dsmCompleteScreenHTML(correct, fullPoolSize, pct);
+    container.innerHTML = dsmCompleteScreenHTML(correct, total, pct);
 
     // Unlock next panels
     if (config.onComplete) config.onComplete();
@@ -380,6 +369,7 @@ var DSMPlayer = (function() {
 
     // Reset state for retry
     started = false;
+    advancing = false;
     pool = [];
     currentIdx = 0;
     round = 1;
