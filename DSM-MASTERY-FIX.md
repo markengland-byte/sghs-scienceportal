@@ -112,9 +112,86 @@ DSM panel numbers by unit:
 
 ---
 
+## Follow-up: Auto-recover missing mastery scores
+
+**Commit:** `9adaa50` — "Auto-recover missing mastery scores from pre-fix bypass"
+**Date:** 2026-05-01 (same day, second deploy)
+
+### Problem discovered after initial fix
+
+Kiera Looney completed Unit 6 mastery but had no score on the dashboard. Investigation showed she (and likely many other students) had `localStorage sol_unit6_dsm = 'passed'` cached from sessions under the old buggy code. When loading the page after our fix, `DSMPlayer.init()` saw 'passed' in localStorage, showed "Mastery Achieved!", and skipped the quiz — **without ever submitting a score to Supabase**. Unit 7 worked because she'd never visited it before (no cached localStorage).
+
+This affected every student who reached the Mastery Module panel under the old `goTo()` bypass — their browsers think mastery is done, but the database has no record.
+
+### Fix
+
+Modified `DSMPlayer.init()` to verify scores against the database when localStorage says 'passed':
+
+1. If localStorage says 'passed' AND `studentName` is available AND `config.moduleName` is set:
+   - Query `solAPI.hasPriorScore(studentName, moduleName, 'Mastery Module')`
+   - **Score found** → show "Mastery Achieved!" as before (no change)
+   - **No score found** → clear the localStorage flag, load the quiz fresh
+2. Fallback (no student name yet or API unavailable): trust localStorage as before
+
+This means every student who bypassed mastery under the old code will **automatically** get the real quiz next time they load any unit — no manual action needed from students or teacher.
+
+### Changes
+
+- **dsm-player.js:**
+  - `init()` now verifies DB score when localStorage says 'passed'
+  - Extracted `loadQuestions(container)` helper (was inline in `init()`)
+  - Added `moduleName` to config schema
+- **unit-1.html through unit-8.html:**
+  - All 20 `DSMPlayer.init()` calls now include `moduleName` field
+
+### Module names by unit
+
+| Unit | moduleName |
+|------|-----------|
+| 1 | SOL Prep — Unit 1: Scientific Investigation |
+| 2 | SOL Prep — Unit 2: Biochemistry & Energy |
+| 3 | SOL Prep — Unit 3: Cell Structure & Function |
+| 4 | SOL Prep — Unit 4: Bacteria & Viruses |
+| 5 | SOL Prep — Unit 5: Genetics & Inheritance |
+| 6 | SOL Prep — Unit 6: Classification & Diversity |
+| 7 | SOL Prep — Unit 7: Evolution |
+| 8 | SOL Prep — Unit 8: Ecology & Ecosystems |
+
+### Updated code paths
+
+| Scenario | Result |
+|----------|--------|
+| localStorage 'passed' + score exists in DB | Shows "Mastery Achieved!" — no quiz (correct) |
+| localStorage 'passed' + NO score in DB | Clears localStorage, loads quiz fresh (auto-recovery) |
+| localStorage 'passed' + student name not set yet | Falls back to trusting localStorage (safe default) |
+| No localStorage flag at all | Normal flow — loads quiz from scratch |
+
+---
+
+## Summary of all commits (2026-05-01)
+
+| Commit | What |
+|--------|------|
+| `7bef639` | Fix mastery gate bypass: score calculation + panel auto-unlock |
+| `a1f3fc9` | Add DSM mastery gate fix documentation |
+| `9adaa50` | Auto-recover missing mastery scores from pre-fix bypass |
+
+---
+
 ## Remaining work (not part of this fix)
 
 - **SSO rollout** — continues per `migrations/SSO-ACTIVATION-PLAN.md` (Phases 1-6)
 - **RLS lockdown** — Phase 2 migration (`004-rls-phase2-lockdown.sql`) ready but not yet applied
 - **Credential cleanup** — Phase 3 per `SECURITY-PLAN.md`
-- **Existing bad scores in Supabase** — Skylar's 1/25 at 100% (and any similar records from other students) remain in the `scores` table. These could be cleaned up manually via Supabase SQL Editor if needed, but the fix prevents new bad scores going forward.
+- **Existing bad scores in Supabase** — Skylar's 1/25 at 100% (and any similar records from other students) remain in the `scores` table. These could be cleaned up manually via Supabase SQL Editor:
+  ```sql
+  -- Find all suspicious mastery scores (score/total mismatch with pct)
+  SELECT student_name, module, score, total, pct, created_at
+  FROM scores
+  WHERE lesson = 'Mastery Module'
+    AND pct != ROUND((score::numeric / total) * 100)
+  ORDER BY created_at DESC;
+
+  -- Delete them if desired (students will retake automatically via the auto-recovery)
+  ```
+- **Students with no mastery scores at all** (bypassed via goTo, never triggered complete()) — these are handled automatically by the auto-recovery in `9adaa50`. No action needed.
