@@ -58,10 +58,10 @@ body{font-family:'Source Sans 3',sans-serif;background:#0f2240;min-height:100vh;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0" integrity="sha384-PsnFqJ58vyp7buRfuvdS2SrjRdUYinBv6lWwJXx3xQ17hWefo/UkwXowVBT53ubG" crossorigin="anonymous"></script>
+<script src="./supabase-config.js"></script>
 <script>
-var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
-var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
-var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// SUPABASE_URL + SUPABASE_ANON_KEY come from supabase-config.js loaded above.
+var sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
 // If already logged in (legacy session OR returning from Google OAuth
 // redirect), verify teacher profile then go to dashboard. If signed in
@@ -72,7 +72,7 @@ sb.auth.getSession().then(async function(result) {
   var uid = result.data.session.user.id;
   var t = await sb.from('teachers').select('id').eq('auth_user_id', uid).maybeSingle();
   if (t.data) {
-    window.location.href = 'dashboard.html';
+    window.location.href = '../sol-prep/dashboard.html';
   } else {
     await sb.auth.signOut();
     var errEl = document.getElementById('err-msg');
@@ -168,7 +168,7 @@ async function doLogin() {
     }).then(function(){}).catch(function(){});
 
     // Success — redirect to dashboard
-    window.location.href = 'dashboard.html';
+    window.location.href = '../sol-prep/dashboard.html';
 
   } catch (e) {
     errEl.textContent = 'Connection error. Please try again.';

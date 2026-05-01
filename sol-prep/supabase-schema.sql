@@ -1,4 +1,31 @@
 -- ================================================================
+-- ⚠️  HISTORICAL — DO NOT RUN AGAINST PRODUCTION
+-- ================================================================
+-- This file was the Phase 1 bootstrap when SGHS was first wired to
+-- Supabase. It has been SUPERSEDED by the numbered migrations under
+-- migrations/ at the repo root:
+--
+--   001-rls-lockdown.sql       — proper RLS scoping
+--   002-sso-foundation.sql     — students/student_classes + helpers
+--   003-sso-activation-prep.sql — requires_sso flag + email sync
+--   004-rls-phase2-lockdown.sql — dual-path INSERT policies
+--   005-dsm-module-id-tracking.sql — scores.dsm_module_id column
+--
+-- Plus feature-additive migrations in this folder:
+--   dsm-migration.sql, quiz-progress-migration.sql,
+--   allow-retakes-migration.sql, mastery-threshold-migration.sql,
+--   module-releases-migration.sql
+--
+-- Running this file against production WOULD:
+--   - Re-create policies that have been deliberately replaced
+--   - Re-seed Period 1-7 classes with hardcoded teacher_name='Mr. England'
+--     and no teacher_id, breaking the Phase 2 RLS lockdown
+--   - Drop and recreate tables in some cases, possibly losing data
+--
+-- Kept here only as reference for what the Phase 1 baseline looked
+-- like, and so anyone setting up a fresh dev project from scratch
+-- has a starting point. For prod, trust the migrations/ tree.
+-- ================================================================
 -- SGHS SOL Prep — Supabase Schema (Phase 1)
 -- Run this in your Supabase SQL Editor after creating a new project.
 -- ================================================================

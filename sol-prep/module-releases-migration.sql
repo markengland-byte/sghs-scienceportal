@@ -45,6 +45,12 @@ ON CONFLICT (module_key) DO NOTHING;
 -- only the SQL Editor (service_role) or an authenticated teacher
 -- session can flip them. Prevents a student with the anon key from
 -- unlocking modules from their browser console.
+--
+-- ⚠️  DO NOT ADD an "Anyone can update release state" policy. The
+-- entire point of this table is that students cannot self-unlock.
+-- If a teacher needs to flip a row programmatically, do it from
+-- the dashboard (which uses the teacher's authenticated session)
+-- or directly via SQL Editor with service_role — never anon.
 ALTER TABLE module_releases ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can read release state" ON module_releases;

@@ -8,9 +8,17 @@
 
 var solAPI = (function() {
 
-  // ── CONFIG — update these after creating your Supabase project ──
-  var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
+  // ── CONFIG ─────────────────────────────────────────────────────
+  // Single source of truth lives in shared/supabase-config.js (loaded
+  // from login.html and dashboard.html). Hardcoded fallback below is
+  // for unit pages and any HTML that hasn't yet been updated to load
+  // supabase-config.js — keep it in sync until full centralization.
+  // To rotate the key: change shared/supabase-config.js AND the two
+  // hardcoded fallbacks below + in shared/portal-api.js.
+  var SUPABASE_URL = (typeof window !== 'undefined' && window.SUPABASE_URL)
+    || 'https://cogpsieldrgeqlemhosy.supabase.co';
+  var SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.SUPABASE_ANON_KEY)
+    || 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
 
   // Lazy-loaded Supabase JS client (only when SSO is invoked).
   var SB_LIB_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0';
@@ -113,7 +121,7 @@ var solAPI = (function() {
         return succeeded;
       }
       var r = rows[i];
-      return _rest('POST', r.table, { body: r.body, prefer: 'return=minimal' })
+      return _rest('POST', r.table, { body: r.body, prefer: 'return=representation' })
         .then(function(resp) {
           if (resp && resp.ok) succeeded++;
           else remaining.push(r);
@@ -167,7 +175,7 @@ var solAPI = (function() {
   }
 
   function _postBestEffort(table, body, label, opts) {
-    var fetchOpts = { body: body, prefer: 'return=minimal' };
+    var fetchOpts = { body: body, prefer: 'return=representation' };
     if (opts && opts.keepalive) fetchOpts.keepalive = true;
     return _rest('POST', table, fetchOpts)
       .then(function(r) {
@@ -327,7 +335,7 @@ var solAPI = (function() {
     return _rest('POST', 'quiz_progress', {
       query: 'on_conflict=class_id,student_name,module',
       body: body,
-      prefer: 'resolution=merge-duplicates,return=minimal',
+      prefer: 'resolution=merge-duplicates,return=representation',
       keepalive: !!keepalive
     }).then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -378,7 +386,7 @@ var solAPI = (function() {
     var q = 'class_id=eq.' + encodeURIComponent(_classId)
       + '&student_name=eq.' + encodeURIComponent(studentName)
       + '&module=eq.' + encodeURIComponent(module);
-    return _rest('DELETE', 'quiz_progress', { query: q, prefer: 'return=minimal' })
+    return _rest('DELETE', 'quiz_progress', { query: q, prefer: 'return=representation' })
       .catch(function(err) {
         console.warn('[solAPI] clearProgress failed:', err.message);
       });
@@ -411,7 +419,7 @@ var solAPI = (function() {
     return _rest('PATCH', 'quiz_progress', {
       query: q,
       body: { updated_at: new Date().toISOString() },
-      prefer: 'return=minimal'
+      prefer: 'return=representation'
     }).catch(function() { /* swallow — heartbeats are best-effort */ });
   }
 
@@ -631,7 +639,7 @@ var solAPI = (function() {
     return _rest('PATCH', 'dsm_attempts', {
       query: 'id=eq.' + attemptId,
       body: data,
-      prefer: 'return=minimal'
+      prefer: 'return=representation'
     }).then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r;
@@ -740,7 +748,7 @@ var solAPI = (function() {
     if (!_studentId || !classId) return Promise.resolve(null);
     return _rest('POST', 'student_classes', {
       body: { student_id: _studentId, class_id: classId },
-      prefer: 'resolution=ignore-duplicates,return=minimal'
+      prefer: 'resolution=ignore-duplicates,return=representation'
     });
   }
 

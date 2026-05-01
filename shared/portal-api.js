@@ -10,8 +10,15 @@
 
 var portalAPI = (function() {
 
-  var SUPABASE_URL = 'https://cogpsieldrgeqlemhosy.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
+  // Single source of truth lives in shared/supabase-config.js (loaded
+  // from login.html / dashboard.html). Hardcoded fallback for HTML
+  // pages that haven't yet been updated to load supabase-config.js.
+  // Rotation: change supabase-config.js AND these two fallbacks +
+  // sol-prep/sol-api.js.
+  var SUPABASE_URL = (typeof window !== 'undefined' && window.SUPABASE_URL)
+    || 'https://cogpsieldrgeqlemhosy.supabase.co';
+  var SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.SUPABASE_ANON_KEY)
+    || 'sb_publishable_Wn4L2S2gMPq2cLoiLt2tIQ_z4e7IUZU';
 
   // Lazy-loaded Supabase JS client (only when SSO is invoked).
   var SB_LIB_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0';
@@ -92,7 +99,7 @@ var portalAPI = (function() {
   }
 
   function _postBestEffort(table, body, label, opts) {
-    var fetchOpts = { body: body, prefer: 'return=minimal' };
+    var fetchOpts = { body: body, prefer: 'return=representation' };
     if (opts && opts.keepalive) fetchOpts.keepalive = true;
     return _rest('POST', table, fetchOpts)
       .then(function(r) {
@@ -369,7 +376,7 @@ var portalAPI = (function() {
     if (!_studentId || !classId) return Promise.resolve(null);
     return _rest('POST', 'student_classes', {
       body: { student_id: _studentId, class_id: classId },
-      prefer: 'resolution=ignore-duplicates,return=minimal'
+      prefer: 'resolution=ignore-duplicates,return=representation'
     });
   }
 
