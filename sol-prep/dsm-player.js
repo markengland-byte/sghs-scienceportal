@@ -13,6 +13,7 @@ var DSMPlayer = (function() {
     unitNumber: 0,
     standard: '',        // e.g. 'BIO.4'
     unitKey: '',         // e.g. 'unit4'
+    moduleName: '',      // e.g. 'SOL Prep — Unit 4: Bacteria & Viruses'
     panelId: 0,          // which panel number the DSM is on
     containerId: '',     // DOM id of the container div
     unlockPanels: [],    // panel numbers to unlock on completion
@@ -43,12 +44,40 @@ var DSMPlayer = (function() {
 
     // Check if already completed (from localStorage)
     if (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed') {
+      // Verify a Mastery Module score actually exists in the database.
+      // Students who bypassed via the old goTo() auto-unlock bug have
+      // 'passed' in localStorage but no score recorded. For those
+      // students, clear the flag and show the quiz so they can earn
+      // a real score.
+      var sName = (typeof studentName !== 'undefined') ? studentName : '';
+      if (sName && config.moduleName && typeof solAPI.hasPriorScore === 'function') {
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280"><div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module...</div></div>';
+        solAPI.hasPriorScore(sName, config.moduleName, 'Mastery Module').then(function(prior) {
+          if (prior) {
+            // Score exists — genuinely completed. Show completion.
+            completed = true;
+            container.innerHTML = dsmCompletedHTML();
+            if (config.onComplete) config.onComplete();
+          } else {
+            // No score in DB — student bypassed via old bug. Reset and load quiz.
+            localStorage.removeItem('sol_' + config.unitKey + '_dsm');
+            loadQuestions(container);
+          }
+        });
+        return;
+      }
+      // Fallback: no student name yet or hasPriorScore unavailable — trust localStorage.
       completed = true;
       container.innerHTML = dsmCompletedHTML();
       if (config.onComplete) config.onComplete();
       return;
     }
 
+    loadQuestions(container);
+  }
+
+  // ── LOAD QUESTIONS ────────────────────────────────────────────
+  function loadQuestions(container) {
     // Show loading state
     container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280"><div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module...</div></div>';
 
