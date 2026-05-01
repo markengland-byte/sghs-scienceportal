@@ -242,7 +242,12 @@ var solAPI = (function() {
         total: payload.total,
         pct: payload.pct,
         time_on_quiz: payload.timeOnQuiz || null,
-        assignment_id: payload.assignmentId || null
+        assignment_id: payload.assignmentId || null,
+        // Tie a Mastery Module pass to the specific dsm_modules row the
+        // student passed against. When the teacher republishes a DSM
+        // (new module ID), lookups at init() no longer match this row
+        // and the student is correctly required to retake.
+        dsm_module_id: payload.dsmModuleId || null
       }, 'score');
     }
     else if (action === 'quizDetail') {
@@ -520,13 +525,23 @@ var solAPI = (function() {
   // "no score in DB" from "we don't know" — important for the DSM auto-
   // recovery flow where a network blip should NOT silently wipe a
   // legitimate localStorage 'passed' flag.
-  function lookupScoreStrict(studentName, module, lesson) {
+  //
+  // Optional dsmModuleId: when supplied, the query matches either rows
+  // tagged with that module ID OR rows with NULL dsm_module_id (i.e.
+  // historical mastery earned before the dsm_module_id column existed).
+  // This lets the DSM player invalidate scores tied to a now-replaced
+  // module without invalidating legitimate pre-migration mastery.
+  function lookupScoreStrict(studentName, module, lesson, dsmModuleId) {
     if (!_classId || !studentName || !module) return Promise.resolve(null);
     var q = 'class_id=eq.' + encodeURIComponent(_classId)
       + '&student_name=eq.' + encodeURIComponent(studentName)
       + '&module=eq.' + encodeURIComponent(module);
     if (lesson) q += '&lesson=eq.' + encodeURIComponent(lesson);
-    q += '&select=score,total,pct,created_at&order=created_at.desc&limit=1';
+    if (dsmModuleId) {
+      // PostgREST OR syntax: match this module ID OR untagged historical rows.
+      q += '&or=(dsm_module_id.eq.' + encodeURIComponent(dsmModuleId) + ',dsm_module_id.is.null)';
+    }
+    q += '&select=score,total,pct,created_at,dsm_module_id&order=created_at.desc&limit=1';
     return _rest('GET', 'scores', { query: q })
       .then(function(r) {
         if (!r.ok) throw new Error('lookupScoreStrict HTTP ' + r.status);

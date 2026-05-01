@@ -42,21 +42,26 @@ var DSMPlayer = (function() {
   var advancing = false;   // guards next-question races (#12)
 
   // ── INIT ──────────────────────────────────────────────────────
-  // Idempotent (#8). Always probes DB when studentName is available
-  // (#10). Distinguishes "no row" from "lookup failed" via
-  // lookupScoreStrict (#9) — a network blip never wipes a legitimate
+  // Idempotent (#8). Fetches the current published DSM module FIRST so
+  // we know its ID, then probes the DB scoped by module ID (#11) plus
+  // student/lesson. This means a republished DSM (new module ID) does
+  // not credit a student who passed the old module. Historical mastery
+  // (rows with NULL dsm_module_id from before that column existed)
+  // continues to count.
+  //
+  // #9: Distinguishes "no row" from "lookup failed" via
+  // lookupScoreStrict — a network blip never wipes a legitimate
   // 'passed' flag.
+  // #10: Always probes DB when student name available (cross-device).
   function init(opts) {
     config = Object.assign(config, opts);
     var container = document.getElementById(config.containerId);
     if (!container) return;
 
-    // Guard against re-init while a quiz is in progress (#8). Don't
-    // touch in-progress state — the user is mid-attempt.
+    // Guard against re-init while a quiz is in progress (#8).
     if (started && !completed) return;
 
-    // Reset state for a fresh init (e.g., panel revisit after completion).
-    // Don't reset `completed` — that's set deliberately.
+    // Reset state. Don't reset `completed` — that's set deliberately.
     questions = [];
     moduleId = null;
     pool = [];
@@ -71,74 +76,63 @@ var DSMPlayer = (function() {
     totalAnswered = 0;
     advancing = false;
 
-    var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : '';
-    var hasName = !!sName;
-    var lsPassed = (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed');
-
-    // Always probe the DB when we have a student name and module name.
-    // This subsumes the legacy "only probe if localStorage says passed"
-    // logic and closes the cross-device gap (#10).
-    if (hasName && config.moduleName && typeof solAPI.lookupScoreStrict === 'function') {
-      container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280">'
-        + '<div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module&hellip;</div></div>';
-      solAPI.lookupScoreStrict(sName, config.moduleName, 'Mastery Module')
-        .then(function(prior) {
-          if (prior) {
-            // DB confirms mastery. Sync localStorage and show completion.
-            localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
-            completed = true;
-            container.innerHTML = dsmCompletedHTML();
-            if (config.onComplete) config.onComplete();
-          } else {
-            // DB has no score. Clear stale localStorage flag if present
-            // (legacy bypass artifact) and load the quiz fresh.
-            if (lsPassed) localStorage.removeItem('sol_' + config.unitKey + '_dsm');
-            loadQuestions(container);
-          }
-        })
-        .catch(function(err) {
-          // Lookup FAILED (network/RLS). Don't wipe localStorage —
-          // a transient blip shouldn't force a passed student to retake.
-          console.warn('[DSM] lookupScoreStrict failed; trusting localStorage:', err && err.message);
-          if (lsPassed) {
-            completed = true;
-            container.innerHTML = dsmCompletedHTML();
-            if (config.onComplete) config.onComplete();
-          } else {
-            loadQuestions(container);
-          }
-        });
-      return;
-    }
-
-    // Fallback: no name yet OR lookupScoreStrict missing. Trust localStorage.
-    if (lsPassed) {
-      completed = true;
-      container.innerHTML = dsmCompletedHTML();
-      if (config.onComplete) config.onComplete();
-      return;
-    }
-    loadQuestions(container);
-  }
-
-  // ── LOAD QUESTIONS ────────────────────────────────────────────
-  function loadQuestions(container) {
     container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280">'
       + '<div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module&hellip;</div></div>';
 
+    // Step 1: fetch the current published module + questions. This
+    // gives us the moduleId that subsequent lookups must match.
     solAPI.getDSMQuestions(config.standard).then(function(result) {
-      // Defense-in-depth (#2): require a real array of questions, not just
-      // any truthy `result.questions` (a {error:...} object would otherwise
-      // sneak through the old `length === 0` check).
+      // Defense-in-depth (#2): require a real array.
       if (!result || !result.module || !Array.isArray(result.questions) || result.questions.length === 0) {
         container.innerHTML = dsmNotAvailableHTML();
         if (config.onSkip) config.onSkip();
         return;
       }
-
       moduleId = result.module.id;
       questions = result.questions;
-      container.innerHTML = dsmReadyHTML();
+
+      // Step 2: probe DB scoped by THIS module ID (or NULL for historical).
+      var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : '';
+      var hasName = !!sName;
+      var lsPassed = (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed');
+
+      if (hasName && config.moduleName && typeof solAPI.lookupScoreStrict === 'function') {
+        solAPI.lookupScoreStrict(sName, config.moduleName, 'Mastery Module', moduleId)
+          .then(function(prior) {
+            if (prior) {
+              // Score for THIS module (or historical NULL) — credit it.
+              localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
+              completed = true;
+              container.innerHTML = dsmCompletedHTML();
+              if (config.onComplete) config.onComplete();
+            } else {
+              // No matching score. Clear stale localStorage flag if it
+              // was for a since-replaced module; show ready screen.
+              if (lsPassed) localStorage.removeItem('sol_' + config.unitKey + '_dsm');
+              container.innerHTML = dsmReadyHTML();
+            }
+          })
+          .catch(function(err) {
+            // Lookup FAILED (network/RLS). Trust localStorage as fallback.
+            console.warn('[DSM] lookupScoreStrict failed; trusting localStorage:', err && err.message);
+            if (lsPassed) {
+              completed = true;
+              container.innerHTML = dsmCompletedHTML();
+              if (config.onComplete) config.onComplete();
+            } else {
+              container.innerHTML = dsmReadyHTML();
+            }
+          });
+      } else {
+        // No name yet OR no lookupScoreStrict. Trust localStorage.
+        if (lsPassed) {
+          completed = true;
+          container.innerHTML = dsmCompletedHTML();
+          if (config.onComplete) config.onComplete();
+        } else {
+          container.innerHTML = dsmReadyHTML();
+        }
+      }
     });
   }
 
@@ -422,8 +416,11 @@ var DSMPlayer = (function() {
     // doesn't navigate away before _postWithRetry has had a chance to
     // attempt the request. The buffered-retry layer handles transient
     // failures, but synchronous tab-close mid-fetch can still cancel.
+    //
+    // #11: Tag the score with the dsm_modules.id so a future republish
+    // (new module ID) correctly invalidates this row at lookup time.
     var scorePromise = (typeof send === 'function')
-      ? send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct })
+      ? send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct, dsmModuleId: moduleId })
       : Promise.resolve();
 
     // _postWithRetry never rejects (it buffers on failure), so this .then
