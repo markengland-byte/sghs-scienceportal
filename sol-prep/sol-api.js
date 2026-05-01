@@ -515,6 +515,26 @@ var solAPI = (function() {
       .catch(function() { return null; });
   }
 
+  // Like hasPriorScore but THROWS on lookup failure (network error, RLS
+  // reject, non-2xx) instead of returning null. Lets the caller distinguish
+  // "no score in DB" from "we don't know" — important for the DSM auto-
+  // recovery flow where a network blip should NOT silently wipe a
+  // legitimate localStorage 'passed' flag.
+  function lookupScoreStrict(studentName, module, lesson) {
+    if (!_classId || !studentName || !module) return Promise.resolve(null);
+    var q = 'class_id=eq.' + encodeURIComponent(_classId)
+      + '&student_name=eq.' + encodeURIComponent(studentName)
+      + '&module=eq.' + encodeURIComponent(module);
+    if (lesson) q += '&lesson=eq.' + encodeURIComponent(lesson);
+    q += '&select=score,total,pct,created_at&order=created_at.desc&limit=1';
+    return _rest('GET', 'scores', { query: q })
+      .then(function(r) {
+        if (!r.ok) throw new Error('lookupScoreStrict HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(rows) { return (rows && rows[0]) || null; });
+  }
+
   function hasPriorPracticeScore(studentName, assignmentId) {
     if (!_classId || !studentName) return Promise.resolve(null);
     var q = 'class_id=eq.' + encodeURIComponent(_classId)
@@ -749,7 +769,8 @@ var solAPI = (function() {
     getAllowRetakes: function() { return _allowRetakes; },
     getMasteryThreshold: function() { return _masteryThreshold; },
     hasPriorPracticeScore: hasPriorPracticeScore,
-    hasPriorScore: hasPriorScore
+    hasPriorScore: hasPriorScore,
+    lookupScoreStrict: lookupScoreStrict
   };
 
 })();

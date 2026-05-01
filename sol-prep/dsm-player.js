@@ -4,6 +4,10 @@
 
    Usage: DSMPlayer.init({ ... }) called from each unit file.
    Requires sol-api.js to be loaded first.
+
+   Hardened 2026-05-01 against the 14 issues identified in
+   DSM_AUDIT_REPORT.md (root of repo) plus the round-parity
+   misclassification documented in DSM-MASTERY-FIX.md.
    ================================================================ */
 
 var DSMPlayer = (function() {
@@ -26,65 +30,107 @@ var DSMPlayer = (function() {
   var moduleId = null;     // dsm_modules.id
   var pool = [];           // current round's question indices
   var currentIdx = 0;      // position in pool
-  var round = 1;           // 1=full attempt, 2=review missed, 3=full again, ...
-  var attemptNumber = 1;   // counts FULL attempts only (rounds 1, 3, 5, ...)
+  var round = 1;           // 1=full attempt, 2=review missed, 3=review again, ...
+  var attemptNumber = 1;   // counts FULL attempts only
   var missed = [];         // indices missed this round
   var allMissed = [];      // { round, questionId, questionText } across all rounds
   var attemptId = null;
+  var attemptCreatePromise = null;  // chain target for completion update (#7)
   var completed = false;
   var started = false;
   var totalAnswered = 0;
-  var advancing = false;   // guards against setTimeout double-fire of nextQuestion()
+  var advancing = false;   // guards next-question races (#12)
 
   // ── INIT ──────────────────────────────────────────────────────
+  // Idempotent (#8). Always probes DB when studentName is available
+  // (#10). Distinguishes "no row" from "lookup failed" via
+  // lookupScoreStrict (#9) — a network blip never wipes a legitimate
+  // 'passed' flag.
   function init(opts) {
     config = Object.assign(config, opts);
     var container = document.getElementById(config.containerId);
     if (!container) return;
 
-    // Check if already completed (from localStorage)
-    if (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed') {
-      // Verify a Mastery Module score actually exists in the database.
-      // Students who bypassed via the old goTo() auto-unlock bug have
-      // 'passed' in localStorage but no score recorded. For those
-      // students, clear the flag and show the quiz so they can earn
-      // a real score.
-      var sName = (typeof studentName !== 'undefined') ? studentName : '';
-      if (sName && config.moduleName && typeof solAPI.hasPriorScore === 'function') {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280"><div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module...</div></div>';
-        solAPI.hasPriorScore(sName, config.moduleName, 'Mastery Module').then(function(prior) {
+    // Guard against re-init while a quiz is in progress (#8). Don't
+    // touch in-progress state — the user is mid-attempt.
+    if (started && !completed) return;
+
+    // Reset state for a fresh init (e.g., panel revisit after completion).
+    // Don't reset `completed` — that's set deliberately.
+    questions = [];
+    moduleId = null;
+    pool = [];
+    currentIdx = 0;
+    round = 1;
+    attemptNumber = 1;
+    missed = [];
+    allMissed = [];
+    attemptId = null;
+    attemptCreatePromise = null;
+    started = false;
+    totalAnswered = 0;
+    advancing = false;
+
+    var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : '';
+    var hasName = !!sName;
+    var lsPassed = (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed');
+
+    // Always probe the DB when we have a student name and module name.
+    // This subsumes the legacy "only probe if localStorage says passed"
+    // logic and closes the cross-device gap (#10).
+    if (hasName && config.moduleName && typeof solAPI.lookupScoreStrict === 'function') {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280">'
+        + '<div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module&hellip;</div></div>';
+      solAPI.lookupScoreStrict(sName, config.moduleName, 'Mastery Module')
+        .then(function(prior) {
           if (prior) {
-            // Score exists — genuinely completed. Show completion.
+            // DB confirms mastery. Sync localStorage and show completion.
+            localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
             completed = true;
             container.innerHTML = dsmCompletedHTML();
             if (config.onComplete) config.onComplete();
           } else {
-            // No score in DB — student bypassed via old bug. Reset and load quiz.
-            localStorage.removeItem('sol_' + config.unitKey + '_dsm');
+            // DB has no score. Clear stale localStorage flag if present
+            // (legacy bypass artifact) and load the quiz fresh.
+            if (lsPassed) localStorage.removeItem('sol_' + config.unitKey + '_dsm');
+            loadQuestions(container);
+          }
+        })
+        .catch(function(err) {
+          // Lookup FAILED (network/RLS). Don't wipe localStorage —
+          // a transient blip shouldn't force a passed student to retake.
+          console.warn('[DSM] lookupScoreStrict failed; trusting localStorage:', err && err.message);
+          if (lsPassed) {
+            completed = true;
+            container.innerHTML = dsmCompletedHTML();
+            if (config.onComplete) config.onComplete();
+          } else {
             loadQuestions(container);
           }
         });
-        return;
-      }
-      // Fallback: no student name yet or hasPriorScore unavailable — trust localStorage.
+      return;
+    }
+
+    // Fallback: no name yet OR lookupScoreStrict missing. Trust localStorage.
+    if (lsPassed) {
       completed = true;
       container.innerHTML = dsmCompletedHTML();
       if (config.onComplete) config.onComplete();
       return;
     }
-
     loadQuestions(container);
   }
 
   // ── LOAD QUESTIONS ────────────────────────────────────────────
   function loadQuestions(container) {
-    // Show loading state
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280"><div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module...</div></div>';
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280">'
+      + '<div style="font-size:1.5rem;margin-bottom:8px">Loading Mastery Module&hellip;</div></div>';
 
-    // Load questions
     solAPI.getDSMQuestions(config.standard).then(function(result) {
-      if (!result.module || result.questions.length === 0) {
-        // No DSM published for this standard — skip gracefully
+      // Defense-in-depth (#2): require a real array of questions, not just
+      // any truthy `result.questions` (a {error:...} object would otherwise
+      // sneak through the old `length === 0` check).
+      if (!result || !result.module || !Array.isArray(result.questions) || result.questions.length === 0) {
         container.innerHTML = dsmNotAvailableHTML();
         if (config.onSkip) config.onSkip();
         return;
@@ -106,27 +152,34 @@ var DSMPlayer = (function() {
     allMissed = [];
     totalAnswered = 0;
     advancing = false;
+    completed = false;
 
     // Shuffle all questions for round 1 (full attempt)
     pool = shuffleArray(Array.from({ length: questions.length }, function(_, i) { return i; }));
     currentIdx = 0;
 
-    // Create attempt record
-    var studentName = document.getElementById('student-name') ?
-      document.getElementById('student-name').value.trim() : '';
+    // #4: Use the page-scope `studentName` (set by proceedStart). The
+    // old `document.getElementById('student-name')` lookup never matched
+    // anything on SOL-prep pages — those use student-first-name +
+    // student-last-name and the page-scope variable. Result of the bug:
+    // every dsm_attempts row across all 8 units said 'Unknown'.
+    var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : 'Unknown';
 
-    solAPI.createDSMAttempt({
-      studentName: studentName || 'Unknown',
+    // #7: Track the create promise so completion can chain to it if the
+    // student finishes faster than the network round-trip (Slow 3G case).
+    attemptCreatePromise = solAPI.createDSMAttempt({
+      studentName: sName,
       moduleId: moduleId,
       unitNumber: config.unitNumber,
       totalQuestions: questions.length
     }).then(function(data) {
       if (data && data.length > 0) attemptId = data[0].id;
-    });
+      return attemptId;
+    }).catch(function() { return null; });
 
-    // Log activity
     if (typeof send === 'function') {
-      send({ action: 'activity', event: 'dsm_start', lesson: 'Mastery Module', timestamp: new Date().toISOString() });
+      send({ action: 'activity', event: 'dsm_start', lesson: 'Mastery Module',
+        timestamp: new Date().toISOString() });
     }
 
     showQuestion();
@@ -144,11 +197,11 @@ var DSMPlayer = (function() {
     html += '<div class="dsm-remaining">' + remaining + ' remaining</div>';
     html += '</div>';
 
-    // Progress track
     var pct = Math.round((currentIdx / pool.length) * 100);
     html += '<div class="dsm-track"><div class="dsm-track-fill" style="width:' + pct + '%"></div></div>';
 
-    html += '<div class="dsm-question-card" id="dsm-active-card">';
+    // data-answered guards against double-click/touch reentrance (#12)
+    html += '<div class="dsm-question-card" id="dsm-active-card" data-answered="0">';
     html += '<div class="dsm-q-stem-live">' + escDSM(q.question_text) + '</div>';
     html += '<div class="dsm-opts-live">';
     var opts = [
@@ -173,79 +226,87 @@ var DSMPlayer = (function() {
 
   // ── HANDLE ANSWER ─────────────────────────────────────────────
   function handleAnswer(chosen) {
+    // #12: Per-card answer guard. Once an answer has been recorded for
+    // this card, subsequent clicks/touches on options are ignored. Catches
+    // ghost-clicks on Chromebook touchscreens and keyboard repeat events.
+    var card = document.getElementById('dsm-active-card');
+    if (card && card.dataset.answered === '1') return;
+    if (card) card.dataset.answered = '1';
+
     var qIdx = pool[currentIdx];
     var q = questions[qIdx];
-    var correct = q.correct_answer;
-    var isCorrect = chosen === correct;
+    var correctAns = q.correct_answer;
+    var isCorrect = chosen === correctAns;
 
     totalAnswered++;
 
-    // Disable all options
     var allOpts = document.querySelectorAll('.dsm-opt-live');
     allOpts.forEach(function(el) {
       el.style.pointerEvents = 'none';
-      if (el.dataset.value === correct) {
-        el.classList.add('dsm-correct');
-      }
-      if (el.dataset.value === chosen && !isCorrect) {
-        el.classList.add('dsm-incorrect');
-      }
+      if (el.dataset.value === correctAns) el.classList.add('dsm-correct');
+      if (el.dataset.value === chosen && !isCorrect) el.classList.add('dsm-incorrect');
     });
 
     if (isCorrect) {
-      // Correct — auto-advance after delay. Flag prevents double-fire
-      // if nextQuestion() is called manually before the timeout.
+      // Auto-advance after delay. `advancing` flag prevents manual
+      // nextQuestion() calls during the timeout from double-firing.
       advancing = true;
       setTimeout(function() { advancing = false; nextQuestion(); }, 800);
     } else {
-      // Wrong — show explanation, require manual advance
       missed.push(qIdx);
       allMissed.push({ round: round, questionId: q.id, questionText: q.question_text });
-
       var expEl = document.getElementById('dsm-explanation');
-      if (expEl) { expEl.style.display = 'block'; }
+      if (expEl) expEl.style.display = 'block';
       var nextBtn = document.getElementById('dsm-next-btn');
-      if (nextBtn) { nextBtn.style.display = 'inline-block'; }
+      if (nextBtn) nextBtn.style.display = 'inline-block';
     }
   }
 
   // ── NEXT QUESTION ─────────────────────────────────────────────
   function nextQuestion() {
-    // Guard: if a correct-answer setTimeout is pending, ignore manual calls.
     if (advancing) return;
-
     currentIdx++;
 
     if (currentIdx >= pool.length) {
-      // Round complete. Two cases:
-      //   - Full attempt (odd rounds: 1, 3, 5, ...) — check threshold
-      //   - Review of missed (even rounds: 2, 4, 6, ...) — show "now retake" prompt
-      var isFullAttempt = (round % 2) === 1;
+      // Bug 3 fix: anchor "full attempt" detection on what `full` actually
+      // means — the pool covers every question. Round parity was fragile:
+      // startNextRound() incremented `round` even when continuing within
+      // a review cycle, breaking parity-based logic and producing bogus
+      // 1/N=100% score rows like Kiera Looney's 4-row burst on 2026-05-01.
+      var isFullAttempt = (pool.length === questions.length);
+
       if (isFullAttempt) {
         var correct = pool.length - missed.length;
         var total = pool.length;
-        var pct = Math.round((correct / total) * 100);
+        var pct = total > 0 ? Math.round((correct / total) * 100) : 0;
         var threshold = (typeof solAPI.getMasteryThreshold === 'function')
           ? solAPI.getMasteryThreshold() : 100;
+
         if (pct >= threshold) {
-          // Pass the real score directly — no reconstruction needed.
           complete(correct, total, pct);
           return;
         }
-        // Below threshold — into review mode (Round 2 = missed only).
+        // Below threshold. If missed.length === 0 here, something is
+        // structurally wrong (impossible if threshold ≤ 100). Log and
+        // bail rather than trying to "fail-safe" by completing (#6).
         if (missed.length === 0) {
-          // Edge: 0 missed but below threshold (only possible if
-          // threshold>100, which the schema disallows). Fail-safe.
-          complete(correct, total, pct);
+          console.error('[DSM] unreachable: full attempt with 0 missed but pct ' + pct + ' < threshold ' + threshold);
+          // Don't call complete(); show the review prompt anyway so the
+          // student isn't credited with mastery they didn't demonstrate.
+          showFullAttemptReviewPrompt();
           return;
         }
         showFullAttemptReviewPrompt();
       } else {
-        // Even round — review of missed just finished.
-        // If they got all missed right, prompt them to retake the full quiz.
-        // If still missed some, give them another review pass.
+        // Review round just finished.
         if (missed.length === 0) {
-          showRetakeFullPrompt();
+          // #5: Student demonstrated mastery on review — credit it.
+          // The prior strict-spec behavior (forcing a fresh full attempt)
+          // punished clean recovery and was the loop that fed Bug 3's
+          // misclassification. Lenient: every question has now been
+          // answered correctly at some point, so award mastery with the
+          // full pool size as both `correct` and `total`.
+          complete(questions.length, questions.length, 100);
         } else {
           showRoundInterstitial();
         }
@@ -259,12 +320,12 @@ var DSMPlayer = (function() {
   function showFullAttemptReviewPrompt() {
     var container = document.getElementById(config.containerId);
     var correct = pool.length - missed.length;
-    var pct = Math.round((correct / pool.length) * 100);
+    var pct = pool.length > 0 ? Math.round((correct / pool.length) * 100) : 0;
     var threshold = (typeof solAPI.getMasteryThreshold === 'function')
       ? solAPI.getMasteryThreshold() : 100;
 
     var html = '<div class="dsm-interstitial">';
-    html += '<div class="dsm-inter-icon">📝</div>';
+    html += '<div class="dsm-inter-icon">&#128221;</div>';
     html += '<div class="dsm-inter-title">Attempt ' + attemptNumber + ' Complete</div>';
     html += '<div class="dsm-inter-stat">' + correct + ' / ' + pool.length + ' correct (' + pct + '%)</div>';
     html += '<div class="dsm-inter-msg">You need <strong>' + threshold + '%</strong> for mastery. Let\'s review the ones you missed before trying again.</div>';
@@ -280,35 +341,13 @@ var DSMPlayer = (function() {
     }
   }
 
-  // ── RETAKE-FULL PROMPT (after even round, all review correct) ───
-  function showRetakeFullPrompt() {
-    var container = document.getElementById(config.containerId);
-    var threshold = (typeof solAPI.getMasteryThreshold === 'function')
-      ? solAPI.getMasteryThreshold() : 100;
-
-    var html = '<div class="dsm-interstitial">';
-    html += '<div class="dsm-inter-icon">💪</div>';
-    html += '<div class="dsm-inter-title">Review Complete!</div>';
-    html += '<div class="dsm-inter-msg">Nice work on the review. Now try a fresh full attempt to demonstrate mastery.</div>';
-    html += '<div class="dsm-inter-sub">All ' + questions.length + ' questions, fresh shuffle. You need ' + threshold + '% to master.</div>';
-    html += '<button class="dsm-start-btn" onclick="DSMPlayer.startFreshFullAttempt()">Start Attempt ' + (attemptNumber + 1) + ' &rarr;</button>';
-    html += '</div>';
-
-    container.innerHTML = html;
-
-    if (typeof send === 'function') {
-      send({ action: 'activity', event: 'dsm_review_complete', lesson: 'Mastery Module',
-        metadata: JSON.stringify({ attempt: attemptNumber, round: round }) });
-    }
-  }
-
-  // ── ROUND INTERSTITIAL (only fires mid-review when still missing some) ─
+  // ── ROUND INTERSTITIAL (mid-review when still missing some) ────
   function showRoundInterstitial() {
     var container = document.getElementById(config.containerId);
     var missedCount = missed.length;
 
     var html = '<div class="dsm-interstitial">';
-    html += '<div class="dsm-inter-icon">🔁</div>';
+    html += '<div class="dsm-inter-icon">&#128257;</div>';
     html += '<div class="dsm-inter-title">Keep Reviewing</div>';
     html += '<div class="dsm-inter-stat">' + (pool.length - missedCount) + ' / ' + pool.length + ' correct in this review</div>';
     html += '<div class="dsm-inter-msg">' + missedCount + ' question' + (missedCount !== 1 ? 's' : '') + ' to keep reviewing.</div>';
@@ -318,7 +357,9 @@ var DSMPlayer = (function() {
     container.innerHTML = html;
   }
 
-  // Cycle missed (review). Round increments to next even number.
+  // Cycle missed (review). Round increments — used to mean "even round =
+  // review", but with Bug 3's fix the round counter is informational only;
+  // round-type detection now uses pool.length === questions.length.
   function startNextRound() {
     round++;
     pool = shuffleArray(missed.slice());
@@ -327,8 +368,7 @@ var DSMPlayer = (function() {
     showQuestion();
   }
 
-  // Reshuffle ALL questions for a fresh full attempt. Round increments to
-  // next odd number; attemptNumber increments.
+  // Reshuffle ALL questions for a fresh full attempt.
   function startFreshFullAttempt() {
     round++;
     attemptNumber++;
@@ -339,48 +379,70 @@ var DSMPlayer = (function() {
   }
 
   // ── COMPLETE ──────────────────────────────────────────────────
-  // Receives the actual score from the call site (nextQuestion).
-  // No reconstruction, no fallbacks, no guessing.
+  // Receives the actual score from the call site. No reconstruction.
   function complete(correct, total, pct) {
-    if (completed) return;  // guard against double-calls
+    if (completed) return;  // double-call guard
     completed = true;
+
+    // #1, #3: defensive validation. If caller passed garbage, log and
+    // bail with safe zeros rather than silently substituting questions.length.
+    if (typeof correct !== 'number' || typeof total !== 'number' || total <= 0) {
+      console.error('[DSM] complete() invalid args', { correct: correct, total: total, pct: pct });
+      correct = 0;
+      total = (questions.length > 0) ? questions.length : 1;
+      pct = 0;
+    } else {
+      // Re-derive pct as single source of truth, but only if the caller's
+      // value disagrees by more than 1 (FP rounding tolerance).
+      var derived = Math.round((correct / total) * 100);
+      if (typeof pct !== 'number' || Math.abs(pct - derived) > 1) pct = derived;
+    }
+
     localStorage.setItem('sol_' + config.unitKey + '_dsm', 'passed');
 
-    // Derive pct from correct/total — single source of truth.
-    // The caller should always pass these, but defend against undefined.
-    total = total || questions.length;
-    correct = (correct != null) ? correct : 0;
-    pct = Math.round((correct / total) * 100);
-
-    // Update attempt
-    if (attemptId) {
-      solAPI.updateDSMAttempt(attemptId, {
+    // #7: Update the attempts row, chaining to the create promise if
+    // the row hasn't been created yet (slow network case).
+    function applyAttemptUpdate() {
+      if (!attemptId) return Promise.resolve();
+      return solAPI.updateDSMAttempt(attemptId, {
         completed: true,
         completed_at: new Date().toISOString(),
         rounds_completed: round,
         questions_missed: allMissed
       });
     }
-
-    // Submit score
-    if (typeof send === 'function') {
-      send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct });
-      send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
-        metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
+    if (attemptId) {
+      applyAttemptUpdate();
+    } else if (attemptCreatePromise) {
+      attemptCreatePromise.then(applyAttemptUpdate);
     }
 
-    // Show completion screen
-    var container = document.getElementById(config.containerId);
-    container.innerHTML = dsmCompleteScreenHTML(correct, total, pct);
+    // #13: Submit the score. Hold the promise so we can transition the UI
+    // *after* the write fires onto the wire — guaranteeing the student
+    // doesn't navigate away before _postWithRetry has had a chance to
+    // attempt the request. The buffered-retry layer handles transient
+    // failures, but synchronous tab-close mid-fetch can still cancel.
+    var scorePromise = (typeof send === 'function')
+      ? send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct })
+      : Promise.resolve();
 
-    // Unlock next panels
-    if (config.onComplete) config.onComplete();
-
-    // Save progress
-    if (typeof saveProgress === 'function') saveProgress();
+    // _postWithRetry never rejects (it buffers on failure), so this .then
+    // always fires.
+    Promise.resolve(scorePromise).then(function() {
+      if (typeof send === 'function') {
+        send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
+          metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
+      }
+      var container = document.getElementById(config.containerId);
+      if (container) container.innerHTML = dsmCompleteScreenHTML(correct, total, pct);
+      if (config.onComplete) config.onComplete();
+      if (typeof saveProgress === 'function') saveProgress();
+    });
   }
 
   // ── QUIT ──────────────────────────────────────────────────────
+  // Currently unreachable (not exposed in public API) but kept correct
+  // in case it's re-exposed. #14: full state reset.
   function quit() {
     if (!confirm('Quit the Mastery Module? Your score will be recorded as 0. You can try again later.')) return;
 
@@ -391,20 +453,23 @@ var DSMPlayer = (function() {
         questions_missed: allMissed
       });
     }
-
     if (typeof send === 'function') {
       send({ action: 'score', lesson: 'Mastery Module', score: 0, total: questions.length, pct: 0 });
     }
 
-    // Reset state for retry
+    // Full state reset for clean retry — match init()'s reset block.
     started = false;
     advancing = false;
+    completed = false;
     pool = [];
     currentIdx = 0;
     round = 1;
+    attemptNumber = 1;
     missed = [];
     allMissed = [];
+    totalAnswered = 0;
     attemptId = null;
+    attemptCreatePromise = null;
 
     var container = document.getElementById(config.containerId);
     container.innerHTML = dsmReadyHTML();
@@ -414,36 +479,36 @@ var DSMPlayer = (function() {
   function dsmReadyHTML() {
     var threshold = (typeof solAPI.getMasteryThreshold === 'function')
       ? solAPI.getMasteryThreshold() : 100;
-    return '<div class="dsm-ready">' +
-      '<div class="dsm-ready-icon">🧠</div>' +
-      '<div class="dsm-ready-title">Mastery Module</div>' +
-      '<div class="dsm-ready-sub">' + questions.length + ' questions · ' + config.standard + '</div>' +
-      '<div class="dsm-ready-desc">Reach <strong>' + threshold + '%</strong> on a full attempt to achieve mastery. Below the threshold? Review the ones you missed, then try a fresh full attempt.</div>' +
-      '<div class="dsm-ready-rules">' +
-      '<div class="dsm-rule">✓ Correct answers advance automatically</div>' +
-      '<div class="dsm-rule">✗ Wrong answers show the explanation</div>' +
-      '<div class="dsm-rule">🏆 ' + threshold + '% on a full attempt = Mastery achieved</div>' +
-      '</div>' +
-      '<button class="dsm-start-btn" onclick="DSMPlayer.start()">Begin Mastery Module &rarr;</button>' +
-      '</div>';
+    return '<div class="dsm-ready">'
+      + '<div class="dsm-ready-icon">&#129504;</div>'
+      + '<div class="dsm-ready-title">Mastery Module</div>'
+      + '<div class="dsm-ready-sub">' + questions.length + ' questions &middot; ' + config.standard + '</div>'
+      + '<div class="dsm-ready-desc">Reach <strong>' + threshold + '%</strong> on a full attempt to achieve mastery, OR get every missed question right on review. Whichever comes first.</div>'
+      + '<div class="dsm-ready-rules">'
+      + '<div class="dsm-rule">&#10003; Correct answers advance automatically</div>'
+      + '<div class="dsm-rule">&#10007; Wrong answers show the explanation</div>'
+      + '<div class="dsm-rule">&#127942; Mastery = ' + threshold + '% on full attempt OR clean review pass</div>'
+      + '</div>'
+      + '<button class="dsm-start-btn" onclick="DSMPlayer.start()">Begin Mastery Module &rarr;</button>'
+      + '</div>';
   }
 
   function dsmNotAvailableHTML() {
-    return '<div class="dsm-ready">' +
-      '<div class="dsm-ready-icon">📋</div>' +
-      '<div class="dsm-ready-title">Mastery Module</div>' +
-      '<div class="dsm-ready-sub">Not yet available for this unit</div>' +
-      '<div class="dsm-ready-desc">Your teacher hasn\'t set up the Mastery Module for ' + config.standard + ' yet. You can continue to the Study Guide and Practice Test.</div>' +
-      '</div>';
+    return '<div class="dsm-ready">'
+      + '<div class="dsm-ready-icon">&#128203;</div>'
+      + '<div class="dsm-ready-title">Mastery Module</div>'
+      + '<div class="dsm-ready-sub">Not yet available for this unit</div>'
+      + '<div class="dsm-ready-desc">Your teacher hasn\'t set up the Mastery Module for ' + config.standard + ' yet. You can continue to the Study Guide and Practice Test.</div>'
+      + '</div>';
   }
 
   function dsmCompletedHTML() {
-    return '<div class="dsm-ready">' +
-      '<div class="dsm-ready-icon">🏆</div>' +
-      '<div class="dsm-ready-title">Mastery Achieved!</div>' +
-      '<div class="dsm-ready-sub">You\'ve mastered ' + config.standard + '</div>' +
-      '<div class="dsm-ready-desc">Great work! Continue to the Practice Test to measure your SOL proficiency.</div>' +
-      '</div>';
+    return '<div class="dsm-ready">'
+      + '<div class="dsm-ready-icon">&#127942;</div>'
+      + '<div class="dsm-ready-title">Mastery Achieved!</div>'
+      + '<div class="dsm-ready-sub">You\'ve mastered ' + config.standard + '</div>'
+      + '<div class="dsm-ready-desc">Great work! Continue to the Practice Test to measure your SOL proficiency.</div>'
+      + '</div>';
   }
 
   function dsmCompleteScreenHTML(correct, total, pct) {
@@ -454,16 +519,16 @@ var DSMPlayer = (function() {
     var subtitle = perfect
       ? (attemptNumber === 1 ? 'Perfect — first try!' : 'Took ' + attemptNumber + ' attempts, but you nailed it.')
       : 'You hit the mastery threshold on attempt ' + attemptNumber + '.';
-    return '<div class="dsm-complete-screen">' +
-      '<div class="dsm-complete-icon">🎉</div>' +
-      '<div class="dsm-complete-title">Mastery Achieved!</div>' +
-      '<div class="dsm-complete-stat">' + correct + '/' + total + ' correct (' + pct + '%)</div>' +
-      '<div class="dsm-complete-sub">' + subtitle + '</div>' +
-      '<div class="dsm-complete-detail">' +
-      (allMissed.length > 0 ? '<div style="margin-top:12px;font-size:.85rem;color:#64748b">Total questions reviewed: ' + totalAnswered + ' · Unique misses: ' + allMissed.length + '</div>' : '') +
-      '</div>' +
-      '<button class="dsm-start-btn" onclick="goTo(' + (config.panelId + 1) + ')">Continue to Study Guide &rarr;</button>' +
-      '</div>';
+    return '<div class="dsm-complete-screen">'
+      + '<div class="dsm-complete-icon">&#127881;</div>'
+      + '<div class="dsm-complete-title">Mastery Achieved!</div>'
+      + '<div class="dsm-complete-stat">' + correct + '/' + total + ' correct (' + pct + '%)</div>'
+      + '<div class="dsm-complete-sub">' + subtitle + '</div>'
+      + '<div class="dsm-complete-detail">'
+      + (allMissed.length > 0 ? '<div style="margin-top:12px;font-size:.85rem;color:#64748b">Total questions reviewed: ' + totalAnswered + ' &middot; Unique misses: ' + allMissed.length + '</div>' : '')
+      + '</div>'
+      + '<button class="dsm-start-btn" onclick="goTo(' + (config.panelId + 1) + ')">Continue to Study Guide &rarr;</button>'
+      + '</div>';
   }
 
   // ── HELPERS ───────────────────────────────────────────────────
@@ -482,8 +547,7 @@ var DSMPlayer = (function() {
 
   // ── PUBLIC API ────────────────────────────────────────────────
   // quit() exists in this module but is intentionally NOT exposed —
-  // students must complete mastery before proceeding. Restoring the
-  // quit option means re-adding it here.
+  // students must complete mastery before proceeding.
   return {
     init: init,
     start: start,
