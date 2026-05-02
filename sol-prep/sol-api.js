@@ -357,8 +357,14 @@ var solAPI = (function() {
   // Persist immediately (no debounce). Returns the fetch promise.
   function _saveProgressNow(module, studentName, progressData, keepalive) {
     if (!_classId || !studentName || !module) return Promise.resolve();
+    // FERPA Phase 2.5: quiz_progress is now auth_user_id-scoped via RLS.
+    // No session => no write (and no point — student couldn't read it back
+    // either after the lockdown).
+    var auid = _authUid();
+    if (!auid) return Promise.resolve();
     var body = {
       class_id: _classId,
+      auth_user_id: auid,
       student_name: studentName,
       module: module,
       progress_data: progressData
