@@ -74,26 +74,21 @@ test('unit-1.html: page loads, modal accepts class code, panel 0 renders', async
   const modal = page.locator('#name-modal');
   await expect(modal).toBeVisible();
 
-  // ── Fill in the legacy name + class code path. SSO button is also
-  //    present but we deliberately use the manual entry to test that flow.
-  await page.locator('#student-first-name').fill('Playwright');
-  await page.locator('#student-last-name').fill(`Ci${stamp}`);
-  await page.locator('#class-code').fill(CLASS_CODE);
+  // ── SSO is now the only entry path (legacy name modal removed
+  //    when biology classes flipped to requires_sso=true). Verify
+  //    the SSO button is present + the start button + the class
+  //    code field. We don't try to actually drive OAuth — that
+  //    requires a real Google account in CI which is its own
+  //    project. Smoke test scope: page loads, expected controls
+  //    are in the DOM, no uncaught JS errors.
 
-  // ── Submit
-  const startBtn = page.locator('button.nm-btn').filter({ hasText: /^Start Unit 1/ });
-  await startBtn.click();
+  await expect(page.locator('#sso-signin-btn')).toBeVisible();
+  await expect(page.locator('#class-code')).toBeAttached();
+  await expect(page.locator('button.nm-btn')).toBeAttached();
 
-  // ── Modal should be hidden once class validation completes.
-  await expect(modal).toBeHidden({ timeout: 12_000 });
-
-  // ── Panel 0 (SOL Focus card) renders.
-  const panel0 = page.locator('#p0.panel.active');
-  await expect(panel0).toBeVisible();
-
-  // ── Title content sanity check.
-  await expect(page.locator('.focus-title').first())
-    .toContainText('Scientific Investigation');
+  // Sanity: legacy name inputs should NOT be in the DOM anymore.
+  await expect(page.locator('#student-first-name')).toHaveCount(0);
+  await expect(page.locator('#student-last-name')).toHaveCount(0);
 
   // ── Filter out expected noise from real errors.
   //    - cdn.jsdelivr.net/sm/...map: CSP-blocked sourcemap fetch (harmless)
