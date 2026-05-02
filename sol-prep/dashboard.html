@@ -261,6 +261,7 @@ tr:hover td{background:#f8fafc}
   <div class="tab" onclick="showTab('checkpoints',this)">Checkpoints</div>
   <div class="tab" onclick="showTab('activity',this)">Activity / Time</div>
   <div class="tab" onclick="showTab('pulse',this)">Live Pulse</div>
+  <div class="tab" onclick="showTab('overrides',this)">Overrides</div>
   <div class="tab" onclick="showTab('analytics',this)">Analytics</div>
   <div class="tab" onclick="showTab('mastery',this)">Mastery Modules</div>
   <div class="tab-sep" id="admin-tab-sep" style="display:none"></div>
@@ -421,6 +422,26 @@ tr:hover td{background:#f8fafc}
       🔴 way idle (&gt; 10 min) ·
       ✓ done (on Results step) ·
       ⚫ no activity today
+    </div>
+  </div>
+
+  <!-- OVERRIDES TAB -->
+  <div class="panel" id="tab-overrides">
+    <div class="tbl-wrap" id="overrides-wrap">
+      <div class="tbl-header" style="flex-wrap:wrap;gap:8px;align-items:center">
+        <h3>Per-Student Module Access <span style="color:#94a3b8;font-size:.78rem;font-weight:400">— overrides the class-wide Module Access toggles</span></h3>
+        <div id="overrides-status" style="font-size:.75rem;color:#94a3b8"></div>
+        <button class="btn-export" onclick="loadOverrides()">Refresh</button>
+      </div>
+      <div style="margin:0 0 12px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:.78rem;color:#475569;line-height:1.5">
+        <strong>Click a cell</strong> to cycle: <span style="display:inline-block;width:18px;text-align:center">⚪</span> class default → <span style="display:inline-block;width:18px;text-align:center">🟢</span> force-OPEN → <span style="display:inline-block;width:18px;text-align:center">🔴</span> force-CLOSED → back to default.
+        Force-OPEN lets the student into a unit even when the class is locked. Force-CLOSED keeps them out even when the class is unlocked. No persistence — toggle on or off as you go.
+      </div>
+      <div id="overrides-matrix-wrap" style="overflow-x:auto;max-width:100%">
+        <table id="overrides-table" style="border-collapse:separate;border-spacing:0;font-size:.85rem">
+          <thead></thead><tbody></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -707,6 +728,9 @@ function onClassChange() {
   loadAllData();
   loadExamDate();
   loadMasteryThreshold();
+  if (document.getElementById('tab-overrides').classList.contains('active')) {
+    loadOverrides();
+  }
 }
 
 /* ── EXAM DATE ── */
@@ -1984,6 +2008,120 @@ function showTab(id, el) {
   el.classList.add('active');
   if (id === 'pulse') startPulseAutoRefresh(); else stopPulseAutoRefresh();
   if (id === 'gradebook') renderGradebook();
+  if (id === 'overrides') loadOverrides();
+}
+
+/* ══════════════════════════════════════════════
+   PER-STUDENT MODULE OVERRIDES
+   ══════════════════════════════════════════════ */
+var OVERRIDE_MODULE_KEYS = ['unit-1','unit-2','unit-3','unit-4','unit-5','unit-6','unit-7','unit-8','practice-test'];
+// Memoized state: key = studentId|moduleKey -> { id, unlocked }
+var overridesByKey = {};
+var overridesStudents = [];
+
+async function loadOverrides() {
+  var statusEl = document.getElementById('overrides-status');
+  if (!selectedClassId) {
+    statusEl.textContent = 'Select a class to view its students.';
+    document.querySelector('#overrides-table thead').innerHTML = '';
+    document.querySelector('#overrides-table tbody').innerHTML = '';
+    return;
+  }
+  statusEl.textContent = 'Loading…';
+  try {
+    var [studentsRes, overridesRes] = await Promise.all([
+      teacherFetch('students',         { class_id: selectedClassId }),
+      teacherFetch('student-override', { class_id: selectedClassId })
+    ]);
+    overridesStudents = (studentsRes.rows || []).slice().sort(function(a,b) {
+      return (a.display_name || '').localeCompare(b.display_name || '');
+    });
+    overridesByKey = {};
+    (overridesRes.rows || []).forEach(function(r) {
+      overridesByKey[r.student_id + '|' + r.module_key] = { id: r.id, unlocked: r.unlocked };
+    });
+    statusEl.textContent = overridesStudents.length + ' student' + (overridesStudents.length === 1 ? '' : 's') + ' enrolled';
+    renderOverrides();
+  } catch (e) {
+    statusEl.textContent = 'Failed: ' + e.message;
+  }
+}
+
+function _overrideCellHTML(studentId, moduleKey) {
+  var ov = overridesByKey[studentId + '|' + moduleKey];
+  var symbol, bg, title;
+  if (!ov) {
+    symbol = '⚪'; bg = '#fff'; title = 'Class default — click to force OPEN';
+  } else if (ov.unlocked) {
+    symbol = '🟢'; bg = '#d1fae5'; title = 'Force OPEN — click to force CLOSED';
+  } else {
+    symbol = '🔴'; bg = '#fee2e2'; title = 'Force CLOSED — click to clear (back to default)';
+  }
+  return '<td onclick="cycleOverride(\'' + studentId + '\',\'' + moduleKey + '\')" '
+    + 'style="text-align:center;cursor:pointer;padding:8px 6px;background:' + bg + ';border:1px solid #e2e8f0;font-size:1rem;user-select:none" '
+    + 'title="' + title + '">' + symbol + '</td>';
+}
+
+function renderOverrides() {
+  var thead = document.querySelector('#overrides-table thead');
+  var tbody = document.querySelector('#overrides-table tbody');
+  if (overridesStudents.length === 0) {
+    thead.innerHTML = '';
+    tbody.innerHTML = '<tr><td style="padding:20px;color:#94a3b8;font-style:italic">No students enrolled in this class yet.</td></tr>';
+    return;
+  }
+  var headerCells = ['<th style="position:sticky;left:0;background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 12px;text-align:left;font-weight:700;color:#0f2240">Student</th>']
+    .concat(OVERRIDE_MODULE_KEYS.map(function(k) {
+      var label = k === 'practice-test' ? 'Practice' : k.replace('unit-', 'U');
+      return '<th style="border:1px solid #e2e8f0;padding:8px 6px;background:#f1f5f9;font-weight:700;color:#0f2240;font-size:.8rem">' + label + '</th>';
+    }))
+    .join('');
+  thead.innerHTML = '<tr>' + headerCells + '</tr>';
+
+  tbody.innerHTML = overridesStudents.map(function(s) {
+    var nameCell = '<td style="position:sticky;left:0;background:#fff;border:1px solid #e2e8f0;padding:8px 12px;font-weight:600;color:#0f2240;white-space:nowrap">'
+      + (s.display_name || s.email || '(unnamed)') + '</td>';
+    var cells = OVERRIDE_MODULE_KEYS.map(function(k) { return _overrideCellHTML(s.id, k); }).join('');
+    return '<tr>' + nameCell + cells + '</tr>';
+  }).join('');
+}
+
+async function cycleOverride(studentId, moduleKey) {
+  var key = studentId + '|' + moduleKey;
+  var current = overridesByKey[key];
+  // Determine next state.
+  var action;
+  if (!current) {
+    action = { method: 'POST', body: { student_id: studentId, module_key: moduleKey, unlocked: true } };
+  } else if (current.unlocked) {
+    action = { method: 'POST', body: { student_id: studentId, module_key: moduleKey, unlocked: false } };
+  } else {
+    action = { method: 'DELETE', body: { student_id: studentId, module_key: moduleKey } };
+  }
+  try {
+    var sess = await sb.auth.getSession();
+    var token = sess && sess.data && sess.data.session && sess.data.session.access_token;
+    if (!token) throw new Error('Not signed in');
+    var r = await fetch('/api/teacher/student-override', {
+      method: action.method,
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(action.body)
+    });
+    if (!r.ok) {
+      var body = '';
+      try { body = await r.text(); } catch (e) {}
+      throw new Error(r.status + ' ' + body.slice(0, 200));
+    }
+    var result = await r.json();
+    if (action.method === 'DELETE') {
+      delete overridesByKey[key];
+    } else if (result.row) {
+      overridesByKey[key] = { id: result.row.id, unlocked: result.row.unlocked };
+    }
+    renderOverrides();
+  } catch (e) {
+    showToast('Override failed: ' + e.message);
+  }
 }
 
 /* ══════════════════════════════════════════════

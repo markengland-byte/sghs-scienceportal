@@ -433,8 +433,20 @@ var solAPI = (function() {
   // false = show locked overlay. Defaults to TRUE on any failure
   // (network error, missing row) so we don't accidentally lock the
   // whole site if Supabase is down.
-  function isModuleUnlocked(moduleKey) {
-    if (!moduleKey) return Promise.resolve(true);
+  //
+  // Resolution order:
+  //   1. student_module_overrides for (_studentId, moduleKey) wins
+  //      if a row exists. Lets a teacher force-OPEN a unit for one
+  //      student when the class is locked, or force-CLOSED for one
+  //      student when the class is open.
+  //   2. Otherwise fall back to module_releases.unlocked (the
+  //      class-wide default).
+  //
+  // The override lookup is skipped when _studentId is null (e.g.
+  // the page loaded before SSO hydration finished). The unit pages
+  // gate this call AFTER applySSOSession so _studentId is set, but
+  // the null-guard means a stale call still works safely.
+  function _getGlobalLock(moduleKey) {
     return _rest('GET', 'module_releases', {
       query: 'module_key=eq.' + encodeURIComponent(moduleKey) + '&select=unlocked&limit=1'
     })
@@ -445,6 +457,75 @@ var solAPI = (function() {
       return rows[0].unlocked !== false;
     })
     .catch(function() { return true; });
+  }
+
+  function isModuleUnlocked(moduleKey) {
+    if (!moduleKey) return Promise.resolve(true);
+    if (!_studentId) return _getGlobalLock(moduleKey);
+    return _rest('GET', 'student_module_overrides', {
+      query: 'student_id=eq.' + encodeURIComponent(_studentId)
+        + '&module_key=eq.' + encodeURIComponent(moduleKey)
+        + '&select=unlocked&limit=1'
+    })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(rows) {
+      if (rows && rows.length > 0) return rows[0].unlocked === true;
+      return _getGlobalLock(moduleKey);
+    })
+    .catch(function() { return _getGlobalLock(moduleKey); });
+  }
+
+  // ── MODULE-RELEASE GATE UI ──────────────────────────────────
+  // Centralized lock-overlay DOM management. Each entry page used
+  // to inline this; now they call solAPI.runModuleReleaseGate(key)
+  // on page-load AND after applySSOSession (so a per-student
+  // override granted via student_module_overrides flips state
+  // immediately when the student signs in).
+  //
+  // Idempotent: safe to call repeatedly. State transitions:
+  //   locked   -> hides #name-modal, .panel, .top-bar, .main,
+  //               .modal-overlay; shows #module-release-lock-overlay
+  //   unlocked -> removes #module-release-lock-overlay; clears the
+  //               inline display:none we set on lock-down so CSS
+  //               default visibility resumes.
+  var _LOCK_OVERLAY_ID = 'module-release-lock-overlay';
+  var _LOCK_HIDE_SELECTORS = '.panel, .top-bar, .main, .modal-overlay';
+
+  function _showLockOverlay() {
+    var modal = document.getElementById('name-modal');
+    if (modal) modal.style.display = 'none';
+    document.querySelectorAll(_LOCK_HIDE_SELECTORS).forEach(function(el) {
+      el.style.display = 'none';
+    });
+    if (document.getElementById(_LOCK_OVERLAY_ID)) return;
+    var ov = document.createElement('div');
+    ov.id = _LOCK_OVERLAY_ID;
+    ov.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#0f2240,#1e3a6e);color:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;font-family:Source Sans 3,sans-serif';
+    ov.innerHTML =
+      '<div style="font-size:5rem;margin-bottom:20px">🔒</div>' +
+      '<h1 style="font-family:Playfair Display,serif;font-size:2.4rem;font-weight:900;margin-bottom:14px;letter-spacing:-0.5px">Not Yet Open</h1>' +
+      '<p style="font-size:1.1rem;line-height:1.6;max-width:520px;color:rgba(255,255,255,0.78);margin-bottom:28px">This module isn\'t available yet. We open units in class so we can work through them together. See your teacher when it\'s time.</p>' +
+      '<a href="index.html" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;text-decoration:none;padding:10px 24px;border-radius:24px;font-size:.9rem;font-weight:600">← Back to Portal</a>';
+    document.body.appendChild(ov);
+  }
+
+  function _hideLockOverlay() {
+    var ov = document.getElementById(_LOCK_OVERLAY_ID);
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    var modal = document.getElementById('name-modal');
+    if (modal && modal.style.display === 'none') modal.style.display = '';
+    document.querySelectorAll(_LOCK_HIDE_SELECTORS).forEach(function(el) {
+      if (el.style.display === 'none') el.style.display = '';
+    });
+  }
+
+  function runModuleReleaseGate(moduleKey) {
+    if (!moduleKey) return Promise.resolve(true);
+    return isModuleUnlocked(moduleKey).then(function(open) {
+      if (open) _hideLockOverlay();
+      else _showLockOverlay();
+      return open;
+    });
   }
 
   // ── BEACON (page unload) ─────────────────────────────────────
@@ -793,6 +874,7 @@ var solAPI = (function() {
     pingProgress: pingProgress,
     canonicalizeName: canonicalizeName,
     isModuleUnlocked: isModuleUnlocked,
+    runModuleReleaseGate: runModuleReleaseGate,
     // Practice-test retake policy
     getAllowRetakes: function() { return _allowRetakes; },
     getMasteryThreshold: function() { return _masteryThreshold; },
