@@ -736,12 +736,16 @@ var solAPI = (function() {
     });
   }
 
-  // Create a DSM attempt record
+  // Create a DSM attempt record. FERPA Phase 2: auth_user_id must
+  // be on the body — RLS WITH CHECK (auth_user_id = auth.uid()).
+  // Without it, the INSERT is silently rejected; the DSM player
+  // proceeds with no `attemptId` and the Mastery never records.
   function createDSMAttempt(data) {
     return _rest('POST', 'dsm_attempts', {
       body: {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: _authUid(),
         student_name: data.studentName,
         module_id: data.moduleId,
         unit_number: data.unitNumber,
@@ -751,10 +755,23 @@ var solAPI = (function() {
         completed: false
       },
       prefer: 'return=representation'
-    }).then(function(r) { return r.json(); });
+    }).then(function(r) {
+      if (!r.ok) {
+        return r.text().then(function(t) {
+          console.error('[solAPI] createDSMAttempt failed:', r.status, t.slice(0, 200));
+          throw new Error('HTTP ' + r.status);
+        });
+      }
+      return r.json();
+    });
   }
 
-  // Update a DSM attempt (on completion or quit)
+  // Update a DSM attempt (on completion or quit). RLS USING +
+  // WITH CHECK both require auth_user_id = auth.uid(). The row was
+  // created with the caller's auth_user_id by createDSMAttempt, so
+  // the UPDATE check passes naturally for the row owner. Still
+  // include auth_user_id in the body for defense-in-depth in case
+  // someone passes a partial body that omits it.
   function updateDSMAttempt(attemptId, data) {
     return _rest('PATCH', 'dsm_attempts', {
       query: 'id=eq.' + attemptId,
