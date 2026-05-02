@@ -22,8 +22,32 @@ var DSMPlayer = (function() {
     containerId: '',     // DOM id of the container div
     unlockPanels: [],    // panel numbers to unlock on completion
     onComplete: null,    // callback when mastery achieved
-    onSkip: null         // callback when no DSM is available
+    onSkip: null,        // callback when no DSM is available
+
+    // Phase D additions — engine passes these explicitly. Legacy unit
+    // pages don't pass them, in which case the player falls back to
+    // the page-scope `studentName` global and `send` global.
+    studentName: null,   // string; preferred over the global
+    send: null           // function(payload); preferred over the global
   };
+
+  // Lazy resolvers — called every place we need student name or send
+  // so that legacy pages (which set the globals AFTER DSMPlayer.init
+  // returns) still work.
+  function _sName() {
+    return config.studentName
+      || (typeof studentName !== 'undefined' && studentName ? studentName : '');
+  }
+  function _send(payload) {
+    if (typeof config.send === 'function') return config.send(payload);
+    if (typeof send === 'function') return send(payload);
+    // Hard fallback — call solAPI directly so the activity event isn't lost.
+    if (window.solAPI && solAPI.submit) {
+      payload.student = payload.student || _sName();
+      payload.module  = payload.module  || config.moduleName;
+      return solAPI.submit(payload);
+    }
+  }
 
   // ── STATE ──
   var questions = [];      // all questions from Supabase
@@ -92,7 +116,7 @@ var DSMPlayer = (function() {
       questions = result.questions;
 
       // Step 2: probe DB scoped by THIS module ID (or NULL for historical).
-      var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : '';
+      var sName = _sName();
       var hasName = !!sName;
       var lsPassed = (localStorage.getItem('sol_' + config.unitKey + '_dsm') === 'passed');
 
@@ -152,12 +176,12 @@ var DSMPlayer = (function() {
     pool = shuffleArray(Array.from({ length: questions.length }, function(_, i) { return i; }));
     currentIdx = 0;
 
-    // #4: Use the page-scope `studentName` (set by proceedStart). The
-    // old `document.getElementById('student-name')` lookup never matched
-    // anything on SOL-prep pages — those use student-first-name +
-    // student-last-name and the page-scope variable. Result of the bug:
-    // every dsm_attempts row across all 8 units said 'Unknown'.
-    var sName = (typeof studentName !== 'undefined' && studentName) ? studentName : 'Unknown';
+    // #4: page-scope `studentName` set by proceedStart, OR Phase D
+    // engine passes config.studentName explicitly. Both resolve through
+    // _sName(). Result of the original bug: every dsm_attempts row
+    // across all 8 units said 'Unknown' because the old code looked
+    // for #student-name (no such element on SOL-prep pages).
+    var sName = _sName() || 'Unknown';
 
     // #7: Track the create promise so completion can chain to it if the
     // student finishes faster than the network round-trip (Slow 3G case).
@@ -171,10 +195,8 @@ var DSMPlayer = (function() {
       return attemptId;
     }).catch(function() { return null; });
 
-    if (typeof send === 'function') {
-      send({ action: 'activity', event: 'dsm_start', lesson: 'Mastery Module',
-        timestamp: new Date().toISOString() });
-    }
+    _send({ action: 'activity', event: 'dsm_start', lesson: 'Mastery Module',
+      timestamp: new Date().toISOString() });
 
     showQuestion();
   }
@@ -329,10 +351,8 @@ var DSMPlayer = (function() {
 
     container.innerHTML = html;
 
-    if (typeof send === 'function') {
-      send({ action: 'activity', event: 'dsm_attempt_complete', lesson: 'Mastery Module',
-        metadata: JSON.stringify({ attempt: attemptNumber, correct: correct, total: pool.length, pct: pct, threshold: threshold }) });
-    }
+    _send({ action: 'activity', event: 'dsm_attempt_complete', lesson: 'Mastery Module',
+      metadata: JSON.stringify({ attempt: attemptNumber, correct: correct, total: pool.length, pct: pct, threshold: threshold }) });
   }
 
   // ── ROUND INTERSTITIAL (mid-review when still missing some) ────
@@ -419,17 +439,13 @@ var DSMPlayer = (function() {
     //
     // #11: Tag the score with the dsm_modules.id so a future republish
     // (new module ID) correctly invalidates this row at lookup time.
-    var scorePromise = (typeof send === 'function')
-      ? send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct, dsmModuleId: moduleId })
-      : Promise.resolve();
+    var scorePromise = _send({ action: 'score', lesson: 'Mastery Module', score: correct, total: total, pct: pct, dsmModuleId: moduleId }) || Promise.resolve();
 
     // _postWithRetry never rejects (it buffers on failure), so this .then
     // always fires.
     Promise.resolve(scorePromise).then(function() {
-      if (typeof send === 'function') {
-        send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
-          metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
-      }
+      _send({ action: 'activity', event: 'dsm_complete', lesson: 'Mastery Module',
+        metadata: JSON.stringify({ rounds: round, attempts: attemptNumber, score: pct, totalMissed: allMissed.length }) });
       var container = document.getElementById(config.containerId);
       if (container) container.innerHTML = dsmCompleteScreenHTML(correct, total, pct);
       if (config.onComplete) config.onComplete();
@@ -450,9 +466,7 @@ var DSMPlayer = (function() {
         questions_missed: allMissed
       });
     }
-    if (typeof send === 'function') {
-      send({ action: 'score', lesson: 'Mastery Module', score: 0, total: questions.length, pct: 0 });
-    }
+    _send({ action: 'score', lesson: 'Mastery Module', score: 0, total: questions.length, pct: 0 });
 
     // Full state reset for clean retry — match init()'s reset block.
     started = false;
