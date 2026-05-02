@@ -378,11 +378,14 @@ tr:hover td{background:#f8fafc}
         <input class="filter" type="text" placeholder="Filter by student..." oninput="textFilters.activity=this.value;currentPages.activity=1;renderActivity()">
         <select class="filter" id="activity-event-filter" onchange="currentPages.activity=1;renderActivity()">
           <option value="">All Events</option>
+          <option value="client_error">⚠️ Recent Errors</option>
           <option value="page_view">Page Views</option>
           <option value="session_end">Session Totals</option>
           <option value="module_start">Module Starts</option>
           <option value="test_started">Test Started</option>
           <option value="submit_score">Score Submitted</option>
+          <option value="dsm_start">DSM Started</option>
+          <option value="dsm_complete">DSM Completed</option>
         </select>
         <button class="btn-export" onclick="exportCSV('activity')">Export CSV</button>
       </div>
@@ -579,6 +582,7 @@ tr:hover td{background:#f8fafc}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0" integrity="sha384-PsnFqJ58vyp7buRfuvdS2SrjRdUYinBv6lWwJXx3xQ17hWefo/UkwXowVBT53ubG" crossorigin="anonymous"></script>
 <script src="../shared/supabase-config.js"></script>
+<script src="../shared/error-reporter.js"></script>
 <script>
 /* ══════════════════════════════════════════════
    SUPABASE CLIENT
@@ -1090,7 +1094,12 @@ function renderActivity() {
   var tbody = '';
   pageRows.forEach(function(r) {
     var dur = r.duration ? formatDuration(r.duration) : '&mdash;';
-    var evBadge = r.event === 'page_view' ? 'badge-blue' : r.event === 'session_end' ? 'badge-green' : r.event === 'submit_score' ? 'badge-green' : 'badge-yellow';
+    var evBadge = r.event === 'client_error' ? 'badge-red'
+                : r.event === 'page_view' ? 'badge-blue'
+                : r.event === 'session_end' ? 'badge-green'
+                : r.event === 'submit_score' ? 'badge-green'
+                : r.event === 'dsm_complete' ? 'badge-green'
+                : 'badge-yellow';
     tbody += '<tr>' +
       '<td>' + formatTimestamp(r.created_at) + '</td>' +
       '<td>' + esc(r.student_name) + '</td>' +
