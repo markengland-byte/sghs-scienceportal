@@ -1951,7 +1951,16 @@ function submitFinalScore() {
   var __dzBtn = document.getElementById('dz-submit-btn');
   __dzBtn.disabled = true;
   Promise.resolve(__lastScorePromise).then(function(result) {
-    if (result) {
+    if (result && result.buffered) {
+      // Audit #12: write got buffered to localStorage; will sync on next
+      // page load. Treat as success for the retake-lock UI (data is safe
+      // and replay is automatic) but tell the user honestly via toast.
+      __dzBtn.textContent = 'Saved offline';
+      practiceAlreadySubmitted = true;
+      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
+      var _rbtn = document.getElementById('dz-retake-btn');
+      if (_rbtn) _rbtn.style.display = 'none';
+    } else if (result) {
       __dzBtn.textContent = '\u2705 Score Sent!';
       showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
       /* PRACTICE-RETAKE-IN-SESSION-LOCK */

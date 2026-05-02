@@ -169,7 +169,12 @@ var solAPI = (function() {
           if (typeof window.showToast === 'function') {
             window.showToast('\u26A0 Saved ' + label + ' offline \u2014 will retry when you reload');
           }
-          // Error already surfaced — swallow to avoid unhandled-rejection warning.
+          // Audit #12: return a sentinel so callers can differentiate
+          // 'saved offline, will sync on next load' from 'this is live on
+          // the server right now'. The UI used to lie ('Save failed - retry?')
+          // for buffered writes - data was safe but the message looked like
+          // a hard failure.
+          return { buffered: true, label: label };
         });
     });
   }

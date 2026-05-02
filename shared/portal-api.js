@@ -93,7 +93,10 @@ var portalAPI = (function() {
           if (typeof window.showToast === 'function') {
             window.showToast('\u26A0 Could not save ' + label + ' \u2014 please tell your teacher');
           }
-          // Error already surfaced — swallow to avoid unhandled-rejection warning.
+          // Audit #12: return a sentinel so callers can differentiate
+          // buffered-saved from live-saved. UI used to lie 'Save failed -
+          // retry?' for buffered writes; data was safe but message wrong.
+          return { buffered: true, label: label };
         });
     });
   }

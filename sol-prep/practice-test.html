@@ -1125,7 +1125,12 @@ function submitScore() {
   // _postWithRetry surfaces its own "Could not save" toast on failure;
   // stay silent here to avoid overwriting it.
   Promise.resolve(scorePromise).then(function(result) {
-    if (result) {
+    if (result && result.buffered) {
+      // Audit #12: buffered to localStorage; will sync on next page load.
+      btn.textContent = 'Saved offline';
+      showToast('Score saved offline - will sync on next visit');
+      clearProgressAll();
+    } else if (result) {
       btn.textContent = '\u2705 Score Submitted';
       showToast('\u2713 Score saved: ' + correct + '/' + testQuestions.length + ' (' + pct + '%)');
       clearProgressAll();
