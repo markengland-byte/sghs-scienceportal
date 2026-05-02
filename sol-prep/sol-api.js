@@ -41,6 +41,13 @@ var solAPI = (function() {
   var _studentEmail = '';
   var _studentDisplayName = '';
 
+  // Single source of truth for auth.uid() — denormalized onto every
+  // write payload so RLS can use a self-contained `auth_user_id =
+  // auth.uid()` check (no cross-table subqueries; FERPA Phase 2).
+  function _authUid() {
+    return (_session && _session.user && _session.user.id) || null;
+  }
+
   // ── SUPABASE REST HELPER ──
   function _rest(method, table, opts) {
     opts = opts || {};
@@ -121,6 +128,20 @@ var solAPI = (function() {
         return succeeded;
       }
       var r = rows[i];
+      // FERPA Phase 2 backwards-compat: writes buffered before this
+      // deploy were serialized without auth_user_id. After RLS lockdown
+      // those would be rejected forever. If we have a session now,
+      // inject the field at drain time so the retry succeeds.
+      var auid = _authUid();
+      if (auid && r.body) {
+        if (Array.isArray(r.body)) {
+          r.body.forEach(function(row) {
+            if (row && row.auth_user_id == null) row.auth_user_id = auid;
+          });
+        } else if (r.body.auth_user_id == null) {
+          r.body.auth_user_id = auid;
+        }
+      }
       return _rest('POST', r.table, { body: r.body, prefer: 'return=representation' })
         .then(function(resp) {
           if (resp && resp.ok) succeeded++;
@@ -244,10 +265,13 @@ var solAPI = (function() {
     var student = payload.student;
     var module = payload.module;
 
+    var auid = _authUid();
+
     if (action === 'score') {
       return _postWithRetry('scores', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -269,6 +293,7 @@ var solAPI = (function() {
         return {
           class_id: _classId,
           student_id: _studentId,
+          auth_user_id: auid,
           student_name: student,
           module: module,
           lesson: payload.lesson || '',
@@ -290,6 +315,7 @@ var solAPI = (function() {
       return _postWithRetry('checkpoints', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -307,6 +333,7 @@ var solAPI = (function() {
       return _postBestEffort('activity', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -542,6 +569,7 @@ var solAPI = (function() {
     _postBestEffort('activity', {
       class_id: _classId,
       student_id: _studentId,
+      auth_user_id: _authUid(),
       student_name: payload.student || '',
       module: payload.module || '',
       lesson: payload.lesson || '',
