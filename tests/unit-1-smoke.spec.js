@@ -1,116 +1,116 @@
-/* SGHS Portal — unit-1.html smoke test
+/* SGHS Portal — unit-1.html smoke test (Phase D era)
    ---------------------------------------------------------------
-   What this catches:
+   What this catches (the bugs Phase D weekend actually hit):
      - JS syntax errors that break the page on load
-     - Broken module-release gate (unit-1 should be open per memory)
-     - validateCode + storeClass round-trip
-     - Modal accept-and-dismiss flow
-     - First panel render
+     - unit-engine.js failing to load (404 from corrupted cache-bust,
+       parse error, etc.) → UnitEngine undefined
+     - sol-api.js failing to load → solAPI undefined
+     - dsm-player.js failing to load → DSMPlayer undefined
+     - config/unit-1.js failing to load → UNIT_CONFIG undefined
+     - Module-release lock branches behaving correctly
+     - Required SSO modal markup intact
+     - No uncaught page errors during initial render
 
    What this does NOT catch (intentionally):
+     - Sign-in flow (requires real Google account in CI)
      - The full quiz interaction loop (DSM, vocab, practice test) —
        too brittle for CI; covered by the SQL integration suite at
        migrations/test/dsm-integration-tests.sql.
-     - Anything that requires a teacher session (use of the dashboard)
+     - Anything that requires a teacher session.
 
-   IMPORTANT — TEST DATA POLLUTION:
-     Each run inserts rows under student_name='Playwright Ci<stamp>'
-     into scores/activity/quiz_progress/student_classes (legacy
-     branch — student_id is NULL because no Google session). They
-     accumulate. Run this every few months to clean up:
-
-       DELETE FROM scores         WHERE student_name LIKE 'Playwright%';
-       DELETE FROM activity       WHERE student_name LIKE 'Playwright%';
-       DELETE FROM quiz_progress  WHERE student_name LIKE 'Playwright%';
-       DELETE FROM checkpoints    WHERE student_name LIKE 'Playwright%';
-       DELETE FROM dsm_attempts   WHERE student_name LIKE 'Playwright%';
-
-     (None of those will touch real student data — the prefix is
-     reserved for this test.)
+   The test does NOT insert rows. With SSO-required, the modal can'"'"'t
+   be accepted without a real Google session, so the entry flow stops
+   at the modal — fine for a smoke test.
 
    Configure via env vars (see playwright.config.js + smoke.yml):
      TEST_BASE_URL    default https://sghs-portal.vercel.app
-     TEST_CLASS_CODE  default ENG-3 (Mark's active 3rd Block)
+     TEST_CLASS_CODE  default BIO-3 (post-rename) or ENG-3 (pre)
 */
 const { test, expect } = require('@playwright/test');
 
 const BASE_URL = process.env.TEST_BASE_URL || 'https://sghs-portal.vercel.app';
 const CLASS_CODE = process.env.TEST_CLASS_CODE || 'ENG-3';
 
-test('unit-1.html: page loads, modal accepts class code, panel 0 renders', async ({ page }) => {
-  const stamp = Date.now();
-  const consoleErrors = [];
+// Errors we expect/accept in CI but which are unrelated to portal health.
+const HARMLESS_PATTERNS = [
+  /cdn\.jsdelivr\.net\/sm\//,             // CSP-blocked Supabase sourcemap fetch
+  /Tracking Prevention/,                   // Edge privacy feature on CDN
+  /409 \(Conflict\)/,                      // duplicate enrollInClass attempt
+  /cdnjs\.cloudflare\.com/,                // CDN sourcemap noise
+  /\/rest\/v1\/activity/,                  // error-reporter writes from anon get 401
+                                           // post-Phase-2 RLS — known, separate fix
+];
 
-  // Capture browser console errors so a failed assertion includes them.
+test('unit-1.html: page loads, engine + solAPI + config registered, modal correct', async ({ page }) => {
+  const consoleErrors = [];
   page.on('console', msg => {
     if (msg.type() === 'error') consoleErrors.push(msg.text());
   });
-
-  // Page errors (uncaught exceptions in page scripts).
   const pageErrors = [];
   page.on('pageerror', err => pageErrors.push(err.message + '\n' + (err.stack || '').slice(0, 500)));
 
   await page.goto(`${BASE_URL}/sol-prep/unit-1.html`, { waitUntil: 'domcontentloaded' });
 
-  // ── Wait for the async isModuleUnlocked() lookup to resolve.
+  // ── Wait for async boot (initAuth, runModuleReleaseGate, etc.).
   await page.waitForTimeout(1500);
 
-  // ── Module-release state branches the test:
-  //    - If unit-1 is intentionally LOCKED (teacher closed it overnight,
-  //      between classes, etc.), the entry flow can't run. Verify the
-  //      lock UI is well-formed and exit early with PASS — a locked unit
-  //      is normal operation, not a smoke-test failure.
-  //    - If unit-1 is OPEN, run the full entry flow.
+  // ── Hard fail on any uncaught page error during initial render.
+  expect(pageErrors, 'Uncaught page errors:\n' + pageErrors.join('\n')).toHaveLength(0);
+
+  // ── Phase D core invariant: every script tag must have loaded and
+  //    the globals must be wired. These four checks would have caught
+  //    yesterday'"'"'s `?v=__HASH__` corruption that 404'"'"'d every script.
+  const globalsReady = await page.evaluate(() => ({
+    unitEngine:   typeof window.UnitEngine,
+    solAPI:       typeof window.solAPI,
+    dsmPlayer:    typeof window.DSMPlayer,
+    unitConfig:   typeof window.UNIT_CONFIG,
+    configUnit:   window.UNIT_CONFIG && window.UNIT_CONFIG.unitNumber,
+    configKey:    window.UNIT_CONFIG && window.UNIT_CONFIG.unitKey
+  }));
+  expect(globalsReady.unitEngine, '[engine] UnitEngine global must be registered').toBe('object');
+  expect(globalsReady.solAPI,     '[engine] solAPI global must be registered').toBe('object');
+  expect(globalsReady.dsmPlayer,  '[engine] DSMPlayer global must be registered').toBe('object');
+  expect(globalsReady.unitConfig, '[engine] window.UNIT_CONFIG must be registered').toBe('object');
+  expect(globalsReady.configUnit, 'config unitNumber should match the page').toBe(1);
+  expect(globalsReady.configKey,  'config unitKey should match the page').toBe('unit1');
+
+  // ── Public API surface check — these are the methods the inline
+  //    onclick attributes call. If any is missing, students hit a
+  //    ReferenceError mid-page.
+  const apiPresent = await page.evaluate(() => {
+    const methods = ['boot','onGateAnswer','onVqPick','onFlipCard','onSolPick',
+      'goTo','retakePractice','submitFinalScore','showDangerZone','showToast',
+      'markAnswered','retryVocab','gradeVocab','startUnit','startFresh',
+      'signInWithGoogle','flushSave'];
+    return methods.filter(m => typeof window.UnitEngine[m] !== 'function');
+  });
+  expect(apiPresent, 'UnitEngine missing public methods').toEqual([]);
+
+  // ── Module-release state branches the rest of the test.
   const lockOverlay = page.locator('#module-release-lock-overlay');
   const isLocked = await lockOverlay.isVisible().catch(() => false);
   if (isLocked) {
     await expect(lockOverlay).toContainText(/Not Yet Open/i);
-    console.log('[smoke] unit-1 is currently locked — entry-flow assertions skipped (this is expected if a teacher locked it).');
-    expect(pageErrors, 'Uncaught page errors:\n' + pageErrors.join('\n')).toHaveLength(0);
+    console.log('[smoke] unit-1 is currently locked — entry-flow assertions skipped (expected when teacher has it locked).');
     return;
   }
 
-  // ── Modal visible (unlocked path)
-  const modal = page.locator('#name-modal');
-  await expect(modal).toBeVisible();
-
-  // ── SSO is now the only entry path (legacy name modal removed
-  //    when biology classes flipped to requires_sso=true). Verify
-  //    the SSO button is present + the start button + the class
-  //    code field. We don't try to actually drive OAuth — that
-  //    requires a real Google account in CI which is its own
-  //    project. Smoke test scope: page loads, expected controls
-  //    are in the DOM, no uncaught JS errors.
-
+  // ── Modal + SSO entry path (unlocked branch)
+  await expect(page.locator('#name-modal')).toBeVisible();
   await expect(page.locator('#sso-signin-btn')).toBeVisible();
   await expect(page.locator('#class-code')).toBeAttached();
   await expect(page.locator('button.nm-btn')).toBeAttached();
 
-  // Sanity: legacy name inputs should NOT be in the DOM anymore.
+  // ── Legacy name modal artifacts must be gone (Phase A removed them).
   await expect(page.locator('#student-first-name')).toHaveCount(0);
   await expect(page.locator('#student-last-name')).toHaveCount(0);
 
-  // ── Filter out expected noise from real errors.
-  //    - cdn.jsdelivr.net/sm/...map: CSP-blocked sourcemap fetch (harmless)
-  //    - "Tracking Prevention blocked": Edge privacy feature on Chart.js CDN
-  //    - 409 Conflict: enrollInClass duplicate (harmless; row already exists)
-  const realConsoleErrors = consoleErrors.filter(e =>
-    !e.includes('cdn.jsdelivr.net/sm/') &&
-    !e.includes('Tracking Prevention') &&
-    !e.includes('409 (Conflict)') &&
-    !e.includes('cdnjs.cloudflare.com')
-  );
-
-  if (realConsoleErrors.length > 0) {
+  // ── Console-error filter: anything not in HARMLESS_PATTERNS is real.
+  const realErrors = consoleErrors.filter(e => !HARMLESS_PATTERNS.some(p => p.test(e)));
+  if (realErrors.length > 0) {
     console.log('Browser console errors (filtered):');
-    realConsoleErrors.forEach(e => console.log('  - ' + e));
+    realErrors.forEach(e => console.log('  - ' + e));
   }
-  if (pageErrors.length > 0) {
-    console.log('Uncaught page errors:');
-    pageErrors.forEach(e => console.log('  - ' + e));
-  }
-
-  // Hard fail on any uncaught page error — those would have crashed
-  // a real student's session.
-  expect(pageErrors, 'Uncaught page errors:\n' + pageErrors.join('\n')).toHaveLength(0);
+  // Soft assertion — log but don't fail. (Hard fail is on pageErrors.)
 });
