@@ -563,6 +563,18 @@ window.UnitEngine = (function() {
       } else {
         goTo(0);
       }
+      // Third DSM-init path (matches original code): if the user
+      // previously passed vocab, ensure the player is initialized
+      // even when saved state lacked vqAnswers. Without this, a
+      // student returning to the Mastery panel after a vocab pass
+      // sees a blank panel because _initDSMPlayer() inside
+      // _replayDom only fires when vqAnswers has entries.
+      var vocabFlag = localStorage.getItem('sol_' + _config.unitKey + '_vocab') === 'passed';
+      if ((vocabFlag || _state.vocabPassed) && window.DSMPlayer) {
+        _state.vocabPassed = true;
+        _state.unlockedPanels.add(_config.dsmPanelId);
+        _initDSMPlayer();
+      }
     }).catch(function(err) {
       console.warn('[UnitEngine] restore failed:', err);
       goTo(0);
