@@ -714,8 +714,19 @@ window.UnitEngine = (function() {
     }
 
     _state.unlockedPanels.add(panelId + 1);
-    var nextBtn = document.querySelector('#p' + panelId + ' .next-btn');
-    if (nextBtn) nextBtn.disabled = false;
+    // Inline lesson HTML uses <button class="nbtn next" id="next-N">
+    // (NOT .next-btn — that was a wrong assumption in the first
+    // engine draft). Try the explicit ID first; fall back to the
+    // class selector for any pages with different markup.
+    var nextBtn = document.getElementById('next-' + panelId)
+      || document.querySelector('#p' + panelId + ' .nbtn.next');
+    if (nextBtn) {
+      nextBtn.disabled = false;
+      // Strip the lock-emoji prefix once unlocked. Match both the
+      // literal emoji and its surrogate-pair escape (some pages
+      // serialize as "🔒").
+      nextBtn.innerHTML = nextBtn.innerHTML.replace(/^[\uD83D]?\uDD12\s*|^🔒\s*/, '');
+    }
   }
 
   // Generic "panel-3 chart marker" for unit-1 (graph-1 / graph-2 in BIO.1c).
