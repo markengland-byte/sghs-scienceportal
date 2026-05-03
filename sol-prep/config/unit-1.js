@@ -34,7 +34,7 @@ window.UNIT_CONFIG = {
 
   // Per-panel gate requirements (panel 3 also requires 2 graph answers
   // tracked separately via UnitEngine.markAnswered('graph1'/'graph2', ...))
-  gateRequired: { 0: 5, 1: 2, 2: 2, 3: 4, 4: 2, 5: 2, 6: 2 },
+  gateRequired: { 0: 5, 1: 5, 2: 5, 3: 6, 4: 6, 5: 4, 6: 4 },
 
   // Vocab gate
   vocab: {
