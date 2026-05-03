@@ -439,20 +439,11 @@ function applySSOSession() {
   if (!solAPI.isAuthenticated || !solAPI.isAuthenticated()) return false;
   var fullName = (solAPI.getStudentDisplayName && solAPI.getStudentDisplayName()) || '';
   var email = (solAPI.getStudentEmail && solAPI.getStudentEmail()) || '';
-  if (!fullName && !email) return false;
-  if (!fullName) fullName = email.split('@')[0];
-  var parts = fullName.trim().split(/\s+/);
-  var first = parts[0] || '';
-  var last = parts.slice(1).join(' ');
-  var f = document.getElementById('sfirstname');
-  var l = document.getElementById('slastname');
-  if (f) { f.value = first; f.disabled = true; f.style.opacity = '0.6'; }
-  if (l) { l.value = last;  l.disabled = true; l.style.opacity = '0.6'; }
-  // Programmatic value changes don't fire input events, so update start-btn
-  // directly using the same gating logic as check() below.
-  var sb = document.getElementById('start-btn');
-  var codeEl = document.getElementById('scode');
-  if (sb) sb.disabled = !(first && last && codeEl && codeEl.value.trim());
+  // Fall back to email-prefix BEFORE bailing; bcpsk12.com Google
+  // accounts always have email, sometimes lack a stored display_name.
+  if (!fullName && email) fullName = email.split('@')[0];
+  if (!fullName) return false;
+
   var banner = document.getElementById('sso-signed-in');
   var nameDisp = document.getElementById('sso-name-display');
   var btn = document.getElementById('sso-signin-btn');
@@ -460,14 +451,16 @@ function applySSOSession() {
   if (nameDisp) nameDisp.textContent = fullName + (email ? ' (' + email + ')' : '');
   if (btn) btn.style.display = 'none';
   _ssoActive = true;
+
+  // Programmatic SSO toggle doesn't fire codeEl 'input' so update
+  // start-btn directly with the same logic the check() function uses.
+  var sb = document.getElementById('start-btn');
+  var codeEl = document.getElementById('scode');
+  if (sb) sb.disabled = !(codeEl && codeEl.value.trim());
   return true;
 }
 
 function clearSSOSession() {
-  var f = document.getElementById('sfirstname');
-  var l = document.getElementById('slastname');
-  if (f) { f.disabled = false; f.style.opacity = '1'; }
-  if (l) { l.disabled = false; l.style.opacity = '1'; }
   var banner = document.getElementById('sso-signed-in');
   var btn = document.getElementById('sso-signin-btn');
   if (banner) banner.style.display = 'none';
@@ -483,25 +476,26 @@ function signInWithGoogle() {
   }
   var btn = document.getElementById('sso-signin-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Redirecting...'; }
-  solAPI.signInWithGoogle(window.location.href).catch(function(err) {
+
+  function handleErr(err) {
     console.error('[practice-test] sign-in failed:', err);
     if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
     var ce = document.getElementById('code-err');
-    if (ce) { ce.textContent = 'Sign-in failed: ' + (err.message || 'unknown error'); ce.style.display = 'block'; }
-  });
+    if (ce) { ce.textContent = 'Sign-in failed: ' + (err && err.message ? err.message : 'unknown error'); ce.style.display = 'block'; }
+  }
+  // Supabase signInWithOAuth resolves with { data, error } even when
+  // it "fails" — we have to inspect the resolved value rather than
+  // rely on .catch() alone.
+  solAPI.signInWithGoogle(window.location.href).then(function(result) {
+    if (result && result.error) handleErr(result.error);
+  }).catch(handleErr);
 }
 
 document.addEventListener('click', function(e) {
   if (e.target && e.target.id === 'sso-signout') {
     e.preventDefault();
     if (solAPI.signOut) {
-      solAPI.signOut().then(function() {
-        clearSSOSession();
-        var f = document.getElementById('sfirstname');
-        var l = document.getElementById('slastname');
-        if (f) f.value = '';
-        if (l) l.value = '';
-      });
+      solAPI.signOut().then(clearSSOSession);
     }
   }
 });
@@ -1118,7 +1112,7 @@ function submitScore() {
   });
   send({
     action: 'activity',
-    lesson: 'Practice Test (Generated)',
+    lesson: lessonLabel,
     event: 'submit_score',
     duration: Math.round((Date.now() - testStart) / 1000),
     stdBreakdown: stdBreakdown
