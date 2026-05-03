@@ -312,7 +312,8 @@ window.UnitEngine = (function() {
       // Show score box if graded.
       if (_state.vqScore > 0 || Object.keys(_state.vqAnswers).length >= c.vocab.total) {
         var box = document.getElementById('vquiz-score');
-        var nEl = document.getElementById('vq-score-n');
+        // unit-1 markup uses #vq-score-n; units 2-8 use #vq-score-num.
+        var nEl = document.getElementById('vq-score-n') || document.getElementById('vq-score-num');
         var msgEl = document.getElementById('vq-pass-msg');
         if (box && nEl && msgEl) {
           nEl.textContent = _state.vqScore + '/' + c.vocab.total;
@@ -706,25 +707,38 @@ window.UnitEngine = (function() {
     if (required == null) return;
     var answered = _state.gateAnswered[panelId] ? _state.gateAnswered[panelId].size : 0;
 
+    // Special case for unit-1 panel 3: the "answered" count is a
+    // combined pool of gate-questions + graph clicks. Original
+    // behavior: 4 of any combination unlocks (matches the 4 .gate-q
+    // questions + 2 graph clicks total of 6 possible engagement
+    // points). Match the original'"'"'s permissive logic.
+    var isUnit1Panel3 = (panelId === 3 && _config.unitNumber === 1);
+    var graphPoints = isUnit1Panel3
+      ? (_state.graphAnswered.graph1 ? 1 : 0) + (_state.graphAnswered.graph2 ? 1 : 0)
+      : 0;
+    var displayedAnswered = answered + graphPoints;
+
     // Live-update the visible "X of N answered" counter under each
     // panel. Use the count of actual rendered .gate-q elements (the
     // visible total) as the denominator, NOT the gateRequired minimum
     // — required is "min to unlock", not the visible question count.
-    // Without this, panels that show 5 questions but only require 2
-    // to unlock display nonsense like "5 of 2 answered".
     var countEl = document.getElementById('gate-count-' + panelId);
     if (countEl) {
-      var visibleTotal = document.querySelectorAll('#p' + panelId + ' .gate-q').length || required;
-      countEl.textContent = answered + ' of ' + visibleTotal + ' answered';
+      var visibleTotal;
+      if (isUnit1Panel3) {
+        // For unit-1 panel 3, denominator is the gate-required (4) so
+        // the counter doesn'"'"'t exceed it (caps at "4 of 4 answered").
+        visibleTotal = required;
+        displayedAnswered = Math.min(displayedAnswered, required);
+      } else {
+        visibleTotal = document.querySelectorAll('#p' + panelId + ' .gate-q').length || required;
+      }
+      countEl.textContent = displayedAnswered + ' of ' + visibleTotal + ' answered';
     }
 
-    // Special case: panel-3 graphs (unit-1 only — generic via graphAnswered keys).
-    var graphsRequiredFor3 = (panelId === 3 && _config.gateRequired[3] === 4 && Object.keys(_config.gateRequired).indexOf('3-graphs') === -1);
-    var graphsDone = (_state.graphAnswered.graph1 && _state.graphAnswered.graph2);
-    var bothGraphsRequired = graphsRequiredFor3 && _config.unitNumber === 1;
-
-    if (bothGraphsRequired) {
-      if (answered < 2 || !graphsDone) return;
+    // Combined-pool gate check for unit-1 panel 3; standard check elsewhere.
+    if (isUnit1Panel3) {
+      if ((answered + graphPoints) < required) return;
     } else {
       if (answered < required) return;
     }
@@ -841,7 +855,8 @@ window.UnitEngine = (function() {
     _state.vqScore = score;
 
     var box = document.getElementById('vquiz-score');
-    var nEl = document.getElementById('vq-score-n');
+    // unit-1 markup uses #vq-score-n; units 2-8 use #vq-score-num.
+    var nEl = document.getElementById('vq-score-n') || document.getElementById('vq-score-num');
     var msgEl = document.getElementById('vq-pass-msg');
     if (box && nEl && msgEl) {
       nEl.textContent = score + '/' + c.vocab.total;
