@@ -29,6 +29,7 @@ window.UnitEngine = (function() {
   var _saveTimer = null;
   var _hbInterval = null;
   var _hbLastActive = Date.now();
+  var _lastScorePromise = null;
 
   var SAVE_DEBOUNCE_MS = 1500;
   var HEARTBEAT_MS = 60000;
@@ -239,6 +240,20 @@ window.UnitEngine = (function() {
       _checkGate(parseInt(panelId));
     }
 
+    // Graph questions (unit-1 panel 3 only). Replays the visual styling
+    // so the chart-option highlights persist across reloads.
+    ['graph1', 'graph2'].forEach(function(key, i) {
+      if (!_state.graphAnswered[key]) return;
+      var qId = i === 0 ? 'graph-q1' : 'graph-q2';
+      var fbId = i === 0 ? 'graph-feedback' : 'graph2-feedback';
+      document.querySelectorAll('#' + qId + ' .graph-q-opt').forEach(function(o) {
+        var oc = o.getAttribute('onclick') || '';
+        o.classList.add(oc.indexOf('true') !== -1 ? 'correct-ans' : 'neutral');
+      });
+      var fb = document.getElementById(fbId);
+      if (fb) fb.style.display = 'block';
+    });
+
     // Vocab cards
     var cards = document.querySelectorAll('.vcard');
     var vocabNeedsReset = (!_state.vocabPassed && Object.keys(_state.vqAnswers).length === 0);
@@ -384,6 +399,14 @@ window.UnitEngine = (function() {
       if (!_state.studentName) return;
       var duration = Math.round((Date.now() - _state.sessionStart) / 1000);
       _flushSave();
+      // Push the latest progress snapshot via keepalive so the request
+      // survives page-unload (regular fetch gets cancelled).
+      if (solAPI.flushProgress) {
+        try {
+          var snap = localStorage.getItem('sol_' + _config.unitKey + '_progress');
+          if (snap) solAPI.flushProgress(_config.unitKey.replace(/^unit/, 'unit-'), _state.studentName, JSON.parse(snap));
+        } catch (e) {}
+      }
       if (solAPI.beacon) {
         solAPI.beacon({
           action: 'activity',
@@ -585,7 +608,9 @@ window.UnitEngine = (function() {
   function _send(payload) {
     payload.student = _state.studentName;
     payload.module  = payload.module || _config.moduleName;
-    return solAPI.submit ? (solAPI.submit(payload) || Promise.resolve()) : Promise.resolve();
+    var p = solAPI.submit ? (solAPI.submit(payload) || Promise.resolve()) : Promise.resolve();
+    if (payload.action === 'score') _lastScorePromise = p;
+    return p;
   }
 
   // ── PANEL NAVIGATION ─────────────────────────────────────
@@ -681,16 +706,16 @@ window.UnitEngine = (function() {
     if (required == null) return;
     var answered = _state.gateAnswered[panelId] ? _state.gateAnswered[panelId].size : 0;
 
+    // Live-update the visible "X of N answered" counter under each panel.
+    var countEl = document.getElementById('gate-count-' + panelId);
+    if (countEl) countEl.textContent = answered + ' of ' + required + ' answered';
+
     // Special case: panel-3 graphs (unit-1 only — generic via graphAnswered keys).
     var graphsRequiredFor3 = (panelId === 3 && _config.gateRequired[3] === 4 && Object.keys(_config.gateRequired).indexOf('3-graphs') === -1);
     var graphsDone = (_state.graphAnswered.graph1 && _state.graphAnswered.graph2);
     var bothGraphsRequired = graphsRequiredFor3 && _config.unitNumber === 1;
 
     if (bothGraphsRequired) {
-      // Original logic: panel 3 needs 2 qq + 2 graph = 4 total but they're separate
-      // For unit-1, gateRequired[3] = 4 = the 4 questions, plus 2 graph answers needed
-      // Inspect original: required=4 covers 2 qq + 2 graphs combined, BUT they're in different counters
-      // Original behavior: panel 3 = 2 q + 2 graph required = unlock when both q-count >= 2 AND both graphs answered
       if (answered < 2 || !graphsDone) return;
     } else {
       if (answered < required) return;
@@ -714,17 +739,26 @@ window.UnitEngine = (function() {
     }
 
     _state.unlockedPanels.add(panelId + 1);
-    // Inline lesson HTML uses <button class="nbtn next" id="next-N">
-    // (NOT .next-btn — that was a wrong assumption in the first
-    // engine draft). Try the explicit ID first; fall back to the
-    // class selector for any pages with different markup.
+
+    // Update the gate-status box: switch from locked-grey to unlocked-green
+    // and replace the "Answer all questions..." text with the success message.
+    var statusEl = document.getElementById('gate-status-' + panelId);
+    if (statusEl) {
+      statusEl.classList.add('unlocked');
+      var msg = statusEl.querySelector('.gate-msg');
+      if (msg) msg.textContent = 'All questions answered — next step unlocked!';
+    }
+    // Mark THIS panel's step button as done now that the gate cleared.
+    var doneSb = document.getElementById('sb' + panelId);
+    if (doneSb) doneSb.classList.add('done');
+
+    // Inline lesson HTML uses <button class="nbtn next" id="next-N">.
     var nextBtn = document.getElementById('next-' + panelId)
       || document.querySelector('#p' + panelId + ' .nbtn.next');
     if (nextBtn) {
       nextBtn.disabled = false;
-      // Strip the lock-emoji prefix once unlocked. Match both the
-      // literal emoji and its surrogate-pair escape (some pages
-      // serialize as "🔒").
+      // Strip the leading lock-emoji prefix once unlocked. Match both the
+      // literal emoji and its surrogate-pair escape.
       nextBtn.innerHTML = nextBtn.innerHTML.replace(/^[\uD83D]?\uDD12\s*|^🔒\s*/, '');
     }
   }
@@ -788,6 +822,13 @@ window.UnitEngine = (function() {
 
   function _gradeVocab() {
     var c = _config;
+    // Manual-trigger guard: if the student clicks the "Grade My Vocab Quiz"
+    // button before answering all of them, refuse with a toast instead of
+    // grading a partial set.
+    if (Object.keys(_state.vqAnswers).length < c.vocab.total) {
+      showToast('Answer all ' + c.vocab.total + ' vocab questions first!');
+      return;
+    }
     var score = Object.values(_state.vqAnswers).filter(function(v) { return v; }).length;
     _state.vqScore = score;
 
@@ -876,15 +917,67 @@ window.UnitEngine = (function() {
     var progMsg = document.getElementById('sol-progress-msg');
     if (progMsg) progMsg.textContent = _state.pracAnswered + ' of ' + _config.totalSolQ + ' answered';
 
-    if (_state.pracAnswered >= _config.totalSolQ) _showDangerZone();
+    if (_state.pracAnswered >= _config.totalSolQ) {
+      _showDangerZone();
+      // Auto-scroll to the danger-zone summary after the explanation
+      // animation settles. Original behavior; gives the student a beat
+      // before the page jumps.
+      setTimeout(function() {
+        var dz = document.getElementById('dz-result');
+        if (dz) dz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 800);
+    }
     _scheduleSave();
   }
 
   function _showDangerZone() {
-    var dz = document.getElementById('sol-danger-zone');
-    if (dz) dz.style.display = 'block';
+    var pct = _state.pracAnswered > 0
+      ? Math.round((_state.pracCorrect / _config.totalSolQ) * 100)
+      : 0;
+    var waiting = document.getElementById('dz-waiting');
+    if (waiting) waiting.style.display = 'none';
+    var box = document.getElementById('dz-result');
+    if (!box) {
+      var trBtn = document.getElementById('to-results-btn');
+      if (trBtn) trBtn.disabled = false;
+      return;
+    }
+    box.style.display = 'block';
+
+    var cls, emoji, label, msg;
+    if (pct >= 80)      { cls='green';  emoji='🟢'; label='STRONG — You\'re in good shape on ' + _config.standard; msg='Score: '+pct+'%. You\'re above the 80% threshold.'; }
+    else if (pct >= 60) { cls='yellow'; emoji='🟡'; label='CAUTION — Review needed on ' + _config.standard; msg='Score: '+pct+'%. Review missed standards before the SOL.'; }
+    else                { cls='red';    emoji='🔴'; label='DANGER ZONE — ' + _config.standard + ' needs work'; msg='Score: '+pct+'%. Re-read all sections and retake.'; }
+    box.className = 'dz-box ' + cls;
+
+    var s  = document.getElementById('dz-score');  if (s)  s.textContent  = _state.pracCorrect + '/' + _config.totalSolQ;
+    var em = document.getElementById('dz-emoji');  if (em) em.textContent = emoji;
+    var lb = document.getElementById('dz-label');  if (lb) lb.textContent = label;
+    var mg = document.getElementById('dz-msg');    if (mg) mg.textContent = msg;
+
+    var stdKeys = Object.keys(_state.missedStds);
+    var smap = _config.standardsMap || {};
+    if (stdKeys.length > 0) {
+      var missed = document.getElementById('dz-missed');
+      var list   = document.getElementById('dz-missed-list');
+      if (missed) missed.style.display = 'block';
+      if (list) list.innerHTML = stdKeys.map(function(k) {
+        return '<div class="dz-missed-item"><strong>' + k + '</strong>: '
+          + (smap[k] || k) + ' — missed ' + _state.missedStds[k] + ' question(s)</div>';
+      }).join('');
+    }
+
     var trBtn = document.getElementById('to-results-btn');
     if (trBtn) trBtn.disabled = false;
+    var sbLast = document.getElementById('sb' + (_config.totalPanels - 1));
+    if (sbLast) sbLast.classList.add('done');
+
+    try {
+      localStorage.setItem('sol_'+_config.unitKey+'_score',  _state.pracCorrect+'/'+_config.totalSolQ);
+      localStorage.setItem('sol_'+_config.unitKey+'_pct',    pct);
+      localStorage.setItem('sol_'+_config.unitKey+'_status', cls);
+      localStorage.setItem('sol_'+_config.unitKey+'_done',   'true');
+    } catch (e) {}
   }
 
   function submitFinalScore() {
@@ -893,6 +986,11 @@ window.UnitEngine = (function() {
       return;
     }
     var pct = Math.round((_state.pracCorrect / _config.totalSolQ) * 100);
+
+    // Disable the submit button immediately so the student can't double-click.
+    var dzBtn = document.getElementById('dz-submit-btn');
+    if (dzBtn) dzBtn.disabled = true;
+
     _send({
       action: 'score', lesson: 'Practice Test',
       score: _state.pracCorrect, total: _config.totalSolQ, pct: pct
@@ -902,7 +1000,25 @@ window.UnitEngine = (function() {
       questions: _state.questionDetail
     });
     _state.unlockedPanels.add(_config.totalPanels - 1);
-    goTo(_config.totalPanels - 1);
+
+    // Wait for the score write to land before declaring success/failure.
+    Promise.resolve(_lastScorePromise || Promise.resolve()).then(function(result) {
+      _state.practiceAlreadySubmitted = true;
+      _state.priorPracticeScore = { score: _state.pracCorrect, total: _config.totalSolQ, pct: pct };
+      var rb = document.getElementById('dz-retake-btn');
+      if (rb) rb.style.display = 'none';
+      if (dzBtn) {
+        if (result && result.buffered) {
+          dzBtn.textContent = '✓ Saved offline — will sync on reload';
+        } else if (result) {
+          dzBtn.textContent = '✅ Score Sent!';
+        } else {
+          dzBtn.textContent = '⚠ Save failed — retry?';
+          dzBtn.disabled = false;
+        }
+      }
+      // Don't auto-navigate — student clicks "Continue to Results" via #to-results-btn.
+    });
   }
 
   function retakePractice() {
@@ -921,8 +1037,14 @@ window.UnitEngine = (function() {
       var exp = qq.querySelector('.qexp');
       if (exp) { exp.classList.remove('show', 'qexp-wrong'); exp.style.display = ''; }
     });
-    var dz = document.getElementById('sol-danger-zone');
-    if (dz) dz.style.display = 'none';
+    // Reset the danger-zone visual state to its pre-submit defaults.
+    var dzr  = document.getElementById('dz-result');
+    if (dzr) { dzr.style.display = 'none'; dzr.className = 'dz-box'; }
+    var dm   = document.getElementById('dz-missed');      if (dm)   dm.style.display   = 'none';
+    var dml  = document.getElementById('dz-missed-list'); if (dml)  dml.innerHTML      = '';
+    var ds   = document.getElementById('dz-submit-btn');  if (ds)   { ds.textContent  = '📤 Submit Score to Mr. England'; ds.disabled = false; }
+    var trb  = document.getElementById('to-results-btn'); if (trb)  trb.disabled       = true;
+    var wait = document.getElementById('dz-waiting');     if (wait) wait.style.display = 'block';
     var progMsg = document.getElementById('sol-progress-msg');
     if (progMsg) progMsg.textContent = '0 of ' + _config.totalSolQ + ' answered';
     _scheduleSave();
@@ -949,8 +1071,18 @@ window.UnitEngine = (function() {
       banner.id = 'pretest-already-banner';
       banner.style.cssText = 'background:#dcfce7;border:2px solid #16a34a;color:#166534;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
       banner.innerHTML = '✓ Pretest already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). The pretest is a one-time diagnostic — you can continue to the lesson below.';
-      p0.insertBefore(banner, p0.firstChild);
+      var lc = p0.querySelector('.lc');
+      (lc || p0).insertBefore(banner, (lc || p0).firstChild);
     }
+    // Hide the pretest questions so a re-enrolled student can't re-take.
+    document.querySelectorAll('#p0 .qq, #p0 .gate-q').forEach(function(qq) { qq.style.display = 'none'; });
+    _state.pretestSent = true;
+    // Pre-fill gate-answered set with sentinel keys so _checkGate(0) unlocks panel 1.
+    if (!_state.gateAnswered[0]) _state.gateAnswered[0] = new Set();
+    var req = (_config.gateRequired && _config.gateRequired[0]) || 5;
+    for (var i = 0; i < req; i++) _state.gateAnswered[0].add('pretest-locked-' + i);
+    _state.unlockedPanels.add(1);
+    _checkGate(0);
   }
 
   function _checkPracticeLock() {
@@ -967,19 +1099,17 @@ window.UnitEngine = (function() {
   function _applyPracticeLockUI() {
     if (!_state.practiceAlreadySubmitted || !_state.priorPracticeScore) return;
     var p = _state.priorPracticeScore;
-    var practicePanel = _config.totalPanels - 2;
-    var pp = document.getElementById('p' + practicePanel);
-    if (pp && !document.getElementById('practice-already-banner')) {
-      var banner = document.createElement('div');
-      banner.id = 'practice-already-banner';
-      banner.style.cssText = 'background:#fef3c7;border:2px solid #f59e0b;color:#78350f;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
-      banner.innerHTML = '✓ Practice Test already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). One-attempt policy is in effect.';
-      pp.insertBefore(banner, pp.firstChild);
-    }
-    var box = document.getElementById('sol-practice-box');
-    if (box) box.style.display = 'none';
     var locked = document.getElementById('practice-test-locked');
-    if (locked) locked.style.display = 'block';
+    if (locked) {
+      locked.innerHTML =
+        '<div class="practice-locked-icon">✓</div>' +
+        '<div class="practice-locked-title">Practice Test Already Submitted</div>' +
+        '<div class="practice-locked-sub">Your score: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). Talk to your teacher if you need to retake.</div>';
+      locked.style.display = '';
+    }
+    var box = document.getElementById('sol-practice-box');  if (box) box.style.display = 'none';
+    var rb  = document.getElementById('dz-retake-btn');     if (rb)  rb.style.display  = 'none';
+    _state.unlockedPanels.add(_config.totalPanels - 1);
   }
 
   // ── HEARTBEAT ────────────────────────────────────────────
@@ -1044,15 +1174,22 @@ window.UnitEngine = (function() {
   // ── UI HELPERS ───────────────────────────────────────────
   function showToast(msg) {
     var t = document.getElementById('toast');
-    if (!t) {
+    var m = document.getElementById('toast-msg');
+    // Prefer the inner span (HTML uses <div id="toast">📤 <span id="toast-msg">…</span></div>);
+    // fall back to overwriting the toast div text content.
+    if (m) m.textContent = msg;
+    else if (t) t.textContent = msg;
+    else {
       t = document.createElement('div');
       t.id = 'toast';
       t.className = 'toast';
+      t.textContent = msg;
       document.body.appendChild(t);
     }
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(function() { t.classList.remove('show'); }, 3000);
+    if (t) {
+      t.style.display = 'flex';
+      setTimeout(function() { t.style.display = 'none'; }, 3500);
+    }
   }
 
   function startFresh() {
@@ -1084,6 +1221,7 @@ window.UnitEngine = (function() {
     showToast:        showToast,
     markAnswered:     markAnswered,
     retryVocab:       retryVocab,
+    gradeVocab:       _gradeVocab,
     startUnit:        startUnit,
     startFresh:       startFresh,
     signInWithGoogle: signInWithGoogle,

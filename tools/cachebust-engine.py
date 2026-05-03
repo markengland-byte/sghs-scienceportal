@@ -6,7 +6,7 @@ from pathlib import Path
 
 BASE = Path(r"C:\Users\Mark England\Desktop\sghs-portal-v2\sol-prep")
 TARGETS = [f"unit-{n}.html" for n in range(1, 9)]
-NEW_VERSION = "2026-05-03-phaseD-nav"
+NEW_VERSION = "2026-05-03-phaseD-batch"
 
 PAT = re.compile(r'\?v=\d{4}-\d{2}-\d{2}-phaseD[^"]*')
 
