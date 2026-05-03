@@ -706,9 +706,17 @@ window.UnitEngine = (function() {
     if (required == null) return;
     var answered = _state.gateAnswered[panelId] ? _state.gateAnswered[panelId].size : 0;
 
-    // Live-update the visible "X of N answered" counter under each panel.
+    // Live-update the visible "X of N answered" counter under each
+    // panel. Use the count of actual rendered .gate-q elements (the
+    // visible total) as the denominator, NOT the gateRequired minimum
+    // — required is "min to unlock", not the visible question count.
+    // Without this, panels that show 5 questions but only require 2
+    // to unlock display nonsense like "5 of 2 answered".
     var countEl = document.getElementById('gate-count-' + panelId);
-    if (countEl) countEl.textContent = answered + ' of ' + required + ' answered';
+    if (countEl) {
+      var visibleTotal = document.querySelectorAll('#p' + panelId + ' .gate-q').length || required;
+      countEl.textContent = answered + ' of ' + visibleTotal + ' answered';
+    }
 
     // Special case: panel-3 graphs (unit-1 only — generic via graphAnswered keys).
     var graphsRequiredFor3 = (panelId === 3 && _config.gateRequired[3] === 4 && Object.keys(_config.gateRequired).indexOf('3-graphs') === -1);
