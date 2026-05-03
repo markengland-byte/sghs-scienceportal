@@ -69,7 +69,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 .f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
 
 /* CONTENT LAYOUT */
-.lc{padding:36px 48px 56px;max-width:860px;}
+.lc{padding:36px 48px 56px;max-width:860px;margin:0 auto;}
 .section{margin-bottom:40px;}
 .eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
@@ -285,7 +285,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       &#10003; Signed in as <strong id="sso-name-display"></strong>
       <a href="#" id="sso-signout" style="float:right;color:#1976d2;font-size:.78rem;text-decoration:underline">Switch account</a>
     </div>
-    <button id="sso-signin-btn" type="button" onclick="signInWithGoogle()"
+    <button id="sso-signin-btn" type="button" onclick="UnitEngine.signInWithGoogle()"
             style="width:100%;padding:10px;font-size:.95rem;font-weight:600;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:8px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px">
       <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.26c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.71H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
       Sign in with Google
@@ -295,8 +295,8 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="class-info" style="display:none;font-size:.8rem;color:var(--green);margin-bottom:8px;padding:2px 0"></div>
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="code-err">Please enter your class code.</div>
-    <button class="nm-btn" onclick="startUnit()">Start Unit 8 &#x2192;</button>
-    <div style="margin-top:8px;text-align:center"><a href="#" onclick="startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <button class="nm-btn" onclick="UnitEngine.startUnit()">Start Unit 8 &#x2192;</button>
+    <div style="margin-top:8px;text-align:center"><a href="#" onclick="UnitEngine.startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
     <div style="margin-top:4px;text-align:center"><a href="#" onclick="solAPI.clearClass();document.getElementById('class-code').value='';document.getElementById('class-info').style.display='none';return false" style="font-size:.72rem;color:var(--muted);text-decoration:underline">Change class code</a></div>
   </div>
 </div>
@@ -314,16 +314,16 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 </header>
 
 <nav class="steps-bar" id="steps-bar">
-  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Populations</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Energy &amp; Cycles</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Succession</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Human Impact</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Mastery</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
+  <div class="step"><button class="step-btn active" onclick="UnitEngine.goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(1)" id="sb1"><span class="step-num">2</span>Populations</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(2)" id="sb2"><span class="step-num">3</span>Energy &amp; Cycles</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(3)" id="sb3"><span class="step-num">4</span>Succession</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(4)" id="sb4"><span class="step-num">5</span>Human Impact</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(6)" id="sb6"><span class="step-num">7</span>Mastery</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
 </nav>
 <div class="steps-prog" id="steps-prog"></div>
 
@@ -432,10 +432,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="0">
         <div class="q-stem"><span class="q-num">1</span> Approximately how many questions on the real SOL come from BIO.8?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1 question</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 6 questions</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 15 questions</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>25 questions</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>1 question</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>About 6 questions</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>About 15 questions</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>25 questions</li>
         </ul>
         <div class="qexp">BIO.8 accounts for about 12% of the SOL test, approximately 6 questions out of 50.</div>
       </div>
@@ -443,10 +443,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">2</span> Which is a TOP MISS AREA for BIO.8?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Reading carrying capacity from a population graph</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Naming every species in a forest ecosystem</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Drawing food webs from scratch</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating the exact pH of soil</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Reading carrying capacity from a population graph</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Naming every species in a forest ecosystem</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Drawing food webs from scratch</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Calculating the exact pH of soil</li>
         </ul>
         <div class="qexp">Students struggle with identifying carrying capacity on a graph. It's where the population levels OFF (plateaus), not the highest point if the line overshoots then drops back.</div>
       </div>
@@ -457,10 +457,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="0">
         <div class="q-stem"><span class="q-num">3</span> (2005-29) The organisms in a backyard (bacteria, grass, trees, insects, birds, mammals) together make up &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>a population</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>an experimental group</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>a community</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>a kingdom</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>a population</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>an experimental group</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>a community</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>a kingdom</li>
         </ul>
         <div class="qexp">Multiple DIFFERENT species living together = community. A population is one species. A kingdom is a classification group. An experimental group is part of an experiment.</div>
       </div>
@@ -468,10 +468,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="0">
         <div class="q-stem"><span class="q-num">4</span> (2001-36) Which level of a food pyramid represents the largest biomass?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Top predators (bass)</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Producers (algae)</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Primary consumers (minnows)</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Secondary consumers (copepods)</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Top predators (bass)</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Producers (algae)</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Primary consumers (minnows)</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Secondary consumers (copepods)</li>
         </ul>
         <div class="qexp">Producers (the bottom of the pyramid) ALWAYS have the most biomass and energy. Each level up has less because only ~10% of energy is transferred. Algae (producers) = largest biomass.</div>
       </div>
@@ -479,10 +479,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">5</span> (2002-24) The main cause of fish kills in rivers polluted by fertilizers is &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>decreased oxygen levels</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>increased water temperatures</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>decreased mineral sources</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>increased water levels</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>decreased oxygen levels</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>increased water temperatures</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>decreased mineral sources</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>increased water levels</li>
         </ul>
         <div class="qexp">Fertilizer runoff causes eutrophication: excess nutrients → algal bloom → algae die → bacteria decompose algae → bacteria consume oxygen → dissolved oxygen drops → fish suffocate and die.</div>
       </div>
@@ -491,7 +491,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     </div>
     <div class="section" style="margin-top:24px;"><a class="depth-link" href="../biology/ecosystems-biosphere.html">&#x1F4D8; Need more depth? See the full lesson in Ecosystems &amp; the Biosphere &rarr;</a></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; Populations &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="UnitEngine.goTo(1)" id="next-0" disabled>&#x1F512; Populations &rarr;</button></div>
 </div>
 <!-- PANEL 1: POPULATIONS & CARRYING CAPACITY (BIO.8a) -->
 <div class="panel" id="p1">
@@ -549,10 +549,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="1" data-std="BIO.8a">
         <div class="q-stem"><span class="q-num">1</span> (2006-43) Plant roots grow with mycorrhizal fungi. Fungi absorb water/minerals for the plant and receive carbohydrates. This is &mdash; <span class="q-tag">BIO.8a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>mutualism</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>competition</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>predation</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>parasitism</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>mutualism</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>competition</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>predation</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>parasitism</li>
         </ul>
         <div class="qexp">Both organisms benefit: fungi get carbohydrates, plant gets water and minerals. Both benefit = mutualism. If one was harmed, it would be parasitism.</div>
       </div>
@@ -560,10 +560,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="1" data-std="BIO.8a">
         <div class="q-stem"><span class="q-num">2</span> (2003-43) The greatest limiting factor for plants on the floor of a rain forest is &mdash; <span class="q-tag">BIO.8a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>herbivores</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>water</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>sunlight</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>space</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>herbivores</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>water</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>sunlight</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>space</li>
         </ul>
         <div class="qexp">The rain forest canopy blocks most sunlight from reaching the floor. Water is abundant in a rain forest. Sunlight is the most limited resource for floor-level plants.</div>
       </div>
@@ -571,10 +571,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.8a">
         <div class="q-stem"><span class="q-num">3</span> (2001-5) In 1893, a forest had ~3,000 mule deer. After predators were killed, deer rose to 100,000 by 1923 on 1 million acres. The density in 1923 was approximately &mdash; <span class="q-tag">BIO.8a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1 per 100 acres</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>1 per acre</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>1 per 1,000 acres</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>1 per 10 acres</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>1 per 100 acres</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>1 per acre</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>1 per 1,000 acres</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>1 per 10 acres</li>
         </ul>
         <div class="qexp">Population density = number / area. 100,000 deer &divide; 1,000,000 acres = 1 deer per 10 acres. When predators were removed, the deer population exploded because a major limiting factor (predation) was eliminated.</div>
       </div>
@@ -582,10 +582,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="1" data-std="BIO.8a">
         <div class="q-stem"><span class="q-num">4</span> (2004-8) An organism that produces FEW offspring with high parental care has the greatest risk of population loss from &mdash; <span class="q-tag">BIO.8a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>bacterial infection in one individual</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>a single season of drought</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>the death of only a few individuals</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>competition with other species</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>bacterial infection in one individual</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>a single season of drought</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>the death of only a few individuals</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>competition with other species</li>
         </ul>
         <div class="qexp">Species with few offspring (like elephants) have small populations. Losing even a few individuals represents a large percentage of the population. Species with many offspring (bacteria, flies) can absorb losses because they reproduce rapidly.</div>
       </div>
@@ -593,7 +593,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-1"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-1">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Energy &amp; Cycles &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="UnitEngine.goTo(2)" id="next-1" disabled>&#x1F512; Energy &amp; Cycles &rarr;</button></div>
 </div>
 
 <!-- PANEL 2: ENERGY FLOW & NUTRIENT CYCLES (BIO.8b) -->
@@ -647,10 +647,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="2" data-std="BIO.8b">
         <div class="q-stem"><span class="q-num">1</span> (2004-20) Which organism is correctly paired with its metabolism? <span class="q-tag">BIO.8b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Human &mdash; heterotroph</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Fish &mdash; autotroph</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Grass &mdash; heterotroph</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Mushroom &mdash; autotroph</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Human &mdash; heterotroph</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Fish &mdash; autotroph</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Grass &mdash; heterotroph</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Mushroom &mdash; autotroph</li>
         </ul>
         <div class="qexp">Humans eat other organisms = heterotroph. Fish eat other organisms = heterotroph (not autotroph). Grass photosynthesizes = autotroph (not heterotroph). Mushrooms decompose = heterotroph (not autotroph).</div>
       </div>
@@ -658,10 +658,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="2" data-std="BIO.8b">
         <div class="q-stem"><span class="q-num">2</span> (2002-29) At deep-sea vents, bacteria turn hydrogen sulfide into sugars and provide food to other organisms. Compared to land food chains, these bacteria fill the same role as &mdash; <span class="q-tag">BIO.8b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>mushrooms</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>hawks</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>green plants</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>rabbits</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>mushrooms</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>hawks</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>green plants</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>rabbits</li>
         </ul>
         <div class="qexp">These bacteria are PRODUCERS &mdash; they make their own food (from chemicals, not sunlight). On land, green plants are the producers. Mushrooms are decomposers, hawks are consumers, rabbits are consumers.</div>
       </div>
@@ -669,10 +669,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="2" data-std="BIO.8b">
         <div class="q-stem"><span class="q-num">3</span> (2002-27) Which of these is a decomposer in a Virginia forest? <span class="q-tag">BIO.8b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>A pine tree</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>A dandelion</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>A mushroom</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>A caterpillar</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>A pine tree</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>A dandelion</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>A mushroom</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>A caterpillar</li>
         </ul>
         <div class="qexp">Mushrooms (fungi) are decomposers &mdash; they break down dead organic matter and recycle nutrients. Pine trees and dandelions are producers. Caterpillars are consumers (herbivores).</div>
       </div>
@@ -680,10 +680,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.8b">
         <div class="q-stem"><span class="q-num">4</span> (2003-37) Energy is transferred from insects to fish in an ecosystem by &mdash; <span class="q-tag">BIO.8b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>decaying processes</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>radiation</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>water</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>food consumption</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>decaying processes</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>radiation</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>water</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>food consumption</li>
         </ul>
         <div class="qexp">Energy moves between trophic levels through EATING. Fish eat insects, transferring the chemical energy stored in the insects' bodies to the fish. Energy flows through food chains by consumption.</div>
       </div>
@@ -691,7 +691,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-2"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-2">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; Populations</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Succession &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(1)">&larr; Populations</button><button class="nbtn next" onclick="UnitEngine.goTo(3)" id="next-2" disabled>&#x1F512; Succession &rarr;</button></div>
 </div>
 <!-- PANEL 3: SUCCESSION (BIO.8c) -->
 <div class="panel" id="p3">
@@ -734,10 +734,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="3" data-std="BIO.8c">
         <div class="q-stem"><span class="q-num">1</span> (2006-14) In an aquatic habitat, an example of a pioneer community would be &mdash; <span class="q-tag">BIO.8c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>grass</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>water lilies</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>water reeds</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>algae</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>grass</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>water lilies</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>water reeds</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>algae</li>
         </ul>
         <div class="qexp">Algae are the pioneer species in aquatic environments &mdash; they're the first to colonize and require the least established conditions. Water lilies, reeds, and grasses come in later stages.</div>
       </div>
@@ -745,10 +745,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.8c">
         <div class="q-stem"><span class="q-num">2</span> An abandoned parking lot cracks and weeds begin to grow through the pavement. Over decades, shrubs and then trees take over. This is an example of &mdash; <span class="q-tag">BIO.8c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>primary succession</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>secondary succession</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>eutrophication</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>extinction</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>primary succession</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>secondary succession</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>eutrophication</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>extinction</li>
         </ul>
         <div class="qexp">Soil exists under/around the pavement, and seeds are available nearby. Since soil is present, this is secondary succession. Primary succession would be on bare rock with NO soil.</div>
       </div>
@@ -756,10 +756,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.8c">
         <div class="q-stem"><span class="q-num">3</span> The climax community in most of Virginia is a &mdash; <span class="q-tag">BIO.8c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>grassland prairie</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>pine forest</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>deciduous oak-hickory forest</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>tropical rainforest</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>grassland prairie</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>pine forest</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>deciduous oak-hickory forest</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>tropical rainforest</li>
         </ul>
         <div class="qexp">The VDOE framework explicitly states Virginia's climax community is a deciduous oak-hickory (hardwood) forest. Pine forests are an intermediate stage, not the climax.</div>
       </div>
@@ -767,10 +767,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.8c">
         <div class="q-stem"><span class="q-num">4</span> Primary succession differs from secondary succession because primary succession &mdash; <span class="q-tag">BIO.8c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>begins on bare rock with no soil present</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>occurs after a forest fire</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>is always faster</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>requires existing vegetation</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>begins on bare rock with no soil present</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>occurs after a forest fire</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>is always faster</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>requires existing vegetation</li>
         </ul>
         <div class="qexp">Primary = starts from bare rock, NO soil. Secondary = starts after disturbance where soil remains (like after a fire). Primary is SLOWER, not faster. Secondary requires existing soil, not primary.</div>
       </div>
@@ -778,7 +778,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-3"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-3">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Energy &amp; Cycles</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Human Impact &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(2)">&larr; Energy &amp; Cycles</button><button class="nbtn next" onclick="UnitEngine.goTo(4)" id="next-3" disabled>&#x1F512; Human Impact &rarr;</button></div>
 </div>
 
 <!-- PANEL 4: HUMAN IMPACT & VIRGINIA (BIO.8d) -->
@@ -842,10 +842,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.8d">
         <div class="q-stem"><span class="q-num">1</span> (2005-33) Of the following causes of wetland loss, which do people have the LEAST control over? <span class="q-tag">BIO.8d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Droughts</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Draining and filling</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Discharge of pollutants</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Overgrazing</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Droughts</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Draining and filling</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Discharge of pollutants</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Overgrazing</li>
         </ul>
         <div class="qexp">Droughts are natural weather events &mdash; humans have minimal control over them. Draining, pollution, and overgrazing are all direct human activities that can be regulated or stopped.</div>
       </div>
@@ -853,10 +853,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.8d">
         <div class="q-stem"><span class="q-num">2</span> (2004-46) Which method of caterpillar control would be most dangerous to honeybees needed for pollination? <span class="q-tag">BIO.8d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Using moth scents to attract moths to traps</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Releasing caterpillar parasites</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Planting moth-repelling plants</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Spraying plants with insecticides</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Using moth scents to attract moths to traps</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Releasing caterpillar parasites</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Planting moth-repelling plants</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Spraying plants with insecticides</li>
         </ul>
         <div class="qexp">Insecticides kill ALL insects, not just the target pest. Honeybees visiting sprayed plants would also be killed. The other methods (traps, parasites, repelling plants) specifically target moths/caterpillars without harming bees.</div>
       </div>
@@ -864,10 +864,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.8d">
         <div class="q-stem"><span class="q-num">3</span> (2003-24) Fewer than 3,000 manatees are left. Which would most likely cause their extinction? <span class="q-tag">BIO.8d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Increases in range</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Increases in non-competing species</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>A disease reducing fertility rates</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>A freeze in the northern range</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Increases in range</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Increases in non-competing species</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>A disease reducing fertility rates</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>A freeze in the northern range</li>
         </ul>
         <div class="qexp">With only 3,000 left, any factor that reduces reproduction would be devastating. A disease reducing fertility = fewer births = population can't recover = extinction. More range or non-competing species wouldn't threaten them.</div>
       </div>
@@ -875,10 +875,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.8d">
         <div class="q-stem"><span class="q-num">4</span> (2006-15) When the environment suddenly changes, the least specialized animals have the best chance of survival because they &mdash; <span class="q-tag">BIO.8d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>can adapt to different conditions</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>move from place to place</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>mutate rapidly</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>reproduce abundantly</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>can adapt to different conditions</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>move from place to place</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>mutate rapidly</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>reproduce abundantly</li>
         </ul>
         <div class="qexp">Generalists (least specialized) can eat different foods, live in different habitats, and tolerate a range of conditions. When the environment changes, they can adjust. Specialists (highly specialized) depend on specific resources that may disappear.</div>
       </div>
@@ -886,7 +886,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-4"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-4">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Succession</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(3)">&larr; Succession</button><button class="nbtn next" onclick="UnitEngine.goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
 </div>
 <!-- PANEL 5: VOCAB LOCK-IN -->
 <div class="panel" id="p5">
@@ -896,56 +896,56 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <p class="prose">Flip ALL 26 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
     <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 29 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 29 cards studied</div></div>
     <div class="vocab-grid">
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ecosystem</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All living organisms + nonliving environment in a geographic area</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Population</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Group of same species living in the same area at the same time</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Community</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All populations of different species interacting in an area</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biotic Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Living components: predators, prey, competitors, disease organisms</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Abiotic Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Nonliving components: temperature, water, sunlight, pH, soil</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Carrying Capacity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Maximum population an environment can sustain; where graph levels off</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Limiting Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Resource or condition that restricts population growth</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Food Chain</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Linear pathway: producer &rarr; primary consumer &rarr; secondary consumer</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Food Web</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Interconnected food chains showing complex feeding relationships</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Trophic Level</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Feeding position in a food chain (producer, 1st consumer, 2nd consumer)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Producer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Makes own food (autotroph); base of energy pyramid; most energy/biomass</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Consumer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Eats other organisms for energy (heterotroph)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Decomposer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Breaks down dead matter, recycling nutrients (bacteria, fungi)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Energy Pyramid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Energy decreases at each level (~10% transferred up); producers at base</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biomass Pyramid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Total mass of organisms at each trophic level; producers = most</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Carbon Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Carbon moves via photosynthesis, respiration, combustion, decomposition</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nitrogen Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">N&#x2082; fixed by bacteria &rarr; absorbed by plants &rarr; eaten by animals &rarr; returned to soil</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nitrogen Fixation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Bacteria convert atmospheric N&#x2082; into ammonia plants can use</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Primary Succession</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Starts on bare rock with NO soil; very slow; pioneer species (lichens) first</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Secondary Succession</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">After disturbance where SOIL remains; faster than primary</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Pioneer Species</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">First to colonize bare area (lichens, mosses); break down rock into soil</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Climax Community</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Stable mature ecosystem; Virginia = deciduous oak-hickory forest</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eutrophication</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Excess nutrients &rarr; algal bloom &rarr; oxygen depletion &rarr; fish kills</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Invasive Species</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Non-native organism that harms the ecosystem it enters</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biodiversity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Variety of species; higher biodiversity = more stable ecosystem</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Watershed</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Area of land draining into a common body of water (e.g., Chesapeake Bay)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutualism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Symbiotic relationship where BOTH species benefit (mycorrhizal fungi + plant roots)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Parasitism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">One species benefits, the other is HARMED (tick feeding on dog)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Commensalism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">One species benefits, other is UNAFFECTED (barnacles on whale)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Ecosystem</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All living organisms + nonliving environment in a geographic area</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Population</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Group of same species living in the same area at the same time</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Community</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All populations of different species interacting in an area</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biotic Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Living components: predators, prey, competitors, disease organisms</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Abiotic Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Nonliving components: temperature, water, sunlight, pH, soil</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Carrying Capacity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Maximum population an environment can sustain; where graph levels off</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Limiting Factor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Resource or condition that restricts population growth</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Food Chain</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Linear pathway: producer &rarr; primary consumer &rarr; secondary consumer</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Food Web</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Interconnected food chains showing complex feeding relationships</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Trophic Level</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Feeding position in a food chain (producer, 1st consumer, 2nd consumer)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Producer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Makes own food (autotroph); base of energy pyramid; most energy/biomass</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Consumer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Eats other organisms for energy (heterotroph)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Decomposer</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Breaks down dead matter, recycling nutrients (bacteria, fungi)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Energy Pyramid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Energy decreases at each level (~10% transferred up); producers at base</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biomass Pyramid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Total mass of organisms at each trophic level; producers = most</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Carbon Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Carbon moves via photosynthesis, respiration, combustion, decomposition</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nitrogen Cycle</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">N&#x2082; fixed by bacteria &rarr; absorbed by plants &rarr; eaten by animals &rarr; returned to soil</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nitrogen Fixation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Bacteria convert atmospheric N&#x2082; into ammonia plants can use</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Primary Succession</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Starts on bare rock with NO soil; very slow; pioneer species (lichens) first</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Secondary Succession</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">After disturbance where SOIL remains; faster than primary</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Pioneer Species</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">First to colonize bare area (lichens, mosses); break down rock into soil</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Climax Community</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Stable mature ecosystem; Virginia = deciduous oak-hickory forest</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Eutrophication</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Excess nutrients &rarr; algal bloom &rarr; oxygen depletion &rarr; fish kills</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Invasive Species</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Non-native organism that harms the ecosystem it enters</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Biodiversity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Variety of species; higher biodiversity = more stable ecosystem</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Watershed</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Area of land draining into a common body of water (e.g., Chesapeake Bay)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutualism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Symbiotic relationship where BOTH species benefit (mycorrhizal fungi + plant roots)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Parasitism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">One species benefits, the other is HARMED (tick feeding on dog)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Commensalism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">One species benefits, other is UNAFFECTED (barnacles on whale)</div></div></div></div>
     </div>
     <div id="vquiz" style="display:none;">
       <div class="vquiz-box">
         <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
-        <div class="vq" id="vq1"><div class="vq-text">1. The maximum population an environment can sustain is the:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Limiting factor</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Carrying capacity</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Biomass</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Trophic level</div></div><div class="vq-result" id="vqr1"></div></div>
-        <div class="vq" id="vq2"><div class="vq-text">2. Only ~10% of energy passes from one level to the next. This is shown in a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Energy pyramid</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Food chain</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Water cycle</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Cladogram</div></div><div class="vq-result" id="vqr2"></div></div>
-        <div class="vq" id="vq3"><div class="vq-text">3. Succession starting on bare rock with NO soil is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Secondary succession</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Eutrophication</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Primary succession</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Climax community</div></div><div class="vq-result" id="vqr3"></div></div>
-        <div class="vq" id="vq4"><div class="vq-text">4. Excess nutrients causing algal bloom → oxygen depletion → fish kill is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Biodiversity</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Succession</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Carrying capacity</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Eutrophication</div></div><div class="vq-result" id="vqr4"></div></div>
-        <div class="vq" id="vq5"><div class="vq-text">5. Virginia's climax community is a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Pine forest</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Grassland</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Deciduous oak-hickory forest</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Tropical rainforest</div></div><div class="vq-result" id="vqr5"></div></div>
-        <div class="vq" id="vq6"><div class="vq-text">6. An organism that breaks down dead matter and recycles nutrients is a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Producer</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Decomposer</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Primary consumer</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Predator</div></div><div class="vq-result" id="vqr6"></div></div>
-        <div class="vq" id="vq7"><div class="vq-text">7. All populations of different species interacting in an area form a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Population</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Community</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Ecosystem</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Biome</div></div><div class="vq-result" id="vqr7"></div></div>
-        <div class="vq" id="vq8"><div class="vq-text">8. Bacteria that convert atmospheric N₂ into forms plants can use perform:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Nitrogen fixation</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Photosynthesis</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Decomposition</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Fermentation</div></div><div class="vq-result" id="vqr8"></div></div>
-        <div class="vq" id="vq9"><div class="vq-text">9. A non-native organism that harms the ecosystem it enters is an:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Endemic species</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Pioneer species</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Invasive species</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Keystone species</div></div><div class="vq-result" id="vqr9"></div></div>
-        <div class="vq" id="vq10"><div class="vq-text">10. The first organisms to colonize bare rock during primary succession are:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Oak trees</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Grasses</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Shrubs</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Lichens and mosses</div></div><div class="vq-result" id="vqr10"></div></div>
+        <div class="vq" id="vq1"><div class="vq-text">1. The maximum population an environment can sustain is the:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Limiting factor</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Carrying capacity</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Biomass</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Trophic level</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. Only ~10% of energy passes from one level to the next. This is shown in a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Energy pyramid</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Food chain</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Water cycle</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Cladogram</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. Succession starting on bare rock with NO soil is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Secondary succession</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Eutrophication</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Primary succession</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Climax community</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. Excess nutrients causing algal bloom → oxygen depletion → fish kill is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Biodiversity</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Succession</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Carrying capacity</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Eutrophication</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. Virginia's climax community is a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Pine forest</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Grassland</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Deciduous oak-hickory forest</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Tropical rainforest</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. An organism that breaks down dead matter and recycles nutrients is a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Producer</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Decomposer</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Primary consumer</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Predator</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. All populations of different species interacting in an area form a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Population</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Community</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Ecosystem</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Biome</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. Bacteria that convert atmospheric N₂ into forms plants can use perform:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Nitrogen fixation</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Photosynthesis</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Decomposition</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Fermentation</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. A non-native organism that harms the ecosystem it enters is an:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Endemic species</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Pioneer species</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Invasive species</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Keystone species</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. The first organisms to colonize bare rock during primary succession are:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Oak trees</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Grasses</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Shrubs</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Lichens and mosses</div></div><div class="vq-result" id="vqr10"></div></div>
         <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
-        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="UnitEngine.retryVocab()" style="display:none;">Retry Quiz</button></div>
       </div>
     </div>
     <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Mastery Module Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the Mastery Module.</div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Human Impact</button><button class="nbtn next" onclick="goTo(6)">Mastery Module &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(4)">&larr; Human Impact</button><button class="nbtn next" onclick="UnitEngine.goTo(6)">Mastery Module &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -957,7 +957,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="sh2">BIO.8 Concept Mastery</div>
     <div id="dsm-container"></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Study Guide &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="UnitEngine.goTo(7)">Study Guide &rarr;</button></div>
 </div>
 
 <!-- PANEL 7: STUDY GUIDE -->
@@ -977,7 +977,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <p class="prose" style="font-size:.85rem;"><strong>5 threats:</strong> habitat destruction, pollution, invasive species, overexploitation, climate change. <strong>Eutrophication:</strong> fertilizer &rarr; algal bloom &rarr; O&#x2082; depletion &rarr; fish kill. <strong>Virginia:</strong> Chesapeake Bay watershed, oak-hickory forests, coastal wetlands. <strong>Solutions:</strong> buffer zones, reduced fertilizer, wetland restoration, invasive species control.</p>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Mastery Module</button><button class="nbtn next" onclick="goTo(8)">Practice Test &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(6)">&larr; Mastery Module</button><button class="nbtn next" onclick="UnitEngine.goTo(8)">Practice Test &rarr;</button></div>
 </div>
 
 <!-- PANEL 8: PRACTICE TEST (20 Qs) -->
@@ -988,30 +988,30 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Complete the Mastery Module to unlock the Practice Test.</div></div></div>
     <div class="quiz-box" id="sol-practice-box">
       <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.8 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
-      <!-- Q1 --><div class="qq" data-ans="c" data-std="BIO.8a"><div class="q-stem"><span class="q-num">1</span> (2001-16) A symbiotic relationship where one organism benefits while the other is harmed is &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>antagonism</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>commensalism</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>parasitism</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>mutualism</li></ul><div class="qexp">Parasitism: parasite benefits, host is harmed (tick on dog). Mutualism: both benefit. Commensalism: one benefits, other unaffected.</div></div>
-      <!-- Q2 --><div class="qq" data-ans="b" data-std="BIO.8a"><div class="q-stem"><span class="q-num">2</span> (2003-49) In which biome do evaporation rates exceed precipitation rates? <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Hardwood forest</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Desert</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Grassland</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Tropical jungle</li></ul><div class="qexp">Deserts are defined by having more water lost through evaporation than gained through precipitation. This extreme aridity is the defining characteristic.</div></div>
-      <!-- Q3 --><div class="qq" data-ans="d" data-std="BIO.8a"><div class="q-stem"><span class="q-num">3</span> (2002-48) On a population graph, the deer population at carrying capacity is where the line &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>starts increasing</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>reaches its steepest slope</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>begins to decline</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>levels off and stabilizes</li></ul><div class="qexp">Carrying capacity = where the population LEVELS OFF (plateaus). Not the peak, not the slope &mdash; the stable plateau.</div></div>
-      <!-- Q4 --><div class="qq" data-ans="c" data-std="BIO.8a"><div class="q-stem"><span class="q-num">4</span> (2004-8) Which organism has the greatest risk of population loss from the death of only a few individuals? <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Bacteria</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Flies</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Elephants</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Rats</li></ul><div class="qexp">Elephants produce few offspring with long gestation. A small population can't absorb losses. Bacteria, flies, and rats reproduce rapidly and can recover quickly.</div></div>
-      <!-- Q5 --><div class="qq" data-ans="a" data-std="BIO.8a"><div class="q-stem"><span class="q-num">5</span> (2006-43) Mycorrhizal fungi absorb water/minerals for plants and receive carbohydrates in return. This is &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>mutualism</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>competition</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>predation</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>parasitism</li></ul><div class="qexp">Both benefit: fungi get carbs, plant gets water/minerals = mutualism.</div></div>
-      <!-- Q6 --><div class="qq" data-ans="b" data-std="BIO.8b"><div class="q-stem"><span class="q-num">6</span> (2003-34) Which is required by ALL living things? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Oxygen</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Energy</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Mobility</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Carbon dioxide</li></ul><div class="qexp">ALL living things need energy. Not all need oxygen (anaerobic bacteria), not all move, not all use CO&#x2082; directly.</div></div>
-      <!-- Q7 --><div class="qq" data-ans="d" data-std="BIO.8b"><div class="q-stem"><span class="q-num">7</span> (2006-48) In a food web diagram, which organism provides nutrients for the LARGEST number of other organisms? <span class="q-tag">BIO.8b</span></div><div class="sol-img-wrap"><img class="sol-img" src="images/questions/2006-48.png" alt="Food web diagram" loading="lazy"></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Bluefish</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Seal</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Snapper</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Herring</li></ul><div class="qexp">In a food web, the organism eaten by the most other organisms provides nutrients to the largest number. Herring is typically a key prey species eaten by many predators.</div></div>
-      <!-- Q8 --><div class="qq" data-ans="a" data-std="BIO.8b"><div class="q-stem"><span class="q-num">8</span> (2004-20) Which organism is correctly paired with its metabolism? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Human &mdash; heterotroph</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Fish &mdash; autotroph</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Grass &mdash; heterotroph</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Mushroom &mdash; autotroph</li></ul><div class="qexp">Humans eat = heterotroph. Fish eat = heterotroph. Grass photosynthesizes = autotroph. Mushrooms decompose = heterotroph.</div></div>
-      <!-- Q9 --><div class="qq" data-ans="c" data-std="BIO.8b"><div class="q-stem"><span class="q-num">9</span> In a carbon cycle diagram, which process removes CO&#x2082; from the atmosphere? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Combustion</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Respiration</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Photosynthesis</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Decomposition</li></ul><div class="qexp">Photosynthesis absorbs CO&#x2082; from the atmosphere and converts it to glucose. Respiration, combustion, and decomposition all RELEASE CO&#x2082;.</div></div>
-      <!-- Q10 --><div class="qq" data-ans="b" data-std="BIO.8b"><div class="q-stem"><span class="q-num">10</span> Energy is transferred from one organism to another in an ecosystem by &mdash; <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>decomposition</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>food consumption</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>sunlight absorption</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>water evaporation</li></ul><div class="qexp">Energy flows through food chains by EATING. Each organism obtains energy by consuming the one below it in the food chain.</div></div>
-      <!-- Q11 --><div class="qq" data-ans="d" data-std="BIO.8c"><div class="q-stem"><span class="q-num">11</span> (2006-14) In an aquatic habitat, a pioneer community example would be &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>grass</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>water lilies</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>water reeds</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>algae</li></ul><div class="qexp">Algae are pioneers in aquatic succession &mdash; first to colonize, require least established conditions.</div></div>
-      <!-- Q12 --><div class="qq" data-ans="c" data-std="BIO.8c"><div class="q-stem"><span class="q-num">12</span> Virginia's climax community is a &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>pine forest</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>grassland</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>deciduous oak-hickory forest</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>marsh</li></ul><div class="qexp">VDOE states Virginia's climax = deciduous oak-hickory (hardwood) forest.</div></div>
-      <!-- Q13 --><div class="qq" data-ans="a" data-std="BIO.8c"><div class="q-stem"><span class="q-num">13</span> After a volcanic eruption creates new land, the first organisms to appear would be &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>lichens and mosses</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>tall trees</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>large mammals</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>flowering plants</li></ul><div class="qexp">Primary succession on bare volcanic rock: lichens and mosses are pioneer species. They break down rock to begin soil formation.</div></div>
-      <!-- Q14 --><div class="qq" data-ans="b" data-std="BIO.8c"><div class="q-stem"><span class="q-num">14</span> A forest destroyed by fire regrows faster than bare volcanic rock because the burned area has &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>more sunlight</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>existing soil with seeds and nutrients</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>fewer predators</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>more rainfall</li></ul><div class="qexp">Secondary succession (after fire) is faster because SOIL already exists with seeds, roots, and nutrients. Primary succession (bare rock) must create soil from scratch.</div></div>
-      <!-- Q15 --><div class="qq" data-ans="c" data-std="BIO.8c"><div class="q-stem"><span class="q-num">15</span> (2002-33) Many Virginia forests have been cleared for farmland. Which factor would LEAST affect how long it takes to return a farm to forest? <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>The ability of the farmland to retain moisture</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>The number of viable tree seeds on the land</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>The density of the original forest on the farm</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>The amount of available nutrients in the soil</li></ul><div class="qexp">The density of the ORIGINAL forest (before it was cleared) doesn't affect how quickly new forest grows back. What matters NOW is moisture, seeds, and soil nutrients. This is secondary succession &mdash; the land already has soil.</div></div>
-      <!-- Q16 --><div class="qq" data-ans="c" data-std="BIO.8d"><div class="q-stem"><span class="q-num">16</span> (2004-14) An oak-hickory forest cleared and replanted with pines would most threaten the &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>cardinal</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>summer tanager</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>hooded warbler</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>field sparrow</li></ul><div class="qexp">The hooded warbler depends on dense hardwood understory. Replacing hardwoods with pines destroys this specific habitat. More specialized species are most threatened by habitat change.</div></div>
-      <!-- Q17 --><div class="qq" data-ans="d" data-std="BIO.8d"><div class="q-stem"><span class="q-num">17</span> (2004-46) Which caterpillar control method would be most dangerous to honeybees? <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Moth scent traps</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Caterpillar parasites</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Moth-repelling plants</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Spraying insecticides</li></ul><div class="qexp">Insecticides kill ALL insects indiscriminately, including beneficial pollinators like honeybees. The other methods target only the pest species.</div></div>
-      <!-- Q18 --><div class="qq" data-ans="a" data-std="BIO.8d"><div class="q-stem"><span class="q-num">18</span> (2005-33) Of causes of wetland loss, people have LEAST control over &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>droughts</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>draining and filling</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>pollutant discharge</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>overgrazing</li></ul><div class="qexp">Droughts are natural weather events; humans can't prevent them. The others are direct human activities that can be regulated.</div></div>
-      <!-- Q19 --><div class="qq" data-ans="a" data-std="BIO.8d"><div class="q-stem"><span class="q-num">19</span> (2006-15) Least specialized animals survive sudden environmental changes best because they &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>adapt to different conditions</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>move faster</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>mutate rapidly</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>reproduce abundantly</li></ul><div class="qexp">Generalists tolerate a wide range of conditions. When the environment changes, they can adjust. Specialists depend on specific resources that may disappear.</div></div>
-      <!-- Q20 --><div class="qq" data-ans="c" data-std="BIO.8d"><div class="q-stem"><span class="q-num">20</span> (2003-24) With fewer than 3,000 manatees left, which would most likely cause extinction? <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Increased range</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>More non-competing species</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Disease reducing fertility</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>A freeze in northern range</li></ul><div class="qexp">With only 3,000 left, reduced fertility = fewer births = population can't recover = extinction. More range or non-competing species wouldn't threaten them.</div></div>
-      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+      <!-- Q1 --><div class="qq" data-ans="c" data-std="BIO.8a"><div class="q-stem"><span class="q-num">1</span> (2001-16) A symbiotic relationship where one organism benefits while the other is harmed is &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>antagonism</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>commensalism</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>parasitism</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>mutualism</li></ul><div class="qexp">Parasitism: parasite benefits, host is harmed (tick on dog). Mutualism: both benefit. Commensalism: one benefits, other unaffected.</div></div>
+      <!-- Q2 --><div class="qq" data-ans="b" data-std="BIO.8a"><div class="q-stem"><span class="q-num">2</span> (2003-49) In which biome do evaporation rates exceed precipitation rates? <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Hardwood forest</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Desert</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Grassland</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Tropical jungle</li></ul><div class="qexp">Deserts are defined by having more water lost through evaporation than gained through precipitation. This extreme aridity is the defining characteristic.</div></div>
+      <!-- Q3 --><div class="qq" data-ans="d" data-std="BIO.8a"><div class="q-stem"><span class="q-num">3</span> (2002-48) On a population graph, the deer population at carrying capacity is where the line &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>starts increasing</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>reaches its steepest slope</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>begins to decline</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>levels off and stabilizes</li></ul><div class="qexp">Carrying capacity = where the population LEVELS OFF (plateaus). Not the peak, not the slope &mdash; the stable plateau.</div></div>
+      <!-- Q4 --><div class="qq" data-ans="c" data-std="BIO.8a"><div class="q-stem"><span class="q-num">4</span> (2004-8) Which organism has the greatest risk of population loss from the death of only a few individuals? <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Bacteria</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Flies</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Elephants</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Rats</li></ul><div class="qexp">Elephants produce few offspring with long gestation. A small population can't absorb losses. Bacteria, flies, and rats reproduce rapidly and can recover quickly.</div></div>
+      <!-- Q5 --><div class="qq" data-ans="a" data-std="BIO.8a"><div class="q-stem"><span class="q-num">5</span> (2006-43) Mycorrhizal fungi absorb water/minerals for plants and receive carbohydrates in return. This is &mdash; <span class="q-tag">BIO.8a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>mutualism</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>competition</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>predation</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>parasitism</li></ul><div class="qexp">Both benefit: fungi get carbs, plant gets water/minerals = mutualism.</div></div>
+      <!-- Q6 --><div class="qq" data-ans="b" data-std="BIO.8b"><div class="q-stem"><span class="q-num">6</span> (2003-34) Which is required by ALL living things? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Oxygen</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Energy</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Mobility</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Carbon dioxide</li></ul><div class="qexp">ALL living things need energy. Not all need oxygen (anaerobic bacteria), not all move, not all use CO&#x2082; directly.</div></div>
+      <!-- Q7 --><div class="qq" data-ans="d" data-std="BIO.8b"><div class="q-stem"><span class="q-num">7</span> (2006-48) In a food web diagram, which organism provides nutrients for the LARGEST number of other organisms? <span class="q-tag">BIO.8b</span></div><div class="sol-img-wrap"><img class="sol-img" src="images/questions/2006-48.png" alt="Food web diagram" loading="lazy"></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Bluefish</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Seal</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Snapper</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Herring</li></ul><div class="qexp">In a food web, the organism eaten by the most other organisms provides nutrients to the largest number. Herring is typically a key prey species eaten by many predators.</div></div>
+      <!-- Q8 --><div class="qq" data-ans="a" data-std="BIO.8b"><div class="q-stem"><span class="q-num">8</span> (2004-20) Which organism is correctly paired with its metabolism? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Human &mdash; heterotroph</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Fish &mdash; autotroph</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Grass &mdash; heterotroph</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Mushroom &mdash; autotroph</li></ul><div class="qexp">Humans eat = heterotroph. Fish eat = heterotroph. Grass photosynthesizes = autotroph. Mushrooms decompose = heterotroph.</div></div>
+      <!-- Q9 --><div class="qq" data-ans="c" data-std="BIO.8b"><div class="q-stem"><span class="q-num">9</span> In a carbon cycle diagram, which process removes CO&#x2082; from the atmosphere? <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Combustion</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Respiration</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Photosynthesis</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Decomposition</li></ul><div class="qexp">Photosynthesis absorbs CO&#x2082; from the atmosphere and converts it to glucose. Respiration, combustion, and decomposition all RELEASE CO&#x2082;.</div></div>
+      <!-- Q10 --><div class="qq" data-ans="b" data-std="BIO.8b"><div class="q-stem"><span class="q-num">10</span> Energy is transferred from one organism to another in an ecosystem by &mdash; <span class="q-tag">BIO.8b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>decomposition</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>food consumption</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>sunlight absorption</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>water evaporation</li></ul><div class="qexp">Energy flows through food chains by EATING. Each organism obtains energy by consuming the one below it in the food chain.</div></div>
+      <!-- Q11 --><div class="qq" data-ans="d" data-std="BIO.8c"><div class="q-stem"><span class="q-num">11</span> (2006-14) In an aquatic habitat, a pioneer community example would be &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>grass</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>water lilies</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>water reeds</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>algae</li></ul><div class="qexp">Algae are pioneers in aquatic succession &mdash; first to colonize, require least established conditions.</div></div>
+      <!-- Q12 --><div class="qq" data-ans="c" data-std="BIO.8c"><div class="q-stem"><span class="q-num">12</span> Virginia's climax community is a &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>pine forest</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>grassland</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>deciduous oak-hickory forest</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>marsh</li></ul><div class="qexp">VDOE states Virginia's climax = deciduous oak-hickory (hardwood) forest.</div></div>
+      <!-- Q13 --><div class="qq" data-ans="a" data-std="BIO.8c"><div class="q-stem"><span class="q-num">13</span> After a volcanic eruption creates new land, the first organisms to appear would be &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>lichens and mosses</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>tall trees</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>large mammals</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>flowering plants</li></ul><div class="qexp">Primary succession on bare volcanic rock: lichens and mosses are pioneer species. They break down rock to begin soil formation.</div></div>
+      <!-- Q14 --><div class="qq" data-ans="b" data-std="BIO.8c"><div class="q-stem"><span class="q-num">14</span> A forest destroyed by fire regrows faster than bare volcanic rock because the burned area has &mdash; <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>more sunlight</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>existing soil with seeds and nutrients</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>fewer predators</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>more rainfall</li></ul><div class="qexp">Secondary succession (after fire) is faster because SOIL already exists with seeds, roots, and nutrients. Primary succession (bare rock) must create soil from scratch.</div></div>
+      <!-- Q15 --><div class="qq" data-ans="c" data-std="BIO.8c"><div class="q-stem"><span class="q-num">15</span> (2002-33) Many Virginia forests have been cleared for farmland. Which factor would LEAST affect how long it takes to return a farm to forest? <span class="q-tag">BIO.8c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>The ability of the farmland to retain moisture</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>The number of viable tree seeds on the land</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>The density of the original forest on the farm</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>The amount of available nutrients in the soil</li></ul><div class="qexp">The density of the ORIGINAL forest (before it was cleared) doesn't affect how quickly new forest grows back. What matters NOW is moisture, seeds, and soil nutrients. This is secondary succession &mdash; the land already has soil.</div></div>
+      <!-- Q16 --><div class="qq" data-ans="c" data-std="BIO.8d"><div class="q-stem"><span class="q-num">16</span> (2004-14) An oak-hickory forest cleared and replanted with pines would most threaten the &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>cardinal</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>summer tanager</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>hooded warbler</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>field sparrow</li></ul><div class="qexp">The hooded warbler depends on dense hardwood understory. Replacing hardwoods with pines destroys this specific habitat. More specialized species are most threatened by habitat change.</div></div>
+      <!-- Q17 --><div class="qq" data-ans="d" data-std="BIO.8d"><div class="q-stem"><span class="q-num">17</span> (2004-46) Which caterpillar control method would be most dangerous to honeybees? <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Moth scent traps</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Caterpillar parasites</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Moth-repelling plants</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Spraying insecticides</li></ul><div class="qexp">Insecticides kill ALL insects indiscriminately, including beneficial pollinators like honeybees. The other methods target only the pest species.</div></div>
+      <!-- Q18 --><div class="qq" data-ans="a" data-std="BIO.8d"><div class="q-stem"><span class="q-num">18</span> (2005-33) Of causes of wetland loss, people have LEAST control over &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>droughts</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>draining and filling</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>pollutant discharge</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>overgrazing</li></ul><div class="qexp">Droughts are natural weather events; humans can't prevent them. The others are direct human activities that can be regulated.</div></div>
+      <!-- Q19 --><div class="qq" data-ans="a" data-std="BIO.8d"><div class="q-stem"><span class="q-num">19</span> (2006-15) Least specialized animals survive sudden environmental changes best because they &mdash; <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>adapt to different conditions</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>move faster</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>mutate rapidly</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>reproduce abundantly</li></ul><div class="qexp">Generalists tolerate a wide range of conditions. When the environment changes, they can adjust. Specialists depend on specific resources that may disappear.</div></div>
+      <!-- Q20 --><div class="qq" data-ans="c" data-std="BIO.8d"><div class="q-stem"><span class="q-num">20</span> (2003-24) With fewer than 3,000 manatees left, which would most likely cause extinction? <span class="q-tag">BIO.8d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Increased range</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>More non-competing species</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Disease reducing fertility</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>A freeze in northern range</li></ul><div class="qexp">With only 3,000 left, reduced fertility = fewer births = population can't recover = extinction. More range or non-competing species wouldn't threaten them.</div></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="UnitEngine.goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(9)" disabled>Results &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="UnitEngine.goTo(9)" disabled>Results &rarr;</button></div>
 </div>
 
 <!-- PANEL 9: RESULTS -->
@@ -1019,1097 +1019,19 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   <div class="lc">
     <div class="eyebrow">Step 10 of 10 &mdash; Results</div>
     <div class="sh2">Your BIO.8 Score &amp; Danger Zone Report</div>
-    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
-    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="UnitEngine.goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="UnitEngine.submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="UnitEngine.retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
 </div>
 
 </main>
 <script src="../shared/error-reporter.js"></script>
-<script src="sol-api.js?v=2026-05-02-dsmfix"></script>
-<script src="dsm-player.js?v=2026-05-01-fix3"></script>
-<script>
-/* ── CONSTANTS ───────────────────────────────────── */
-const UNIT = 'unit8';
-const TOTAL_PANELS = 10;
-const TOTAL_SOL_Q = 20;
-const TOTAL_CARDS = 29;
-const VQ_TOTAL = 10;
-const VQ_PASS = 8;
-
-/* ── STATE ────────────────────────────────────────── */
-var studentName = '';
-var currentPanel = 0;
-var panelStartTime = Date.now();
-var sessionStart = Date.now();
-var activityLog = [];
-var pretestAnswers = [];
-var pretestSent = false;
-var vqAnswers = {};
-var vqScore = 0;
-var vocabPassed = false;
-var pracAnswered = 0;
-var pracCorrect = 0;
-var missedStds = {};
-var questionDetail = [];
-var flippedCards = new Set();
-var graphAnswered = {};
-
-var VQ_CORRECT = {1:'b',2:'a',3:'c',4:'d',5:'c',6:'b',7:'b',8:'a',9:'c',10:'d'};
-var VQ_EXPLAIN = {
-  1:'Carrying capacity is the maximum population an environment can sustain with available resources. On a graph, it\'s where the line levels off.',
-  2:'An energy pyramid shows that only ~10% of energy is transferred from one trophic level to the next. Producers have the most energy.',
-  3:'Primary succession starts on bare rock with NO soil. Pioneer species (lichens, mosses) colonize first and begin creating soil.',
-  4:'Eutrophication: excess nutrients cause algal bloom → algae die → bacteria decompose them → oxygen depleted → fish suffocate and die.',
-  5:'Virginia\'s climax community is a deciduous oak-hickory (hardwood) forest. This is the stable endpoint of succession in most of Virginia.',
-  6:'Decomposers (bacteria, fungi) break down dead organisms and recycle nutrients (carbon, nitrogen, phosphorus) back into the ecosystem.',
-  7:'A community = all populations of different species interacting in an area. A population = one species only.',
-  8:'Nitrogen-fixing bacteria convert atmospheric N₂ into ammonia (NH₃) that plants can absorb through their roots.',
-  9:'Invasive species are non-native organisms that harm ecosystems by outcompeting, preying on, or infecting native species.',
-  10:'Lichens and mosses are pioneer species — the first to colonize bare rock, breaking it down to begin soil formation.'
-};
-
-/* ── METADATA ────────────────────────────────────── */
-function initMeta() {
-  var today = new Date().toISOString().slice(0, 10);
-  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
-  var last = localStorage.getItem('sol_streak_last');
-  if (last === today) { /* already counted */ }
-  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
-  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
-  document.getElementById('streak-val').textContent = streak;
-  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
-
-  var examDate = solAPI.getExamDate();
-  if (examDate) {
-    var diff = Math.max(0, Math.ceil((examDate - new Date()) / 86400000));
-    document.getElementById('sol-countdown').textContent = diff;
-    document.getElementById('sol-countdown').style.color = diff <= 14 ? '#fca5a5' : diff <= 21 ? '#fcd34d' : '#fff';
-  } else {
-    document.getElementById('sol-countdown').textContent = '--';
-  }
-}
-
-/* ── TRACKING ────────────────────────────────────── */
-var __lastScorePromise = null;
-
-function send(payload) {
-  payload.student = studentName;
-  payload.module = 'SOL Prep — Unit 8: Ecology & Ecosystems';
-  var __p = solAPI.submit(payload) || Promise.resolve();
-  if (payload.action === 'score') __lastScorePromise = __p;
-  return __p;
-}
-
-function getAnswerText(opt) {
-  var t = opt.textContent.trim();
-  return t.replace(/^[A-D]\s*/, '');
-}
-
-/* ── PRETEST-LOCK: pretest one-attempt block ─── */
-var pretestAlreadySubmitted = false;
-var priorPretestScore = null;
-
-function checkPretestLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, '', 'Pretest')
-    .then(function(prior) {
-      if (!prior) return;
-      pretestAlreadySubmitted = true;
-      priorPretestScore = prior;
-      applyPretestLockUI();
-    });
-}
-
-function applyPretestLockUI() {
-  if (!pretestAlreadySubmitted || !priorPretestScore) return;
-  var p = priorPretestScore;
-  var p0 = document.getElementById('p0');
-  if (p0 && !document.getElementById('pretest-already-banner')) {
-    var banner = document.createElement('div');
-    banner.id = 'pretest-already-banner';
-    banner.style.cssText = 'background:#dcfce7;border:2px solid #16a34a;color:#166534;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
-    banner.innerHTML = '✓ Pretest already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). The pretest is a one-time diagnostic — you can continue to the lesson below.';
-    var lc = p0.querySelector('.lc');
-    if (lc) lc.insertBefore(banner, lc.firstChild);
-  }
-  document.querySelectorAll('#p0 .qq, #p0 .gate-q').forEach(function(qq) { qq.style.display = 'none'; });
-  if (typeof pretestSent !== 'undefined') pretestSent = true;
-  if (typeof gateAnswered !== 'undefined' && typeof gateRequired !== 'undefined') {
-    if (!gateAnswered[0]) gateAnswered[0] = new Set();
-    var req = gateRequired[0] || 5;
-    for (var i = 0; i < req; i++) gateAnswered[0].add('pretest-locked-' + i);
-  }
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(1);
-  if (typeof checkGate === 'function') checkGate(0);
-}
-
-/* ── RETAKE-LOCK: practice-test one-attempt block ─── */
-var practiceAlreadySubmitted = false;
-var priorPracticeScore = null;
-
-function checkPracticeRetakeLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, 'SOL Prep \u2014 Unit 8: Ecology', 'Practice Test')
-    .then(function(prior) {
-      if (!prior) return;
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = prior;
-      applyPracticeLockUI();
-    });
-}
-
-function applyPracticeLockUI() {
-  if (!practiceAlreadySubmitted || !priorPracticeScore) return;
-  var p = priorPracticeScore;
-  var locked = document.getElementById('practice-test-locked');
-  if (locked) {
-    locked.innerHTML =
-      '<div class="practice-locked-icon">\u2713</div>'
-      + '<div class="practice-locked-title">Practice Test Already Submitted</div>'
-      + '<div class="practice-locked-sub">Your score: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). Talk to your teacher if you need to retake.</div>';
-    locked.style.display = '';
-  }
-  var box = document.getElementById('sol-practice-box');
-  if (box) box.style.display = 'none';
-  var rb = document.getElementById('dz-retake-btn');
-  if (rb) rb.style.display = 'none';
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(11);
-}
-
-/* ── HEARTBEAT-PRESENCE: live-pulse signal ─── */
-// Heartbeat keeps the Live Pulse dashboard accurate while a student
-// is reading without clicking. Bumps quiz_progress.updated_at every
-// 60s, but only when the tab is visible AND the user has moved/
-// clicked/typed in the last 90s — so a student who walked away
-// stops looking active after ~90s, while one reading attentively
-// stays green.
-var _hbInterval = null;
-var _hbLastActive = Date.now();
-var HEARTBEAT_MS = 60000;
-var HEARTBEAT_PRESENCE_WINDOW_MS = 90000;
-
-(function bindActivityListeners() {
-  var bump = function() { _hbLastActive = Date.now(); };
-  ['mousemove','keydown','click','touchstart','wheel','scroll'].forEach(function(ev) {
-    document.addEventListener(ev, bump, { passive: true });
-  });
-})();
-
-function startHeartbeat(module, studentName) {
-  if (_hbInterval || !solAPI.pingProgress) return;
-  if (!module || !studentName) return;
-  _hbInterval = setInterval(function() {
-    if (document.visibilityState !== 'visible') return;
-    if (Date.now() - _hbLastActive > HEARTBEAT_PRESENCE_WINDOW_MS) return;
-    solAPI.pingProgress(module, studentName);
-  }, HEARTBEAT_MS);
-}
-function stopHeartbeat() {
-  if (_hbInterval) { clearInterval(_hbInterval); _hbInterval = null; }
-}
-window.addEventListener('pagehide', stopHeartbeat);
-
-/* ── SAVE / RESTORE ──────────────────────────────── */
-function saveProgress() {
-  if (!studentName) return;
-  var gateObj = {};
-  for (var key in gateAnswered) {
-    gateObj[key] = Array.from(gateAnswered[key]);
-  }
-  var data = {
-    studentName: studentName,
-    classCode: solAPI.getClassCode(),
-    currentPanel: currentPanel,
-    gateAnswered: gateObj,
-    graphAnswered: graphAnswered,
-    pretestAnswers: pretestAnswers,
-    pretestSent: pretestSent,
-    vqAnswers: vqAnswers,
-    vqScore: vqScore,
-    vocabPassed: vocabPassed,
-    pracAnswered: pracAnswered,
-    pracCorrect: pracCorrect,
-    missedStds: missedStds,
-    questionDetail: questionDetail,
-    activityLog: activityLog,
-    sessionStart: sessionStart,
-    unlockedPanels: Array.from(unlockedPanels),
-    flippedCards: Array.from(flippedCards)
-  };
-  data.savedAt = Date.now();
-  localStorage.setItem('sol_unit8_progress', JSON.stringify(data));
-  // Cross-device sync — push to Supabase (debounced 1.5s).
-  if (studentName && solAPI.saveProgress) {
-    solAPI.saveProgress('unit-8', studentName, data);
-  }
-}
-
-function restoreProgress(data) {
-  studentName = data.studentName;
-  if (data.unlockedPanels) {
-    unlockedPanels = new Set(data.unlockedPanels);
-  } else {
-    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
-  }
-  pretestAnswers = data.pretestAnswers || [];
-  pretestSent = data.pretestSent || false;
-  vqAnswers = data.vqAnswers || {};
-  vqScore = data.vqScore || 0;
-  vocabPassed = data.vocabPassed || false;
-  pracAnswered = data.pracAnswered || 0;
-  pracCorrect = data.pracCorrect || 0;
-  missedStds = data.missedStds || {};
-  questionDetail = data.questionDetail || [];
-  activityLog = data.activityLog || [];
-  sessionStart = data.sessionStart || Date.now();
-  graphAnswered = data.graphAnswered || {};
-
-  gateAnswered = {};
-  if (data.gateAnswered) {
-    for (var pid in data.gateAnswered) {
-      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
-    }
-  }
-
-  document.getElementById('name-modal').style.display = 'none';
-  panelStartTime = Date.now();
-
-  // Replay gate questions visually
-  for (var panelId in gateAnswered) {
-    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-    gateAnswered[panelId].forEach(function(idx) {
-      if (qs[idx]) {
-        var qq = qs[idx];
-        var correct = qq.dataset.ans;
-        qq.querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === correct) o.classList.add('correct');
-        });
-        var exp = qq.querySelector('.qexp');
-        if (exp) exp.classList.add('show');
-      }
-    });
-    checkGate(parseInt(panelId));
-  }
-
-  // Replay graph answers
-  // (No graph questions in Unit 2 content panels)
-
-  // Restore flipped cards
-  if (data.flippedCards) {
-    flippedCards = new Set(data.flippedCards);
-    var allCards = document.querySelectorAll('.vcard');
-    flippedCards.forEach(function(idx) {
-      if (allCards[idx]) allCards[idx].classList.add('flipped');
-    });
-    var countEl = document.getElementById('vocab-flip-count');
-    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-    if (flippedCards.size >= TOTAL_CARDS) {
-      document.getElementById('vquiz').style.display = 'block';
-      var gate = document.getElementById('vocab-flip-gate');
-      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
-    }
-  }
-
-  // Restore vocab quiz answers
-  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
-    for (var qn in data.vqAnswers) {
-      var chosen = data.vqAnswers[qn];
-      var vqDiv = document.getElementById('vq' + qn);
-      if (!vqDiv) continue;
-      var opts = vqDiv.querySelectorAll('.vq-opt');
-      opts.forEach(function(o) {
-        o.classList.add('revealed');
-        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
-        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
-      });
-      var res = document.getElementById('vqr' + qn);
-      if (res) {
-        res.textContent = VQ_EXPLAIN[qn];
-        res.classList.add('show');
-        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
-      }
-    }
-    if (data.vocabPassed) {
-      var scoreBox = document.getElementById('vquiz-score');
-      scoreBox.style.display = 'block';
-      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
-      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! Mastery Module unlocked.';
-      DSMPlayer.init({
-        unitNumber: 8,
-        moduleName: 'SOL Prep — Unit 8: Ecology & Ecosystems',
-        standard: 'BIO.8',
-        unitKey: UNIT,
-        panelId: 6,
-        containerId: 'dsm-container',
-        unlockPanels: [7, 8, 9],
-        onComplete: function() {
-          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-          document.getElementById('practice-locked').style.display = 'none';
-          if (!practiceAlreadySubmitted) {
-            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-          } else { applyPracticeLockUI(); }
-          saveProgress();
-        },
-        onSkip: function() {
-          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-          document.getElementById('practice-locked').style.display = 'none';
-          if (!practiceAlreadySubmitted) {
-            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-          } else { applyPracticeLockUI(); }
-        }
-      });
-    }
-  }
-
-  // Restore practice test answers
-  if (data.pracAnswered > 0) {
-    var solQs = document.querySelectorAll('#sol-practice-box .qq');
-    for (var qi = 0; qi < data.questionDetail.length; qi++) {
-      var qd = data.questionDetail[qi];
-      if (solQs[qi]) {
-        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
-          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
-        });
-        var exp = solQs[qi].querySelector('.qexp');
-        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
-      }
-    }
-    var progMsg = document.getElementById('sol-progress-msg');
-    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-    if (data.pracAnswered === TOTAL_SOL_Q) {
-      document.getElementById('to-results-btn').disabled = false;
-      showDangerZone();
-    }
-  }
-
-  goTo(data.currentPanel || 0);
-}
-
-/* ── SSO (Google sign-in) ─────────────────────────── */
-/* SSO-HELPERS */
-var _ssoActive = false;
-
-function applySSOSession() {
-  if (!solAPI.isAuthenticated || !solAPI.isAuthenticated()) return false;
-  var fullName = (solAPI.getStudentDisplayName && solAPI.getStudentDisplayName()) || '';
-  var email = (solAPI.getStudentEmail && solAPI.getStudentEmail()) || '';
-  if (!fullName && !email) return false;
-  if (!fullName) fullName = email.split('@')[0];
-  var parts = fullName.trim().split(/\s+/);
-  var first = parts[0] || '';
-  var last = parts.slice(1).join(' ');
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.value = first; f.disabled = true; f.style.opacity = '0.6'; }
-  if (l) { l.value = last;  l.disabled = true; l.style.opacity = '0.6'; }
-  var banner = document.getElementById('sso-signed-in');
-  var nameDisp = document.getElementById('sso-name-display');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'block';
-  if (nameDisp) nameDisp.textContent = fullName + (email ? ' (' + email + ')' : '');
-  if (btn) btn.style.display = 'none';
-  _ssoActive = true;
-  return true;
-}
-
-function clearSSOSession() {
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.disabled = false; f.style.opacity = '1'; }
-  if (l) { l.disabled = false; l.style.opacity = '1'; }
-  var banner = document.getElementById('sso-signed-in');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'none';
-  if (btn) btn.style.display = 'flex';
-  _ssoActive = false;
-}
-
-function signInWithGoogle() {
-  if (!solAPI.signInWithGoogle) return;
-  var codeEl = document.getElementById('class-code');
-  if (codeEl && codeEl.value.trim()) {
-    sessionStorage.setItem('_sso_pending_code', codeEl.value.trim());
-  }
-  var btn = document.getElementById('sso-signin-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting...'; }
-  solAPI.signInWithGoogle(window.location.href).catch(function(err) {
-    console.error('[unit-8] sign-in failed:', err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
-    var ce = document.getElementById('code-err');
-    if (ce) { ce.textContent = 'Sign-in failed: ' + (err.message || 'unknown error'); ce.style.display = 'block'; }
-  });
-}
-
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'sso-signout') {
-    e.preventDefault();
-    if (solAPI.signOut) {
-      solAPI.signOut().then(function() {
-        clearSSOSession();
-        var f = document.getElementById('student-first-name');
-        var l = document.getElementById('student-last-name');
-        if (f) f.value = '';
-        if (l) l.value = '';
-      });
-    }
-  }
-});
-
-/* ── START FRESH (clear local + remote progress) ───── */
-function startFresh() {
-  var saved = localStorage.getItem('sol_unit8_progress');
-  var name = '';
-  try { name = saved ? (JSON.parse(saved).studentName || '') : ''; } catch(e) {}
-  if (name && solAPI.clearProgress) {
-    solAPI.clearProgress('unit-8', name);
-  }
-  localStorage.removeItem('sol_unit8_progress');
-  localStorage.removeItem('sol_unit8_vocab');
-  solAPI.clearClass();
-  location.reload();
-}
-
-/* ── START ────────────────────────────────────────── */
-function startUnit() {
-  // SSO is the only path — legacy name-modal flow removed when
-  // requires_sso flipped true on biology classes.
-  if (!_ssoActive || !solAPI.getStudentDisplayName || !solAPI.getStudentDisplayName()) {
-    if (typeof showToast === 'function') showToast('Please sign in with Google first.');
-    return;
-  }
-  var nameInput = solAPI.getStudentDisplayName();
-  var codeInput = document.getElementById('class-code').value.trim();
-  if (!codeInput) {
-    document.getElementById('code-err').style.display = 'block';
-    return;
-  }
-  document.getElementById('name-err').style.display = 'none';
-  document.getElementById('code-err').style.display = 'none';
-
-  var stored = solAPI.getStored();
-  if (stored && stored.code === codeInput.toUpperCase()) {
-    proceedStart(nameInput);
-    return;
-  }
-
-  var btn = document.querySelector('.nm-btn');
-  btn.disabled = true;
-  btn.textContent = 'Validating...';
-
-  solAPI.validateCode(codeInput).then(function(result) {
-    if (!result.valid) {
-      document.getElementById('code-err').textContent = 'Invalid class code. Check with your teacher.';
-      document.getElementById('code-err').style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Start Unit 8 \u2192';
-      return;
-    }
-    solAPI.storeClass();
-    proceedStart(nameInput);
-  });
-}
-
-function proceedStart(nameInput) {
-  /* SSO-PROCEED-OVERRIDE */
-  if (_ssoActive && solAPI.getStudentDisplayName) {
-    var ssoName = solAPI.getStudentDisplayName();
-    if (ssoName) nameInput = ssoName;
-  }
-  /* canonicalizeName: */
-  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(nameInput) : (nameInput || '').trim());
-  /* SSO-ENROLL */
-  if (_ssoActive && solAPI.enrollInClass && solAPI.getClassId) {
-    solAPI.enrollInClass(solAPI.getClassId());
-  }
-  checkPracticeRetakeLock();
-  checkPretestLock();
-  startHeartbeat('', studentName);
-
-  // Check local + remote progress, prefer whichever is newer.
-  var saved = localStorage.getItem('sol_unit8_progress');
-  var localData = saved ? JSON.parse(saved) : null;
-  if (localData && localData.studentName !== studentName) localData = null;
-
-  var remoteP = (solAPI.getProgress ? solAPI.getProgress('unit-8', studentName) : Promise.resolve(null));
-  remoteP.then(function(remote) {
-    var remoteData = remote ? remote.progress_data : null;
-    var chosen = null;
-    if (remoteData && localData) {
-      var remoteAt = new Date(remote.updated_at).getTime();
-      var localAt = localData.savedAt || localData.sessionStart || 0;
-      chosen = (remoteAt > localAt + 1000) ? remoteData : localData;
-    } else {
-      chosen = remoteData || localData;
-    }
-    if (chosen) {
-      localStorage.setItem('sol_unit8_progress', JSON.stringify(chosen));
-      restoreProgress(chosen);
-      return;
-    }
-    localStorage.removeItem('sol_unit8_progress');
-    document.getElementById('name-modal').style.display = 'none';
-    initMeta();
-    sessionStart = Date.now();
-    panelStartTime = Date.now();
-    send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });  });
-}
-
-/* ── NAVIGATION ───────────────────────────────────── */
-var unlockedPanels = new Set([0]);
-
-var stepNames = ['SOL Focus','Populations','Energy & Cycles','Succession','Human Impact','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
-
-function goTo(n) {
-  if (n === 10 && practiceAlreadySubmitted) applyPracticeLockUI();
-  if (n === 0 && pretestAlreadySubmitted) applyPretestLockUI();
-  if (n > currentPanel && !unlockedPanels.has(n)) {
-    showToast('Complete the questions on this page first!');
-    return;
-  }
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
-  }
-  panelStartTime = Date.now();
-
-  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  var target = document.getElementById('p' + n);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
-  var sb = document.getElementById('sb' + n);
-  if (sb) sb.classList.add('active');
-  for (var i = 0; i < n; i++) {
-    var prev = document.getElementById('sb' + i);
-    if (prev) prev.classList.add('done');
-  }
-  currentPanel = n;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
-  document.getElementById('steps-prog').style.width = pct + '%';
-  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
-  if (!(n in gateRequired) && n !== DSM_PANEL) { unlockedPanels.add(n + 1); }
-  localStorage.setItem('sol_' + UNIT + '_panel', n);
-  saveProgress();
-}
-
-/* ── GATE SYSTEM ─────────────────────────────────── */
-var gateAnswered = {};
-var DSM_PANEL = 6;  // Mastery Module panel — unlocked only by DSMPlayer.onComplete
-var gateRequired = { 0: 5, 1: 4, 2: 4, 3: 4, 4: 4 };
-
-function gateAnswer(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var panelId = parseInt(qq.dataset.panel);
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
-  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-  for (var i = 0; i < qs.length; i++) {
-    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
-  }
-
-  // Track pretest answers (panel 0, questions 3-5)
-  if (panelId === 0) {
-    var qIndex = Array.from(qs).indexOf(qq);
-    if (qIndex >= 2) {
-      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
-      if (pretestAnswers.length === 3 && !pretestSent) {
-        pretestSent = true;
-        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
-        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
-          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
-        })});
-      }
-    }
-  }
-
-  checkGate(panelId);
-  saveProgress();
-}
-
-function checkGate(panelId) {
-  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
-  var required = gateRequired[panelId] || 0;
-
-  var status = document.getElementById('gate-status-' + panelId);
-  var count = document.getElementById('gate-count-' + panelId);
-  if (count) count.textContent = answered + ' of ' + required + ' answered';
-
-  if (answered >= required) {
-    unlockedPanels.add(panelId + 1);
-    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
-    var btn = document.getElementById('next-' + panelId);
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
-    }
-    var sb = document.getElementById('sb' + panelId);
-    if (sb) sb.classList.add('done');
-    saveProgress();
-  }
-}
-
-/* ── FLASHCARDS ──────────────────────────────────── */
-function flipCard(card) {
-  card.classList.toggle('flipped');
-  var allCards = document.querySelectorAll('.vcard');
-  var idx = Array.from(allCards).indexOf(card);
-  if (card.classList.contains('flipped')) {
-    flippedCards.add(idx);
-  }
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-
-  if (flippedCards.size >= TOTAL_CARDS) {
-    document.getElementById('vquiz').style.display = 'block';
-    var gate = document.getElementById('vocab-flip-gate');
-    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
-  }
-  saveProgress();
-}
-
-/* ── VOCAB QUIZ ──────────────────────────────────── */
-function vqPick(el) {
-  var vq = el.closest('.vq');
-  if (vq.querySelector('.vq-opt.revealed')) return;
-  var qNum = vq.id.replace('vq', '');
-  var chosen = el.dataset.v;
-  var correct = VQ_CORRECT[qNum];
-  var isCorrect = (chosen === correct);
-
-  vq.querySelectorAll('.vq-opt').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === el && !isCorrect) o.classList.add('incorrect');
-  });
-
-  var res = document.getElementById('vqr' + qNum);
-  if (res) {
-    res.textContent = VQ_EXPLAIN[qNum];
-    res.classList.add('show');
-    if (!isCorrect) res.classList.add('wrong');
-  }
-
-  vqAnswers[qNum] = chosen;
-  saveProgress();
-}
-
-function gradeVocab() {
-  vqScore = 0;
-  for (var q = 1; q <= VQ_TOTAL; q++) {
-    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
-  }
-  var box = document.getElementById('vquiz-score');
-  var nEl = document.getElementById('vq-score-num');
-  var msgEl = document.getElementById('vq-pass-msg');
-  var retryBtn = document.getElementById('vq-retry-btn');
-  nEl.textContent = vqScore + '/' + VQ_TOTAL;
-  box.style.display = 'block';
-  if (vqScore >= VQ_PASS) {
-    msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
-    vocabPassed = true;
-    unlockedPanels.add(6);
-    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
-    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
-    DSMPlayer.init({
-      unitNumber: 8,
-      moduleName: 'SOL Prep — Unit 8: Ecology & Ecosystems',
-      standard: 'BIO.8',
-      unitKey: UNIT,
-      panelId: 6,
-      containerId: 'dsm-container',
-      unlockPanels: [7, 8, 9],
-      onComplete: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  } else {
-    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
-    retryBtn.style.display = 'inline-block';
-
-    flippedCards = new Set();
-    vqAnswers = {};
-    vqScore = 0;
-
-    saveProgress();
-
-    var allCards = document.querySelectorAll('.vcard');
-    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
-    var flipGate = document.getElementById('vocab-flip-gate');
-    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-    var flipCount = document.getElementById('vocab-flip-count');
-    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-    setTimeout(function() {
-      document.getElementById('vquiz').style.display = 'none';
-      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-      box.style.display = 'none';
-      retryBtn.style.display = 'none';
-      saveProgress();
-      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast('Study all cards again before retaking the quiz');
-    }, 3000);
-    return;
-  }
-  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  saveProgress();
-}
-
-function retryVocab() {
-  vqAnswers = {};
-  vqScore = 0;
-  flippedCards = new Set();
-
-  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-  var scoreBox = document.getElementById('vquiz-score');
-  if (scoreBox) scoreBox.style.display = 'none';
-  var retryBtn = document.getElementById('vq-retry-btn');
-  if (retryBtn) retryBtn.style.display = 'none';
-
-  var allCards = document.querySelectorAll('.vcard');
-  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
-
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-  var gate = document.getElementById('vocab-flip-gate');
-  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-
-  var quiz = document.getElementById('vquiz');
-  if (quiz) quiz.style.display = 'none';
-
-  saveProgress();
-  var grid = document.querySelector('.vocab-grid');
-  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
-}
-
-/* ── SOL PRACTICE TEST ───────────────────────────── */
-function solPick(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var std = qq.dataset.std || 'BIO.8';
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  pracAnswered++;
-  if (isCorrect) pracCorrect++;
-  else {
-    if (!missedStds[std]) missedStds[std] = 0;
-    missedStds[std]++;
-  }
-
-  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
-  var qNumMatch = stemText.match(/^(\d+)/);
-  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
-  var studentAnswerText = getAnswerText(opt);
-  var correctAnswerText = '';
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
-  });
-  questionDetail.push({
-    qNum: qNum, std: std, questionText: stemText,
-    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
-    isCorrect: isCorrect, correct: correct, chosen: chosen
-  });
-
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-
-  if (pracAnswered === TOTAL_SOL_Q) {
-    document.getElementById('to-results-btn').disabled = false;
-    showDangerZone();
-    setTimeout(function(){ goTo(9); }, 800);
-  }
-  saveProgress();
-}
-
-/* ── DANGER ZONE ─────────────────────────────────── */
-function showDangerZone() {
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-  var box = document.getElementById('dz-result');
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'none';
-  box.style.display = 'block';
-  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
-
-  var cls, emoji, label, msg;
-  if (pct >= 80) {
-    cls = 'green'; emoji = '\uD83D\uDFE2';
-    label = 'STRONG \u2014 You\'re in good shape on BIO.8';
-    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
-  } else if (pct >= 60) {
-    cls = 'yellow'; emoji = '\uD83D\uDFE1';
-    label = 'CAUTION \u2014 Review needed on BIO.8';
-    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
-  } else {
-    cls = 'red'; emoji = '\uD83D\uDD34';
-    label = 'DANGER ZONE \u2014 BIO.8 needs work';
-    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
-  }
-
-  box.className = 'dz-box ' + cls;
-  document.getElementById('dz-emoji').textContent = emoji;
-  document.getElementById('dz-label').textContent = label;
-  document.getElementById('dz-msg').textContent = msg;
-
-  if (Object.keys(missedStds).length > 0) {
-    var missed = document.getElementById('dz-missed');
-    var list = document.getElementById('dz-missed-list');
-    missed.style.display = 'block';
-    var stdDesc = {
-      'BIO.8a': 'Populations \u2014 Carrying Capacity, Limiting Factors, Interactions',
-      'BIO.8b': 'Energy & Cycles \u2014 Food Webs, Carbon/Nitrogen Cycles',
-      'BIO.8c': 'Succession \u2014 Primary, Secondary, Climax Community',
-      'BIO.8d': 'Human Impact \u2014 Pollution, Invasive Species, Virginia Ecosystems'
-    };
-    list.innerHTML = Object.keys(missedStds).map(function(s) {
-      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
-    }).join('');
-  }
-
-  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
-  localStorage.setItem('sol_' + UNIT + '_pct', pct);
-  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
-  localStorage.setItem('sol_' + UNIT + '_done', 'true');
-
-  var sb9 = document.getElementById('sb9');
-  if (sb9) sb9.classList.add('done');
-  saveProgress();
-}
-
-/* ── SUBMIT FINAL SCORE ──────────────────────────── */
-function submitFinalScore() {
-  if (!studentName) return;
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-
-  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
-
-  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
-    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
-  })});
-
-  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
-
-  showToast('Saving score\u2026');
-  var __dzBtn = document.getElementById('dz-submit-btn');
-  __dzBtn.disabled = true;
-  Promise.resolve(__lastScorePromise).then(function(result) {
-    if (result && result.buffered) {
-      // Audit #12: write got buffered to localStorage; will sync on next
-      // page load. Treat as success for the retake-lock UI (data is safe
-      // and replay is automatic) but tell the user honestly via toast.
-      __dzBtn.textContent = 'Saved offline';
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else if (result) {
-      __dzBtn.textContent = '\u2705 Score Sent!';
-      showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
-      /* PRACTICE-RETAKE-IN-SESSION-LOCK */
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else {
-      __dzBtn.textContent = '\u26A0 Save failed \u2014 retry?';
-      __dzBtn.disabled = false;
-    }
-  });
-}
-
-/* ── RETAKE PRACTICE TEST ────────────────────────── */
-function retakePractice() {
-  if (practiceAlreadySubmitted) {
-    showToast('You\'ve already submitted this test. Talk to your teacher to retake.');
-    return;
-  }
-  pracAnswered = 0;
-  pracCorrect = 0;
-  missedStds = {};
-  questionDetail = [];
-  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
-  document.getElementById('dz-result').style.display = 'none';
-  document.getElementById('dz-result').className = 'dz-box';
-  document.getElementById('dz-missed').style.display = 'none';
-  document.getElementById('dz-missed-list').innerHTML = '';
-  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
-  document.getElementById('dz-submit-btn').disabled = false;
-  document.getElementById('to-results-btn').disabled = true;
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'block';
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = '';
-  goTo(8);
-  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
-}
-
-/* ── TOAST ────────────────────────────────────────── */
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.style.display = 'flex';
-  setTimeout(function(){ t.style.display = 'none'; }, 3500);
-}
-
-/* ── PAGE EXIT HANDLER ───────────────────────────── */
-window.addEventListener('beforeunload', function() {
-  if (!studentName) return;
-  saveProgress();
-  // Flush cross-device snapshot synchronously (keepalive) — survives unload.
-  if (solAPI.flushProgress) {
-    var snap = localStorage.getItem('sol_unit8_progress');
-    if (snap) solAPI.flushProgress('unit-8', studentName, JSON.parse(snap));
-  }
-  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-  }
-  solAPI.beacon({
-    student: studentName,
-    module: 'SOL Prep — Unit 8: Ecology & Ecosystems',
-    action: 'activity',
-    event: 'session_end',
-    totalSessionSeconds: totalSeconds,
-    panelLog: JSON.stringify(activityLog),
-    timestamp: new Date().toISOString()
-  });
-});
-
-/* ── INIT ON DOM READY ───────────────────────────── */
-document.addEventListener('DOMContentLoaded', function() {
-  initMeta();
-  /* SSO-INIT-AUTH */
-  var pendingCode = sessionStorage.getItem('_sso_pending_code');
-  if (pendingCode) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = pendingCode;
-    sessionStorage.removeItem('_sso_pending_code');
-  }
-  if (solAPI.initAuth) {
-    solAPI.initAuth().then(function(studentRow) {
-      if (studentRow) applySSOSession();
-      // Re-evaluate the lock with the student's identity now known —
-      // a per-student override can flip state in either direction.
-      if (solAPI.runModuleReleaseGate) solAPI.runModuleReleaseGate('unit-8');
-    }).catch(function(err) { console.warn('initAuth failed:', err); });
-  }
-
-  var storedClass = solAPI.getStored();
-  if (storedClass) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = storedClass.code;
-    var infoEl = document.getElementById('class-info');
-    if (infoEl) { infoEl.textContent = '\u2713 ' + storedClass.teacher + ' \u2014 ' + storedClass.label; infoEl.style.display = 'block'; }
-  }
-  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
-    vocabPassed = true;
-    unlockedPanels.add(6);
-    DSMPlayer.init({
-      unitNumber: 8,
-      moduleName: 'SOL Prep — Unit 8: Ecology & Ecosystems',
-      standard: 'BIO.8',
-      unitKey: UNIT,
-      panelId: 6,
-      containerId: 'dsm-container',
-      unlockPanels: [7, 8, 9],
-      onComplete: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  }
-  var saved = localStorage.getItem('sol_unit8_progress');
-  if (saved) {
-    var data = JSON.parse(saved);
-    if (data.studentName) {
-      var _parts = data.studentName.trim().split(/\s+/);
-      var _firstEl = document.getElementById('student-first-name');
-      var _lastEl = document.getElementById('student-last-name');
-      if (_firstEl) _firstEl.value = _parts[0] || '';
-      if (_lastEl)  _lastEl.value  = _parts.slice(1).join(' ');
-      var modalTitle = document.querySelector('.nm-title');
-      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
-      var modalSub = document.querySelector('.nm-sub');
-      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
-      var modalBtn = document.querySelector('.nm-btn');
-      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
-    }
-  }
-});
-/* MODULE-RELEASE-GATE — page-load pass uses GLOBAL state only
-   (no _studentId yet). After applySSOSession the gate is re-run
-   from initAuth's then-chain so per-student overrides take effect. */
-if (window.solAPI && solAPI.runModuleReleaseGate) {
-  solAPI.runModuleReleaseGate('unit-8');
-}
-</script>
+<script src="sol-api.js?v=2026-05-03-phaseD"></script>
+<script src="dsm-player.js?v=2026-05-03-phaseD"></script>
+<script src="unit-engine.js?v=2026-05-03-phaseD"></script>
+<script src="config/unit-8.js?v=2026-05-03-phaseD"></script>
+
+<script>UnitEngine.boot(window.UNIT_CONFIG);</script>
 </body>
 </html>

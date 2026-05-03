@@ -69,7 +69,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 .f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
 
 /* CONTENT LAYOUT */
-.lc{padding:36px 48px 56px;max-width:860px;}
+.lc{padding:36px 48px 56px;max-width:860px;margin:0 auto;}
 .section{margin-bottom:40px;}
 .eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
@@ -285,7 +285,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       &#10003; Signed in as <strong id="sso-name-display"></strong>
       <a href="#" id="sso-signout" style="float:right;color:#1976d2;font-size:.78rem;text-decoration:underline">Switch account</a>
     </div>
-    <button id="sso-signin-btn" type="button" onclick="signInWithGoogle()"
+    <button id="sso-signin-btn" type="button" onclick="UnitEngine.signInWithGoogle()"
             style="width:100%;padding:10px;font-size:.95rem;font-weight:600;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:8px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px">
       <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.26c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.71H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
       Sign in with Google
@@ -295,8 +295,8 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="class-info" style="display:none;font-size:.8rem;color:var(--green);margin-bottom:8px;padding:2px 0"></div>
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="code-err">Please enter your class code.</div>
-    <button class="nm-btn" onclick="startUnit()">Start Unit 5 &#x2192;</button>
-    <div style="margin-top:8px;text-align:center"><a href="#" onclick="startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <button class="nm-btn" onclick="UnitEngine.startUnit()">Start Unit 5 &#x2192;</button>
+    <div style="margin-top:8px;text-align:center"><a href="#" onclick="UnitEngine.startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
     <div style="margin-top:4px;text-align:center"><a href="#" onclick="solAPI.clearClass();document.getElementById('class-code').value='';document.getElementById('class-info').style.display='none';return false" style="font-size:.72rem;color:var(--muted);text-decoration:underline">Change class code</a></div>
   </div>
 </div>
@@ -326,27 +326,27 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 
 <!-- STEP PROGRESS BAR (10 steps) -->
 <nav class="steps-bar" id="steps-bar">
-  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
+  <div class="step"><button class="step-btn active" onclick="UnitEngine.goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>DNA Structure</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(1)" id="sb1"><span class="step-num">2</span>DNA Structure</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Meiosis</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(2)" id="sb2"><span class="step-num">3</span>Meiosis</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Mendelian Genetics</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(3)" id="sb3"><span class="step-num">4</span>Mendelian Genetics</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Non-Mendelian</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(4)" id="sb4"><span class="step-num">5</span>Non-Mendelian</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Genetic Engineering</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(5)" id="sb5"><span class="step-num">6</span>Genetic Engineering</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Vocab Lock-In</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(6)" id="sb6"><span class="step-num">7</span>Vocab Lock-In</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Mastery</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(7)" id="sb7"><span class="step-num">8</span>Mastery</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Study Guide</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(8)" id="sb8"><span class="step-num">9</span>Study Guide</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Practice Test</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(9)" id="sb9"><span class="step-num">10</span>Practice Test</button></div>
   <div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(10)" id="sb10"><span class="step-num">11</span>Results</button></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(10)" id="sb10"><span class="step-num">11</span>Results</button></div>
 </nav>
 <div class="steps-prog" id="steps-prog"></div>
 
@@ -477,10 +477,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="0">
         <div class="q-stem"><span class="q-num">1</span> According to the SOL Focus Card, approximately how many questions on the real Biology SOL come from BIO.5?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1&ndash;2 questions</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 4 questions</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 7 questions</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>25 questions</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>1&ndash;2 questions</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>About 4 questions</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>About 7 questions</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>25 questions</li>
         </ul>
         <div class="qexp">BIO.5 accounts for about 14% of the SOL test &mdash; approximately 7 questions out of 50. This is the highest-weighted single standard.</div>
       </div>
@@ -488,10 +488,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">2</span> Which is identified as a TOP MISS AREA for Virginia students on BIO.5?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Dihybrid Punnett squares (two traits at once)</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Drawing the structure of a ribosome</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Naming all 20 amino acids</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating the molecular weight of DNA</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Dihybrid Punnett squares (two traits at once)</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Drawing the structure of a ribosome</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Naming all 20 amino acids</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Calculating the molecular weight of DNA</li>
         </ul>
         <div class="qexp">Students can usually do monohybrid Punnett squares (one trait) but struggle with dihybrid crosses (two traits). The SOL tests both types.</div>
       </div>
@@ -502,10 +502,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">3</span> (2006-10) In squash plants, yellow fruit (Y) is dominant to white fruit (y). If two heterozygous yellow plants are crossed, the possible genotypes of offspring are &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>YY, Yy, yy only</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>YY, yy only</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Yy only</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Yy, yy only</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>YY, Yy, yy only</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>YY, yy only</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Yy only</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Yy, yy only</li>
         </ul>
         <div class="qexp">Heterozygous = Yy. Cross Yy x Yy: the Punnett square gives YY (25%), Yy (50%), yy (25%). All three genotypes are possible.</div>
       </div>
@@ -513,10 +513,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="0">
         <div class="q-stem"><span class="q-num">4</span> (2005-6) In snapdragons, red and white are homozygous. When crossed, pink flowers result. If two pink snapdragons are crossed, the offspring will be &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>2 red, 2 white</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>2 red, 1 pink, 1 white</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>1 red, 2 pink, 1 white</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>1 red, 1 pink, 2 white</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>2 red, 2 white</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>2 red, 1 pink, 1 white</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>1 red, 2 pink, 1 white</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>1 red, 1 pink, 2 white</li>
         </ul>
         <div class="qexp">This is incomplete dominance. Pink = heterozygous (Rr). Cross Rr x Rr: 1 RR (red) : 2 Rr (pink) : 1 rr (white). The 1:2:1 ratio is the signature of incomplete dominance.</div>
       </div>
@@ -524,10 +524,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="0">
         <div class="q-stem"><span class="q-num">5</span> (2003-38) The parts of DNA that provide the code for proteins are the &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>phosphates</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>sugars</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>hydrogen bonds</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>nitrogenous bases</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>phosphates</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>sugars</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>hydrogen bonds</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>nitrogenous bases</li>
         </ul>
         <div class="qexp">The sequence of nitrogenous bases (A, T, G, C) along the DNA strand is the genetic code. Each three-base sequence (codon) specifies one amino acid. Phosphates and sugars form the backbone structure but don't carry the code.</div>
       </div>
@@ -543,7 +543,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <a class="depth-link" href="../biology/patterns-inheritance.html">&#x1F4D8; Need more depth? See the full lesson in Patterns of Inheritance &rarr;</a>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; DNA Structure &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="UnitEngine.goTo(1)" id="next-0" disabled>&#x1F512; DNA Structure &rarr;</button></div>
 </div>
 <!-- =================================================================
      PANEL 1: DNA STRUCTURE (BIO.5a/b)
@@ -607,10 +607,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.5a">
         <div class="q-stem"><span class="q-num">1</span> (2003-38) The parts of DNA that provide the code for proteins are the &mdash; <span class="q-tag">BIO.5a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>phosphates</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>sugars</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>hydrogen bonds</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>nitrogenous bases</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>phosphates</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>sugars</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>hydrogen bonds</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>nitrogenous bases</li>
         </ul>
         <div class="qexp">The sequence of nitrogenous bases (A, T, G, C) IS the genetic code. Every three bases (a codon) specify one amino acid. The sugar-phosphate backbone provides structure but doesn't carry code.</div>
       </div>
@@ -618,10 +618,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.5a">
         <div class="q-stem"><span class="q-num">2</span> (2006-7) DNA fits inside the nucleus because it can &mdash; <span class="q-tag">BIO.5a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>denature from the effect of an enzyme</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>break apart into separate genes</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>extend to form very long, thin molecules</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>coil tightly around associated proteins</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>denature from the effect of an enzyme</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>break apart into separate genes</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>extend to form very long, thin molecules</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>coil tightly around associated proteins</li>
         </ul>
         <div class="qexp">DNA coils around histone proteins, compacting into chromosomes that fit inside the nucleus. If DNA were stretched out straight, it would be about 2 meters long &mdash; far too long to fit without coiling.</div>
       </div>
@@ -629,10 +629,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.5a">
         <div class="q-stem"><span class="q-num">3</span> (2002-42) A triplet code for RNA may be represented by all of the following EXCEPT &mdash; <span class="q-tag">BIO.5a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>CGG</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>CGT</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>CGU</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>CGA</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>CGG</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>CGT</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>CGU</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>CGA</li>
         </ul>
         <div class="qexp">RNA uses Uracil (U) instead of Thymine (T). CGT contains T, which is a DNA base, not an RNA base. All other options use only valid RNA bases (C, G, U, A).</div>
       </div>
@@ -640,10 +640,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.5b">
         <div class="q-stem"><span class="q-num">4</span> (2003-42) What is one potential benefit of the Human Genome Project? <span class="q-tag">BIO.5b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Creating communication between research centers</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Explaining human cultural differences</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Classifying man most accurately in the animal kingdom</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Finding the genes responsible for many diseases</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Creating communication between research centers</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Explaining human cultural differences</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Classifying man most accurately in the animal kingdom</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Finding the genes responsible for many diseases</li>
         </ul>
         <div class="qexp">The Human Genome Project sequenced all human DNA, enabling scientists to identify genes linked to diseases like cancer, diabetes, and sickle-cell anemia. This has led to genetic testing and targeted treatments.</div>
       </div>
@@ -655,7 +655,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Meiosis &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="UnitEngine.goTo(2)" id="next-1" disabled>&#x1F512; Meiosis &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -726,10 +726,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.5d">
         <div class="q-stem"><span class="q-num">1</span> (2001-12) Wild cats experience decreased genetic diversity as populations decline. Decreased genetic diversity leads to &mdash; <span class="q-tag">BIO.5d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>increased birthrates</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>disproportionate gender ratios</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>increased immigration rates</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>decreased disease resistance</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>increased birthrates</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>disproportionate gender ratios</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>increased immigration rates</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>decreased disease resistance</li>
         </ul>
         <div class="qexp">Less genetic diversity = less variation in immune defenses = entire population vulnerable to the same diseases. Genetically diverse populations have individuals with different immune capabilities, so some survive any given disease.</div>
       </div>
@@ -737,10 +737,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="2" data-std="BIO.5d">
         <div class="q-stem"><span class="q-num">2</span> (2005-2) For a mutation to pass on to offspring, it must occur in a &mdash; <span class="q-tag">BIO.5d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>sex cell (gamete)</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>muscle cell</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>bone cell</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>brain cell</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>sex cell (gamete)</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>muscle cell</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>bone cell</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>brain cell</li>
         </ul>
         <div class="qexp">Only mutations in sex cells (gametes) are passed to offspring. Mutations in somatic cells (muscle, bone, brain) affect only that individual and die with them. This is a frequently tested distinction.</div>
       </div>
@@ -748,10 +748,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.5d">
         <div class="q-stem"><span class="q-num">3</span> (2002-28) In a cow heterozygous for long hair (Ll), what percentage of gametes will carry the dominant allele? <span class="q-tag">BIO.5d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>25%</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>50%</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>75%</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>100%</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>25%</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>50%</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>75%</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>100%</li>
         </ul>
         <div class="qexp">Heterozygous Ll: meiosis separates the alleles. Half the gametes get L (dominant) and half get l (recessive). So 50% carry the dominant allele.</div>
       </div>
@@ -759,10 +759,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="2" data-std="BIO.5d">
         <div class="q-stem"><span class="q-num">4</span> (2004-42) Inbreeding in endangered species over a short time may lead to extinction because it may &mdash; <span class="q-tag">BIO.5d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>increase beneficial mutations</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>produce a different species</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>reduce genetic diversity</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>increase fertility</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>increase beneficial mutations</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>produce a different species</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>reduce genetic diversity</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>increase fertility</li>
         </ul>
         <div class="qexp">Inbreeding reduces genetic diversity because related individuals share many of the same alleles. Less diversity = less ability to adapt to diseases or environmental changes = higher extinction risk.</div>
       </div>
@@ -774,7 +774,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; DNA Structure</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Mendelian Genetics &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(1)">&larr; DNA Structure</button><button class="nbtn next" onclick="UnitEngine.goTo(3)" id="next-2" disabled>&#x1F512; Mendelian Genetics &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -851,10 +851,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">1</span> (2001-32) Tall (T) is dominant to short (t) in pea plants. If two heterozygous tall plants are crossed, what percent will be short? <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>75%</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>50%</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>25%</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>0%</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>75%</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>50%</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>25%</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>0%</li>
         </ul>
         <div class="qexp">Tt x Tt gives 1 TT : 2 Tt : 1 tt. Only tt (1 out of 4 = 25%) shows the short phenotype. The 3:1 ratio (75% tall : 25% short) is the classic Mendelian result.</div>
       </div>
@@ -862,10 +862,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">2</span> (2006-6) Cross TTPP x ttpp. Which describes the offspring? <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Three-quarters tall and purple</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>All tall and purple</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Three-quarters short and white</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>All short and white</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Three-quarters tall and purple</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>All tall and purple</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Three-quarters short and white</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>All short and white</li>
         </ul>
         <div class="qexp">TTPP can only pass T and P. ttpp can only pass t and p. All offspring are TtPp. Since T (tall) and P (purple) are dominant, ALL offspring show both dominant phenotypes.</div>
       </div>
@@ -873,10 +873,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">3</span> (2002-11) Two heterozygous short-haired rabbits (Ff x Ff) are crossed. What is the chance of offspring with short fur? <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>One in four</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Three in four</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Two in four</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Four in four</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>One in four</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Three in four</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Two in four</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Four in four</li>
         </ul>
         <div class="qexp">Short fur (F) is dominant. Ff x Ff gives: 1 FF + 2 Ff + 1 ff = 3 out of 4 show short fur (FF, Ff, Ff all show dominant phenotype). Only ff (1 in 4) shows long fur.</div>
       </div>
@@ -884,10 +884,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="3" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">4</span> (2004-36) Black rabbits crossed with white rabbits produce all black F1 offspring. When F1 rabbits are crossed, some white appear in F2. What can we conclude? <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>The white parent carried a dominant allele</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>All black rabbits in F2 are homozygous</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>All white rabbits are heterozygous</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>All F1 rabbits carried a recessive allele</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>The white parent carried a dominant allele</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>All black rabbits in F2 are homozygous</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>All white rabbits are heterozygous</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>All F1 rabbits carried a recessive allele</li>
         </ul>
         <div class="qexp">All F1 are black but produce some white F2 offspring. This means F1 must be heterozygous (Bb) &mdash; they carry the recessive white allele (b) but show the dominant black phenotype. When two Bb cross: 1 BB : 2 Bb : 1 bb.</div>
       </div>
@@ -899,7 +899,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Meiosis</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Non-Mendelian &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(2)">&larr; Meiosis</button><button class="nbtn next" onclick="UnitEngine.goTo(4)" id="next-3" disabled>&#x1F512; Non-Mendelian &rarr;</button></div>
 </div>
 <!-- =================================================================
      PANEL 4: NON-MENDELIAN PATTERNS (BIO.5c continued)
@@ -952,10 +952,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="4" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">1</span> (2006-44) A family tree shows that albinism appears in offspring of normally pigmented parents. Albinism is &mdash; <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>carried only by females</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>a recessive genetic trait</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>a sex-linked gene</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>requires both parents to be albinos</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>carried only by females</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>a recessive genetic trait</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>a sex-linked gene</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>requires both parents to be albinos</li>
         </ul>
         <div class="qexp">If normally pigmented parents produce albino offspring, both parents must be carriers (heterozygous). The trait only appears when two recessive alleles are inherited (homozygous recessive). This is classic recessive inheritance.</div>
       </div>
@@ -963,10 +963,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">2</span> (2005-6) Pink snapdragons crossed produce 1 red : 2 pink : 1 white offspring. This illustrates &mdash; <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>complete dominance</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>codominance</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>incomplete dominance</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>sex-linked inheritance</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>complete dominance</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>codominance</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>incomplete dominance</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>sex-linked inheritance</li>
         </ul>
         <div class="qexp">The 1:2:1 phenotype ratio with a BLENDED heterozygote (pink = blend of red and white) is the signature of incomplete dominance. In codominance, both colors would show separately (spots), not blend.</div>
       </div>
@@ -974,10 +974,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">3</span> (2002-44) If a mutation occurs only in somatic (body) cells, the individual may &mdash; <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>experience an increased risk of cancer</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>experience difficulties replicating RNA</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>pass on these mutations to their offspring</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>develop entirely new DNA sequences in all cells</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>experience an increased risk of cancer</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>experience difficulties replicating RNA</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>pass on these mutations to their offspring</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>develop entirely new DNA sequences in all cells</li>
         </ul>
         <div class="qexp">Somatic cell mutations affect only that individual and can cause uncontrolled cell growth (cancer). They are NOT passed to offspring &mdash; only gamete mutations are inherited. The mutation doesn't spread to all cells.</div>
       </div>
@@ -985,10 +985,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.5c">
         <div class="q-stem"><span class="q-num">4</span> (2005-48) The chances of developing cancer, diabetes, or sickle-cell anemia are higher if a family member has the disorder because they are &mdash; <span class="q-tag">BIO.5c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>passed through blood contact</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>related to diet</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>highly infectious</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>genetically based</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>passed through blood contact</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>related to diet</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>highly infectious</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>genetically based</li>
         </ul>
         <div class="qexp">These disorders have a genetic component &mdash; family members share genes. If a gene variant that increases disease risk runs in a family, relatives are more likely to inherit it. They are NOT passed by blood contact or infection.</div>
       </div>
@@ -1000,7 +1000,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Mendelian Genetics</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Genetic Engineering &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(3)">&larr; Mendelian Genetics</button><button class="nbtn next" onclick="UnitEngine.goTo(5)" id="next-4" disabled>&#x1F512; Genetic Engineering &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -1071,10 +1071,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="5" data-std="BIO.5e">
         <div class="q-stem"><span class="q-num">1</span> (2001-20) Which is an example of a genetically engineered organism? <span class="q-tag">BIO.5e</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Seedless fruits from grafting</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>A plant that received external DNA to produce natural insecticides</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>A plant with naturally occurring medicinal properties</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>A new variety created by cross-pollination</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Seedless fruits from grafting</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>A plant that received external DNA to produce natural insecticides</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>A plant with naturally occurring medicinal properties</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>A new variety created by cross-pollination</li>
         </ul>
         <div class="qexp">Genetic engineering = directly inserting DNA from one organism into another using technology. Grafting and cross-pollination are traditional breeding methods, not genetic engineering. Natural medicinal properties are not engineered.</div>
       </div>
@@ -1082,10 +1082,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="5" data-std="BIO.5e">
         <div class="q-stem"><span class="q-num">2</span> (2002-3) DNA that is derived from the DNA of two or more different species is called &mdash; <span class="q-tag">BIO.5e</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>recombinant DNA</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>mitochondrial DNA</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>plasmid</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>chloroplast DNA</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>recombinant DNA</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>mitochondrial DNA</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>plasmid</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>chloroplast DNA</li>
         </ul>
         <div class="qexp">Recombinant DNA is artificially created by combining DNA from two or more different sources (often different species). A plasmid is the VEHICLE used to carry recombinant DNA, not the recombinant DNA itself.</div>
       </div>
@@ -1093,10 +1093,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="5" data-std="BIO.5e">
         <div class="q-stem"><span class="q-num">3</span> CRISPR technology allows scientists to &mdash; <span class="q-tag">BIO.5e</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>view DNA under a light microscope</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>separate DNA fragments by size</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>precisely edit DNA at a specific location in the genome</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>make millions of copies of a DNA segment</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>view DNA under a light microscope</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>separate DNA fragments by size</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>precisely edit DNA at a specific location in the genome</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>make millions of copies of a DNA segment</li>
         </ul>
         <div class="qexp">CRISPR is a gene-editing tool that precisely cuts DNA at a specific location, allowing scientists to delete, modify, or insert genes. Separating fragments = gel electrophoresis. Making copies = PCR.</div>
       </div>
@@ -1104,10 +1104,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="5" data-std="BIO.5e">
         <div class="q-stem"><span class="q-num">4</span> A benefit of genetically engineering bacteria to produce human insulin is that it &mdash; <span class="q-tag">BIO.5e</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>eliminates the need for any medical treatment</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>provides a reliable, large-scale source of insulin for diabetics</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>cures diabetes permanently</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>makes bacteria immune to all diseases</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>eliminates the need for any medical treatment</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>provides a reliable, large-scale source of insulin for diabetics</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>cures diabetes permanently</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>makes bacteria immune to all diseases</li>
         </ul>
         <div class="qexp">Before genetic engineering, insulin was extracted from pig or cow pancreases in limited quantities. Engineered bacteria can produce unlimited human insulin, making it accessible to millions of diabetics worldwide.</div>
       </div>
@@ -1119,7 +1119,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       </div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Non-Mendelian</button><button class="nbtn next" onclick="goTo(6)" id="next-5" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(4)">&larr; Non-Mendelian</button><button class="nbtn next" onclick="UnitEngine.goTo(6)" id="next-5" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
 </div>
 <!-- =================================================================
      PANEL 6: VOCAB LOCK-IN
@@ -1131,58 +1131,58 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <p class="prose">Flip ALL 28 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
     <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 31 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 31 cards studied</div></div>
     <div class="vocab-grid">
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">DNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Double-helix molecule of nucleotides; A-T, G-C base pairing; carries genetic code</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nucleotide</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Building block of DNA/RNA: sugar + phosphate + nitrogenous base (A, T, G, or C)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gene</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Segment of DNA that codes for a specific protein or trait</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Chromosome</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Tightly coiled DNA + histone proteins; humans have 46 (23 pairs)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Allele</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Different versions of the same gene (e.g., B for brown, b for blue)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genotype</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Genetic makeup of an organism (BB, Bb, or bb)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phenotype</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Observable physical trait expressed by the genotype (e.g., brown eyes)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dominant</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Allele expressed when at least one copy is present (CAPITAL letter)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Recessive</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Allele only expressed when TWO copies present (lowercase letter)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homozygous</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two identical alleles (BB or bb)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Heterozygous</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two different alleles (Bb); shows dominant phenotype</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Punnett Square</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Diagram predicting probability of offspring genotypes and phenotypes</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Monohybrid Cross</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cross examining ONE trait (e.g., Bb x Bb); 2x2 Punnett square</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dihybrid Cross</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cross examining TWO traits (e.g., BbTt x BbTt); 4x4 Punnett square</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Incomplete Dominance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Neither allele dominant; heterozygote shows BLEND (red + white = pink)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Codominance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Both alleles fully expressed; heterozygote shows BOTH traits (red AND white spots)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Meiosis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell division &rarr; 4 genetically DIFFERENT cells with HALF chromosomes (gametes)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gamete</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Sex cell (egg or sperm); haploid = half the chromosome number</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Diploid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with two sets of chromosomes (2n); body cells; humans = 46</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Haploid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with one set of chromosomes (n); gametes; humans = 23</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Crossing Over</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Exchange of DNA between homologous chromosomes during meiosis; increases diversity</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Change in DNA sequence; can be beneficial, harmful, or neutral</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Diversity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Variety of genes in a population; diverse populations survive better</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Engineering</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Direct manipulation of DNA using technology (restriction enzymes, CRISPR, etc.)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">PCR</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Polymerase chain reaction; makes millions of copies of a DNA segment</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Restriction Enzyme</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Enzyme that cuts DNA at specific sequences; molecular scissors</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gel Electrophoresis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Separates DNA fragments by size using electric current; used in forensics</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">CRISPR</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Gene-editing tool; precisely cuts and modifies DNA at specific locations</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">mRNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Messenger RNA; carries genetic code from DNA in nucleus to ribosome for translation</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Codon</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Three-nucleotide sequence on mRNA that codes for one amino acid; AUG = start</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Histone</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Protein that DNA coils around to compact into chromosomes; enables DNA to fit in nucleus</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">DNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Double-helix molecule of nucleotides; A-T, G-C base pairing; carries genetic code</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Nucleotide</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Building block of DNA/RNA: sugar + phosphate + nitrogenous base (A, T, G, or C)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gene</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Segment of DNA that codes for a specific protein or trait</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Chromosome</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Tightly coiled DNA + histone proteins; humans have 46 (23 pairs)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Allele</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Different versions of the same gene (e.g., B for brown, b for blue)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genotype</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Genetic makeup of an organism (BB, Bb, or bb)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Phenotype</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Observable physical trait expressed by the genotype (e.g., brown eyes)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dominant</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Allele expressed when at least one copy is present (CAPITAL letter)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Recessive</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Allele only expressed when TWO copies present (lowercase letter)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homozygous</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two identical alleles (BB or bb)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Heterozygous</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Two different alleles (Bb); shows dominant phenotype</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Punnett Square</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Diagram predicting probability of offspring genotypes and phenotypes</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Monohybrid Cross</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cross examining ONE trait (e.g., Bb x Bb); 2x2 Punnett square</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Dihybrid Cross</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cross examining TWO traits (e.g., BbTt x BbTt); 4x4 Punnett square</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Incomplete Dominance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Neither allele dominant; heterozygote shows BLEND (red + white = pink)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Codominance</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Both alleles fully expressed; heterozygote shows BOTH traits (red AND white spots)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Meiosis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell division &rarr; 4 genetically DIFFERENT cells with HALF chromosomes (gametes)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gamete</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Sex cell (egg or sperm); haploid = half the chromosome number</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Diploid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with two sets of chromosomes (2n); body cells; humans = 46</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Haploid</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Cell with one set of chromosomes (n); gametes; humans = 23</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Crossing Over</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Exchange of DNA between homologous chromosomes during meiosis; increases diversity</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Change in DNA sequence; can be beneficial, harmful, or neutral</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Diversity</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Variety of genes in a population; diverse populations survive better</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Engineering</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Direct manipulation of DNA using technology (restriction enzymes, CRISPR, etc.)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">PCR</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Polymerase chain reaction; makes millions of copies of a DNA segment</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Restriction Enzyme</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Enzyme that cuts DNA at specific sequences; molecular scissors</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gel Electrophoresis</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Separates DNA fragments by size using electric current; used in forensics</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">CRISPR</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Gene-editing tool; precisely cuts and modifies DNA at specific locations</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">mRNA</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Messenger RNA; carries genetic code from DNA in nucleus to ribosome for translation</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Codon</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Three-nucleotide sequence on mRNA that codes for one amino acid; AUG = start</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Histone</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Protein that DNA coils around to compact into chromosomes; enables DNA to fit in nucleus</div></div></div></div>
     </div>
     <div id="vquiz" style="display:none;">
       <div class="vquiz-box">
         <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
-        <div class="vq" id="vq1"><div class="vq-text">1. An organism with genotype Bb is described as:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Homozygous dominant</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Heterozygous</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Homozygous recessive</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Codominant</div></div><div class="vq-result" id="vqr1"></div></div>
-        <div class="vq" id="vq2"><div class="vq-text">2. Meiosis produces:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>2 identical cells with same chromosomes</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>4 different cells with half the chromosomes</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>4 identical cells with same chromosomes</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>2 different cells with half the chromosomes</div></div><div class="vq-result" id="vqr2"></div></div>
-        <div class="vq" id="vq3"><div class="vq-text">3. In incomplete dominance, the heterozygote shows:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>The dominant trait only</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>The recessive trait only</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>A blend of both traits</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Both traits separately</div></div><div class="vq-result" id="vqr3"></div></div>
-        <div class="vq" id="vq4"><div class="vq-text">4. The tool that makes millions of copies of a DNA segment is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Gel electrophoresis</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>CRISPR</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>PCR</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Restriction enzyme</div></div><div class="vq-result" id="vqr4"></div></div>
-        <div class="vq" id="vq5"><div class="vq-text">5. A pairs with T and G pairs with C in DNA. In RNA, A pairs with:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>T</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>U</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>G</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>C</div></div><div class="vq-result" id="vqr5"></div></div>
-        <div class="vq" id="vq6"><div class="vq-text">6. The observable physical trait of an organism is its:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Genotype</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Phenotype</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Allele</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Chromosome</div></div><div class="vq-result" id="vqr6"></div></div>
-        <div class="vq" id="vq7"><div class="vq-text">7. Crossing over during meiosis increases:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Chromosome number</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Cell size</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Genetic diversity</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Mutation rate</div></div><div class="vq-result" id="vqr7"></div></div>
-        <div class="vq" id="vq8"><div class="vq-text">8. CRISPR is a tool used to:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Separate DNA by size</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Copy DNA millions of times</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Precisely edit DNA at specific locations</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>View DNA under a microscope</div></div><div class="vq-result" id="vqr8"></div></div>
-        <div class="vq" id="vq9"><div class="vq-text">9. A cross examining TWO traits simultaneously is called a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Monohybrid cross</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Dihybrid cross</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Testcross</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Backcross</div></div><div class="vq-result" id="vqr9"></div></div>
-        <div class="vq" id="vq10"><div class="vq-text">10. For a mutation to be inherited by offspring, it must occur in a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Muscle cell</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Skin cell</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Sex cell (gamete)</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Nerve cell</div></div><div class="vq-result" id="vqr10"></div></div>
+        <div class="vq" id="vq1"><div class="vq-text">1. An organism with genotype Bb is described as:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Homozygous dominant</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Heterozygous</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Homozygous recessive</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Codominant</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. Meiosis produces:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>2 identical cells with same chromosomes</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>4 different cells with half the chromosomes</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>4 identical cells with same chromosomes</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>2 different cells with half the chromosomes</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. In incomplete dominance, the heterozygote shows:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>The dominant trait only</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>The recessive trait only</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>A blend of both traits</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Both traits separately</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. The tool that makes millions of copies of a DNA segment is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Gel electrophoresis</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>CRISPR</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>PCR</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Restriction enzyme</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. A pairs with T and G pairs with C in DNA. In RNA, A pairs with:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>T</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>U</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>G</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>C</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. The observable physical trait of an organism is its:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Genotype</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Phenotype</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Allele</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Chromosome</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. Crossing over during meiosis increases:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Chromosome number</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Cell size</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Genetic diversity</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Mutation rate</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. CRISPR is a tool used to:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Separate DNA by size</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Copy DNA millions of times</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Precisely edit DNA at specific locations</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>View DNA under a microscope</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. A cross examining TWO traits simultaneously is called a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Monohybrid cross</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Dihybrid cross</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Testcross</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Backcross</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. For a mutation to be inherited by offspring, it must occur in a:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Muscle cell</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Skin cell</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Sex cell (gamete)</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Nerve cell</div></div><div class="vq-result" id="vqr10"></div></div>
         <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
-        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="UnitEngine.retryVocab()" style="display:none;">Retry Quiz</button></div>
       </div>
     </div>
     <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Mastery Module Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the Mastery Module.</div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Genetic Engineering</button><button class="nbtn next" onclick="goTo(7)">Mastery Module &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(5)">&larr; Genetic Engineering</button><button class="nbtn next" onclick="UnitEngine.goTo(7)">Mastery Module &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -1194,7 +1194,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="sh2">BIO.5 Concept Mastery</div>
     <div id="dsm-container"></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(8)">Study Guide &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(6)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="UnitEngine.goTo(8)">Study Guide &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -1220,7 +1220,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <p class="prose" style="font-size:.85rem;"><strong>Recombinant DNA</strong> = DNA from 2+ species combined. Applications: insulin production, pest-resistant crops, gene therapy, forensics.</p>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Mastery Module</button><button class="nbtn next" onclick="goTo(9)">Practice Test &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(7)">&larr; Mastery Module</button><button class="nbtn next" onclick="UnitEngine.goTo(9)">Practice Test &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -1233,30 +1233,30 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Complete the Mastery Module to unlock the Practice Test.</div></div></div>
     <div class="quiz-box" id="sol-practice-box">
       <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.5 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
-      <!-- Q1 --><div class="qq" data-ans="d" data-std="BIO.5a"><div class="q-stem"><span class="q-num">1</span> (2002-6) An x-ray diffraction image of DNA led to the idea that DNA &mdash; <span class="q-tag">BIO.5a</span></div><div class="sol-img-wrap"><img class="sol-img" src="images/questions/2002-6.png" alt="Franklin's x-ray diffraction image of DNA showing helical X pattern" loading="lazy"></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>is a very long molecule</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>can copy itself</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>contains paired bases</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>is a double helix</li></ul><div class="qexp">Rosalind Franklin's x-ray diffraction photo showed a distinctive X pattern that indicated DNA has a helical (spiral) structure. This was critical evidence for Watson and Crick's double helix model.</div></div>
-      <!-- Q2 --><div class="qq" data-ans="a" data-std="BIO.5a"><div class="q-stem"><span class="q-num">2</span> (2005-43) Which is most responsible for carrying coded information from the nucleus? <span class="q-tag">BIO.5a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>mRNA</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Ribosomes</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>ATP</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Cell membrane</li></ul><div class="qexp">mRNA carries the genetic code from DNA in the nucleus to the ribosome in the cytoplasm for translation into protein.</div></div>
-      <!-- Q3 --><div class="qq" data-ans="c" data-std="BIO.5a"><div class="q-stem"><span class="q-num">3</span> (2005-13) Tissue from heart and stomach of a grasshopper would have the same &mdash; <span class="q-tag">BIO.5a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>metabolic rates</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>cell shape</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>DNA</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>cell size</li></ul><div class="qexp">All cells in an organism contain the same DNA. Different tissues have different shapes, sizes, and metabolic rates, but the genetic content is identical.</div></div>
-      <!-- Q4 --><div class="qq" data-ans="b" data-std="BIO.5d"><div class="q-stem"><span class="q-num">4</span> (2002-28) In a heterozygous cow (Ll), what % of gametes carry the dominant allele? <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>25%</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>50%</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>75%</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>100%</li></ul><div class="qexp">Meiosis separates alleles. Ll produces 50% L gametes and 50% l gametes.</div></div>
-      <!-- Q5 --><div class="qq" data-ans="d" data-std="BIO.5d"><div class="q-stem"><span class="q-num">5</span> (2001-12) Decreased genetic diversity in wild cat populations leads to &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>increased birthrates</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>disproportionate gender ratios</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>increased immigration</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>decreased disease resistance</li></ul><div class="qexp">Less genetic diversity = entire population vulnerable to the same diseases. Diverse populations have varied immune defenses.</div></div>
-      <!-- Q6 --><div class="qq" data-ans="a" data-std="BIO.5c"><div class="q-stem"><span class="q-num">6</span> (2006-10) Heterozygous yellow squash (Yy x Yy): possible offspring genotypes? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>YY, Yy, yy only</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>YY, yy only</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Yy only</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Yy, yy only</li></ul><div class="qexp">Yy x Yy gives 1 YY : 2 Yy : 1 yy. All three genotypes are possible.</div></div>
-      <!-- Q7 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">7</span> (2002-11) Heterozygous short-haired rabbits (Ff x Ff): chance of short fur? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>One in four</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Three in four</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Two in four</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Four in four</li></ul><div class="qexp">Ff x Ff: 1 FF + 2 Ff + 1 ff. Short fur (F) is dominant: FF, Ff, Ff all show short = 3 out of 4.</div></div>
-      <!-- Q8 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">8</span> (2006-6) Cross TTPP x ttpp. The offspring are &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Three-quarters tall and purple</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>All tall and purple</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Three-quarters short and white</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>All short and white</li></ul><div class="qexp">TTPP x ttpp = all TtPp. Both T and P are dominant, so ALL offspring are tall and purple.</div></div>
-      <!-- Q9 --><div class="qq" data-ans="d" data-std="BIO.5c"><div class="q-stem"><span class="q-num">9</span> (2003-13) Heterozygous green corn (Gg x Gg): chance of albino (gg)? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Two in four</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Three in four</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Four in four</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>One in four</li></ul><div class="qexp">Gg x Gg: 1 GG + 2 Gg + 1 gg. Albino = gg = 1 out of 4 (25%).</div></div>
-      <!-- Q10 --><div class="qq" data-ans="c" data-std="BIO.5c"><div class="q-stem"><span class="q-num">10</span> (2005-6) Pink snapdragons (Rr x Rr) produce &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>2 red, 2 white</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>2 red, 1 pink, 1 white</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>1 red, 2 pink, 1 white</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>1 red, 1 pink, 2 white</li></ul><div class="qexp">Incomplete dominance: Rr x Rr = 1 RR (red) : 2 Rr (pink) : 1 rr (white). 1:2:1 ratio.</div></div>
-      <!-- Q11 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">11</span> (2006-44) Albinism appearing in children of pigmented parents shows it is &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>carried only by females</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>a recessive genetic trait</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>a sex-linked gene</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>requiring both parents to be albinos</li></ul><div class="qexp">Both parents look normal but produce albino child = both are carriers (heterozygous). Trait only shows when homozygous recessive.</div></div>
-      <!-- Q12 --><div class="qq" data-ans="a" data-std="BIO.5d"><div class="q-stem"><span class="q-num">12</span> (2005-2) For a mutation to pass to offspring, it must occur in a &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>sex cell</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>muscle cell</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>bone cell</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>brain cell</li></ul><div class="qexp">Only gamete mutations are inherited. Somatic mutations affect only that individual.</div></div>
-      <!-- Q13 --><div class="qq" data-ans="a" data-std="BIO.5d"><div class="q-stem"><span class="q-num">13</span> (2002-44) Somatic cell mutations from radiation may cause &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>increased cancer risk</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>RNA replication difficulties</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>mutations passed to offspring</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>entirely new DNA in all cells</li></ul><div class="qexp">Somatic mutations can cause uncontrolled cell growth (cancer) but are NOT passed to offspring and don't spread to all cells.</div></div>
-      <!-- Q14 --><div class="qq" data-ans="c" data-std="BIO.5d"><div class="q-stem"><span class="q-num">14</span> (2004-42) Inbreeding in endangered species may lead to extinction by &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>increasing beneficial mutations</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>producing a different species</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>reducing genetic diversity</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>increasing fertility</li></ul><div class="qexp">Inbreeding = related individuals sharing the same alleles = less diversity = less ability to adapt.</div></div>
-      <!-- Q15 --><div class="qq" data-ans="d" data-std="BIO.5b"><div class="q-stem"><span class="q-num">15</span> (2003-42) A potential benefit of the Human Genome Project is &mdash; <span class="q-tag">BIO.5b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>creating communication between research centers</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>explaining human cultural differences</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>classifying humans in the animal kingdom</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>finding the genes responsible for many diseases</li></ul><div class="qexp">Sequencing the human genome helps identify disease-related genes, enabling genetic testing and targeted therapies.</div></div>
-      <!-- Q16 --><div class="qq" data-ans="b" data-std="BIO.5e"><div class="q-stem"><span class="q-num">16</span> (2001-20) Which is a genetically engineered organism? <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Seedless fruits from grafting</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>A plant with external DNA for insecticide production</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>A plant with natural medicinal properties</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>New variety from cross-pollination</li></ul><div class="qexp">Genetic engineering = inserting external DNA using technology. Grafting and cross-pollination are traditional methods.</div></div>
-      <!-- Q17 --><div class="qq" data-ans="a" data-std="BIO.5e"><div class="q-stem"><span class="q-num">17</span> (2002-3) DNA from two or more species combined is called &mdash; <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>recombinant DNA</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>mitochondrial DNA</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>plasmid</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>chloroplast DNA</li></ul><div class="qexp">Recombinant DNA is artificially created by combining DNA from different species. Plasmids carry recombinant DNA but aren't the recombinant DNA itself.</div></div>
-      <!-- Q18 --><div class="qq" data-ans="c" data-std="BIO.5e"><div class="q-stem"><span class="q-num">18</span> CRISPR allows scientists to &mdash; <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>view DNA under a microscope</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>separate DNA fragments by size</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>precisely edit DNA at specific genome locations</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>copy DNA millions of times</li></ul><div class="qexp">CRISPR = precise gene editing (find-and-replace for DNA). Gel electrophoresis separates by size. PCR copies DNA.</div></div>
-      <!-- Q19 --><div class="qq" data-ans="d" data-std="BIO.5c"><div class="q-stem"><span class="q-num">19</span> (2005-48) Cancer, diabetes, and sickle-cell risk increases with family history because they are &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>passed through blood contact</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>related to diet</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>highly infectious</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>genetically based</li></ul><div class="qexp">These conditions have genetic components. Family members share genes, so disease-associated alleles run in families.</div></div>
-      <!-- Q20 --><div class="qq" data-ans="a" data-std="BIO.5c"><div class="q-stem"><span class="q-num">20</span> (2005-16) A student hypothesizes thick leg muscles are inherited. Dogs outdoors have thicker muscles than indoor dogs. The student should conclude &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Inheritance alone may not account for thick leg muscles</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Dogs with thick muscles can't survive indoors</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Thick muscles require more exercise</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Thick muscles are associated with coat thickness</li></ul><div class="qexp">The data shows environment (outdoor activity) affects muscle thickness, meaning genetics alone doesn't explain the trait. This is the concept of gene-environment interaction.</div></div>
-      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(10)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+      <!-- Q1 --><div class="qq" data-ans="d" data-std="BIO.5a"><div class="q-stem"><span class="q-num">1</span> (2002-6) An x-ray diffraction image of DNA led to the idea that DNA &mdash; <span class="q-tag">BIO.5a</span></div><div class="sol-img-wrap"><img class="sol-img" src="images/questions/2002-6.png" alt="Franklin's x-ray diffraction image of DNA showing helical X pattern" loading="lazy"></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>is a very long molecule</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>can copy itself</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>contains paired bases</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>is a double helix</li></ul><div class="qexp">Rosalind Franklin's x-ray diffraction photo showed a distinctive X pattern that indicated DNA has a helical (spiral) structure. This was critical evidence for Watson and Crick's double helix model.</div></div>
+      <!-- Q2 --><div class="qq" data-ans="a" data-std="BIO.5a"><div class="q-stem"><span class="q-num">2</span> (2005-43) Which is most responsible for carrying coded information from the nucleus? <span class="q-tag">BIO.5a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>mRNA</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Ribosomes</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>ATP</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Cell membrane</li></ul><div class="qexp">mRNA carries the genetic code from DNA in the nucleus to the ribosome in the cytoplasm for translation into protein.</div></div>
+      <!-- Q3 --><div class="qq" data-ans="c" data-std="BIO.5a"><div class="q-stem"><span class="q-num">3</span> (2005-13) Tissue from heart and stomach of a grasshopper would have the same &mdash; <span class="q-tag">BIO.5a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>metabolic rates</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>cell shape</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>DNA</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>cell size</li></ul><div class="qexp">All cells in an organism contain the same DNA. Different tissues have different shapes, sizes, and metabolic rates, but the genetic content is identical.</div></div>
+      <!-- Q4 --><div class="qq" data-ans="b" data-std="BIO.5d"><div class="q-stem"><span class="q-num">4</span> (2002-28) In a heterozygous cow (Ll), what % of gametes carry the dominant allele? <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>25%</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>50%</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>75%</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>100%</li></ul><div class="qexp">Meiosis separates alleles. Ll produces 50% L gametes and 50% l gametes.</div></div>
+      <!-- Q5 --><div class="qq" data-ans="d" data-std="BIO.5d"><div class="q-stem"><span class="q-num">5</span> (2001-12) Decreased genetic diversity in wild cat populations leads to &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>increased birthrates</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>disproportionate gender ratios</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>increased immigration</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>decreased disease resistance</li></ul><div class="qexp">Less genetic diversity = entire population vulnerable to the same diseases. Diverse populations have varied immune defenses.</div></div>
+      <!-- Q6 --><div class="qq" data-ans="a" data-std="BIO.5c"><div class="q-stem"><span class="q-num">6</span> (2006-10) Heterozygous yellow squash (Yy x Yy): possible offspring genotypes? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>YY, Yy, yy only</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>YY, yy only</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Yy only</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Yy, yy only</li></ul><div class="qexp">Yy x Yy gives 1 YY : 2 Yy : 1 yy. All three genotypes are possible.</div></div>
+      <!-- Q7 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">7</span> (2002-11) Heterozygous short-haired rabbits (Ff x Ff): chance of short fur? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>One in four</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Three in four</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Two in four</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Four in four</li></ul><div class="qexp">Ff x Ff: 1 FF + 2 Ff + 1 ff. Short fur (F) is dominant: FF, Ff, Ff all show short = 3 out of 4.</div></div>
+      <!-- Q8 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">8</span> (2006-6) Cross TTPP x ttpp. The offspring are &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Three-quarters tall and purple</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>All tall and purple</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Three-quarters short and white</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>All short and white</li></ul><div class="qexp">TTPP x ttpp = all TtPp. Both T and P are dominant, so ALL offspring are tall and purple.</div></div>
+      <!-- Q9 --><div class="qq" data-ans="d" data-std="BIO.5c"><div class="q-stem"><span class="q-num">9</span> (2003-13) Heterozygous green corn (Gg x Gg): chance of albino (gg)? <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Two in four</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Three in four</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Four in four</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>One in four</li></ul><div class="qexp">Gg x Gg: 1 GG + 2 Gg + 1 gg. Albino = gg = 1 out of 4 (25%).</div></div>
+      <!-- Q10 --><div class="qq" data-ans="c" data-std="BIO.5c"><div class="q-stem"><span class="q-num">10</span> (2005-6) Pink snapdragons (Rr x Rr) produce &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>2 red, 2 white</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>2 red, 1 pink, 1 white</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>1 red, 2 pink, 1 white</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>1 red, 1 pink, 2 white</li></ul><div class="qexp">Incomplete dominance: Rr x Rr = 1 RR (red) : 2 Rr (pink) : 1 rr (white). 1:2:1 ratio.</div></div>
+      <!-- Q11 --><div class="qq" data-ans="b" data-std="BIO.5c"><div class="q-stem"><span class="q-num">11</span> (2006-44) Albinism appearing in children of pigmented parents shows it is &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>carried only by females</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>a recessive genetic trait</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>a sex-linked gene</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>requiring both parents to be albinos</li></ul><div class="qexp">Both parents look normal but produce albino child = both are carriers (heterozygous). Trait only shows when homozygous recessive.</div></div>
+      <!-- Q12 --><div class="qq" data-ans="a" data-std="BIO.5d"><div class="q-stem"><span class="q-num">12</span> (2005-2) For a mutation to pass to offspring, it must occur in a &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>sex cell</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>muscle cell</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>bone cell</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>brain cell</li></ul><div class="qexp">Only gamete mutations are inherited. Somatic mutations affect only that individual.</div></div>
+      <!-- Q13 --><div class="qq" data-ans="a" data-std="BIO.5d"><div class="q-stem"><span class="q-num">13</span> (2002-44) Somatic cell mutations from radiation may cause &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>increased cancer risk</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>RNA replication difficulties</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>mutations passed to offspring</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>entirely new DNA in all cells</li></ul><div class="qexp">Somatic mutations can cause uncontrolled cell growth (cancer) but are NOT passed to offspring and don't spread to all cells.</div></div>
+      <!-- Q14 --><div class="qq" data-ans="c" data-std="BIO.5d"><div class="q-stem"><span class="q-num">14</span> (2004-42) Inbreeding in endangered species may lead to extinction by &mdash; <span class="q-tag">BIO.5d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>increasing beneficial mutations</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>producing a different species</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>reducing genetic diversity</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>increasing fertility</li></ul><div class="qexp">Inbreeding = related individuals sharing the same alleles = less diversity = less ability to adapt.</div></div>
+      <!-- Q15 --><div class="qq" data-ans="d" data-std="BIO.5b"><div class="q-stem"><span class="q-num">15</span> (2003-42) A potential benefit of the Human Genome Project is &mdash; <span class="q-tag">BIO.5b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>creating communication between research centers</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>explaining human cultural differences</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>classifying humans in the animal kingdom</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>finding the genes responsible for many diseases</li></ul><div class="qexp">Sequencing the human genome helps identify disease-related genes, enabling genetic testing and targeted therapies.</div></div>
+      <!-- Q16 --><div class="qq" data-ans="b" data-std="BIO.5e"><div class="q-stem"><span class="q-num">16</span> (2001-20) Which is a genetically engineered organism? <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Seedless fruits from grafting</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>A plant with external DNA for insecticide production</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>A plant with natural medicinal properties</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>New variety from cross-pollination</li></ul><div class="qexp">Genetic engineering = inserting external DNA using technology. Grafting and cross-pollination are traditional methods.</div></div>
+      <!-- Q17 --><div class="qq" data-ans="a" data-std="BIO.5e"><div class="q-stem"><span class="q-num">17</span> (2002-3) DNA from two or more species combined is called &mdash; <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>recombinant DNA</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>mitochondrial DNA</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>plasmid</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>chloroplast DNA</li></ul><div class="qexp">Recombinant DNA is artificially created by combining DNA from different species. Plasmids carry recombinant DNA but aren't the recombinant DNA itself.</div></div>
+      <!-- Q18 --><div class="qq" data-ans="c" data-std="BIO.5e"><div class="q-stem"><span class="q-num">18</span> CRISPR allows scientists to &mdash; <span class="q-tag">BIO.5e</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>view DNA under a microscope</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>separate DNA fragments by size</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>precisely edit DNA at specific genome locations</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>copy DNA millions of times</li></ul><div class="qexp">CRISPR = precise gene editing (find-and-replace for DNA). Gel electrophoresis separates by size. PCR copies DNA.</div></div>
+      <!-- Q19 --><div class="qq" data-ans="d" data-std="BIO.5c"><div class="q-stem"><span class="q-num">19</span> (2005-48) Cancer, diabetes, and sickle-cell risk increases with family history because they are &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>passed through blood contact</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>related to diet</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>highly infectious</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>genetically based</li></ul><div class="qexp">These conditions have genetic components. Family members share genes, so disease-associated alleles run in families.</div></div>
+      <!-- Q20 --><div class="qq" data-ans="a" data-std="BIO.5c"><div class="q-stem"><span class="q-num">20</span> (2005-16) A student hypothesizes thick leg muscles are inherited. Dogs outdoors have thicker muscles than indoor dogs. The student should conclude &mdash; <span class="q-tag">BIO.5c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Inheritance alone may not account for thick leg muscles</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Dogs with thick muscles can't survive indoors</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Thick muscles require more exercise</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Thick muscles are associated with coat thickness</li></ul><div class="qexp">The data shows environment (outdoor activity) affects muscle thickness, meaning genetics alone doesn't explain the trait. This is the concept of gene-environment interaction.</div></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="UnitEngine.goTo(10)" id="to-results-btn" disabled>View Results &rarr;</button></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(10)" disabled>Results &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(8)">&larr; Study Guide</button><button class="nbtn next" onclick="UnitEngine.goTo(10)" disabled>Results &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -1266,1071 +1266,19 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   <div class="lc">
     <div class="eyebrow">Step 11 of 11 &mdash; Results</div>
     <div class="sh2">Your BIO.5 Score &amp; Danger Zone Report</div>
-    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(9)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
-    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="UnitEngine.goTo(9)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="UnitEngine.submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="UnitEngine.retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(9)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(9)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
 </div>
 
 </main>
 <script src="../shared/error-reporter.js"></script>
-<script src="sol-api.js?v=2026-05-02-dsmfix"></script>
-<script src="dsm-player.js?v=2026-05-01-fix3"></script>
-<script>
-/* ── CONSTANTS ───────────────────────────────────── */
-const UNIT = 'unit5';
-const TOTAL_PANELS = 11;
-const TOTAL_SOL_Q = 20;
-const TOTAL_CARDS = 31;
-const VQ_TOTAL = 10;
-const VQ_PASS = 8;
-
-/* ── STATE ────────────────────────────────────────── */
-var studentName = '';
-var currentPanel = 0;
-var panelStartTime = Date.now();
-var sessionStart = Date.now();
-var activityLog = [];
-var pretestAnswers = [];
-var pretestSent = false;
-var vqAnswers = {};
-var vqScore = 0;
-var vocabPassed = false;
-var pracAnswered = 0;
-var pracCorrect = 0;
-var missedStds = {};
-var questionDetail = [];
-var flippedCards = new Set();
-var graphAnswered = {};
-
-var VQ_CORRECT = {1:'b',2:'b',3:'c',4:'c',5:'b',6:'b',7:'c',8:'c',9:'b',10:'c'};
-var VQ_EXPLAIN = {
-  1:'Bb has two DIFFERENT alleles = heterozygous. BB = homozygous dominant, bb = homozygous recessive.',
-  2:'Meiosis produces 4 genetically different cells with half the chromosomes (haploid). Mitosis produces 2 identical diploid cells.',
-  3:'Incomplete dominance: heterozygote shows a BLEND of both parental phenotypes. Codominance would show BOTH traits separately.',
-  4:'PCR (Polymerase Chain Reaction) copies a specific DNA segment millions of times. CRISPR edits DNA. Gel electrophoresis separates DNA.',
-  5:'In RNA, uracil (U) replaces thymine (T). So DNA\'s A pairs with RNA\'s U during transcription.',
-  6:'Phenotype = the observable physical trait (what you see). Genotype = the genetic letters (BB, Bb, bb).',
-  7:'Crossing over exchanges DNA segments between homologous chromosomes during meiosis, creating new gene combinations = more genetic diversity.',
-  8:'CRISPR precisely edits DNA at specific locations — like find-and-replace for genes. PCR copies, gel electrophoresis separates.',
-  9:'A dihybrid cross examines TWO traits at once using a 4×4 Punnett square (16 boxes).',
-  10:'Only mutations in sex cells (gametes) are passed to offspring. Somatic cell mutations affect only that individual.'
-};
-
-/* ── METADATA ────────────────────────────────────── */
-function initMeta() {
-  var today = new Date().toISOString().slice(0, 10);
-  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
-  var last = localStorage.getItem('sol_streak_last');
-  if (last === today) { /* already counted */ }
-  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
-  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
-  document.getElementById('streak-val').textContent = streak;
-  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
-
-  var examDate = solAPI.getExamDate();
-  if (examDate) {
-    var diff = Math.max(0, Math.ceil((examDate - new Date()) / 86400000));
-    document.getElementById('sol-countdown').textContent = diff;
-    document.getElementById('sol-countdown').style.color = diff <= 14 ? '#fca5a5' : diff <= 21 ? '#fcd34d' : '#fff';
-  } else {
-    document.getElementById('sol-countdown').textContent = '--';
-  }
-}
-
-/* ── TRACKING ────────────────────────────────────── */
-var __lastScorePromise = null;
-
-function send(payload) {
-  payload.student = studentName;
-  payload.module = 'SOL Prep — Unit 5: Genetics & Inheritance';
-  var __p = solAPI.submit(payload) || Promise.resolve();
-  if (payload.action === 'score') __lastScorePromise = __p;
-  return __p;
-}
-
-function getAnswerText(opt) {
-  var t = opt.textContent.trim();
-  return t.replace(/^[A-D]\s*/, '');
-}
-
-/* ── PRETEST-LOCK: pretest one-attempt block ─── */
-var pretestAlreadySubmitted = false;
-var priorPretestScore = null;
-
-function checkPretestLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, '', 'Pretest')
-    .then(function(prior) {
-      if (!prior) return;
-      pretestAlreadySubmitted = true;
-      priorPretestScore = prior;
-      applyPretestLockUI();
-    });
-}
-
-function applyPretestLockUI() {
-  if (!pretestAlreadySubmitted || !priorPretestScore) return;
-  var p = priorPretestScore;
-  var p0 = document.getElementById('p0');
-  if (p0 && !document.getElementById('pretest-already-banner')) {
-    var banner = document.createElement('div');
-    banner.id = 'pretest-already-banner';
-    banner.style.cssText = 'background:#dcfce7;border:2px solid #16a34a;color:#166534;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
-    banner.innerHTML = '✓ Pretest already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). The pretest is a one-time diagnostic — you can continue to the lesson below.';
-    var lc = p0.querySelector('.lc');
-    if (lc) lc.insertBefore(banner, lc.firstChild);
-  }
-  document.querySelectorAll('#p0 .qq, #p0 .gate-q').forEach(function(qq) { qq.style.display = 'none'; });
-  if (typeof pretestSent !== 'undefined') pretestSent = true;
-  if (typeof gateAnswered !== 'undefined' && typeof gateRequired !== 'undefined') {
-    if (!gateAnswered[0]) gateAnswered[0] = new Set();
-    var req = gateRequired[0] || 5;
-    for (var i = 0; i < req; i++) gateAnswered[0].add('pretest-locked-' + i);
-  }
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(1);
-  if (typeof checkGate === 'function') checkGate(0);
-}
-
-/* ── RETAKE-LOCK: practice-test one-attempt block ─── */
-var practiceAlreadySubmitted = false;
-var priorPracticeScore = null;
-
-function checkPracticeRetakeLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, 'SOL Prep \u2014 Unit 5: Genetics & DNA', 'Practice Test')
-    .then(function(prior) {
-      if (!prior) return;
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = prior;
-      applyPracticeLockUI();
-    });
-}
-
-function applyPracticeLockUI() {
-  if (!practiceAlreadySubmitted || !priorPracticeScore) return;
-  var p = priorPracticeScore;
-  var locked = document.getElementById('practice-test-locked');
-  if (locked) {
-    locked.innerHTML =
-      '<div class="practice-locked-icon">\u2713</div>'
-      + '<div class="practice-locked-title">Practice Test Already Submitted</div>'
-      + '<div class="practice-locked-sub">Your score: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). Talk to your teacher if you need to retake.</div>';
-    locked.style.display = '';
-  }
-  var box = document.getElementById('sol-practice-box');
-  if (box) box.style.display = 'none';
-  var rb = document.getElementById('dz-retake-btn');
-  if (rb) rb.style.display = 'none';
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(11);
-}
-
-/* ── HEARTBEAT-PRESENCE: live-pulse signal ─── */
-// Heartbeat keeps the Live Pulse dashboard accurate while a student
-// is reading without clicking. Bumps quiz_progress.updated_at every
-// 60s, but only when the tab is visible AND the user has moved/
-// clicked/typed in the last 90s — so a student who walked away
-// stops looking active after ~90s, while one reading attentively
-// stays green.
-var _hbInterval = null;
-var _hbLastActive = Date.now();
-var HEARTBEAT_MS = 60000;
-var HEARTBEAT_PRESENCE_WINDOW_MS = 90000;
-
-(function bindActivityListeners() {
-  var bump = function() { _hbLastActive = Date.now(); };
-  ['mousemove','keydown','click','touchstart','wheel','scroll'].forEach(function(ev) {
-    document.addEventListener(ev, bump, { passive: true });
-  });
-})();
-
-function startHeartbeat(module, studentName) {
-  if (_hbInterval || !solAPI.pingProgress) return;
-  if (!module || !studentName) return;
-  _hbInterval = setInterval(function() {
-    if (document.visibilityState !== 'visible') return;
-    if (Date.now() - _hbLastActive > HEARTBEAT_PRESENCE_WINDOW_MS) return;
-    solAPI.pingProgress(module, studentName);
-  }, HEARTBEAT_MS);
-}
-function stopHeartbeat() {
-  if (_hbInterval) { clearInterval(_hbInterval); _hbInterval = null; }
-}
-window.addEventListener('pagehide', stopHeartbeat);
-
-/* ── SAVE / RESTORE ──────────────────────────────── */
-function saveProgress() {
-  if (!studentName) return;
-  var gateObj = {};
-  for (var key in gateAnswered) {
-    gateObj[key] = Array.from(gateAnswered[key]);
-  }
-  var data = {
-    studentName: studentName,
-    classCode: solAPI.getClassCode(),
-    currentPanel: currentPanel,
-    gateAnswered: gateObj,
-    graphAnswered: graphAnswered,
-    pretestAnswers: pretestAnswers,
-    pretestSent: pretestSent,
-    vqAnswers: vqAnswers,
-    vqScore: vqScore,
-    vocabPassed: vocabPassed,
-    pracAnswered: pracAnswered,
-    pracCorrect: pracCorrect,
-    missedStds: missedStds,
-    questionDetail: questionDetail,
-    activityLog: activityLog,
-    sessionStart: sessionStart,
-    unlockedPanels: Array.from(unlockedPanels),
-    flippedCards: Array.from(flippedCards)
-  };
-  data.savedAt = Date.now();
-  localStorage.setItem('sol_unit5_progress', JSON.stringify(data));
-  // Cross-device sync — push to Supabase (debounced 1.5s).
-  if (studentName && solAPI.saveProgress) {
-    solAPI.saveProgress('unit-5', studentName, data);
-  }
-}
-
-function restoreProgress(data) {
-  studentName = data.studentName;
-  if (data.unlockedPanels) {
-    unlockedPanels = new Set(data.unlockedPanels);
-  } else {
-    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
-  }
-  pretestAnswers = data.pretestAnswers || [];
-  pretestSent = data.pretestSent || false;
-  vqAnswers = data.vqAnswers || {};
-  vqScore = data.vqScore || 0;
-  vocabPassed = data.vocabPassed || false;
-  pracAnswered = data.pracAnswered || 0;
-  pracCorrect = data.pracCorrect || 0;
-  missedStds = data.missedStds || {};
-  questionDetail = data.questionDetail || [];
-  activityLog = data.activityLog || [];
-  sessionStart = data.sessionStart || Date.now();
-  graphAnswered = data.graphAnswered || {};
-
-  gateAnswered = {};
-  if (data.gateAnswered) {
-    for (var pid in data.gateAnswered) {
-      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
-    }
-  }
-
-  document.getElementById('name-modal').style.display = 'none';
-  panelStartTime = Date.now();
-
-  // Replay gate questions visually
-  for (var panelId in gateAnswered) {
-    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-    gateAnswered[panelId].forEach(function(idx) {
-      if (qs[idx]) {
-        var qq = qs[idx];
-        var correct = qq.dataset.ans;
-        qq.querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === correct) o.classList.add('correct');
-        });
-        var exp = qq.querySelector('.qexp');
-        if (exp) exp.classList.add('show');
-      }
-    });
-    checkGate(parseInt(panelId));
-  }
-
-  // Replay graph answers
-  // (No graph questions in Unit 2 content panels)
-
-  // Restore flipped cards
-  if (data.flippedCards) {
-    flippedCards = new Set(data.flippedCards);
-    var allCards = document.querySelectorAll('.vcard');
-    flippedCards.forEach(function(idx) {
-      if (allCards[idx]) allCards[idx].classList.add('flipped');
-    });
-    var countEl = document.getElementById('vocab-flip-count');
-    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-    if (flippedCards.size >= TOTAL_CARDS) {
-      document.getElementById('vquiz').style.display = 'block';
-      var gate = document.getElementById('vocab-flip-gate');
-      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
-    }
-  }
-
-  // Restore vocab quiz answers
-  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
-    for (var qn in data.vqAnswers) {
-      var chosen = data.vqAnswers[qn];
-      var vqDiv = document.getElementById('vq' + qn);
-      if (!vqDiv) continue;
-      var opts = vqDiv.querySelectorAll('.vq-opt');
-      opts.forEach(function(o) {
-        o.classList.add('revealed');
-        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
-        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
-      });
-      var res = document.getElementById('vqr' + qn);
-      if (res) {
-        res.textContent = VQ_EXPLAIN[qn];
-        res.classList.add('show');
-        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
-      }
-    }
-    if (data.vocabPassed) {
-      var scoreBox = document.getElementById('vquiz-score');
-      scoreBox.style.display = 'block';
-      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
-      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! Mastery Module unlocked.';
-    }
-  }
-
-  // Restore practice test answers
-  if (data.pracAnswered > 0) {
-    var solQs = document.querySelectorAll('#sol-practice-box .qq');
-    for (var qi = 0; qi < data.questionDetail.length; qi++) {
-      var qd = data.questionDetail[qi];
-      if (solQs[qi]) {
-        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
-          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
-        });
-        var exp = solQs[qi].querySelector('.qexp');
-        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
-      }
-    }
-    var progMsg = document.getElementById('sol-progress-msg');
-    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-    if (data.pracAnswered === TOTAL_SOL_Q) {
-      document.getElementById('to-results-btn').disabled = false;
-      showDangerZone();
-    }
-  }
-
-  goTo(data.currentPanel || 0);
-}
-
-/* ── SSO (Google sign-in) ─────────────────────────── */
-/* SSO-HELPERS */
-var _ssoActive = false;
-
-function applySSOSession() {
-  if (!solAPI.isAuthenticated || !solAPI.isAuthenticated()) return false;
-  var fullName = (solAPI.getStudentDisplayName && solAPI.getStudentDisplayName()) || '';
-  var email = (solAPI.getStudentEmail && solAPI.getStudentEmail()) || '';
-  if (!fullName && !email) return false;
-  if (!fullName) fullName = email.split('@')[0];
-  var parts = fullName.trim().split(/\s+/);
-  var first = parts[0] || '';
-  var last = parts.slice(1).join(' ');
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.value = first; f.disabled = true; f.style.opacity = '0.6'; }
-  if (l) { l.value = last;  l.disabled = true; l.style.opacity = '0.6'; }
-  var banner = document.getElementById('sso-signed-in');
-  var nameDisp = document.getElementById('sso-name-display');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'block';
-  if (nameDisp) nameDisp.textContent = fullName + (email ? ' (' + email + ')' : '');
-  if (btn) btn.style.display = 'none';
-  _ssoActive = true;
-  return true;
-}
-
-function clearSSOSession() {
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.disabled = false; f.style.opacity = '1'; }
-  if (l) { l.disabled = false; l.style.opacity = '1'; }
-  var banner = document.getElementById('sso-signed-in');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'none';
-  if (btn) btn.style.display = 'flex';
-  _ssoActive = false;
-}
-
-function signInWithGoogle() {
-  if (!solAPI.signInWithGoogle) return;
-  var codeEl = document.getElementById('class-code');
-  if (codeEl && codeEl.value.trim()) {
-    sessionStorage.setItem('_sso_pending_code', codeEl.value.trim());
-  }
-  var btn = document.getElementById('sso-signin-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting...'; }
-  solAPI.signInWithGoogle(window.location.href).catch(function(err) {
-    console.error('[unit-5] sign-in failed:', err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
-    var ce = document.getElementById('code-err');
-    if (ce) { ce.textContent = 'Sign-in failed: ' + (err.message || 'unknown error'); ce.style.display = 'block'; }
-  });
-}
-
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'sso-signout') {
-    e.preventDefault();
-    if (solAPI.signOut) {
-      solAPI.signOut().then(function() {
-        clearSSOSession();
-        var f = document.getElementById('student-first-name');
-        var l = document.getElementById('student-last-name');
-        if (f) f.value = '';
-        if (l) l.value = '';
-      });
-    }
-  }
-});
-
-/* ── START FRESH (clear local + remote progress) ───── */
-function startFresh() {
-  var saved = localStorage.getItem('sol_unit5_progress');
-  var name = '';
-  try { name = saved ? (JSON.parse(saved).studentName || '') : ''; } catch(e) {}
-  if (name && solAPI.clearProgress) {
-    solAPI.clearProgress('unit-5', name);
-  }
-  localStorage.removeItem('sol_unit5_progress');
-  localStorage.removeItem('sol_unit5_vocab');
-  solAPI.clearClass();
-  location.reload();
-}
-
-/* ── START ────────────────────────────────────────── */
-function startUnit() {
-  // SSO is the only path — legacy name-modal flow removed when
-  // requires_sso flipped true on biology classes.
-  if (!_ssoActive || !solAPI.getStudentDisplayName || !solAPI.getStudentDisplayName()) {
-    if (typeof showToast === 'function') showToast('Please sign in with Google first.');
-    return;
-  }
-  var nameInput = solAPI.getStudentDisplayName();
-  var codeInput = document.getElementById('class-code').value.trim();
-  if (!codeInput) {
-    document.getElementById('code-err').style.display = 'block';
-    return;
-  }
-  document.getElementById('name-err').style.display = 'none';
-  document.getElementById('code-err').style.display = 'none';
-
-  var stored = solAPI.getStored();
-  if (stored && stored.code === codeInput.toUpperCase()) {
-    proceedStart(nameInput);
-    return;
-  }
-
-  var btn = document.querySelector('.nm-btn');
-  btn.disabled = true;
-  btn.textContent = 'Validating...';
-
-  solAPI.validateCode(codeInput).then(function(result) {
-    if (!result.valid) {
-      document.getElementById('code-err').textContent = 'Invalid class code. Check with your teacher.';
-      document.getElementById('code-err').style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Start Unit 5 \u2192';
-      return;
-    }
-    solAPI.storeClass();
-    proceedStart(nameInput);
-  });
-}
-
-function proceedStart(nameInput) {
-  /* SSO-PROCEED-OVERRIDE */
-  if (_ssoActive && solAPI.getStudentDisplayName) {
-    var ssoName = solAPI.getStudentDisplayName();
-    if (ssoName) nameInput = ssoName;
-  }
-  /* canonicalizeName: */
-  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(nameInput) : (nameInput || '').trim());
-  /* SSO-ENROLL */
-  if (_ssoActive && solAPI.enrollInClass && solAPI.getClassId) {
-    solAPI.enrollInClass(solAPI.getClassId());
-  }
-  checkPracticeRetakeLock();
-  checkPretestLock();
-  startHeartbeat('', studentName);
-
-  // Check local + remote progress, prefer whichever is newer.
-  var saved = localStorage.getItem('sol_unit5_progress');
-  var localData = saved ? JSON.parse(saved) : null;
-  if (localData && localData.studentName !== studentName) localData = null;
-
-  var remoteP = (solAPI.getProgress ? solAPI.getProgress('unit-5', studentName) : Promise.resolve(null));
-  remoteP.then(function(remote) {
-    var remoteData = remote ? remote.progress_data : null;
-    var chosen = null;
-    if (remoteData && localData) {
-      var remoteAt = new Date(remote.updated_at).getTime();
-      var localAt = localData.savedAt || localData.sessionStart || 0;
-      chosen = (remoteAt > localAt + 1000) ? remoteData : localData;
-    } else {
-      chosen = remoteData || localData;
-    }
-    if (chosen) {
-      localStorage.setItem('sol_unit5_progress', JSON.stringify(chosen));
-      restoreProgress(chosen);
-      return;
-    }
-    localStorage.removeItem('sol_unit5_progress');
-    document.getElementById('name-modal').style.display = 'none';
-    initMeta();
-    sessionStart = Date.now();
-    panelStartTime = Date.now();
-    send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });  });
-}
-
-/* ── NAVIGATION ───────────────────────────────────── */
-var unlockedPanels = new Set([0]);
-
-var stepNames = ['SOL Focus','DNA Structure','Meiosis','Mendelian Genetics','Non-Mendelian','Genetic Engineering','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
-
-function goTo(n) {
-  if (n === 10 && practiceAlreadySubmitted) applyPracticeLockUI();
-  if (n === 0 && pretestAlreadySubmitted) applyPretestLockUI();
-  if (n > currentPanel && !unlockedPanels.has(n)) {
-    showToast('Complete the questions on this page first!');
-    return;
-  }
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
-  }
-  panelStartTime = Date.now();
-
-  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  var target = document.getElementById('p' + n);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
-  var sb = document.getElementById('sb' + n);
-  if (sb) sb.classList.add('active');
-  for (var i = 0; i < n; i++) {
-    var prev = document.getElementById('sb' + i);
-    if (prev) prev.classList.add('done');
-  }
-  currentPanel = n;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
-  document.getElementById('steps-prog').style.width = pct + '%';
-  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
-  if (!(n in gateRequired) && n !== DSM_PANEL) { unlockedPanels.add(n + 1); }
-  localStorage.setItem('sol_' + UNIT + '_panel', n);
-  saveProgress();
-}
-
-/* ── GATE SYSTEM ─────────────────────────────────── */
-var gateAnswered = {};
-var DSM_PANEL = 7;  // Mastery Module panel — unlocked only by DSMPlayer.onComplete
-var gateRequired = { 0: 5, 1: 4, 2: 4, 3: 4, 4: 4, 5: 4 };
-
-function gateAnswer(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var panelId = parseInt(qq.dataset.panel);
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
-  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-  for (var i = 0; i < qs.length; i++) {
-    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
-  }
-
-  // Track pretest answers (panel 0, questions 3-5)
-  if (panelId === 0) {
-    var qIndex = Array.from(qs).indexOf(qq);
-    if (qIndex >= 2) {
-      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
-      if (pretestAnswers.length === 3 && !pretestSent) {
-        pretestSent = true;
-        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
-        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
-          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
-        })});
-      }
-    }
-  }
-
-  checkGate(panelId);
-  saveProgress();
-}
-
-function checkGate(panelId) {
-  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
-  var required = gateRequired[panelId] || 0;
-
-  var status = document.getElementById('gate-status-' + panelId);
-  var count = document.getElementById('gate-count-' + panelId);
-  if (count) count.textContent = answered + ' of ' + required + ' answered';
-
-  if (answered >= required) {
-    unlockedPanels.add(panelId + 1);
-    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
-    var btn = document.getElementById('next-' + panelId);
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
-    }
-    var sb = document.getElementById('sb' + panelId);
-    if (sb) sb.classList.add('done');
-    saveProgress();
-  }
-}
-
-/* ── FLASHCARDS ──────────────────────────────────── */
-function flipCard(card) {
-  card.classList.toggle('flipped');
-  var allCards = document.querySelectorAll('.vcard');
-  var idx = Array.from(allCards).indexOf(card);
-  if (card.classList.contains('flipped')) {
-    flippedCards.add(idx);
-  }
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-
-  if (flippedCards.size >= TOTAL_CARDS) {
-    document.getElementById('vquiz').style.display = 'block';
-    var gate = document.getElementById('vocab-flip-gate');
-    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
-  }
-  saveProgress();
-}
-
-/* ── VOCAB QUIZ ──────────────────────────────────── */
-function vqPick(el) {
-  var vq = el.closest('.vq');
-  if (vq.querySelector('.vq-opt.revealed')) return;
-  var qNum = vq.id.replace('vq', '');
-  var chosen = el.dataset.v;
-  var correct = VQ_CORRECT[qNum];
-  var isCorrect = (chosen === correct);
-
-  vq.querySelectorAll('.vq-opt').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === el && !isCorrect) o.classList.add('incorrect');
-  });
-
-  var res = document.getElementById('vqr' + qNum);
-  if (res) {
-    res.textContent = VQ_EXPLAIN[qNum];
-    res.classList.add('show');
-    if (!isCorrect) res.classList.add('wrong');
-  }
-
-  vqAnswers[qNum] = chosen;
-  saveProgress();
-}
-
-function gradeVocab() {
-  vqScore = 0;
-  for (var q = 1; q <= VQ_TOTAL; q++) {
-    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
-  }
-  var box = document.getElementById('vquiz-score');
-  var nEl = document.getElementById('vq-score-num');
-  var msgEl = document.getElementById('vq-pass-msg');
-  var retryBtn = document.getElementById('vq-retry-btn');
-  nEl.textContent = vqScore + '/' + VQ_TOTAL;
-  box.style.display = 'block';
-  if (vqScore >= VQ_PASS) {
-    msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
-    vocabPassed = true;
-    unlockedPanels.add(7);
-    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
-    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
-    DSMPlayer.init({
-      unitNumber: 5,
-      moduleName: 'SOL Prep — Unit 5: Genetics & Inheritance',
-      standard: 'BIO.5',
-      unitKey: UNIT,
-      panelId: 7,
-      containerId: 'dsm-container',
-      unlockPanels: [8, 9, 10],
-      onComplete: function() {
-        unlockedPanels.add(8); unlockedPanels.add(9); unlockedPanels.add(10);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(8); unlockedPanels.add(9); unlockedPanels.add(10);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  } else {
-    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
-    retryBtn.style.display = 'inline-block';
-
-    flippedCards = new Set();
-    vqAnswers = {};
-    vqScore = 0;
-
-    saveProgress();
-
-    var allCards = document.querySelectorAll('.vcard');
-    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
-    var flipGate = document.getElementById('vocab-flip-gate');
-    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-    var flipCount = document.getElementById('vocab-flip-count');
-    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-    setTimeout(function() {
-      document.getElementById('vquiz').style.display = 'none';
-      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-      box.style.display = 'none';
-      retryBtn.style.display = 'none';
-      saveProgress();
-      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast('Study all cards again before retaking the quiz');
-    }, 3000);
-    return;
-  }
-  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  saveProgress();
-}
-
-function retryVocab() {
-  vqAnswers = {};
-  vqScore = 0;
-  flippedCards = new Set();
-
-  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-  var scoreBox = document.getElementById('vquiz-score');
-  if (scoreBox) scoreBox.style.display = 'none';
-  var retryBtn = document.getElementById('vq-retry-btn');
-  if (retryBtn) retryBtn.style.display = 'none';
-
-  var allCards = document.querySelectorAll('.vcard');
-  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
-
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-  var gate = document.getElementById('vocab-flip-gate');
-  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-
-  var quiz = document.getElementById('vquiz');
-  if (quiz) quiz.style.display = 'none';
-
-  saveProgress();
-  var grid = document.querySelector('.vocab-grid');
-  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
-}
-
-/* ── SOL PRACTICE TEST ───────────────────────────── */
-function solPick(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var std = qq.dataset.std || 'BIO.5';
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  pracAnswered++;
-  if (isCorrect) pracCorrect++;
-  else {
-    if (!missedStds[std]) missedStds[std] = 0;
-    missedStds[std]++;
-  }
-
-  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
-  var qNumMatch = stemText.match(/^(\d+)/);
-  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
-  var studentAnswerText = getAnswerText(opt);
-  var correctAnswerText = '';
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
-  });
-  questionDetail.push({
-    qNum: qNum, std: std, questionText: stemText,
-    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
-    isCorrect: isCorrect, correct: correct, chosen: chosen
-  });
-
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-
-  if (pracAnswered === TOTAL_SOL_Q) {
-    document.getElementById('to-results-btn').disabled = false;
-    showDangerZone();
-    setTimeout(function(){ goTo(10); }, 800);
-  }
-  saveProgress();
-}
-
-/* ── DANGER ZONE ─────────────────────────────────── */
-function showDangerZone() {
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-  var box = document.getElementById('dz-result');
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'none';
-  box.style.display = 'block';
-  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
-
-  var cls, emoji, label, msg;
-  if (pct >= 80) {
-    cls = 'green'; emoji = '\uD83D\uDFE2';
-    label = 'STRONG \u2014 You\'re in good shape on BIO.5';
-    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
-  } else if (pct >= 60) {
-    cls = 'yellow'; emoji = '\uD83D\uDFE1';
-    label = 'CAUTION \u2014 Review needed on BIO.5';
-    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
-  } else {
-    cls = 'red'; emoji = '\uD83D\uDD34';
-    label = 'DANGER ZONE \u2014 BIO.5 needs work';
-    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
-  }
-
-  box.className = 'dz-box ' + cls;
-  document.getElementById('dz-emoji').textContent = emoji;
-  document.getElementById('dz-label').textContent = label;
-  document.getElementById('dz-msg').textContent = msg;
-
-  if (Object.keys(missedStds).length > 0) {
-    var missed = document.getElementById('dz-missed');
-    var list = document.getElementById('dz-missed-list');
-    missed.style.display = 'block';
-    var stdDesc = {
-      'BIO.5a': 'DNA Structure \u2014 Nucleotides, Base Pairing, Genetic Code',
-      'BIO.5b': 'DNA Models \u2014 Scientific Advances Over Time',
-      'BIO.5c': 'Genetics \u2014 Punnett Squares, Dominance Patterns',
-      'BIO.5d': 'Meiosis \u2014 Genetic Variation, Mutations',
-      'BIO.5e': 'Genetic Engineering \u2014 CRISPR, Recombinant DNA'
-    };
-    list.innerHTML = Object.keys(missedStds).map(function(s) {
-      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
-    }).join('');
-  }
-
-  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
-  localStorage.setItem('sol_' + UNIT + '_pct', pct);
-  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
-  localStorage.setItem('sol_' + UNIT + '_done', 'true');
-
-  var sb10 = document.getElementById('sb10');
-  if (sb10) sb10.classList.add('done');
-  saveProgress();
-}
-
-/* ── SUBMIT FINAL SCORE ──────────────────────────── */
-function submitFinalScore() {
-  if (!studentName) return;
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-
-  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
-
-  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
-    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
-  })});
-
-  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
-
-  showToast('Saving score\u2026');
-  var __dzBtn = document.getElementById('dz-submit-btn');
-  __dzBtn.disabled = true;
-  Promise.resolve(__lastScorePromise).then(function(result) {
-    if (result && result.buffered) {
-      // Audit #12: write got buffered to localStorage; will sync on next
-      // page load. Treat as success for the retake-lock UI (data is safe
-      // and replay is automatic) but tell the user honestly via toast.
-      __dzBtn.textContent = 'Saved offline';
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else if (result) {
-      __dzBtn.textContent = '\u2705 Score Sent!';
-      showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
-      /* PRACTICE-RETAKE-IN-SESSION-LOCK */
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else {
-      __dzBtn.textContent = '\u26A0 Save failed \u2014 retry?';
-      __dzBtn.disabled = false;
-    }
-  });
-}
-
-/* ── RETAKE PRACTICE TEST ────────────────────────── */
-function retakePractice() {
-  if (practiceAlreadySubmitted) {
-    showToast('You\'ve already submitted this test. Talk to your teacher to retake.');
-    return;
-  }
-  pracAnswered = 0;
-  pracCorrect = 0;
-  missedStds = {};
-  questionDetail = [];
-  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
-  document.getElementById('dz-result').style.display = 'none';
-  document.getElementById('dz-result').className = 'dz-box';
-  document.getElementById('dz-missed').style.display = 'none';
-  document.getElementById('dz-missed-list').innerHTML = '';
-  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
-  document.getElementById('dz-submit-btn').disabled = false;
-  document.getElementById('to-results-btn').disabled = true;
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'block';
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = '';
-  goTo(9);
-  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
-}
-
-/* ── TOAST ────────────────────────────────────────── */
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.style.display = 'flex';
-  setTimeout(function(){ t.style.display = 'none'; }, 3500);
-}
-
-/* ── PAGE EXIT HANDLER ───────────────────────────── */
-window.addEventListener('beforeunload', function() {
-  if (!studentName) return;
-  saveProgress();
-  // Flush cross-device snapshot synchronously (keepalive) — survives unload.
-  if (solAPI.flushProgress) {
-    var snap = localStorage.getItem('sol_unit5_progress');
-    if (snap) solAPI.flushProgress('unit-5', studentName, JSON.parse(snap));
-  }
-  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-  }
-  solAPI.beacon({
-    student: studentName,
-    module: 'SOL Prep — Unit 5: Genetics & Inheritance',
-    action: 'activity',
-    event: 'session_end',
-    totalSessionSeconds: totalSeconds,
-    panelLog: JSON.stringify(activityLog),
-    timestamp: new Date().toISOString()
-  });
-});
-
-/* ── INIT ON DOM READY ───────────────────────────── */
-document.addEventListener('DOMContentLoaded', function() {
-  initMeta();
-  /* SSO-INIT-AUTH */
-  var pendingCode = sessionStorage.getItem('_sso_pending_code');
-  if (pendingCode) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = pendingCode;
-    sessionStorage.removeItem('_sso_pending_code');
-  }
-  if (solAPI.initAuth) {
-    solAPI.initAuth().then(function(studentRow) {
-      if (studentRow) applySSOSession();
-      // Re-evaluate the lock with the student's identity now known —
-      // a per-student override can flip state in either direction.
-      if (solAPI.runModuleReleaseGate) solAPI.runModuleReleaseGate('unit-5');
-    }).catch(function(err) { console.warn('initAuth failed:', err); });
-  }
-
-  var storedClass = solAPI.getStored();
-  if (storedClass) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = storedClass.code;
-    var infoEl = document.getElementById('class-info');
-    if (infoEl) { infoEl.textContent = '\u2713 ' + storedClass.teacher + ' \u2014 ' + storedClass.label; infoEl.style.display = 'block'; }
-  }
-  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
-    vocabPassed = true;
-    DSMPlayer.init({
-      unitNumber: 5,
-      moduleName: 'SOL Prep — Unit 5: Genetics & Inheritance',
-      standard: 'BIO.5',
-      unitKey: UNIT,
-      panelId: 7,
-      containerId: 'dsm-container',
-      unlockPanels: [8, 9, 10],
-      onComplete: function() {
-        unlockedPanels.add(8); unlockedPanels.add(9); unlockedPanels.add(10);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(8); unlockedPanels.add(9); unlockedPanels.add(10);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  }
-  var saved = localStorage.getItem('sol_unit5_progress');
-  if (saved) {
-    var data = JSON.parse(saved);
-    if (data.studentName) {
-      var _parts = data.studentName.trim().split(/\s+/);
-      var _firstEl = document.getElementById('student-first-name');
-      var _lastEl = document.getElementById('student-last-name');
-      if (_firstEl) _firstEl.value = _parts[0] || '';
-      if (_lastEl)  _lastEl.value  = _parts.slice(1).join(' ');
-      var modalTitle = document.querySelector('.nm-title');
-      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
-      var modalSub = document.querySelector('.nm-sub');
-      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
-      var modalBtn = document.querySelector('.nm-btn');
-      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
-    }
-  }
-});
-/* MODULE-RELEASE-GATE — page-load pass uses GLOBAL state only
-   (no _studentId yet). After applySSOSession the gate is re-run
-   from initAuth's then-chain so per-student overrides take effect. */
-if (window.solAPI && solAPI.runModuleReleaseGate) {
-  solAPI.runModuleReleaseGate('unit-5');
-}
-</script>
+<script src="sol-api.js?v=2026-05-03-phaseD"></script>
+<script src="dsm-player.js?v=2026-05-03-phaseD"></script>
+<script src="unit-engine.js?v=2026-05-03-phaseD"></script>
+<script src="config/unit-5.js?v=2026-05-03-phaseD"></script>
+
+<script>UnitEngine.boot(window.UNIT_CONFIG);</script>
 </body>
 </html>

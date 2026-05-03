@@ -69,7 +69,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 .f-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.76rem;color:rgba(255,255,255,.85);}
 
 /* CONTENT LAYOUT */
-.lc{padding:36px 48px 56px;max-width:860px;}
+.lc{padding:36px 48px 56px;max-width:860px;margin:0 auto;}
 .section{margin-bottom:40px;}
 .eyebrow{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .eyebrow::after{content:"";flex:1;height:1px;background:var(--border);}
@@ -285,7 +285,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       &#10003; Signed in as <strong id="sso-name-display"></strong>
       <a href="#" id="sso-signout" style="float:right;color:#1976d2;font-size:.78rem;text-decoration:underline">Switch account</a>
     </div>
-    <button id="sso-signin-btn" type="button" onclick="signInWithGoogle()"
+    <button id="sso-signin-btn" type="button" onclick="UnitEngine.signInWithGoogle()"
             style="width:100%;padding:10px;font-size:.95rem;font-weight:600;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:8px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px">
       <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.26c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.71H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
       Sign in with Google
@@ -295,8 +295,8 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="class-info" style="display:none;font-size:.8rem;color:var(--green);margin-bottom:8px;padding:2px 0"></div>
     <div class="nm-err" id="name-err">Please enter your first and last name.</div>
     <div class="nm-err" id="code-err">Please enter your class code.</div>
-    <button class="nm-btn" onclick="startUnit()">Start Unit 7 &#x2192;</button>
-    <div style="margin-top:8px;text-align:center"><a href="#" onclick="startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
+    <button class="nm-btn" onclick="UnitEngine.startUnit()">Start Unit 7 &#x2192;</button>
+    <div style="margin-top:8px;text-align:center"><a href="#" onclick="UnitEngine.startFresh();return false" style="font-size:.75rem;color:var(--muted);text-decoration:underline">Start fresh (clear saved progress)</a></div>
     <div style="margin-top:4px;text-align:center"><a href="#" onclick="solAPI.clearClass();document.getElementById('class-code').value='';document.getElementById('class-info').style.display='none';return false" style="font-size:.72rem;color:var(--muted);text-decoration:underline">Change class code</a></div>
   </div>
 </div>
@@ -314,16 +314,16 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
 </header>
 
 <nav class="steps-bar" id="steps-bar">
-  <div class="step"><button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">2</span>Fossil &amp; DNA Evidence</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">3</span>Variation &amp; Selection</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">4</span>Adaptations &amp; Speciation</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">5</span>Scientific Evidence</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">7</span>Mastery</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div><div class="step-sep"></div>
-  <div class="step"><button class="step-btn" onclick="goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
+  <div class="step"><button class="step-btn active" onclick="UnitEngine.goTo(0)" id="sb0"><span class="step-num">1</span>SOL Focus</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(1)" id="sb1"><span class="step-num">2</span>Fossil &amp; DNA Evidence</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(2)" id="sb2"><span class="step-num">3</span>Variation &amp; Selection</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(3)" id="sb3"><span class="step-num">4</span>Adaptations &amp; Speciation</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(4)" id="sb4"><span class="step-num">5</span>Scientific Evidence</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(5)" id="sb5"><span class="step-num">6</span>Vocab Lock-In</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(6)" id="sb6"><span class="step-num">7</span>Mastery</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(7)" id="sb7"><span class="step-num">8</span>Study Guide</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(8)" id="sb8"><span class="step-num">9</span>Practice Test</button></div><div class="step-sep"></div>
+  <div class="step"><button class="step-btn" onclick="UnitEngine.goTo(9)" id="sb9"><span class="step-num">10</span>Results</button></div>
 </nav>
 <div class="steps-prog" id="steps-prog"></div>
 
@@ -430,10 +430,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="0">
         <div class="q-stem"><span class="q-num">1</span> Approximately how many questions on the real SOL come from BIO.7?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>1 question</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>About 5 questions</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>About 15 questions</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>25 questions</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>1 question</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>About 5 questions</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>About 15 questions</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>25 questions</li>
         </ul>
         <div class="qexp">BIO.7 accounts for about 10% of the SOL test, approximately 5 questions out of 50.</div>
       </div>
@@ -441,10 +441,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">2</span> Which is a TOP MISS AREA for BIO.7?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Identifying adaptations from physical features (feet, teeth, body shape)</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Memorizing the names of every fossil species</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Drawing phylogenetic trees from scratch</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Calculating mutation rates mathematically</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Identifying adaptations from physical features (feet, teeth, body shape)</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Memorizing the names of every fossil species</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Drawing phylogenetic trees from scratch</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Calculating mutation rates mathematically</li>
         </ul>
         <div class="qexp">SOL questions often show a physical feature (foot shape, tooth shape, body form) and ask what it tells you about the organism's lifestyle, habitat, or diet.</div>
       </div>
@@ -455,10 +455,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="0">
         <div class="q-stem"><span class="q-num">3</span> (2002-7) Which statement describes natural selection?</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Individuals survive that have inherited traits adapted to their environment</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Farmers select animals with desirable traits for breeding</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Populations sharing the same gene pool create new species</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>New species are formed via genetic engineering</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Individuals survive that have inherited traits adapted to their environment</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Farmers select animals with desirable traits for breeding</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Populations sharing the same gene pool create new species</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>New species are formed via genetic engineering</li>
         </ul>
         <div class="qexp">Natural selection = individuals with inherited traits that help them survive in their environment are more likely to reproduce and pass on those traits. Choice B describes artificial selection (humans choosing). C and D are not natural selection.</div>
       </div>
@@ -466,10 +466,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="0">
         <div class="q-stem"><span class="q-num">4</span> (2001-34) Organisms in Phylum Chordata share structural similarities. This suggests that &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>they all live in the same habitat</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>they all eat the same food</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>they evolved at the same time</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>chordates have common ancestors</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>they all live in the same habitat</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>they all eat the same food</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>they evolved at the same time</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>chordates have common ancestors</li>
         </ul>
         <div class="qexp">Shared structural features (homologous structures) across a phylum indicate a shared common ancestor. Similar structures = shared evolutionary origin.</div>
       </div>
@@ -477,10 +477,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="0">
         <div class="q-stem"><span class="q-num">5</span> (2001-31) The nonpoisonous eastern scarlet snake has colored bands resembling the poisonous coral snake. This provides the scarlet snake with &mdash;</div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>a source of food</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>camouflage from prey</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>a method of avoiding predation</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>immunity to coral snake venom</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>a source of food</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>camouflage from prey</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>a method of avoiding predation</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>immunity to coral snake venom</li>
         </ul>
         <div class="qexp">This is mimicry &mdash; a nonpoisonous species looks like a poisonous one. Predators avoid the scarlet snake because it looks dangerous. This is a behavioral/structural adaptation that helps the snake avoid being eaten.</div>
       </div>
@@ -489,7 +489,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     </div>
     <div class="section" style="margin-top:24px;"><a class="depth-link" href="../biology/evolution.html">&#x1F4D8; Need more depth? See the full lesson in Evolution &rarr;</a></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="goTo(1)" id="next-0" disabled>&#x1F512; Fossil &amp; DNA Evidence &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" disabled>&larr; Back</button><button class="nbtn next" onclick="UnitEngine.goTo(1)" id="next-0" disabled>&#x1F512; Fossil &amp; DNA Evidence &rarr;</button></div>
 </div>
 <!-- =================================================================
      PANEL 1: FOSSIL & DNA EVIDENCE (BIO.7a)
@@ -530,10 +530,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="1" data-std="BIO.7a">
         <div class="q-stem"><span class="q-num">1</span> A scientist finds a fossil in a deep rock layer and another in a shallow layer. Using relative dating, the deeper fossil is &mdash; <span class="q-tag">BIO.7a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>younger</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>the same age</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>older</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>impossible to determine</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>younger</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>the same age</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>older</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>impossible to determine</li>
         </ul>
         <div class="qexp">Law of superposition: deeper rock layers were deposited first, so fossils in deeper layers are OLDER. Shallower layers are younger.</div>
       </div>
@@ -541,10 +541,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="1" data-std="BIO.7a">
         <div class="q-stem"><span class="q-num">2</span> (2001-34) All organisms in Phylum Chordata share structural similarities. This suggests that &mdash; <span class="q-tag">BIO.7a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>they all live in the same habitat</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>they all eat the same food</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>they evolved at the same time</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>chordates have common ancestors</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>they all live in the same habitat</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>they all eat the same food</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>they evolved at the same time</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>chordates have common ancestors</li>
         </ul>
         <div class="qexp">Shared structural features (homologous structures) across a phylum indicate descent from a common ancestor. They don't live in the same habitat or eat the same food &mdash; fish and humans are both chordates.</div>
       </div>
@@ -552,10 +552,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.7a">
         <div class="q-stem"><span class="q-num">3</span> Two species share 95% of their DNA sequences. A third species shares only 60% with both. Which conclusion is best supported? <span class="q-tag">BIO.7a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>All three are the same species</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>The first two species are more closely related to each other than to the third</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>The third species is the oldest</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>DNA cannot be used to determine relationships</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>All three are the same species</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>The first two species are more closely related to each other than to the third</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>The third species is the oldest</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>DNA cannot be used to determine relationships</li>
         </ul>
         <div class="qexp">More similar DNA = more closely related. 95% similarity is very high, indicating a recent common ancestor between the first two. The third species (60%) diverged much earlier.</div>
       </div>
@@ -563,10 +563,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="1" data-std="BIO.7a">
         <div class="q-stem"><span class="q-num">4</span> (2005-3) Evidence that a hadrosaurus was a plant eater includes &mdash; <span class="q-tag">BIO.7a</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>the large size of its body</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>fossilized teeth that are flat like modern herbivores</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>its ability to walk on two legs</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>the location where the fossil was found</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>the large size of its body</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>fossilized teeth that are flat like modern herbivores</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>its ability to walk on two legs</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>the location where the fossil was found</li>
         </ul>
         <div class="qexp">Flat teeth are used for grinding plant material (herbivore). Sharp teeth indicate meat-eating (carnivore). Comparing fossilized teeth with modern animals' teeth reveals diet &mdash; this is how we use the fossil record to understand extinct organisms.</div>
       </div>
@@ -574,7 +574,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-1"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-1">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="goTo(2)" id="next-1" disabled>&#x1F512; Variation &amp; Selection &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(0)">&larr; SOL Focus</button><button class="nbtn next" onclick="UnitEngine.goTo(2)" id="next-1" disabled>&#x1F512; Variation &amp; Selection &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -639,10 +639,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="2" data-std="BIO.7b">
         <div class="q-stem"><span class="q-num">1</span> (2003-31) Lamarck believed organisms changed over time through &mdash; <span class="q-tag">BIO.7b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>theory of acquired characteristics</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>law of independent assortment</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>theory of relative fossil-dating</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>theory of artificial selection</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>theory of acquired characteristics</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>law of independent assortment</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>theory of relative fossil-dating</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>theory of artificial selection</li>
         </ul>
         <div class="qexp">Lamarck proposed that organisms could pass on traits they developed during their lifetime (acquired characteristics). This was DISPROVEN &mdash; only genetic traits (DNA) can be inherited. Darwin's natural selection replaced Lamarck's idea.</div>
       </div>
@@ -650,10 +650,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.7b">
         <div class="q-stem"><span class="q-num">2</span> (2002-45) Which characteristic supports the hypothesis that a bird spends time in trees? <span class="q-tag">BIO.7b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>The color of its feathers</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>The shape of its feet</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>The size of its beak</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>The length of its tail</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>The color of its feathers</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>The shape of its feet</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>The size of its beak</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>The length of its tail</li>
         </ul>
         <div class="qexp">Feet adapted for grasping branches (curved toes, strong grip) indicate a tree-dwelling lifestyle. This is form fits function &mdash; the physical adaptation tells you about the organism's environment and behavior.</div>
       </div>
@@ -661,10 +661,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="2" data-std="BIO.7c">
         <div class="q-stem"><span class="q-num">3</span> (2002-1) Himalayan rabbits grow black fur when an icepack is applied to white-furred areas. Hair color is determined by &mdash; <span class="q-tag">BIO.7c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>food intake</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>environmental conditions</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>exercise levels</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>age of the rabbit</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>food intake</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>environmental conditions</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>exercise levels</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>age of the rabbit</li>
         </ul>
         <div class="qexp">The same rabbit produces different fur colors based on TEMPERATURE (cold = dark, warm = light). This shows that phenotype can be influenced by environmental conditions, not just genetics. Gene-environment interaction is a key concept.</div>
       </div>
@@ -672,10 +672,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="2" data-std="BIO.7b">
         <div class="q-stem"><span class="q-num">4</span> (2001-14) In a dry region, Species A (slow growth, few leaves) is abundant while Species B (rapid growth, many leaves) is rare. Which hypothesis explains this? <span class="q-tag">BIO.7b</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Species B is newer to the region</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Species A grows faster underground</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Species B has more predators</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Reduced stem growth may give Species A an advantage in dry conditions</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Species B is newer to the region</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Species A grows faster underground</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Species B has more predators</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Reduced stem growth may give Species A an advantage in dry conditions</li>
         </ul>
         <div class="qexp">In a DRY region, plants that conserve water (slow growth, few leaves = less water loss) have an advantage over plants that grow rapidly and have many leaves (more water loss). This is natural selection by environmental pressure (drought).</div>
       </div>
@@ -683,7 +683,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-2"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-2">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(1)">&larr; Fossil &amp; DNA Evidence</button><button class="nbtn next" onclick="goTo(3)" id="next-2" disabled>&#x1F512; Adaptations &amp; Speciation &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(1)">&larr; Fossil &amp; DNA Evidence</button><button class="nbtn next" onclick="UnitEngine.goTo(3)" id="next-2" disabled>&#x1F512; Adaptations &amp; Speciation &rarr;</button></div>
 </div>
 <!-- =================================================================
      PANEL 3: ADAPTATIONS & SPECIATION (BIO.7c/d)
@@ -737,10 +737,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="3" data-std="BIO.7c">
         <div class="q-stem"><span class="q-num">1</span> (2003-18) Large wide feet on animals in sandy areas are an advantage because they &mdash; <span class="q-tag">BIO.7c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>help the animal run faster</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>provide better camouflage</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>allow the animal to dig burrows</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>distribute body weight over a large area</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>help the animal run faster</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>provide better camouflage</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>allow the animal to dig burrows</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>distribute body weight over a large area</li>
         </ul>
         <div class="qexp">Wide feet spread the animal's weight over more surface area, preventing it from sinking into soft sand. This is the same principle as snowshoes on snow. Form fits function &mdash; the shape of the foot matches the environment.</div>
       </div>
@@ -748,10 +748,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="3" data-std="BIO.7c">
         <div class="q-stem"><span class="q-num">2</span> (2004-49) After a meteorite impact caused colder temperatures, which adaptation helped mammals survive? <span class="q-tag">BIO.7c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Ability to fly</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Aquatic respiration</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Endothermic body metabolism</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Photosynthetic ability</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Ability to fly</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Aquatic respiration</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Endothermic body metabolism</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Photosynthetic ability</li>
         </ul>
         <div class="qexp">Endothermic (warm-blooded) animals generate their own body heat internally, allowing them to maintain activity in cold conditions. Reptiles (ectothermic/cold-blooded) couldn't function in the cold after the impact. This is a physiological adaptation.</div>
       </div>
@@ -759,10 +759,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="3" data-std="BIO.7c">
         <div class="q-stem"><span class="q-num">3</span> (2005-45) The best evidence that a bird is nocturnal would be &mdash; <span class="q-tag">BIO.7c</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>the length of its beak</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>the size of its eyes</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>the color of its feathers</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>the shape of its tail</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>the length of its beak</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>the size of its eyes</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>the color of its feathers</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>the shape of its tail</li>
         </ul>
         <div class="qexp">Large eyes are an adaptation for seeing in low-light conditions (nocturnal activity). Owls have enormous eyes relative to their skull size, allowing them to hunt at night. Eye size is the key indicator of nocturnal behavior.</div>
       </div>
@@ -770,10 +770,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="3" data-std="BIO.7d">
         <div class="q-stem"><span class="q-num">4</span> (2005-17) Over many generations, unrelated species may come to resemble each other due to &mdash; <span class="q-tag">BIO.7d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>similar environmental factors</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>competition with each other</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>homologous structural adaptations</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>similar genetic mutations</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>similar environmental factors</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>competition with each other</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>homologous structural adaptations</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>similar genetic mutations</li>
         </ul>
         <div class="qexp">This is CONVERGENT EVOLUTION &mdash; unrelated species evolve similar traits because they face similar environmental pressures. Example: dolphins (mammals) and sharks (fish) both have streamlined bodies for swimming, but they're not closely related. Similar environment = similar adaptations.</div>
       </div>
@@ -781,7 +781,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-3"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-3">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(2)">&larr; Variation &amp; Selection</button><button class="nbtn next" onclick="goTo(4)" id="next-3" disabled>&#x1F512; Scientific Evidence &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(2)">&larr; Variation &amp; Selection</button><button class="nbtn next" onclick="UnitEngine.goTo(4)" id="next-3" disabled>&#x1F512; Scientific Evidence &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -845,10 +845,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="c" data-panel="4" data-std="BIO.7d">
         <div class="q-stem"><span class="q-num">1</span> Human arms, whale flippers, and bat wings have similar bone structures but different functions. These are examples of &mdash; <span class="q-tag">BIO.7d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>analogous structures</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>vestigial structures</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>homologous structures</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>convergent structures</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>analogous structures</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>vestigial structures</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>homologous structures</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>convergent structures</li>
         </ul>
         <div class="qexp">Same underlying bone structure (humerus, radius, ulna) with different functions = homologous structures. They indicate common ancestry. Analogous structures have similar function but different structure.</div>
       </div>
@@ -856,10 +856,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="a" data-panel="4" data-std="BIO.7d">
         <div class="q-stem"><span class="q-num">2</span> (2005-31) Differences in flower species characteristics most likely resulted from &mdash; <span class="q-tag">BIO.7d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>adaptations in response to different selection pressures</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>defensive mutations allowing concealment</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>mutualism between different species</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>parasitism which did not harm hosts</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>adaptations in response to different selection pressures</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>defensive mutations allowing concealment</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>mutualism between different species</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>parasitism which did not harm hosts</li>
         </ul>
         <div class="qexp">Different environments exert different selective pressures, leading to different adaptations in related species. Over time, this divergence can produce species with very different characteristics &mdash; adaptive radiation.</div>
       </div>
@@ -867,10 +867,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="b" data-panel="4" data-std="BIO.7d">
         <div class="q-stem"><span class="q-num">3</span> A species shows no change in fossils for millions of years, then suddenly appears different in more recent layers. This pattern supports &mdash; <span class="q-tag">BIO.7d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>gradualism</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>punctuated equilibrium</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Lamarck's acquired characteristics</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>spontaneous generation</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>gradualism</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>punctuated equilibrium</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Lamarck's acquired characteristics</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>spontaneous generation</li>
         </ul>
         <div class="qexp">Long stability + sudden change = punctuated equilibrium. Gradualism would show continuous, gradual transitions in the fossil record. Lamarck and spontaneous generation are disproven ideas.</div>
       </div>
@@ -878,10 +878,10 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="qq gate-q" data-ans="d" data-panel="4" data-std="BIO.7d">
         <div class="q-stem"><span class="q-num">4</span> (2005-14) Which life process could be sacrificed without affecting an individual rabbit's survival? <span class="q-tag">BIO.7d</span></div>
         <ul class="qopts">
-          <li class="qo" data-v="a" onclick="gateAnswer(this)"><div class="ol">A</div>Respiration</li>
-          <li class="qo" data-v="b" onclick="gateAnswer(this)"><div class="ol">B</div>Digestion</li>
-          <li class="qo" data-v="c" onclick="gateAnswer(this)"><div class="ol">C</div>Circulation</li>
-          <li class="qo" data-v="d" onclick="gateAnswer(this)"><div class="ol">D</div>Reproduction</li>
+          <li class="qo" data-v="a" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">A</div>Respiration</li>
+          <li class="qo" data-v="b" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">B</div>Digestion</li>
+          <li class="qo" data-v="c" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">C</div>Circulation</li>
+          <li class="qo" data-v="d" onclick="UnitEngine.onGateAnswer(this)"><div class="ol">D</div>Reproduction</li>
         </ul>
         <div class="qexp">An individual rabbit can survive without reproducing &mdash; reproduction is essential for the SPECIES but not for the individual's survival. Respiration, digestion, and circulation are all essential for individual survival.</div>
       </div>
@@ -889,7 +889,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <div class="gate-status" id="gate-status-4"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Answer all questions above to unlock the next step.</div><div class="gate-count" id="gate-count-4">0 of 4 answered</div></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(3)">&larr; Adaptations &amp; Speciation</button><button class="nbtn next" onclick="goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(3)">&larr; Adaptations &amp; Speciation</button><button class="nbtn next" onclick="UnitEngine.goTo(5)" id="next-4" disabled>&#x1F512; Vocab Lock-In &rarr;</button></div>
 </div>
 <!-- PANEL 5: VOCAB LOCK-IN -->
 <div class="panel" id="p5">
@@ -899,51 +899,51 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <p class="prose">Flip ALL 24 flashcards, then score 8/10 on the quiz to unlock the Practice Test.</p>
     <div class="gate-status" id="vocab-flip-gate"><div class="gate-icon">&#x1F512;</div><div class="gate-msg">Flip all 24 flashcards to unlock the Vocab Quiz</div><div class="gate-count" id="vocab-flip-count">0 of 24 cards studied</div></div>
     <div class="vocab-grid">
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Evolution</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Change in allele frequencies in a population over time</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Natural Selection</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Organisms with favorable traits survive and reproduce more; drives adaptation</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Adaptation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Inherited trait that increases fitness in a specific environment</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fitness</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Ability to survive AND reproduce in a specific environment</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fossil</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Preserved evidence of a past organism (bones, imprints, amber)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fossil Record</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All known fossils; documents life's history over 3.5 billion years</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Relative Dating</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Fossil age by rock layer position; deeper = older</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Absolute Dating</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Exact age using radioactive decay (half-life)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homologous Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Same structure, different function; common ancestor (arm/wing/flipper)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Analogous Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Same function, different origin; convergent evolution (bird wing/insect wing)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Vestigial Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Reduced leftover structures; no current function (appendix, whale hip bones)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Common Ancestor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Organism from which two or more species descended</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Speciation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Formation of new species when populations can no longer interbreed</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Extinction</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Complete disappearance of a species; unable to adapt to change</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Variation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Differences in DNA among individuals; raw material for natural selection</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Random change in DNA; source of new genetic variation</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gene Flow</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Movement of genes between populations through migration</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Selective Pressure</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Environmental factor favoring certain traits (predators, climate, disease)</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Overproduction</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Species produce more offspring than can survive; leads to competition</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Punctuated Equilibrium</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Long stability interrupted by rapid bursts of evolutionary change</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gradualism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Slow, continuous evolutionary change over long periods</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Convergent Evolution</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Unrelated species evolve similar traits due to similar environments</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Comparative Genomics</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Comparing DNA sequences across species to find evolutionary relationships</div></div></div></div>
-      <div class="vcard" onclick="flipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Embryology</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Study of embryo development; similar stages suggest shared ancestry</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Evolution</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Change in allele frequencies in a population over time</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Natural Selection</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Organisms with favorable traits survive and reproduce more; drives adaptation</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Adaptation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Inherited trait that increases fitness in a specific environment</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fitness</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Ability to survive AND reproduce in a specific environment</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fossil</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Preserved evidence of a past organism (bones, imprints, amber)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Fossil Record</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">All known fossils; documents life's history over 3.5 billion years</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Relative Dating</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Fossil age by rock layer position; deeper = older</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Absolute Dating</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Exact age using radioactive decay (half-life)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Homologous Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Same structure, different function; common ancestor (arm/wing/flipper)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Analogous Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Same function, different origin; convergent evolution (bird wing/insect wing)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Vestigial Structures</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Reduced leftover structures; no current function (appendix, whale hip bones)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Common Ancestor</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Organism from which two or more species descended</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Speciation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Formation of new species when populations can no longer interbreed</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Extinction</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Complete disappearance of a species; unable to adapt to change</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Genetic Variation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Differences in DNA among individuals; raw material for natural selection</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Mutation</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Random change in DNA; source of new genetic variation</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gene Flow</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Movement of genes between populations through migration</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Selective Pressure</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Environmental factor favoring certain traits (predators, climate, disease)</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Overproduction</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Species produce more offspring than can survive; leads to competition</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Punctuated Equilibrium</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Long stability interrupted by rapid bursts of evolutionary change</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Gradualism</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Slow, continuous evolutionary change over long periods</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Convergent Evolution</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Unrelated species evolve similar traits due to similar environments</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Comparative Genomics</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Comparing DNA sequences across species to find evolutionary relationships</div></div></div></div>
+      <div class="vcard" onclick="UnitEngine.onFlipCard(this)"><div class="vcard-inner"><div class="vfront"><div class="vterm">Embryology</div><div class="vhint">tap to flip</div></div><div class="vback"><div class="vdef">Study of embryo development; similar stages suggest shared ancestry</div></div></div></div>
     </div>
     <div id="vquiz" style="display:none;">
       <div class="vquiz-box">
         <div class="vquiz-header"><div class="vquiz-icon">&#x1F4DD;</div><div><div class="vquiz-title">Vocab Quiz</div><div class="vquiz-sub">Score 8/10 to unlock the Practice Test</div></div></div>
-        <div class="vq" id="vq1"><div class="vq-text">1. Organisms with favorable traits survive and reproduce more. This is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Natural selection</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Gene flow</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Gradualism</div></div><div class="vq-result" id="vqr1"></div></div>
-        <div class="vq" id="vq2"><div class="vq-text">2. Determining a fossil's exact age using radioactive decay is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Absolute dating</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Relative dating</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Carbon printing</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Fossil mapping</div></div><div class="vq-result" id="vqr2"></div></div>
-        <div class="vq" id="vq3"><div class="vq-text">3. Human arm, whale flipper, and bat wing have the same bones. These are:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Analogous structures</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Vestigial structures</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Homologous structures</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Convergent structures</div></div><div class="vq-result" id="vqr3"></div></div>
-        <div class="vq" id="vq4"><div class="vq-text">4. When populations can no longer interbreed, a new species forms. This is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Extinction</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Gene flow</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Mutation</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Speciation</div></div><div class="vq-result" id="vqr4"></div></div>
-        <div class="vq" id="vq5"><div class="vq-text">5. Long periods of no change interrupted by rapid bursts of evolution describes:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Gradualism</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Convergent evolution</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Punctuated equilibrium</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Natural selection</div></div><div class="vq-result" id="vqr5"></div></div>
-        <div class="vq" id="vq6"><div class="vq-text">6. Movement of genes between populations through migration is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Gene flow</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Overproduction</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Speciation</div></div><div class="vq-result" id="vqr6"></div></div>
-        <div class="vq" id="vq7"><div class="vq-text">7. Unrelated species evolving similar traits due to similar environments is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Divergent evolution</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Extinction</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Gradualism</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Convergent evolution</div></div><div class="vq-result" id="vqr7"></div></div>
-        <div class="vq" id="vq8"><div class="vq-text">8. A reduced structure with no current function (like the human appendix) is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Vestigial structure</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Homologous structure</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Analogous structure</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Adaptive structure</div></div><div class="vq-result" id="vqr8"></div></div>
-        <div class="vq" id="vq9"><div class="vq-text">9. Species produce more offspring than can survive. This concept is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Overproduction</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Speciation</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Gene flow</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Mutation</div></div><div class="vq-result" id="vqr9"></div></div>
-        <div class="vq" id="vq10"><div class="vq-text">10. An inherited trait that increases an organism's survival in its environment is an:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="vqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="vqPick(this)"><div class="vq-ol">B</div>Adaptation</div><div class="vq-opt" data-v="c" onclick="vqPick(this)"><div class="vq-ol">C</div>Extinction</div><div class="vq-opt" data-v="d" onclick="vqPick(this)"><div class="vq-ol">D</div>Fossil</div></div><div class="vq-result" id="vqr10"></div></div>
+        <div class="vq" id="vq1"><div class="vq-text">1. Organisms with favorable traits survive and reproduce more. This is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Natural selection</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Gene flow</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Gradualism</div></div><div class="vq-result" id="vqr1"></div></div>
+        <div class="vq" id="vq2"><div class="vq-text">2. Determining a fossil's exact age using radioactive decay is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Absolute dating</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Relative dating</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Carbon printing</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Fossil mapping</div></div><div class="vq-result" id="vqr2"></div></div>
+        <div class="vq" id="vq3"><div class="vq-text">3. Human arm, whale flipper, and bat wing have the same bones. These are:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Analogous structures</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Vestigial structures</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Homologous structures</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Convergent structures</div></div><div class="vq-result" id="vqr3"></div></div>
+        <div class="vq" id="vq4"><div class="vq-text">4. When populations can no longer interbreed, a new species forms. This is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Extinction</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Gene flow</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Mutation</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Speciation</div></div><div class="vq-result" id="vqr4"></div></div>
+        <div class="vq" id="vq5"><div class="vq-text">5. Long periods of no change interrupted by rapid bursts of evolution describes:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Gradualism</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Convergent evolution</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Punctuated equilibrium</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Natural selection</div></div><div class="vq-result" id="vqr5"></div></div>
+        <div class="vq" id="vq6"><div class="vq-text">6. Movement of genes between populations through migration is called:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Gene flow</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Overproduction</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Speciation</div></div><div class="vq-result" id="vqr6"></div></div>
+        <div class="vq" id="vq7"><div class="vq-text">7. Unrelated species evolving similar traits due to similar environments is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Divergent evolution</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Extinction</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Gradualism</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Convergent evolution</div></div><div class="vq-result" id="vqr7"></div></div>
+        <div class="vq" id="vq8"><div class="vq-text">8. A reduced structure with no current function (like the human appendix) is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Vestigial structure</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Homologous structure</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Analogous structure</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Adaptive structure</div></div><div class="vq-result" id="vqr8"></div></div>
+        <div class="vq" id="vq9"><div class="vq-text">9. Species produce more offspring than can survive. This concept is:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Overproduction</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Speciation</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Gene flow</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Mutation</div></div><div class="vq-result" id="vqr9"></div></div>
+        <div class="vq" id="vq10"><div class="vq-text">10. An inherited trait that increases an organism's survival in its environment is an:</div><div class="vq-opts"><div class="vq-opt" data-v="a" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">A</div>Mutation</div><div class="vq-opt" data-v="b" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">B</div>Adaptation</div><div class="vq-opt" data-v="c" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">C</div>Extinction</div><div class="vq-opt" data-v="d" onclick="UnitEngine.onVqPick(this)"><div class="vq-ol">D</div>Fossil</div></div><div class="vq-result" id="vqr10"></div></div>
         <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="gradeVocab()">&#x1F4CA; Grade My Quiz</button></div>
-        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="retryVocab()" style="display:none;">Retry Quiz</button></div>
+        <div class="vquiz-score" id="vquiz-score"><div class="vq-score-n" id="vq-score-num">0/10</div><div class="vquiz-pass-msg" id="vq-pass-msg"></div><button class="vquiz-retry-btn" id="vq-retry-btn" onclick="UnitEngine.retryVocab()" style="display:none;">Retry Quiz</button></div>
       </div>
     </div>
     <div class="practice-locked" id="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Mastery Module Locked</div><div class="practice-locked-sub">Pass the Vocab Quiz (8/10) to unlock the Mastery Module.</div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(4)">&larr; Scientific Evidence</button><button class="nbtn next" onclick="goTo(6)">Mastery Module &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(4)">&larr; Scientific Evidence</button><button class="nbtn next" onclick="UnitEngine.goTo(6)">Mastery Module &rarr;</button></div>
 </div>
 
 <!-- =================================================================
@@ -955,7 +955,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div class="sh2">BIO.7 Concept Mastery</div>
     <div id="dsm-container"></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="goTo(7)">Study Guide &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(5)">&larr; Vocab Lock-In</button><button class="nbtn next" onclick="UnitEngine.goTo(7)">Study Guide &rarr;</button></div>
 </div>
 
 <!-- PANEL 7: STUDY GUIDE -->
@@ -976,7 +976,7 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
       <p class="prose" style="font-size:.85rem;"><strong>Gradualism</strong> = slow continuous change. <strong>Punctuated equilibrium</strong> = long stability + rapid bursts. <strong>Speciation</strong> = new species when populations can't interbreed. <strong>Extinction</strong> = can't adapt to change.</p>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(6)">&larr; Mastery Module</button><button class="nbtn next" onclick="goTo(8)">Practice Test &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(6)">&larr; Mastery Module</button><button class="nbtn next" onclick="UnitEngine.goTo(8)">Practice Test &rarr;</button></div>
 </div>
 
 <!-- PANEL 8: PRACTICE TEST (20 Qs) -->
@@ -987,30 +987,30 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
     <div id="practice-test-locked" style="display:none;"><div class="practice-locked"><div class="practice-locked-icon">&#x1F512;</div><div class="practice-locked-title">Practice Test Locked</div><div class="practice-locked-sub">Complete the Mastery Module to unlock the Practice Test.</div></div></div>
     <div class="quiz-box" id="sol-practice-box">
       <div class="qh"><div class="q-icon">&#x1F3AF;</div><div><h3>BIO.7 Practice Test</h3><p>Released Virginia SOL questions &mdash; <span id="sol-progress-msg"></span></p></div></div>
-      <!-- Q1 --><div class="qq" data-ans="a" data-std="BIO.7a"><div class="q-stem"><span class="q-num">1</span> (2006-14) Based on heart structure, which animal is most closely related to a mammal? <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Bird</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Turtle</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Fish</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Frog</li></ul><div class="qexp">Both birds and mammals have 4-chambered hearts. Turtles/frogs have 3 chambers, fish have 2. Shared complex structure = close evolutionary relationship.</div></div>
-      <!-- Q2 --><div class="qq" data-ans="b" data-std="BIO.7a"><div class="q-stem"><span class="q-num">2</span> A fossil found in a deeper rock layer is generally &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>younger than fossils above</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>older than fossils above</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>the same age as all fossils</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>impossible to compare</li></ul><div class="qexp">Law of superposition: deeper layers deposited first = older fossils. This is relative dating.</div></div>
-      <!-- Q3 --><div class="qq" data-ans="c" data-std="BIO.7a"><div class="q-stem"><span class="q-num">3</span> Radioactive decay is used to determine the exact age of a fossil. This technique is called &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>relative dating</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>carbon printing</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>absolute dating</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>comparative genomics</li></ul><div class="qexp">Absolute dating uses radioactive isotope decay to determine the exact age in years. Relative dating only tells you which is older/younger.</div></div>
-      <!-- Q4 --><div class="qq" data-ans="d" data-std="BIO.7a"><div class="q-stem"><span class="q-num">4</span> Two species share 98% of their DNA. This strongly suggests they &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>live in the same habitat</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>eat the same food</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>are the same species</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>share a recent common ancestor</li></ul><div class="qexp">Highly similar DNA = recent common ancestor. 98% is very high (like humans and chimps) but they're still different species.</div></div>
-      <!-- Q5 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">5</span> (2002-7) Which describes natural selection? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Individuals with inherited traits adapted to their environment survive</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Farmers select desirable traits for breeding</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Populations sharing gene pools create new species</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>New species form via genetic engineering</li></ul><div class="qexp">Natural selection = inherited traits that help survival are passed on. B = artificial selection. C and D are not natural selection.</div></div>
-      <!-- Q6 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">6</span> (2003-31) Lamarck believed organisms changed through &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>theory of acquired characteristics</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>law of independent assortment</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>theory of relative fossil-dating</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>theory of artificial selection</li></ul><div class="qexp">Lamarck (disproven) proposed acquired characteristics could be inherited. Darwin's natural selection replaced this idea.</div></div>
-      <!-- Q7 --><div class="qq" data-ans="b" data-std="BIO.7b"><div class="q-stem"><span class="q-num">7</span> (2006-4) After radiation exposure, newly reproduced cells appear different. This is probably &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>contamination</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>mutation</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>bacterial infection</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>speciation</li></ul><div class="qexp">Radiation causes DNA mutations. When mutated cells reproduce, the new cells show different characteristics. Mutations are a key source of genetic variation.</div></div>
-      <!-- Q8 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">8</span> (2005-16) A student hypothesizes thick leg muscles are inherited. Outdoor dogs have thicker muscles than indoor dogs. Conclude? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Inheritance alone may not account for thick muscles</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Dogs with thick muscles can't survive indoors</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Thick muscles require more exercise</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Thick muscles are linked to coat thickness</li></ul><div class="qexp">The data shows environment (outdoor exercise) affects muscle thickness, so genetics alone doesn't explain the trait. Gene-environment interaction.</div></div>
-      <!-- Q9 --><div class="qq" data-ans="c" data-std="BIO.7c"><div class="q-stem"><span class="q-num">9</span> (2004-47) Which characteristic supports the hypothesis that an animal burrows? <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>Size of its ears</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>Color of its fur</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Size of its claws</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>Length of its tail</li></ul><div class="qexp">Large, strong claws are adapted for digging/burrowing. Form fits function &mdash; the physical feature reveals the behavior.</div></div>
-      <!-- Q10 --><div class="qq" data-ans="a" data-std="BIO.7c"><div class="q-stem"><span class="q-num">10</span> (2004-17) A common adaptation for mammals in an aquatic environment is &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>streamlined body</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>large ears</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>thick fur</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>long legs</li></ul><div class="qexp">Streamlined (torpedo-shaped) bodies reduce drag in water, allowing efficient swimming. Dolphins, seals, and whales all share this adaptation despite being different species.</div></div>
-      <!-- Q11 --><div class="qq" data-ans="c" data-std="BIO.7c"><div class="q-stem"><span class="q-num">11</span> (2001-31) A nonpoisonous snake resembling a poisonous species gains &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>a food source</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>camouflage from prey</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>a method of avoiding predation</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>immunity to venom</li></ul><div class="qexp">Mimicry: predators avoid the harmless snake because it looks like the dangerous one. This is an adaptation for predator avoidance.</div></div>
-      <!-- Q12 --><div class="qq" data-ans="d" data-std="BIO.7c"><div class="q-stem"><span class="q-num">12</span> (2003-18) Wide feet on sandy-area animals distribute &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>heat more evenly</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>food over a larger area</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>scent to mark territory</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>body weight over a large area</li></ul><div class="qexp">Wide feet prevent sinking in sand by spreading weight. Same principle as snowshoes.</div></div>
-      <!-- Q13 --><div class="qq" data-ans="c" data-std="BIO.7d"><div class="q-stem"><span class="q-num">13</span> Human arm, whale flipper, bat wing share the same bones. These are &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>analogous structures</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>vestigial structures</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>homologous structures</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>adaptive radiation</li></ul><div class="qexp">Same underlying structure (bones) with different functions = homologous = common ancestor.</div></div>
-      <!-- Q14 --><div class="qq" data-ans="c" data-std="BIO.7d"><div class="q-stem"><span class="q-num">14</span> Fish, chicken, pig, and human embryos all develop gill slits and tails in early stages. This similarity suggests they &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>all live in aquatic environments</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>will all look similar as adults</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>share a common ancestor</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>all breathe through gills as adults</li></ul><div class="qexp">Similar embryonic development across very different species is strong evidence of shared common ancestry. The same developmental genes are active early, then diverge as the embryo matures. This is embryology evidence for evolution.</div></div>
-      <!-- Q15 --><div class="qq" data-ans="b" data-std="BIO.7d"><div class="q-stem"><span class="q-num">15</span> Long fossil stability then sudden change supports &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>gradualism</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>punctuated equilibrium</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Lamarck's theory</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>spontaneous generation</li></ul><div class="qexp">Punctuated equilibrium = long periods of no change followed by rapid evolutionary change.</div></div>
-      <!-- Q16 --><div class="qq" data-ans="d" data-std="BIO.7d"><div class="q-stem"><span class="q-num">16</span> Darwin's finches on different Galapagos islands evolved different beak shapes. This is evidence that &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>all birds are the same species</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>finches choose which beak shape to develop</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>island environments have no effect on organisms</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>geographic isolation and different food sources led to speciation</li></ul><div class="qexp">Different islands had different food sources (seeds, insects, cacti). Finches with beak shapes best suited to the available food survived and reproduced. Over time, isolated populations diverged into separate species. This is biogeography + natural selection evidence.</div></div>
-      <!-- Q17 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">17</span> A species of fish produces 10,000 eggs per year, but only about 50 survive to adulthood. This is an example of &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>overproduction of offspring leading to competition</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>genetic engineering in fish populations</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>Lamarck's theory of acquired characteristics</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>punctuated equilibrium</li></ul><div class="qexp">Overproduction = species produce far more offspring than can survive. This creates competition, where individuals with favorable traits are more likely to survive and reproduce. This is a key step in natural selection.</div></div>
-      <!-- Q18 --><div class="qq" data-ans="b" data-std="BIO.7d"><div class="q-stem"><span class="q-num">18</span> The human appendix and whale hip bones are examples of &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>analogous structures</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>vestigial structures</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>homologous structures</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>adaptive structures</li></ul><div class="qexp">Vestigial structures are reduced body parts with no current function. The human appendix and whale hip bones are leftovers from ancestors who used them &mdash; evidence that these organisms evolved from ancestors with different body plans.</div></div>
-      <!-- Q19 --><div class="qq" data-ans="d" data-std="BIO.7b"><div class="q-stem"><span class="q-num">19</span> Compared to mammals, sea turtles produce hundreds of eggs at once but provide no parental care. This reproductive strategy &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>guarantees all offspring will survive</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>means sea turtles are more evolved than mammals</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>eliminates the need for genetic variation</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>increases the chance that some offspring will survive to reproduce</li></ul><div class="qexp">Producing many offspring with little parental care is a reproductive strategy: even though most die, the sheer number means SOME will survive. This contrasts with mammals (few offspring, high parental care). Both strategies maximize population survival in different environments.</div></div>
-      <!-- Q20 --><div class="qq" data-ans="c" data-std="BIO.7b"><div class="q-stem"><span class="q-num">20</span> (2003-36) Which type of reproduction provides the most protection to developing offspring of land-dwelling animals? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="solPick(this)"><div class="ol">A</div>An egg with a leathery shell</li><li class="qo" data-v="b" onclick="solPick(this)"><div class="ol">B</div>An egg in a mass of jelly</li><li class="qo" data-v="c" onclick="solPick(this)"><div class="ol">C</div>An egg carried internally</li><li class="qo" data-v="d" onclick="solPick(this)"><div class="ol">D</div>An egg in an eggshell</li></ul><div class="qexp">Internal development (viviparity, like mammals) provides the MOST protection &mdash; the developing offspring is inside the mother's body, protected from predators, temperature changes, and dehydration.</div></div>
-      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
+      <!-- Q1 --><div class="qq" data-ans="a" data-std="BIO.7a"><div class="q-stem"><span class="q-num">1</span> (2006-14) Based on heart structure, which animal is most closely related to a mammal? <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Bird</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Turtle</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Fish</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Frog</li></ul><div class="qexp">Both birds and mammals have 4-chambered hearts. Turtles/frogs have 3 chambers, fish have 2. Shared complex structure = close evolutionary relationship.</div></div>
+      <!-- Q2 --><div class="qq" data-ans="b" data-std="BIO.7a"><div class="q-stem"><span class="q-num">2</span> A fossil found in a deeper rock layer is generally &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>younger than fossils above</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>older than fossils above</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>the same age as all fossils</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>impossible to compare</li></ul><div class="qexp">Law of superposition: deeper layers deposited first = older fossils. This is relative dating.</div></div>
+      <!-- Q3 --><div class="qq" data-ans="c" data-std="BIO.7a"><div class="q-stem"><span class="q-num">3</span> Radioactive decay is used to determine the exact age of a fossil. This technique is called &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>relative dating</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>carbon printing</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>absolute dating</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>comparative genomics</li></ul><div class="qexp">Absolute dating uses radioactive isotope decay to determine the exact age in years. Relative dating only tells you which is older/younger.</div></div>
+      <!-- Q4 --><div class="qq" data-ans="d" data-std="BIO.7a"><div class="q-stem"><span class="q-num">4</span> Two species share 98% of their DNA. This strongly suggests they &mdash; <span class="q-tag">BIO.7a</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>live in the same habitat</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>eat the same food</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>are the same species</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>share a recent common ancestor</li></ul><div class="qexp">Highly similar DNA = recent common ancestor. 98% is very high (like humans and chimps) but they're still different species.</div></div>
+      <!-- Q5 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">5</span> (2002-7) Which describes natural selection? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Individuals with inherited traits adapted to their environment survive</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Farmers select desirable traits for breeding</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Populations sharing gene pools create new species</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>New species form via genetic engineering</li></ul><div class="qexp">Natural selection = inherited traits that help survival are passed on. B = artificial selection. C and D are not natural selection.</div></div>
+      <!-- Q6 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">6</span> (2003-31) Lamarck believed organisms changed through &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>theory of acquired characteristics</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>law of independent assortment</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>theory of relative fossil-dating</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>theory of artificial selection</li></ul><div class="qexp">Lamarck (disproven) proposed acquired characteristics could be inherited. Darwin's natural selection replaced this idea.</div></div>
+      <!-- Q7 --><div class="qq" data-ans="b" data-std="BIO.7b"><div class="q-stem"><span class="q-num">7</span> (2006-4) After radiation exposure, newly reproduced cells appear different. This is probably &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>contamination</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>mutation</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>bacterial infection</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>speciation</li></ul><div class="qexp">Radiation causes DNA mutations. When mutated cells reproduce, the new cells show different characteristics. Mutations are a key source of genetic variation.</div></div>
+      <!-- Q8 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">8</span> (2005-16) A student hypothesizes thick leg muscles are inherited. Outdoor dogs have thicker muscles than indoor dogs. Conclude? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Inheritance alone may not account for thick muscles</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Dogs with thick muscles can't survive indoors</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Thick muscles require more exercise</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Thick muscles are linked to coat thickness</li></ul><div class="qexp">The data shows environment (outdoor exercise) affects muscle thickness, so genetics alone doesn't explain the trait. Gene-environment interaction.</div></div>
+      <!-- Q9 --><div class="qq" data-ans="c" data-std="BIO.7c"><div class="q-stem"><span class="q-num">9</span> (2004-47) Which characteristic supports the hypothesis that an animal burrows? <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>Size of its ears</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>Color of its fur</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Size of its claws</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>Length of its tail</li></ul><div class="qexp">Large, strong claws are adapted for digging/burrowing. Form fits function &mdash; the physical feature reveals the behavior.</div></div>
+      <!-- Q10 --><div class="qq" data-ans="a" data-std="BIO.7c"><div class="q-stem"><span class="q-num">10</span> (2004-17) A common adaptation for mammals in an aquatic environment is &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>streamlined body</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>large ears</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>thick fur</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>long legs</li></ul><div class="qexp">Streamlined (torpedo-shaped) bodies reduce drag in water, allowing efficient swimming. Dolphins, seals, and whales all share this adaptation despite being different species.</div></div>
+      <!-- Q11 --><div class="qq" data-ans="c" data-std="BIO.7c"><div class="q-stem"><span class="q-num">11</span> (2001-31) A nonpoisonous snake resembling a poisonous species gains &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>a food source</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>camouflage from prey</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>a method of avoiding predation</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>immunity to venom</li></ul><div class="qexp">Mimicry: predators avoid the harmless snake because it looks like the dangerous one. This is an adaptation for predator avoidance.</div></div>
+      <!-- Q12 --><div class="qq" data-ans="d" data-std="BIO.7c"><div class="q-stem"><span class="q-num">12</span> (2003-18) Wide feet on sandy-area animals distribute &mdash; <span class="q-tag">BIO.7c</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>heat more evenly</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>food over a larger area</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>scent to mark territory</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>body weight over a large area</li></ul><div class="qexp">Wide feet prevent sinking in sand by spreading weight. Same principle as snowshoes.</div></div>
+      <!-- Q13 --><div class="qq" data-ans="c" data-std="BIO.7d"><div class="q-stem"><span class="q-num">13</span> Human arm, whale flipper, bat wing share the same bones. These are &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>analogous structures</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>vestigial structures</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>homologous structures</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>adaptive radiation</li></ul><div class="qexp">Same underlying structure (bones) with different functions = homologous = common ancestor.</div></div>
+      <!-- Q14 --><div class="qq" data-ans="c" data-std="BIO.7d"><div class="q-stem"><span class="q-num">14</span> Fish, chicken, pig, and human embryos all develop gill slits and tails in early stages. This similarity suggests they &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>all live in aquatic environments</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>will all look similar as adults</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>share a common ancestor</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>all breathe through gills as adults</li></ul><div class="qexp">Similar embryonic development across very different species is strong evidence of shared common ancestry. The same developmental genes are active early, then diverge as the embryo matures. This is embryology evidence for evolution.</div></div>
+      <!-- Q15 --><div class="qq" data-ans="b" data-std="BIO.7d"><div class="q-stem"><span class="q-num">15</span> Long fossil stability then sudden change supports &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>gradualism</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>punctuated equilibrium</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Lamarck's theory</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>spontaneous generation</li></ul><div class="qexp">Punctuated equilibrium = long periods of no change followed by rapid evolutionary change.</div></div>
+      <!-- Q16 --><div class="qq" data-ans="d" data-std="BIO.7d"><div class="q-stem"><span class="q-num">16</span> Darwin's finches on different Galapagos islands evolved different beak shapes. This is evidence that &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>all birds are the same species</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>finches choose which beak shape to develop</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>island environments have no effect on organisms</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>geographic isolation and different food sources led to speciation</li></ul><div class="qexp">Different islands had different food sources (seeds, insects, cacti). Finches with beak shapes best suited to the available food survived and reproduced. Over time, isolated populations diverged into separate species. This is biogeography + natural selection evidence.</div></div>
+      <!-- Q17 --><div class="qq" data-ans="a" data-std="BIO.7b"><div class="q-stem"><span class="q-num">17</span> A species of fish produces 10,000 eggs per year, but only about 50 survive to adulthood. This is an example of &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>overproduction of offspring leading to competition</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>genetic engineering in fish populations</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>Lamarck's theory of acquired characteristics</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>punctuated equilibrium</li></ul><div class="qexp">Overproduction = species produce far more offspring than can survive. This creates competition, where individuals with favorable traits are more likely to survive and reproduce. This is a key step in natural selection.</div></div>
+      <!-- Q18 --><div class="qq" data-ans="b" data-std="BIO.7d"><div class="q-stem"><span class="q-num">18</span> The human appendix and whale hip bones are examples of &mdash; <span class="q-tag">BIO.7d</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>analogous structures</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>vestigial structures</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>homologous structures</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>adaptive structures</li></ul><div class="qexp">Vestigial structures are reduced body parts with no current function. The human appendix and whale hip bones are leftovers from ancestors who used them &mdash; evidence that these organisms evolved from ancestors with different body plans.</div></div>
+      <!-- Q19 --><div class="qq" data-ans="d" data-std="BIO.7b"><div class="q-stem"><span class="q-num">19</span> Compared to mammals, sea turtles produce hundreds of eggs at once but provide no parental care. This reproductive strategy &mdash; <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>guarantees all offspring will survive</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>means sea turtles are more evolved than mammals</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>eliminates the need for genetic variation</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>increases the chance that some offspring will survive to reproduce</li></ul><div class="qexp">Producing many offspring with little parental care is a reproductive strategy: even though most die, the sheer number means SOME will survive. This contrasts with mammals (few offspring, high parental care). Both strategies maximize population survival in different environments.</div></div>
+      <!-- Q20 --><div class="qq" data-ans="c" data-std="BIO.7b"><div class="q-stem"><span class="q-num">20</span> (2003-36) Which type of reproduction provides the most protection to developing offspring of land-dwelling animals? <span class="q-tag">BIO.7b</span></div><ul class="qopts"><li class="qo" data-v="a" onclick="UnitEngine.onSolPick(this)"><div class="ol">A</div>An egg with a leathery shell</li><li class="qo" data-v="b" onclick="UnitEngine.onSolPick(this)"><div class="ol">B</div>An egg in a mass of jelly</li><li class="qo" data-v="c" onclick="UnitEngine.onSolPick(this)"><div class="ol">C</div>An egg carried internally</li><li class="qo" data-v="d" onclick="UnitEngine.onSolPick(this)"><div class="ol">D</div>An egg in an eggshell</li></ul><div class="qexp">Internal development (viviparity, like mammals) provides the MOST protection &mdash; the developing offspring is inside the mother's body, protected from predators, temperature changes, and dehydration.</div></div>
+      <div style="text-align:center;margin-top:18px;"><button class="nbtn next" onclick="UnitEngine.goTo(9)" id="to-results-btn" disabled>View Results &rarr;</button></div>
     </div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="goTo(9)" disabled>Results &rarr;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(7)">&larr; Study Guide</button><button class="nbtn next" onclick="UnitEngine.goTo(9)" disabled>Results &rarr;</button></div>
 </div>
 
 <!-- PANEL 9: RESULTS -->
@@ -1018,1097 +1018,19 @@ body{font-family:"Source Sans 3",sans-serif;background:var(--gray-50);color:var(
   <div class="lc">
     <div class="eyebrow">Step 10 of 10 &mdash; Results</div>
     <div class="sh2">Your BIO.7 Score &amp; Danger Zone Report</div>
-    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
-    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
+    <div id="dz-waiting" style="text-align:center;padding:40px;"><p style="font-size:1.2rem;color:var(--muted);">&#x23F3; Complete the Practice Test to see your results.</p><button class="nbtn next" onclick="UnitEngine.goTo(8)" style="margin:20px auto 0;display:inline-flex;">&larr; Back to Practice Test</button></div>
+    <div class="dz-box" id="dz-result"><div class="dz-emoji" id="dz-emoji"></div><div class="dz-score" id="dz-score"></div><div class="dz-label" id="dz-label"></div><div class="dz-msg" id="dz-msg"></div><div class="dz-missed" id="dz-missed"><div class="dz-missed-title">Standards You Missed</div><div id="dz-missed-list"></div></div><button class="dz-submit-btn" id="dz-submit-btn" onclick="UnitEngine.submitFinalScore()">&#x1F4E4; Submit Score to Mr. England</button><div style="margin-top:12px;"><button class="nbtn prev" onclick="UnitEngine.retakePractice()" style="display:inline-flex;">&#x1F504; Retake Practice Test</button></div></div>
   </div>
-  <div class="lnav"><button class="nbtn prev" onclick="goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
+  <div class="lnav"><button class="nbtn prev" onclick="UnitEngine.goTo(8)">&larr; Practice Test</button><button class="nbtn next" disabled>Unit Complete &#x1F389;</button></div>
 </div>
 
 </main>
 <script src="../shared/error-reporter.js"></script>
-<script src="sol-api.js?v=2026-05-02-dsmfix"></script>
-<script src="dsm-player.js?v=2026-05-01-fix3"></script>
-<script>
-/* ── CONSTANTS ───────────────────────────────────── */
-const UNIT = 'unit7';
-const TOTAL_PANELS = 10;
-const TOTAL_SOL_Q = 20;
-const TOTAL_CARDS = 24;
-const VQ_TOTAL = 10;
-const VQ_PASS = 8;
-
-/* ── STATE ────────────────────────────────────────── */
-var studentName = '';
-var currentPanel = 0;
-var panelStartTime = Date.now();
-var sessionStart = Date.now();
-var activityLog = [];
-var pretestAnswers = [];
-var pretestSent = false;
-var vqAnswers = {};
-var vqScore = 0;
-var vocabPassed = false;
-var pracAnswered = 0;
-var pracCorrect = 0;
-var missedStds = {};
-var questionDetail = [];
-var flippedCards = new Set();
-var graphAnswered = {};
-
-var VQ_CORRECT = {1:'b',2:'a',3:'c',4:'d',5:'c',6:'b',7:'d',8:'a',9:'a',10:'b'};
-var VQ_EXPLAIN = {
-  1:'Natural selection = organisms with favorable inherited traits survive and reproduce more, passing those traits to the next generation.',
-  2:'Absolute dating uses radioactive decay to determine the EXACT age of a fossil in years. Relative dating only tells you which is older/younger.',
-  3:'Homologous structures have the same underlying bone structure but different functions (arm/wing/flipper). They indicate a common ancestor.',
-  4:'Speciation occurs when populations become so different they can no longer interbreed and produce fertile offspring.',
-  5:'Punctuated equilibrium = long periods of no change (stasis) interrupted by rapid bursts of evolutionary change.',
-  6:'Gene flow = movement of genes between populations through migration, introducing new alleles.',
-  7:'Convergent evolution = unrelated species evolve similar traits because they face similar environmental pressures.',
-  8:'Vestigial structures are reduced body parts with no current function (human appendix, whale hip bones), showing ancestral traits.',
-  9:'Overproduction = species produce MORE offspring than can survive, creating competition where favorable traits are selected.',
-  10:'An adaptation is an INHERITED trait that increases an organism\'s ability to survive and reproduce in its environment.'
-};
-
-/* ── METADATA ────────────────────────────────────── */
-function initMeta() {
-  var today = new Date().toISOString().slice(0, 10);
-  var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  var streak = parseInt(localStorage.getItem('sol_streak') || '0');
-  var last = localStorage.getItem('sol_streak_last');
-  if (last === today) { /* already counted */ }
-  else if (last === yesterday) { streak++; localStorage.setItem('sol_streak', streak); localStorage.setItem('sol_streak_last', today); }
-  else { streak = 1; localStorage.setItem('sol_streak', 1); localStorage.setItem('sol_streak_last', today); }
-  document.getElementById('streak-val').textContent = streak;
-  if (streak >= 3) document.getElementById('streak-fire').classList.add('streak-fire');
-
-  var examDate = solAPI.getExamDate();
-  if (examDate) {
-    var diff = Math.max(0, Math.ceil((examDate - new Date()) / 86400000));
-    document.getElementById('sol-countdown').textContent = diff;
-    document.getElementById('sol-countdown').style.color = diff <= 14 ? '#fca5a5' : diff <= 21 ? '#fcd34d' : '#fff';
-  } else {
-    document.getElementById('sol-countdown').textContent = '--';
-  }
-}
-
-/* ── TRACKING ────────────────────────────────────── */
-var __lastScorePromise = null;
-
-function send(payload) {
-  payload.student = studentName;
-  payload.module = 'SOL Prep — Unit 7: Evolution';
-  var __p = solAPI.submit(payload) || Promise.resolve();
-  if (payload.action === 'score') __lastScorePromise = __p;
-  return __p;
-}
-
-function getAnswerText(opt) {
-  var t = opt.textContent.trim();
-  return t.replace(/^[A-D]\s*/, '');
-}
-
-/* ── PRETEST-LOCK: pretest one-attempt block ─── */
-var pretestAlreadySubmitted = false;
-var priorPretestScore = null;
-
-function checkPretestLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, '', 'Pretest')
-    .then(function(prior) {
-      if (!prior) return;
-      pretestAlreadySubmitted = true;
-      priorPretestScore = prior;
-      applyPretestLockUI();
-    });
-}
-
-function applyPretestLockUI() {
-  if (!pretestAlreadySubmitted || !priorPretestScore) return;
-  var p = priorPretestScore;
-  var p0 = document.getElementById('p0');
-  if (p0 && !document.getElementById('pretest-already-banner')) {
-    var banner = document.createElement('div');
-    banner.id = 'pretest-already-banner';
-    banner.style.cssText = 'background:#dcfce7;border:2px solid #16a34a;color:#166534;padding:14px 18px;border-radius:10px;margin:16px 0;font-weight:600;line-height:1.5';
-    banner.innerHTML = '✓ Pretest already submitted: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). The pretest is a one-time diagnostic — you can continue to the lesson below.';
-    var lc = p0.querySelector('.lc');
-    if (lc) lc.insertBefore(banner, lc.firstChild);
-  }
-  document.querySelectorAll('#p0 .qq, #p0 .gate-q').forEach(function(qq) { qq.style.display = 'none'; });
-  if (typeof pretestSent !== 'undefined') pretestSent = true;
-  if (typeof gateAnswered !== 'undefined' && typeof gateRequired !== 'undefined') {
-    if (!gateAnswered[0]) gateAnswered[0] = new Set();
-    var req = gateRequired[0] || 5;
-    for (var i = 0; i < req; i++) gateAnswered[0].add('pretest-locked-' + i);
-  }
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(1);
-  if (typeof checkGate === 'function') checkGate(0);
-}
-
-/* ── RETAKE-LOCK: practice-test one-attempt block ─── */
-var practiceAlreadySubmitted = false;
-var priorPracticeScore = null;
-
-function checkPracticeRetakeLock() {
-  if (!solAPI.getAllowRetakes || solAPI.getAllowRetakes()) return;
-  if (!studentName || !solAPI.hasPriorScore) return;
-  solAPI.hasPriorScore(studentName, 'SOL Prep \u2014 Unit 7: Evolution & Classification', 'Practice Test')
-    .then(function(prior) {
-      if (!prior) return;
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = prior;
-      applyPracticeLockUI();
-    });
-}
-
-function applyPracticeLockUI() {
-  if (!practiceAlreadySubmitted || !priorPracticeScore) return;
-  var p = priorPracticeScore;
-  var locked = document.getElementById('practice-test-locked');
-  if (locked) {
-    locked.innerHTML =
-      '<div class="practice-locked-icon">\u2713</div>'
-      + '<div class="practice-locked-title">Practice Test Already Submitted</div>'
-      + '<div class="practice-locked-sub">Your score: ' + p.score + '/' + p.total + ' (' + (p.pct || 0) + '%). Talk to your teacher if you need to retake.</div>';
-    locked.style.display = '';
-  }
-  var box = document.getElementById('sol-practice-box');
-  if (box) box.style.display = 'none';
-  var rb = document.getElementById('dz-retake-btn');
-  if (rb) rb.style.display = 'none';
-  if (typeof unlockedPanels !== 'undefined') unlockedPanels.add(11);
-}
-
-/* ── HEARTBEAT-PRESENCE: live-pulse signal ─── */
-// Heartbeat keeps the Live Pulse dashboard accurate while a student
-// is reading without clicking. Bumps quiz_progress.updated_at every
-// 60s, but only when the tab is visible AND the user has moved/
-// clicked/typed in the last 90s — so a student who walked away
-// stops looking active after ~90s, while one reading attentively
-// stays green.
-var _hbInterval = null;
-var _hbLastActive = Date.now();
-var HEARTBEAT_MS = 60000;
-var HEARTBEAT_PRESENCE_WINDOW_MS = 90000;
-
-(function bindActivityListeners() {
-  var bump = function() { _hbLastActive = Date.now(); };
-  ['mousemove','keydown','click','touchstart','wheel','scroll'].forEach(function(ev) {
-    document.addEventListener(ev, bump, { passive: true });
-  });
-})();
-
-function startHeartbeat(module, studentName) {
-  if (_hbInterval || !solAPI.pingProgress) return;
-  if (!module || !studentName) return;
-  _hbInterval = setInterval(function() {
-    if (document.visibilityState !== 'visible') return;
-    if (Date.now() - _hbLastActive > HEARTBEAT_PRESENCE_WINDOW_MS) return;
-    solAPI.pingProgress(module, studentName);
-  }, HEARTBEAT_MS);
-}
-function stopHeartbeat() {
-  if (_hbInterval) { clearInterval(_hbInterval); _hbInterval = null; }
-}
-window.addEventListener('pagehide', stopHeartbeat);
-
-/* ── SAVE / RESTORE ──────────────────────────────── */
-function saveProgress() {
-  if (!studentName) return;
-  var gateObj = {};
-  for (var key in gateAnswered) {
-    gateObj[key] = Array.from(gateAnswered[key]);
-  }
-  var data = {
-    studentName: studentName,
-    classCode: solAPI.getClassCode(),
-    currentPanel: currentPanel,
-    gateAnswered: gateObj,
-    graphAnswered: graphAnswered,
-    pretestAnswers: pretestAnswers,
-    pretestSent: pretestSent,
-    vqAnswers: vqAnswers,
-    vqScore: vqScore,
-    vocabPassed: vocabPassed,
-    pracAnswered: pracAnswered,
-    pracCorrect: pracCorrect,
-    missedStds: missedStds,
-    questionDetail: questionDetail,
-    activityLog: activityLog,
-    sessionStart: sessionStart,
-    unlockedPanels: Array.from(unlockedPanels),
-    flippedCards: Array.from(flippedCards)
-  };
-  data.savedAt = Date.now();
-  localStorage.setItem('sol_unit7_progress', JSON.stringify(data));
-  // Cross-device sync — push to Supabase (debounced 1.5s).
-  if (studentName && solAPI.saveProgress) {
-    solAPI.saveProgress('unit-7', studentName, data);
-  }
-}
-
-function restoreProgress(data) {
-  studentName = data.studentName;
-  if (data.unlockedPanels) {
-    unlockedPanels = new Set(data.unlockedPanels);
-  } else {
-    for (var i = 0; i <= (data.currentPanel || 0); i++) unlockedPanels.add(i);
-  }
-  pretestAnswers = data.pretestAnswers || [];
-  pretestSent = data.pretestSent || false;
-  vqAnswers = data.vqAnswers || {};
-  vqScore = data.vqScore || 0;
-  vocabPassed = data.vocabPassed || false;
-  pracAnswered = data.pracAnswered || 0;
-  pracCorrect = data.pracCorrect || 0;
-  missedStds = data.missedStds || {};
-  questionDetail = data.questionDetail || [];
-  activityLog = data.activityLog || [];
-  sessionStart = data.sessionStart || Date.now();
-  graphAnswered = data.graphAnswered || {};
-
-  gateAnswered = {};
-  if (data.gateAnswered) {
-    for (var pid in data.gateAnswered) {
-      gateAnswered[pid] = new Set(data.gateAnswered[pid]);
-    }
-  }
-
-  document.getElementById('name-modal').style.display = 'none';
-  panelStartTime = Date.now();
-
-  // Replay gate questions visually
-  for (var panelId in gateAnswered) {
-    var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-    gateAnswered[panelId].forEach(function(idx) {
-      if (qs[idx]) {
-        var qq = qs[idx];
-        var correct = qq.dataset.ans;
-        qq.querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === correct) o.classList.add('correct');
-        });
-        var exp = qq.querySelector('.qexp');
-        if (exp) exp.classList.add('show');
-      }
-    });
-    checkGate(parseInt(panelId));
-  }
-
-  // Replay graph answers
-  // (No graph questions in Unit 2 content panels)
-
-  // Restore flipped cards
-  if (data.flippedCards) {
-    flippedCards = new Set(data.flippedCards);
-    var allCards = document.querySelectorAll('.vcard');
-    flippedCards.forEach(function(idx) {
-      if (allCards[idx]) allCards[idx].classList.add('flipped');
-    });
-    var countEl = document.getElementById('vocab-flip-count');
-    if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-    if (flippedCards.size >= TOTAL_CARDS) {
-      document.getElementById('vquiz').style.display = 'block';
-      var gate = document.getElementById('vocab-flip-gate');
-      if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied — quiz unlocked!'; }
-    }
-  }
-
-  // Restore vocab quiz answers
-  if (data.vqAnswers && Object.keys(data.vqAnswers).length > 0) {
-    for (var qn in data.vqAnswers) {
-      var chosen = data.vqAnswers[qn];
-      var vqDiv = document.getElementById('vq' + qn);
-      if (!vqDiv) continue;
-      var opts = vqDiv.querySelectorAll('.vq-opt');
-      opts.forEach(function(o) {
-        o.classList.add('revealed');
-        if (o.dataset.v === VQ_CORRECT[qn]) o.classList.add('correct');
-        else if (o.dataset.v === chosen && chosen !== VQ_CORRECT[qn]) o.classList.add('incorrect');
-      });
-      var res = document.getElementById('vqr' + qn);
-      if (res) {
-        res.textContent = VQ_EXPLAIN[qn];
-        res.classList.add('show');
-        if (chosen !== VQ_CORRECT[qn]) res.classList.add('wrong');
-      }
-    }
-    if (data.vocabPassed) {
-      var scoreBox = document.getElementById('vquiz-score');
-      scoreBox.style.display = 'block';
-      document.getElementById('vq-score-num').textContent = data.vqScore + '/' + VQ_TOTAL;
-      document.getElementById('vq-pass-msg').textContent = '\u2705 Passed! Mastery Module unlocked.';
-      DSMPlayer.init({
-        unitNumber: 7,
-        moduleName: 'SOL Prep — Unit 7: Evolution',
-        standard: 'BIO.7',
-        unitKey: UNIT,
-        panelId: 6,
-        containerId: 'dsm-container',
-        unlockPanels: [7, 8, 9],
-        onComplete: function() {
-          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-          document.getElementById('practice-locked').style.display = 'none';
-          if (!practiceAlreadySubmitted) {
-            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-          } else { applyPracticeLockUI(); }
-          saveProgress();
-        },
-        onSkip: function() {
-          unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-          document.getElementById('practice-locked').style.display = 'none';
-          if (!practiceAlreadySubmitted) {
-            var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-            var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-          } else { applyPracticeLockUI(); }
-        }
-      });
-    }
-  }
-
-  // Restore practice test answers
-  if (data.pracAnswered > 0) {
-    var solQs = document.querySelectorAll('#sol-practice-box .qq');
-    for (var qi = 0; qi < data.questionDetail.length; qi++) {
-      var qd = data.questionDetail[qi];
-      if (solQs[qi]) {
-        solQs[qi].querySelectorAll('.qo').forEach(function(o) {
-          o.classList.add('revealed');
-          if (o.dataset.v === solQs[qi].dataset.ans) o.classList.add('correct');
-          else if (getAnswerText(o) === qd.studentAnswer && !qd.isCorrect) o.classList.add('incorrect');
-        });
-        var exp = solQs[qi].querySelector('.qexp');
-        if (exp) { exp.classList.add('show'); if (!qd.isCorrect) exp.classList.add('qexp-wrong'); }
-      }
-    }
-    var progMsg = document.getElementById('sol-progress-msg');
-    if (progMsg) progMsg.textContent = data.pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-    if (data.pracAnswered === TOTAL_SOL_Q) {
-      document.getElementById('to-results-btn').disabled = false;
-      showDangerZone();
-    }
-  }
-
-  goTo(data.currentPanel || 0);
-}
-
-/* ── SSO (Google sign-in) ─────────────────────────── */
-/* SSO-HELPERS */
-var _ssoActive = false;
-
-function applySSOSession() {
-  if (!solAPI.isAuthenticated || !solAPI.isAuthenticated()) return false;
-  var fullName = (solAPI.getStudentDisplayName && solAPI.getStudentDisplayName()) || '';
-  var email = (solAPI.getStudentEmail && solAPI.getStudentEmail()) || '';
-  if (!fullName && !email) return false;
-  if (!fullName) fullName = email.split('@')[0];
-  var parts = fullName.trim().split(/\s+/);
-  var first = parts[0] || '';
-  var last = parts.slice(1).join(' ');
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.value = first; f.disabled = true; f.style.opacity = '0.6'; }
-  if (l) { l.value = last;  l.disabled = true; l.style.opacity = '0.6'; }
-  var banner = document.getElementById('sso-signed-in');
-  var nameDisp = document.getElementById('sso-name-display');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'block';
-  if (nameDisp) nameDisp.textContent = fullName + (email ? ' (' + email + ')' : '');
-  if (btn) btn.style.display = 'none';
-  _ssoActive = true;
-  return true;
-}
-
-function clearSSOSession() {
-  var f = document.getElementById('student-first-name');
-  var l = document.getElementById('student-last-name');
-  if (f) { f.disabled = false; f.style.opacity = '1'; }
-  if (l) { l.disabled = false; l.style.opacity = '1'; }
-  var banner = document.getElementById('sso-signed-in');
-  var btn = document.getElementById('sso-signin-btn');
-  if (banner) banner.style.display = 'none';
-  if (btn) btn.style.display = 'flex';
-  _ssoActive = false;
-}
-
-function signInWithGoogle() {
-  if (!solAPI.signInWithGoogle) return;
-  var codeEl = document.getElementById('class-code');
-  if (codeEl && codeEl.value.trim()) {
-    sessionStorage.setItem('_sso_pending_code', codeEl.value.trim());
-  }
-  var btn = document.getElementById('sso-signin-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting...'; }
-  solAPI.signInWithGoogle(window.location.href).catch(function(err) {
-    console.error('[unit-7] sign-in failed:', err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Sign in with Google'; }
-    var ce = document.getElementById('code-err');
-    if (ce) { ce.textContent = 'Sign-in failed: ' + (err.message || 'unknown error'); ce.style.display = 'block'; }
-  });
-}
-
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'sso-signout') {
-    e.preventDefault();
-    if (solAPI.signOut) {
-      solAPI.signOut().then(function() {
-        clearSSOSession();
-        var f = document.getElementById('student-first-name');
-        var l = document.getElementById('student-last-name');
-        if (f) f.value = '';
-        if (l) l.value = '';
-      });
-    }
-  }
-});
-
-/* ── START FRESH (clear local + remote progress) ───── */
-function startFresh() {
-  var saved = localStorage.getItem('sol_unit7_progress');
-  var name = '';
-  try { name = saved ? (JSON.parse(saved).studentName || '') : ''; } catch(e) {}
-  if (name && solAPI.clearProgress) {
-    solAPI.clearProgress('unit-7', name);
-  }
-  localStorage.removeItem('sol_unit7_progress');
-  localStorage.removeItem('sol_unit7_vocab');
-  solAPI.clearClass();
-  location.reload();
-}
-
-/* ── START ────────────────────────────────────────── */
-function startUnit() {
-  // SSO is the only path — legacy name-modal flow removed when
-  // requires_sso flipped true on biology classes.
-  if (!_ssoActive || !solAPI.getStudentDisplayName || !solAPI.getStudentDisplayName()) {
-    if (typeof showToast === 'function') showToast('Please sign in with Google first.');
-    return;
-  }
-  var nameInput = solAPI.getStudentDisplayName();
-  var codeInput = document.getElementById('class-code').value.trim();
-  if (!codeInput) {
-    document.getElementById('code-err').style.display = 'block';
-    return;
-  }
-  document.getElementById('name-err').style.display = 'none';
-  document.getElementById('code-err').style.display = 'none';
-
-  var stored = solAPI.getStored();
-  if (stored && stored.code === codeInput.toUpperCase()) {
-    proceedStart(nameInput);
-    return;
-  }
-
-  var btn = document.querySelector('.nm-btn');
-  btn.disabled = true;
-  btn.textContent = 'Validating...';
-
-  solAPI.validateCode(codeInput).then(function(result) {
-    if (!result.valid) {
-      document.getElementById('code-err').textContent = 'Invalid class code. Check with your teacher.';
-      document.getElementById('code-err').style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Start Unit 7 \u2192';
-      return;
-    }
-    solAPI.storeClass();
-    proceedStart(nameInput);
-  });
-}
-
-function proceedStart(nameInput) {
-  /* SSO-PROCEED-OVERRIDE */
-  if (_ssoActive && solAPI.getStudentDisplayName) {
-    var ssoName = solAPI.getStudentDisplayName();
-    if (ssoName) nameInput = ssoName;
-  }
-  /* canonicalizeName: */
-  studentName = (solAPI.canonicalizeName ? solAPI.canonicalizeName(nameInput) : (nameInput || '').trim());
-  /* SSO-ENROLL */
-  if (_ssoActive && solAPI.enrollInClass && solAPI.getClassId) {
-    solAPI.enrollInClass(solAPI.getClassId());
-  }
-  checkPracticeRetakeLock();
-  checkPretestLock();
-  startHeartbeat('', studentName);
-
-  // Check local + remote progress, prefer whichever is newer.
-  var saved = localStorage.getItem('sol_unit7_progress');
-  var localData = saved ? JSON.parse(saved) : null;
-  if (localData && localData.studentName !== studentName) localData = null;
-
-  var remoteP = (solAPI.getProgress ? solAPI.getProgress('unit-7', studentName) : Promise.resolve(null));
-  remoteP.then(function(remote) {
-    var remoteData = remote ? remote.progress_data : null;
-    var chosen = null;
-    if (remoteData && localData) {
-      var remoteAt = new Date(remote.updated_at).getTime();
-      var localAt = localData.savedAt || localData.sessionStart || 0;
-      chosen = (remoteAt > localAt + 1000) ? remoteData : localData;
-    } else {
-      chosen = remoteData || localData;
-    }
-    if (chosen) {
-      localStorage.setItem('sol_unit7_progress', JSON.stringify(chosen));
-      restoreProgress(chosen);
-      return;
-    }
-    localStorage.removeItem('sol_unit7_progress');
-    document.getElementById('name-modal').style.display = 'none';
-    initMeta();
-    sessionStart = Date.now();
-    panelStartTime = Date.now();
-    send({ action: 'activity', event: 'module_start', timestamp: new Date().toISOString() });  });
-}
-
-/* ── NAVIGATION ───────────────────────────────────── */
-var unlockedPanels = new Set([0]);
-
-var stepNames = ['SOL Focus','Fossil & DNA Evidence','Variation & Selection','Adaptations & Speciation','Scientific Evidence','Vocab Lock-In','Mastery Module','Study Guide','Practice Test','Results'];
-
-function goTo(n) {
-  if (n === 10 && practiceAlreadySubmitted) applyPracticeLockUI();
-  if (n === 0 && pretestAlreadySubmitted) applyPretestLockUI();
-  if (n > currentPanel && !unlockedPanels.has(n)) {
-    showToast('Complete the questions on this page first!');
-    return;
-  }
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-    send({ action: 'activity', lesson: stepNames[currentPanel] || 'Step ' + currentPanel, event: 'page_view', duration: duration });
-  }
-  panelStartTime = Date.now();
-
-  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  var target = document.getElementById('p' + n);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.step-btn').forEach(function(b) { b.classList.remove('active'); });
-  var sb = document.getElementById('sb' + n);
-  if (sb) sb.classList.add('active');
-  for (var i = 0; i < n; i++) {
-    var prev = document.getElementById('sb' + i);
-    if (prev) prev.classList.add('done');
-  }
-  currentPanel = n;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  var pct = Math.round((n / (TOTAL_PANELS - 1)) * 100);
-  document.getElementById('steps-prog').style.width = pct + '%';
-  // Auto-unlock next panel for ungated panels (e.g. Study Guide)
-  if (!(n in gateRequired) && n !== DSM_PANEL) { unlockedPanels.add(n + 1); }
-  localStorage.setItem('sol_' + UNIT + '_panel', n);
-  saveProgress();
-}
-
-/* ── GATE SYSTEM ─────────────────────────────────── */
-var gateAnswered = {};
-var DSM_PANEL = 6;  // Mastery Module panel — unlocked only by DSMPlayer.onComplete
-var gateRequired = { 0: 5, 1: 4, 2: 4, 3: 4, 4: 4 };
-
-function gateAnswer(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var panelId = parseInt(qq.dataset.panel);
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  if (!gateAnswered[panelId]) gateAnswered[panelId] = new Set();
-  var qs = document.querySelectorAll('.gate-q[data-panel="' + panelId + '"]');
-  for (var i = 0; i < qs.length; i++) {
-    if (qs[i] === qq) { gateAnswered[panelId].add(i); break; }
-  }
-
-  // Track pretest answers (panel 0, questions 3-5)
-  if (panelId === 0) {
-    var qIndex = Array.from(qs).indexOf(qq);
-    if (qIndex >= 2) {
-      pretestAnswers.push({ q: qIndex - 1, chosen: chosen, correct: correct, isCorrect: isCorrect });
-      if (pretestAnswers.length === 3 && !pretestSent) {
-        pretestSent = true;
-        send({ action: 'score', lesson: 'Pretest', score: pretestAnswers.filter(function(a){ return a.isCorrect; }).length, total: 3, pct: Math.round(pretestAnswers.filter(function(a){ return a.isCorrect; }).length / 3 * 100) });
-        send({ action: 'quizDetail', lesson: 'Pretest', questions: pretestAnswers.map(function(a) {
-          return { qNum: a.q, chosen: a.chosen, correct: a.correct, isCorrect: a.isCorrect };
-        })});
-      }
-    }
-  }
-
-  checkGate(panelId);
-  saveProgress();
-}
-
-function checkGate(panelId) {
-  var answered = gateAnswered[panelId] ? gateAnswered[panelId].size : 0;
-  var required = gateRequired[panelId] || 0;
-
-  var status = document.getElementById('gate-status-' + panelId);
-  var count = document.getElementById('gate-count-' + panelId);
-  if (count) count.textContent = answered + ' of ' + required + ' answered';
-
-  if (answered >= required) {
-    unlockedPanels.add(panelId + 1);
-    if (status) { status.classList.add('unlocked'); status.querySelector('.gate-msg').textContent = 'All questions answered \u2014 next step unlocked!'; }
-    var btn = document.getElementById('next-' + panelId);
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = btn.textContent.replace('\uD83D\uDD12 ', '');
-    }
-    var sb = document.getElementById('sb' + panelId);
-    if (sb) sb.classList.add('done');
-    saveProgress();
-  }
-}
-
-/* ── FLASHCARDS ──────────────────────────────────── */
-function flipCard(card) {
-  card.classList.toggle('flipped');
-  var allCards = document.querySelectorAll('.vcard');
-  var idx = Array.from(allCards).indexOf(card);
-  if (card.classList.contains('flipped')) {
-    flippedCards.add(idx);
-  }
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = flippedCards.size + ' of ' + TOTAL_CARDS + ' cards studied';
-
-  if (flippedCards.size >= TOTAL_CARDS) {
-    document.getElementById('vquiz').style.display = 'block';
-    var gate = document.getElementById('vocab-flip-gate');
-    if (gate) { gate.classList.add('unlocked'); gate.querySelector('.gate-msg').textContent = 'All cards studied \u2014 quiz unlocked!'; }
-  }
-  saveProgress();
-}
-
-/* ── VOCAB QUIZ ──────────────────────────────────── */
-function vqPick(el) {
-  var vq = el.closest('.vq');
-  if (vq.querySelector('.vq-opt.revealed')) return;
-  var qNum = vq.id.replace('vq', '');
-  var chosen = el.dataset.v;
-  var correct = VQ_CORRECT[qNum];
-  var isCorrect = (chosen === correct);
-
-  vq.querySelectorAll('.vq-opt').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === el && !isCorrect) o.classList.add('incorrect');
-  });
-
-  var res = document.getElementById('vqr' + qNum);
-  if (res) {
-    res.textContent = VQ_EXPLAIN[qNum];
-    res.classList.add('show');
-    if (!isCorrect) res.classList.add('wrong');
-  }
-
-  vqAnswers[qNum] = chosen;
-  saveProgress();
-}
-
-function gradeVocab() {
-  vqScore = 0;
-  for (var q = 1; q <= VQ_TOTAL; q++) {
-    if (vqAnswers[q] === VQ_CORRECT[q]) vqScore++;
-  }
-  var box = document.getElementById('vquiz-score');
-  var nEl = document.getElementById('vq-score-num');
-  var msgEl = document.getElementById('vq-pass-msg');
-  var retryBtn = document.getElementById('vq-retry-btn');
-  nEl.textContent = vqScore + '/' + VQ_TOTAL;
-  box.style.display = 'block';
-  if (vqScore >= VQ_PASS) {
-    msgEl.textContent = '\u2705 Passed! Mastery Module unlocked.';
-    vocabPassed = true;
-    unlockedPanels.add(6);
-    localStorage.setItem('sol_' + UNIT + '_vocab', 'passed');
-    send({ action: 'activity', event: 'vocab_passed', score: vqScore + '/' + VQ_TOTAL, timestamp: new Date().toISOString() });
-    DSMPlayer.init({
-      unitNumber: 7,
-      moduleName: 'SOL Prep — Unit 7: Evolution',
-      standard: 'BIO.7',
-      unitKey: UNIT,
-      panelId: 6,
-      containerId: 'dsm-container',
-      unlockPanels: [7, 8, 9],
-      onComplete: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  } else {
-    msgEl.textContent = '\u274c Score ' + vqScore + '/' + VQ_TOTAL + '. Need ' + VQ_PASS + '/' + VQ_TOTAL + '. Review missed terms and retry.';
-    retryBtn.style.display = 'inline-block';
-
-    flippedCards = new Set();
-    vqAnswers = {};
-    vqScore = 0;
-
-    saveProgress();
-
-    var allCards = document.querySelectorAll('.vcard');
-    for (var ci = 0; ci < allCards.length; ci++) { allCards[ci].className = 'vcard'; }
-    var flipGate = document.getElementById('vocab-flip-gate');
-    if (flipGate) { flipGate.classList.remove('unlocked'); flipGate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-    var flipCount = document.getElementById('vocab-flip-count');
-    if (flipCount) flipCount.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-    setTimeout(function() {
-      document.getElementById('vquiz').style.display = 'none';
-      document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-      document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-      box.style.display = 'none';
-      retryBtn.style.display = 'none';
-      saveProgress();
-      document.querySelector('.vocab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast('Study all cards again before retaking the quiz');
-    }, 3000);
-    return;
-  }
-  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  saveProgress();
-}
-
-function retryVocab() {
-  vqAnswers = {};
-  vqScore = 0;
-  flippedCards = new Set();
-
-  document.querySelectorAll('.vq-opt').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('.vq-result').forEach(function(r) { r.className = 'vq-result'; r.textContent = ''; });
-  var scoreBox = document.getElementById('vquiz-score');
-  if (scoreBox) scoreBox.style.display = 'none';
-  var retryBtn = document.getElementById('vq-retry-btn');
-  if (retryBtn) retryBtn.style.display = 'none';
-
-  var allCards = document.querySelectorAll('.vcard');
-  for (var i = 0; i < allCards.length; i++) { allCards[i].className = 'vcard'; }
-
-  var countEl = document.getElementById('vocab-flip-count');
-  if (countEl) countEl.textContent = '0 of ' + TOTAL_CARDS + ' cards studied';
-  var gate = document.getElementById('vocab-flip-gate');
-  if (gate) { gate.classList.remove('unlocked'); gate.querySelector('.gate-msg').textContent = 'Flip all ' + TOTAL_CARDS + ' flashcards to unlock the Vocab Quiz'; }
-
-  var quiz = document.getElementById('vquiz');
-  if (quiz) quiz.style.display = 'none';
-
-  saveProgress();
-  var grid = document.querySelector('.vocab-grid');
-  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  showToast('Cards reset \u2014 study all terms again before retaking the quiz');
-}
-
-/* ── SOL PRACTICE TEST ───────────────────────────── */
-function solPick(opt) {
-  var qq = opt.closest('.qq');
-  if (qq.querySelector('.qo.revealed')) return;
-  var correct = qq.dataset.ans;
-  var std = qq.dataset.std || 'BIO.7';
-  var chosen = opt.dataset.v;
-  var isCorrect = (chosen === correct);
-
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    o.classList.add('revealed');
-    if (o.dataset.v === correct) o.classList.add('correct');
-    else if (o === opt && !isCorrect) o.classList.add('incorrect');
-  });
-  var exp = qq.querySelector('.qexp');
-  if (exp) {
-    exp.classList.add('show');
-    if (!isCorrect) exp.classList.add('qexp-wrong');
-  }
-
-  pracAnswered++;
-  if (isCorrect) pracCorrect++;
-  else {
-    if (!missedStds[std]) missedStds[std] = 0;
-    missedStds[std]++;
-  }
-
-  var stemText = qq.querySelector('.q-stem') ? qq.querySelector('.q-stem').textContent.trim() : '';
-  var qNumMatch = stemText.match(/^(\d+)/);
-  var qNum = qNumMatch ? qNumMatch[1] : pracAnswered;
-  var studentAnswerText = getAnswerText(opt);
-  var correctAnswerText = '';
-  qq.querySelectorAll('.qo').forEach(function(o) {
-    if (o.dataset.v === correct) correctAnswerText = getAnswerText(o);
-  });
-  questionDetail.push({
-    qNum: qNum, std: std, questionText: stemText,
-    studentAnswer: studentAnswerText, correctAnswer: correctAnswerText,
-    isCorrect: isCorrect, correct: correct, chosen: chosen
-  });
-
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = pracAnswered + ' of ' + TOTAL_SOL_Q + ' answered';
-
-  if (pracAnswered === TOTAL_SOL_Q) {
-    document.getElementById('to-results-btn').disabled = false;
-    showDangerZone();
-    setTimeout(function(){ goTo(9); }, 800);
-  }
-  saveProgress();
-}
-
-/* ── DANGER ZONE ─────────────────────────────────── */
-function showDangerZone() {
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-  var box = document.getElementById('dz-result');
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'none';
-  box.style.display = 'block';
-  document.getElementById('dz-score').textContent = pracCorrect + '/' + TOTAL_SOL_Q;
-
-  var cls, emoji, label, msg;
-  if (pct >= 80) {
-    cls = 'green'; emoji = '\uD83D\uDFE2';
-    label = 'STRONG \u2014 You\'re in good shape on BIO.7';
-    msg = 'Score: ' + pct + '%. You\'re above the 80% threshold. Keep reviewing other units.';
-  } else if (pct >= 60) {
-    cls = 'yellow'; emoji = '\uD83D\uDFE1';
-    label = 'CAUTION \u2014 Review needed on BIO.7';
-    msg = 'Score: ' + pct + '%. You\'re below 80%. Review the missed standards and retake this unit before the SOL.';
-  } else {
-    cls = 'red'; emoji = '\uD83D\uDD34';
-    label = 'DANGER ZONE \u2014 BIO.7 needs work';
-    msg = 'Score: ' + pct + '%. Re-read ALL content sections for this unit, then retake the Practice Test.';
-  }
-
-  box.className = 'dz-box ' + cls;
-  document.getElementById('dz-emoji').textContent = emoji;
-  document.getElementById('dz-label').textContent = label;
-  document.getElementById('dz-msg').textContent = msg;
-
-  if (Object.keys(missedStds).length > 0) {
-    var missed = document.getElementById('dz-missed');
-    var list = document.getElementById('dz-missed-list');
-    missed.style.display = 'block';
-    var stdDesc = {
-      'BIO.7a': 'Fossils & DNA \u2014 Dating, Comparative Genomics',
-      'BIO.7b': 'Genetic Variation \u2014 Mutations, Gene Flow, Pressures',
-      'BIO.7c': 'Natural Selection \u2014 Adaptations, Differential Survival',
-      'BIO.7d': 'Speciation & Evidence \u2014 Homologous Structures, Gradualism'
-    };
-    list.innerHTML = Object.keys(missedStds).map(function(s) {
-      return '<div class="dz-missed-item"><strong>' + s + '</strong>: ' + (stdDesc[s] || s) + ' \u2014 missed ' + missedStds[s] + ' question(s)</div>';
-    }).join('');
-  }
-
-  localStorage.setItem('sol_' + UNIT + '_score', pracCorrect + '/' + TOTAL_SOL_Q);
-  localStorage.setItem('sol_' + UNIT + '_pct', pct);
-  localStorage.setItem('sol_' + UNIT + '_status', pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red');
-  localStorage.setItem('sol_' + UNIT + '_done', 'true');
-
-  var sb9 = document.getElementById('sb9');
-  if (sb9) sb9.classList.add('done');
-  saveProgress();
-}
-
-/* ── SUBMIT FINAL SCORE ──────────────────────────── */
-function submitFinalScore() {
-  if (!studentName) return;
-  var pct = Math.round((pracCorrect / TOTAL_SOL_Q) * 100);
-
-  send({ action: 'score', lesson: 'Practice Test', score: pracCorrect, total: TOTAL_SOL_Q, pct: pct, timeOnQuiz: Math.round((Date.now() - sessionStart) / 1000) });
-
-  send({ action: 'quizDetail', lesson: 'Practice Test', questions: questionDetail.map(function(q) {
-    return { qNum: q.qNum, questionText: q.questionText, studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer, isCorrect: q.isCorrect };
-  })});
-
-  send({ action: 'activity', lesson: 'Practice Test', event: 'submit_score', duration: Math.round((Date.now() - sessionStart) / 1000) });
-
-  showToast('Saving score\u2026');
-  var __dzBtn = document.getElementById('dz-submit-btn');
-  __dzBtn.disabled = true;
-  Promise.resolve(__lastScorePromise).then(function(result) {
-    if (result && result.buffered) {
-      // Audit #12: write got buffered to localStorage; will sync on next
-      // page load. Treat as success for the retake-lock UI (data is safe
-      // and replay is automatic) but tell the user honestly via toast.
-      __dzBtn.textContent = 'Saved offline';
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else if (result) {
-      __dzBtn.textContent = '\u2705 Score Sent!';
-      showToast('\u2713 Score saved to Mr. England: ' + pracCorrect + '/' + TOTAL_SOL_Q + ' (' + pct + '%)');
-      /* PRACTICE-RETAKE-IN-SESSION-LOCK */
-      practiceAlreadySubmitted = true;
-      priorPracticeScore = { score: pracCorrect, total: TOTAL_SOL_Q, pct: pct };
-      var _rbtn = document.getElementById('dz-retake-btn');
-      if (_rbtn) _rbtn.style.display = 'none';
-    } else {
-      __dzBtn.textContent = '\u26A0 Save failed \u2014 retry?';
-      __dzBtn.disabled = false;
-    }
-  });
-}
-
-/* ── RETAKE PRACTICE TEST ────────────────────────── */
-function retakePractice() {
-  if (practiceAlreadySubmitted) {
-    showToast('You\'ve already submitted this test. Talk to your teacher to retake.');
-    return;
-  }
-  pracAnswered = 0;
-  pracCorrect = 0;
-  missedStds = {};
-  questionDetail = [];
-  document.querySelectorAll('#sol-practice-box .qq .qo').forEach(function(o) { o.classList.remove('revealed', 'correct', 'incorrect'); });
-  document.querySelectorAll('#sol-practice-box .qexp').forEach(function(e) { e.classList.remove('show', 'qexp-wrong'); });
-  document.getElementById('dz-result').style.display = 'none';
-  document.getElementById('dz-result').className = 'dz-box';
-  document.getElementById('dz-missed').style.display = 'none';
-  document.getElementById('dz-missed-list').innerHTML = '';
-  document.getElementById('dz-submit-btn').textContent = '\uD83D\uDCE4 Submit Score to Mr. England';
-  document.getElementById('dz-submit-btn').disabled = false;
-  document.getElementById('to-results-btn').disabled = true;
-  var waiting = document.getElementById('dz-waiting');
-  if (waiting) waiting.style.display = 'block';
-  var progMsg = document.getElementById('sol-progress-msg');
-  if (progMsg) progMsg.textContent = '';
-  goTo(8);
-  send({ action: 'activity', event: 'retake_practice', timestamp: new Date().toISOString() });
-}
-
-/* ── TOAST ────────────────────────────────────────── */
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.style.display = 'flex';
-  setTimeout(function(){ t.style.display = 'none'; }, 3500);
-}
-
-/* ── PAGE EXIT HANDLER ───────────────────────────── */
-window.addEventListener('beforeunload', function() {
-  if (!studentName) return;
-  saveProgress();
-  // Flush cross-device snapshot synchronously (keepalive) — survives unload.
-  if (solAPI.flushProgress) {
-    var snap = localStorage.getItem('sol_unit7_progress');
-    if (snap) solAPI.flushProgress('unit-7', studentName, JSON.parse(snap));
-  }
-  var totalSeconds = Math.round((Date.now() - sessionStart) / 1000);
-  var duration = Math.round((Date.now() - panelStartTime) / 1000);
-  if (duration > 2) {
-    activityLog.push({ panel: currentPanel, seconds: duration, timestamp: new Date().toISOString() });
-  }
-  solAPI.beacon({
-    student: studentName,
-    module: 'SOL Prep — Unit 7: Evolution',
-    action: 'activity',
-    event: 'session_end',
-    totalSessionSeconds: totalSeconds,
-    panelLog: JSON.stringify(activityLog),
-    timestamp: new Date().toISOString()
-  });
-});
-
-/* ── INIT ON DOM READY ───────────────────────────── */
-document.addEventListener('DOMContentLoaded', function() {
-  initMeta();
-  /* SSO-INIT-AUTH */
-  var pendingCode = sessionStorage.getItem('_sso_pending_code');
-  if (pendingCode) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = pendingCode;
-    sessionStorage.removeItem('_sso_pending_code');
-  }
-  if (solAPI.initAuth) {
-    solAPI.initAuth().then(function(studentRow) {
-      if (studentRow) applySSOSession();
-      // Re-evaluate the lock with the student's identity now known —
-      // a per-student override can flip state in either direction.
-      if (solAPI.runModuleReleaseGate) solAPI.runModuleReleaseGate('unit-7');
-    }).catch(function(err) { console.warn('initAuth failed:', err); });
-  }
-
-  var storedClass = solAPI.getStored();
-  if (storedClass) {
-    var codeEl = document.getElementById('class-code');
-    if (codeEl) codeEl.value = storedClass.code;
-    var infoEl = document.getElementById('class-info');
-    if (infoEl) { infoEl.textContent = '\u2713 ' + storedClass.teacher + ' \u2014 ' + storedClass.label; infoEl.style.display = 'block'; }
-  }
-  if (localStorage.getItem('sol_' + UNIT + '_vocab') === 'passed') {
-    vocabPassed = true;
-    unlockedPanels.add(6);
-    DSMPlayer.init({
-      unitNumber: 7,
-      moduleName: 'SOL Prep — Unit 7: Evolution',
-      standard: 'BIO.7',
-      unitKey: UNIT,
-      panelId: 6,
-      containerId: 'dsm-container',
-      unlockPanels: [7, 8, 9],
-      onComplete: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-        saveProgress();
-      },
-      onSkip: function() {
-        unlockedPanels.add(7); unlockedPanels.add(8); unlockedPanels.add(9);
-        document.getElementById('practice-locked').style.display = 'none';
-        if (!practiceAlreadySubmitted) {
-          var tl = document.getElementById('practice-test-locked'); if (tl) tl.style.display = 'none';
-          var tb = document.getElementById('sol-practice-box'); if (tb) tb.style.display = 'block';
-        } else { applyPracticeLockUI(); }
-      }
-    });
-  }
-  var saved = localStorage.getItem('sol_unit7_progress');
-  if (saved) {
-    var data = JSON.parse(saved);
-    if (data.studentName) {
-      var _parts = data.studentName.trim().split(/\s+/);
-      var _firstEl = document.getElementById('student-first-name');
-      var _lastEl = document.getElementById('student-last-name');
-      if (_firstEl) _firstEl.value = _parts[0] || '';
-      if (_lastEl)  _lastEl.value  = _parts.slice(1).join(' ');
-      var modalTitle = document.querySelector('.nm-title');
-      if (modalTitle) modalTitle.textContent = 'Welcome Back!';
-      var modalSub = document.querySelector('.nm-sub');
-      if (modalSub) modalSub.textContent = 'Your progress has been saved. Click Resume to pick up where you left off, or enter a different name to start fresh.';
-      var modalBtn = document.querySelector('.nm-btn');
-      if (modalBtn) modalBtn.textContent = 'Resume \u2192';
-    }
-  }
-});
-/* MODULE-RELEASE-GATE — page-load pass uses GLOBAL state only
-   (no _studentId yet). After applySSOSession the gate is re-run
-   from initAuth's then-chain so per-student overrides take effect. */
-if (window.solAPI && solAPI.runModuleReleaseGate) {
-  solAPI.runModuleReleaseGate('unit-7');
-}
-</script>
+<script src="sol-api.js?v=2026-05-03-phaseD"></script>
+<script src="dsm-player.js?v=2026-05-03-phaseD"></script>
+<script src="unit-engine.js?v=2026-05-03-phaseD"></script>
+<script src="config/unit-7.js?v=2026-05-03-phaseD"></script>
+
+<script>UnitEngine.boot(window.UNIT_CONFIG);</script>
 </body>
 </html>
