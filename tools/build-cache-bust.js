@@ -27,7 +27,9 @@ const crypto = require('crypto');
 
 const ROOT = process.cwd();
 const HASH_LEN = 10;
-const PLACEHOLDER_RE = /(<(?:script|link)[^>]*?(?:src|href)=")([^":]+?)\?v=__HASH__("[^>]*?>)/g;
+// Audit #16: accept both " and ' as the attribute quote (HTML5 allows
+// either). Capture the actual quote char and rebuild with the same.
+const PLACEHOLDER_RE = /(<(?:script|link)[^>]*?(?:src|href)=)(["'])([^"':]+?)\?v=__HASH__\2([^>]*?>)/g;
 
 function sha10(filePath) {
   const buf = fs.readFileSync(filePath);
@@ -49,7 +51,7 @@ function processHtml(htmlPath) {
 
   let count = 0;
   const missing = [];
-  text = text.replace(PLACEHOLDER_RE, (match, prefix, src, suffix) => {
+  text = text.replace(PLACEHOLDER_RE, (match, prefix, quote, src, suffix) => {
     // Skip external URLs.
     if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')) {
       return match;
@@ -61,7 +63,7 @@ function processHtml(htmlPath) {
     }
     const hash = sha10(filePath);
     count++;
-    return `${prefix}${src}?v=${hash}${suffix}`;
+    return `${prefix}${quote}${src}?v=${hash}${quote}${suffix}`;
   });
 
   if (count > 0 || missing.length > 0) {

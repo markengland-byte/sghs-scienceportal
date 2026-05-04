@@ -106,6 +106,16 @@ var DSMPlayer = (function() {
     // Step 1: fetch the current published module + questions. This
     // gives us the moduleId that subsequent lookups must match.
     solAPI.getDSMQuestions(config.standard).then(function(result) {
+      // Audit #13: distinguish a real "no module" from a network timeout.
+      // The timeout case (transient 5s blip) was previously routed to the
+      // same onSkip path as "teacher hasn't set up mastery", which silently
+      // unlocked the practice test as if the gate didn't matter.
+      if (result && result.timedOut) {
+        container.innerHTML = dsmTimedOutHTML();
+        var retryBtn = container.querySelector('#dsm-timeout-retry');
+        if (retryBtn) retryBtn.onclick = function() { init(config); };
+        return; // Do NOT call onSkip — gate stays locked.
+      }
       // Defense-in-depth (#2): require a real array.
       if (!result || !result.module || !Array.isArray(result.questions) || result.questions.length === 0) {
         container.innerHTML = dsmNotAvailableHTML();
@@ -517,6 +527,19 @@ var DSMPlayer = (function() {
       + '<div class="dsm-ready-title">Mastery Module</div>'
       + '<div class="dsm-ready-sub">Not yet available for this unit</div>'
       + '<div class="dsm-ready-desc">Your teacher hasn\'t set up the Mastery Module for ' + config.standard + ' yet. You can continue to the Study Guide and Practice Test.</div>'
+      + '</div>';
+  }
+
+  // Audit #13: shown when the DSM fetch times out. Does NOT bypass the
+  // mastery gate — student must successfully load the module before the
+  // practice test unlocks. Retry button re-runs init.
+  function dsmTimedOutHTML() {
+    return '<div class="dsm-ready">'
+      + '<div class="dsm-ready-icon">&#9888;</div>'
+      + '<div class="dsm-ready-title">Mastery Module</div>'
+      + '<div class="dsm-ready-sub">Network is slow &mdash; couldn\'t load the questions</div>'
+      + '<div class="dsm-ready-desc">Check your Wi-Fi and try again. The Mastery Module must load successfully before you can continue.</div>'
+      + '<button id="dsm-timeout-retry" class="dsm-start-btn" style="margin-top:14px">Retry</button>'
       + '</div>';
   }
 

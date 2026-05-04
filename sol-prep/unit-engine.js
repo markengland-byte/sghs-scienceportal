@@ -202,7 +202,13 @@ window.UnitEngine = (function() {
     var blob = _serializeState();
     try {
       localStorage.setItem('sol_' + _config.unitKey + '_progress', JSON.stringify(blob));
-    } catch (e) { /* localStorage full — fall through */ }
+    } catch (e) {
+      // Audit #14: surface quota / SecurityError so the issue is visible
+      // in DevTools when a student reports lost progress. The remote save
+      // below is the safety net, but if the network is also down progress
+      // is lost on next reload — without this log, root-causing was blind.
+      console.warn('[UnitEngine] localStorage save failed:', e && e.name, e && e.message);
+    }
     if (_state.studentName && solAPI.saveProgress) {
       solAPI.saveProgress(_config.unitKey.replace(/^unit/, 'unit-'), _state.studentName, blob);
     }
