@@ -37,6 +37,14 @@ var portalAPI = (function() {
   var _studentEmail = '';
   var _studentDisplayName = '';
 
+  // ── AUTH HELPER ──
+  // Audit #3: Phase 2 RLS requires auth_user_id on every score / quiz_detail /
+  // checkpoint / activity write. Returns the current Supabase auth uid if
+  // the page has an SSO session, else null. Mirrors sol-api.js _authUid().
+  function _authUid() {
+    return (_session && _session.user && _session.user.id) || null;
+  }
+
   // ── SUPABASE REST HELPER ──
   function _rest(method, table, opts) {
     opts = opts || {};
@@ -146,10 +154,13 @@ var portalAPI = (function() {
     var student = payload.student;
     var module = payload.module;
 
+    var auid = _authUid();
+
     if (action === 'score') {
       return _postWithRetry('scores', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -165,6 +176,7 @@ var portalAPI = (function() {
         return {
           class_id: _classId,
           student_id: _studentId,
+          auth_user_id: auid,
           student_name: student,
           module: module,
           lesson: payload.lesson || '',
@@ -184,6 +196,7 @@ var portalAPI = (function() {
       return _postWithRetry('checkpoints', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -200,6 +213,7 @@ var portalAPI = (function() {
       return _postBestEffort('activity', {
         class_id: _classId,
         student_id: _studentId,
+        auth_user_id: auid,
         student_name: student,
         module: module,
         lesson: payload.lesson || '',
@@ -224,6 +238,7 @@ var portalAPI = (function() {
     _postBestEffort('activity', {
       class_id: _classId,
       student_id: _studentId,
+      auth_user_id: _authUid(),
       student_name: payload.student || '',
       module: payload.module || '',
       lesson: payload.lesson || '',

@@ -986,7 +986,9 @@ function renderOverview() {
     var lastScore = sScores[0]; // already sorted desc by created_at
     var className = getClassName(lastScore.class_id);
 
-    tbody += '<tr style="cursor:pointer" onclick="showStudentDetail(\'' + esc(s).replace(/'/g, "\\'") + '\')">' +
+    // data-attribute + delegated handler avoids inline-JS injection;
+    // esc() doesn't escape '\', which broke the prior onclick approach.
+    tbody += '<tr style="cursor:pointer" data-student-name="' + esc(s) + '">' +
       '<td><strong>' + esc(s) + '</strong></td>' +
       '<td>' + esc(className) + '</td>' +
       '<td>' + sScores.length + '</td>' +
@@ -998,6 +1000,10 @@ function renderOverview() {
   var tbl = document.getElementById('overview-table');
   tbl.querySelector('thead').innerHTML = thead;
   tbl.querySelector('tbody').innerHTML = tbody || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:40px">No data yet. Students will appear here after they complete quizzes.</td></tr>';
+  tbl.onclick = function(e) {
+    var row = e.target.closest('tr[data-student-name]');
+    if (row) showStudentDetail(row.dataset.studentName);
+  };
 
   renderPagination('overview-wrap', 'overview', totalRows);
 }

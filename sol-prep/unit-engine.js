@@ -69,6 +69,10 @@ window.UnitEngine = (function() {
       pracCorrect:   0,
       practiceAlreadySubmitted: false,
       priorPracticeScore: null,
+      // Audit #2 guards: prevent double-submit of quiz_detail rows on retry.
+      // practiceQuizDetailSent persists across reload; in-flight is per-session.
+      practiceQuizDetailSent: false,
+      practiceSubmitInFlight: false,
 
       // per-quiz start timestamps (for time_on_quiz metric — set on first interaction)
       pretestStart:  null,
@@ -138,6 +142,7 @@ window.UnitEngine = (function() {
       pretestStart:   _state.pretestStart,
       vocabStart:     _state.vocabStart,
       practiceStart:  _state.practiceStart,
+      practiceQuizDetailSent: _state.practiceQuizDetailSent,
       savedAt:        Date.now()
     };
   }
@@ -163,6 +168,7 @@ window.UnitEngine = (function() {
     _state.pretestStart   = data.pretestStart  || null;
     _state.vocabStart     = data.vocabStart    || null;
     _state.practiceStart  = data.practiceStart || null;
+    _state.practiceQuizDetailSent = data.practiceQuizDetailSent || false;
 
     // Sets
     if (data.unlockedPanels) {
@@ -1044,6 +1050,14 @@ window.UnitEngine = (function() {
       showToast('Answer all ' + _config.totalSolQ + ' questions first!');
       return;
     }
+    // Audit #2: re-entry guard. Without this, a student who sees the
+    // 'retry?' state and clicks fast could fire a second submitFinalScore
+    // while the first is still in flight.
+    if (_state.practiceSubmitInFlight) {
+      showToast('Submission in progress — please wait.');
+      return;
+    }
+    _state.practiceSubmitInFlight = true;
     var pct = Math.round((_state.pracCorrect / _config.totalSolQ) * 100);
 
     // Disable the submit button immediately so the student can't double-click.
@@ -1058,10 +1072,18 @@ window.UnitEngine = (function() {
       score: _state.pracCorrect, total: _config.totalSolQ, pct: pct,
       timeOnQuiz: practiceSeconds
     });
-    _send({
-      action: 'quizDetail', lesson: 'Practice Test',
-      questions: _state.questionDetail
-    });
+    // Audit #2: only send quizDetail once per practice attempt. If a retry
+    // re-enters submitFinalScore, the score row is safe to retry (sol-api's
+    // _postWithRetry buffers it idempotently from the student's POV) but
+    // quiz_detail rows have no unique constraint — re-sending duplicates
+    // every per-question row in the gradebook.
+    if (!_state.practiceQuizDetailSent) {
+      _send({
+        action: 'quizDetail', lesson: 'Practice Test',
+        questions: _state.questionDetail
+      });
+      _state.practiceQuizDetailSent = true;
+    }
     _state.unlockedPanels.add(_config.totalPanels - 1);
 
     // Wait for the score write to land before declaring success/failure.
@@ -1078,6 +1100,8 @@ window.UnitEngine = (function() {
         } else {
           dzBtn.textContent = '⚠ Save failed — retry?';
           dzBtn.disabled = false;
+          // Allow another attempt; quizDetail won't re-send (guarded above).
+          _state.practiceSubmitInFlight = false;
         }
       }
       // Don't auto-navigate — student clicks "Continue to Results" via #to-results-btn.
