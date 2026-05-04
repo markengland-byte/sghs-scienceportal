@@ -193,7 +193,14 @@ var DSMPlayer = (function() {
     }).then(function(data) {
       if (data && data.length > 0) attemptId = data[0].id;
       return attemptId;
-    }).catch(function() { return null; });
+    }).catch(function(err) {
+      // Audit #8: log the error so an analytics gap is visible. Previously
+      // swallowed silently, which masked RLS / token-refresh races. The
+      // score row still ships via _send; only the dsm_attempts analytics
+      // row is missing, so we don't alarm the student with a toast.
+      console.warn('[DSMPlayer] createDSMAttempt failed:', err && err.message);
+      return null;
+    });
 
     _send({ action: 'activity', event: 'dsm_start', lesson: 'Mastery Module',
       timestamp: new Date().toISOString() });
@@ -538,7 +545,7 @@ var DSMPlayer = (function() {
       + '<div class="dsm-complete-detail">'
       + (allMissed.length > 0 ? '<div style="margin-top:12px;font-size:.85rem;color:#64748b">Total questions reviewed: ' + totalAnswered + ' &middot; Unique misses: ' + allMissed.length + '</div>' : '')
       + '</div>'
-      + '<button class="dsm-start-btn" onclick="goTo(' + (config.panelId + 1) + ')">Continue to Study Guide &rarr;</button>'
+      + '<button class="dsm-start-btn" onclick="UnitEngine.goTo(' + (config.panelId + 1) + ')">Continue to Study Guide &rarr;</button>'
       + '</div>';
   }
 

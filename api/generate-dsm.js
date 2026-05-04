@@ -101,8 +101,15 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Auth verification failed' });
   }
 
-  // Parse request
-  const { standard, questionCount = 25 } = req.body || {};
+  // Parse request. Audit #10: req.body may be a string if Content-Type
+  // wasn't set or runtime mode changed; parse defensively.
+  let body = req.body || {};
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch (e) {
+      return res.status(400).json({ error: 'invalid JSON body' });
+    }
+  }
+  const { standard, questionCount = 25 } = body;
 
   if (!standard || !SOL_STANDARDS[standard]) {
     return res.status(400).json({ error: 'Invalid standard. Use BIO.1 through BIO.8' });

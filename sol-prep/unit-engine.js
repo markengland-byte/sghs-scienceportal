@@ -415,13 +415,22 @@ window.UnitEngine = (function() {
     document.addEventListener('keydown',  function() { _hbLastActive = Date.now(); });
     document.addEventListener('scroll',   function() { _hbLastActive = Date.now(); });
 
-    // Beacon on session-end
-    window.addEventListener('beforeunload', function() {
+    // Audit #4: session-end + progress-flush on page leave. Wired to BOTH
+    // beforeunload (legacy desktop) and pagehide (WHATWG / mobile-reliable)
+    // because mobile Safari skips beforeunload when the tab is closed via
+    // OS gesture. _sessionEndFired makes both triggers idempotent.
+    //
+    // visibilitychange→hidden is a different signal — it fires when the
+    // student tabs away or locks the screen. We only flush progress there
+    // (so unsaved answers survive a forced close) but do NOT emit session_end,
+    // because the student may return and continue working in the same session.
+    var _sessionEndFired = false;
+    function _emitSessionEnd() {
+      if (_sessionEndFired) return;
       if (!_state.studentName) return;
+      _sessionEndFired = true;
       var duration = Math.round((Date.now() - _state.sessionStart) / 1000);
       _flushSave();
-      // Push the latest progress snapshot via keepalive so the request
-      // survives page-unload (regular fetch gets cancelled).
       if (solAPI.flushProgress) {
         try {
           var snap = localStorage.getItem('sol_' + _config.unitKey + '_progress');
@@ -438,6 +447,13 @@ window.UnitEngine = (function() {
           panelLog: JSON.stringify(_state.activityLog),
           totalSessionSeconds: duration
         });
+      }
+    }
+    window.addEventListener('beforeunload', _emitSessionEnd);
+    window.addEventListener('pagehide',     _emitSessionEnd);
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden' && _state.studentName) {
+        _flushSave();
       }
     });
 
@@ -1026,9 +1042,14 @@ window.UnitEngine = (function() {
       var missed = document.getElementById('dz-missed');
       var list   = document.getElementById('dz-missed-list');
       if (missed) missed.style.display = 'block';
+      // Audit #7: show the friendly label only if standardsMap is defined
+      // for this unit. Previously fell back to repeating the code itself,
+      // producing "BIO.1c: BIO.1c — missed 2 question(s)".
       if (list) list.innerHTML = stdKeys.map(function(k) {
-        return '<div class="dz-missed-item"><strong>' + k + '</strong>: '
-          + (smap[k] || k) + ' — missed ' + _state.missedStds[k] + ' question(s)</div>';
+        var label = smap[k];
+        return '<div class="dz-missed-item"><strong>' + k + '</strong>'
+          + (label ? ': ' + label : '')
+          + ' — missed ' + _state.missedStds[k] + ' question(s)</div>';
       }).join('');
     }
 

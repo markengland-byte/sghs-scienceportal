@@ -49,8 +49,15 @@ module.exports = async (req, res) => {
     }
 
     // For POST/DELETE we need a body. Vercel parses JSON automatically
-    // when Content-Type: application/json is set; req.body is the obj.
-    const body = req.body || {};
+    // when Content-Type: application/json is set, but if a client sends
+    // text/plain or the runtime mode changes (e.g. Edge Functions),
+    // req.body comes through as a string. Audit #10: defensive parse.
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch (e) {
+        return res.status(400).json({ error: 'invalid JSON body' });
+      }
+    }
     const studentId = body.student_id ? String(body.student_id) : null;
     const moduleKey = body.module_key ? String(body.module_key) : null;
     if (!studentId || !moduleKey) {
