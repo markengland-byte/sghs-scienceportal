@@ -62,12 +62,18 @@ window.UnitEngine = (function() {
       vqAnswers:     {},
       vqScore:       0,
       vocabPassed:   false,
+      vocabSubmitted: false,
 
       // practice test
       pracAnswered:  0,
       pracCorrect:   0,
       practiceAlreadySubmitted: false,
       priorPracticeScore: null,
+
+      // per-quiz start timestamps (for time_on_quiz metric — set on first interaction)
+      pretestStart:  null,
+      vocabStart:    null,
+      practiceStart: null,
 
       // misc
       missedStds:    {},
@@ -128,6 +134,10 @@ window.UnitEngine = (function() {
       sessionStart:   _state.sessionStart,
       unlockedPanels: Array.from(_state.unlockedPanels),
       flippedCards:   Array.from(_state.flippedCards),
+      vocabSubmitted: _state.vocabSubmitted,
+      pretestStart:   _state.pretestStart,
+      vocabStart:     _state.vocabStart,
+      practiceStart:  _state.practiceStart,
       savedAt:        Date.now()
     };
   }
@@ -149,6 +159,10 @@ window.UnitEngine = (function() {
     _state.activityLog    = data.activityLog || [];
     _state.sessionStart   = data.sessionStart || Date.now();
     _state.graphAnswered  = data.graphAnswered || {};
+    _state.vocabSubmitted = data.vocabSubmitted || false;
+    _state.pretestStart   = data.pretestStart  || null;
+    _state.vocabStart     = data.vocabStart    || null;
+    _state.practiceStart  = data.practiceStart || null;
 
     // Sets
     if (data.unlockedPanels) {
@@ -647,7 +661,8 @@ window.UnitEngine = (function() {
     if (prog) prog.style.width = pct + '%';
 
     // Auto-unlock next panel for ungated panels (e.g. Study Guide).
-    if (!(n in _config.gateRequired) && n !== _config.dsmPanelId) {
+    // Clamp at totalPanels-1 so we don't add a phantom panel beyond Results.
+    if (!(n in _config.gateRequired) && n !== _config.dsmPanelId && (n + 1) <= (_config.totalPanels - 1)) {
       _state.unlockedPanels.add(n + 1);
     }
     localStorage.setItem('sol_' + _config.unitKey + '_panel', n);
@@ -661,6 +676,9 @@ window.UnitEngine = (function() {
     var ans = qq.dataset.ans;
     var chosen = el.dataset.v;
     var panelId = parseInt(qq.dataset.panel || _state.currentPanel);
+
+    // Stamp the pretest start time on first answered question.
+    if (panelId === 0 && _state.pretestStart == null) _state.pretestStart = Date.now();
 
     qq.querySelectorAll('.qo').forEach(function(o) {
       o.classList.add('revealed');
@@ -746,10 +764,14 @@ window.UnitEngine = (function() {
     // Panel 0 → submit pretest score once
     if (panelId === 0 && !_state.pretestSent && _state.pretestAnswers.length === required) {
       var correct = _state.pretestAnswers.filter(function(a) { return a.isCorrect; }).length;
+      var pretestSeconds = _state.pretestStart
+        ? Math.round((Date.now() - _state.pretestStart) / 1000)
+        : null;
       _send({
         action: 'score', module: _config.moduleName, lesson: 'Pretest',
         score: correct, total: _state.pretestAnswers.length,
-        pct: Math.round((correct / _state.pretestAnswers.length) * 100)
+        pct: Math.round((correct / _state.pretestAnswers.length) * 100),
+        timeOnQuiz: pretestSeconds
       });
       _send({
         action: 'quizDetail', module: _config.moduleName, lesson: 'Pretest',
@@ -824,6 +846,9 @@ window.UnitEngine = (function() {
     var correct = _config.vocab.correct[qNum];
     var isCorrect = (chosen === correct);
 
+    // Stamp the vocab start time on first answered question.
+    if (_state.vocabStart == null) _state.vocabStart = Date.now();
+
     vq.querySelectorAll('.vq-opt').forEach(function(o) {
       o.classList.add('revealed');
       if (o.dataset.v === correct) o.classList.add('correct');
@@ -851,6 +876,9 @@ window.UnitEngine = (function() {
       showToast('Answer all ' + c.vocab.total + ' vocab questions first!');
       return;
     }
+    // Auto-grade fires on the 10th onVqPick AND the manual "Grade My Vocab
+    // Quiz" button calls this too — without this guard the score posts twice.
+    if (_state.vocabSubmitted) return;
     var score = Object.values(_state.vqAnswers).filter(function(v) { return v; }).length;
     _state.vqScore = score;
 
@@ -866,11 +894,16 @@ window.UnitEngine = (function() {
         _state.vocabPassed = true;
         _state.unlockedPanels.add(c.dsmPanelId);
         localStorage.setItem('sol_' + c.unitKey + '_vocab', 'passed');
+        var vocabSeconds = _state.vocabStart
+          ? Math.round((Date.now() - _state.vocabStart) / 1000)
+          : null;
         _send({
           action: 'score', lesson: 'Vocab Lock-In',
           score: score, total: c.vocab.total,
-          pct: Math.round((score / c.vocab.total) * 100)
+          pct: Math.round((score / c.vocab.total) * 100),
+          timeOnQuiz: vocabSeconds
         });
+        _state.vocabSubmitted = true;
         _initDSMPlayer();
       } else {
         msgEl.textContent = '❌ Score ' + score + '/' + c.vocab.total + '. Need ' + c.vocab.pass + '/' + c.vocab.total + '. Review missed terms and retry.';
@@ -907,6 +940,9 @@ window.UnitEngine = (function() {
       return;
     }
     if (qq.querySelector('.qo.revealed')) return;
+
+    // Stamp the practice-test start time on first answered question.
+    if (_state.practiceStart == null) _state.practiceStart = Date.now();
 
     var ans = qq.dataset.correct || qq.dataset.ans;
     var chosen = (opt.dataset && opt.dataset.v) || (typeof opt === 'string' ? opt : '');
@@ -1014,9 +1050,13 @@ window.UnitEngine = (function() {
     var dzBtn = document.getElementById('dz-submit-btn');
     if (dzBtn) dzBtn.disabled = true;
 
+    var practiceSeconds = _state.practiceStart
+      ? Math.round((Date.now() - _state.practiceStart) / 1000)
+      : null;
     _send({
       action: 'score', lesson: 'Practice Test',
-      score: _state.pracCorrect, total: _config.totalSolQ, pct: pct
+      score: _state.pracCorrect, total: _config.totalSolQ, pct: pct,
+      timeOnQuiz: practiceSeconds
     });
     _send({
       action: 'quizDetail', lesson: 'Practice Test',
