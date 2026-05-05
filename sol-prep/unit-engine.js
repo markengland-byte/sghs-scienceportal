@@ -484,6 +484,11 @@ window.UnitEngine = (function() {
     });
   }
 
+  // Promise that resolves once SSO session is established (or immediately
+  // if initAuth is unavailable). _proceedStart awaits this before
+  // restoring progress so that RLS-scoped reads on quiz_progress succeed.
+  var _authReady = Promise.resolve();
+
   function _wireSSOAndStart() {
     // Class-code-stored fast path: if a class was already validated, skip the modal.
     var stored = solAPI.getStored();
@@ -500,7 +505,7 @@ window.UnitEngine = (function() {
     _initMeta();
 
     if (solAPI.initAuth) {
-      solAPI.initAuth().then(function(studentRow) {
+      _authReady = solAPI.initAuth().then(function(studentRow) {
         if (studentRow) _applySSOSession();
         if (solAPI.runModuleReleaseGate) solAPI.runModuleReleaseGate(_config.unitKey.replace(/^unit/, 'unit-'));
       }).catch(function(err) {
@@ -624,8 +629,10 @@ window.UnitEngine = (function() {
     _checkPracticeLock();
     _startHeartbeat();
 
-    // Try to restore prior state (local + remote)
-    _tryRestore().then(function(saved) {
+    // Wait for SSO session before restoring — RLS on quiz_progress
+    // requires auth.uid(), so reading progress with the anon key
+    // silently returns nothing and the student loses their place.
+    _authReady.then(function() { return _tryRestore(); }).then(function(saved) {
       if (saved && saved.currentPanel != null) {
         _hydrateState(saved);
         _replayDom();
