@@ -264,6 +264,7 @@ tr:hover td{background:#f8fafc}
   <div class="tab" onclick="showTab('overrides',this)">Overrides</div>
   <div class="tab" onclick="showTab('analytics',this)">Analytics</div>
   <div class="tab" onclick="showTab('mastery',this)">Mastery Modules</div>
+  <div class="tab" onclick="showTab('assignments',this)">Assignments</div>
   <div class="tab-sep" id="admin-tab-sep" style="display:none"></div>
   <div class="tab" id="admin-tab" style="display:none" onclick="showTab('admin',this)">Admin</div>
 </div>
@@ -522,6 +523,61 @@ tr:hover td{background:#f8fafc}
     <div class="card">
       <h3>Published Modules</h3>
       <div id="dsm-modules-list"><div class="dsm-empty">No mastery modules yet. Generate one above.</div></div>
+    </div>
+  </div>
+
+  <!-- ASSIGNMENTS TAB -->
+  <div class="panel" id="tab-assignments">
+    <!-- Create Assignment Form -->
+    <div class="card" id="asn-create-section">
+      <h3>Create Practice Test Assignment <span class="sub">Generate a shareable link for students</span></h3>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Assignment Title</label>
+          <input type="text" id="asn-title" placeholder="e.g. SOL Midterm Practice, Unit 3 Review">
+        </div>
+        <div class="form-group">
+          <label>Mode</label>
+          <select id="asn-mode">
+            <option value="random">Random (each student different)</option>
+            <option value="fixed">Fixed (all students same test)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Allow Retakes</label>
+          <select id="asn-retake">
+            <option value="true">Yes</option>
+            <option value="false">No — one attempt only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Due Date <span class="sub">(optional)</span></label>
+          <input type="date" id="asn-due">
+        </div>
+      </div>
+      <details style="margin:16px 0">
+        <summary style="cursor:pointer;font-weight:600;font-size:.9rem;color:#1a3560">Custom Standard Distribution <span class="sub">(click to expand — default is 50 questions)</span></summary>
+        <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="form-group"><label>BIO.1 — Sci. Investigation</label><input type="number" class="asn-std" data-std="BIO.1" value="8" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.2 — Biochemistry</label><input type="number" class="asn-std" data-std="BIO.2" value="7" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.3 — Cell Structure</label><input type="number" class="asn-std" data-std="BIO.3" value="7" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.4 — Bacteria & Viruses</label><input type="number" class="asn-std" data-std="BIO.4" value="4" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.5 — Genetics</label><input type="number" class="asn-std" data-std="BIO.5" value="7" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.6 — Classification</label><input type="number" class="asn-std" data-std="BIO.6" value="6" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.7 — Evolution</label><input type="number" class="asn-std" data-std="BIO.7" value="6" min="0" max="50" oninput="updateAsnTotal()"></div>
+          <div class="form-group"><label>BIO.8 — Ecology</label><input type="number" class="asn-std" data-std="BIO.8" value="5" min="0" max="50" oninput="updateAsnTotal()"></div>
+        </div>
+        <div id="asn-total" style="margin-top:8px;font-weight:600;font-size:.9rem">Total: 50 questions</div>
+      </details>
+      <button class="btn btn-primary" onclick="createAssignment()">Create Assignment</button>
+    </div>
+
+    <!-- Assignments List -->
+    <div class="card">
+      <h3>Your Assignments</h3>
+      <div id="asn-list"><div style="text-align:center;padding:30px;color:#94a3b8">No assignments yet. Create one above.</div></div>
     </div>
   </div>
 
@@ -2015,6 +2071,7 @@ function showTab(id, el) {
   if (id === 'pulse') startPulseAutoRefresh(); else stopPulseAutoRefresh();
   if (id === 'gradebook') renderGradebook();
   if (id === 'overrides') loadOverrides();
+  if (id === 'assignments') loadAssignments();
 }
 
 /* ══════════════════════════════════════════════
@@ -2033,7 +2090,7 @@ async function loadOverrides() {
     document.querySelector('#overrides-table tbody').innerHTML = '';
     return;
   }
-  statusEl.textContent = 'Loading…';
+  statusEl.textContent = 'Loading\u2026';
   try {
     var [studentsRes, overridesRes] = await Promise.all([
       teacherFetch('students',         { class_id: selectedClassId }),
@@ -2057,11 +2114,11 @@ function _overrideCellHTML(studentId, moduleKey) {
   var ov = overridesByKey[studentId + '|' + moduleKey];
   var symbol, bg, title;
   if (!ov) {
-    symbol = '⚪'; bg = '#fff'; title = 'Class default — click to force OPEN';
+    symbol = '\u26AA'; bg = '#fff'; title = 'Class default \u2014 click to force OPEN';
   } else if (ov.unlocked) {
-    symbol = '🟢'; bg = '#d1fae5'; title = 'Force OPEN — click to force CLOSED';
+    symbol = '\uD83D\uDFE2'; bg = '#d1fae5'; title = 'Force OPEN \u2014 click to force CLOSED';
   } else {
-    symbol = '🔴'; bg = '#fee2e2'; title = 'Force CLOSED — click to clear (back to default)';
+    symbol = '\uD83D\uDD34'; bg = '#fee2e2'; title = 'Force CLOSED \u2014 click to clear (back to default)';
   }
   return '<td onclick="cycleOverride(\'' + studentId + '\',\'' + moduleKey + '\')" '
     + 'style="text-align:center;cursor:pointer;padding:8px 6px;background:' + bg + ';border:1px solid #e2e8f0;font-size:1rem;user-select:none" '
@@ -2095,7 +2152,6 @@ function renderOverrides() {
 async function cycleOverride(studentId, moduleKey) {
   var key = studentId + '|' + moduleKey;
   var current = overridesByKey[key];
-  // Determine next state.
   var action;
   if (!current) {
     action = { method: 'POST', body: { student_id: studentId, module_key: moduleKey, unlocked: true } };
@@ -2631,6 +2687,156 @@ async function addClass() {
   });
 
   loadAdminData();
+}
+
+/* ══════════════════════════════════════════════
+   ASSIGNMENTS — Create & Manage Practice Tests
+   ══════════════════════════════════════════════ */
+
+function updateAsnTotal() {
+  var inputs = document.querySelectorAll('.asn-std');
+  var total = 0;
+  inputs.forEach(function(inp) { total += parseInt(inp.value) || 0; });
+  var el = document.getElementById('asn-total');
+  el.textContent = 'Total: ' + total + ' questions';
+  el.style.color = (total < 5 || total > 100) ? '#dc2626' : '';
+}
+
+async function loadAssignments() {
+  if (!selectedClassId) {
+    document.getElementById('asn-list').innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8">Select a class to view assignments.</div>';
+    return;
+  }
+  try {
+    var { data, error } = await sb.from('assignments')
+      .select('*')
+      .eq('class_id', selectedClassId)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    renderAssignmentsList(data || []);
+  } catch(e) {
+    showToast('Error loading assignments: ' + e.message);
+  }
+}
+
+function renderAssignmentsList(assignments) {
+  var container = document.getElementById('asn-list');
+  if (!assignments.length) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8">No assignments yet. Create one above.</div>';
+    return;
+  }
+
+  // Count completions from in-memory scores data
+  var html = '';
+  assignments.forEach(function(a) {
+    var targets = typeof a.std_targets === 'string' ? JSON.parse(a.std_targets) : (a.std_targets || {});
+    var totalQ = Object.values(targets).reduce(function(s, n) { return s + n; }, 0);
+
+    // Count unique students who submitted for this assignment
+    var completed = 0;
+    var seen = {};
+    (DATA.scores || []).forEach(function(r) {
+      if (r.assignment_id === a.id && !seen[r.student_name]) {
+        seen[r.student_name] = true;
+        completed++;
+      }
+    });
+
+    var link = window.location.origin + '/sol-prep/practice-test.html?assignmentId=' + a.id;
+    var modeBadge = a.mode === 'fixed'
+      ? '<span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600">Fixed</span>'
+      : '<span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600">Random</span>';
+    var dueStr = a.due_date ? new Date(a.due_date + 'T00:00:00').toLocaleDateString() : '';
+    var retakeStr = a.allow_retake ? 'Retakes allowed' : 'One attempt only';
+
+    html += '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;margin-bottom:12px;background:#fff">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">';
+    html += '<div><strong style="font-size:1.05rem">' + esc(a.title) + '</strong> ' + modeBadge + '</div>';
+    html += '<div style="font-size:.82rem;color:#6b7280">' + completed + ' student' + (completed !== 1 ? 's' : '') + ' completed</div>';
+    html += '</div>';
+    html += '<div style="margin-top:8px;font-size:.85rem;color:#6b7280">';
+    html += totalQ + ' questions &middot; ' + retakeStr;
+    if (dueStr) html += ' &middot; Due ' + dueStr;
+    html += '</div>';
+    html += '<div style="margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html += '<input type="text" value="' + esc(link) + '" readonly style="flex:1;min-width:200px;padding:6px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem;background:#f9fafb;color:#374151">';
+    html += '<button class="btn btn-primary btn-sm" onclick="copyAsnLink(\'' + a.id + '\')">Copy Link</button>';
+    html += '<button class="btn btn-secondary btn-sm" onclick="deleteAssignment(\'' + a.id + '\')" style="color:#dc2626">Delete</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+async function createAssignment() {
+  var title = document.getElementById('asn-title').value.trim();
+  if (!title) { showToast('Please enter an assignment title.'); return; }
+  if (!selectedClassId) { showToast('Please select a class first.'); return; }
+
+  var mode = document.getElementById('asn-mode').value;
+  var allowRetake = document.getElementById('asn-retake').value === 'true';
+  var dueDate = document.getElementById('asn-due').value || null;
+
+  // Build std_targets from form
+  var targets = {};
+  document.querySelectorAll('.asn-std').forEach(function(inp) {
+    var n = parseInt(inp.value) || 0;
+    if (n > 0) targets[inp.dataset.std] = n;
+  });
+  var totalQ = Object.values(targets).reduce(function(s, n) { return s + n; }, 0);
+  if (totalQ < 5 || totalQ > 100) { showToast('Total questions must be between 5 and 100.'); return; }
+
+  var seed = (mode === 'fixed') ? Math.floor(Math.random() * 2147483647) : null;
+
+  try {
+    var { data, error } = await sb.from('assignments').insert({
+      class_id: selectedClassId,
+      teacher_id: teacher.id,
+      title: title,
+      mode: mode,
+      seed: seed,
+      question_count: totalQ,
+      std_targets: targets,
+      allow_retake: allowRetake,
+      due_date: dueDate
+    }).select();
+    if (error) throw error;
+
+    var newId = data && data[0] ? data[0].id : '';
+    var link = window.location.origin + '/sol-prep/practice-test.html?assignmentId=' + newId;
+    showToast('Assignment created! Link copied to clipboard.');
+    try { navigator.clipboard.writeText(link); } catch(e) {}
+
+    // Reset form
+    document.getElementById('asn-title').value = '';
+    document.getElementById('asn-due').value = '';
+    loadAssignments();
+  } catch(e) {
+    showToast('Error creating assignment: ' + e.message);
+  }
+}
+
+function copyAsnLink(id) {
+  var link = window.location.origin + '/sol-prep/practice-test.html?assignmentId=' + id;
+  navigator.clipboard.writeText(link).then(function() {
+    showToast('Link copied to clipboard!');
+  }).catch(function() {
+    showToast('Copy failed — select the link manually.');
+  });
+}
+
+async function deleteAssignment(id) {
+  if (!confirm('Delete this assignment? Student scores will be kept but the link will stop working.')) return;
+  try {
+    var { error } = await sb.from('assignments').update({ is_active: false }).eq('id', id);
+    if (error) throw error;
+    showToast('Assignment deleted.');
+    loadAssignments();
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
 }
 
 /* ══════════════════════════════════════════════

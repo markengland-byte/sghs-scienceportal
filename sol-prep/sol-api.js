@@ -695,6 +695,22 @@ var solAPI = (function() {
       .catch(function() { return null; });
   }
 
+  // ── ASSIGNMENTS ───────────────────────────────────────────────
+  // Fetch an active assignment's config so practice-test.html can
+  // apply the teacher's settings (mode, seed, std_targets, etc.).
+  function getAssignment(assignmentId) {
+    if (!assignmentId) return Promise.resolve(null);
+    return _rest('GET', 'assignments', {
+      query: 'id=eq.' + encodeURIComponent(assignmentId)
+        + '&is_active=eq.true'
+        + '&select=title,mode,seed,question_count,std_targets,allow_retake,due_date'
+        + '&limit=1'
+    })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(rows) { return (rows && rows[0]) || null; })
+    .catch(function() { return null; });
+  }
+
   // ── DSM (Dynamic Study Modules) ───────────────────────────────
   // Fetch published DSM questions for a given standard.
   // Bounded by a 5s wall-clock timeout: if Supabase doesn't respond in
@@ -930,6 +946,7 @@ var solAPI = (function() {
     getAllowRetakes: function() { return _allowRetakes; },
     getMasteryThreshold: function() { return _masteryThreshold; },
     hasPriorPracticeScore: hasPriorPracticeScore,
+    getAssignment: getAssignment,
     hasPriorScore: hasPriorScore,
     lookupScoreStrict: lookupScoreStrict
   };

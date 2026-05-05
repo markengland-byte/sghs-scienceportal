@@ -260,13 +260,36 @@ const TOTAL_Q = 50;
 var assignmentId = '';
 var assignmentData = null;  // { mode, seed, stdTargets, questionCount, allowRetake, title }
 
-// Check URL params for assignment
-(function checkAssignment() {
+// Check URL params for assignment and fetch config from Supabase
+var _assignmentReady = (function checkAssignment() {
   var params = new URLSearchParams(window.location.search);
   var aId = params.get('assignmentId');
-  if (!aId) return;
+  if (!aId) return Promise.resolve();
   assignmentId = aId;
-  // Assignment fetching will be added in Phase 2
+
+  return solAPI.getAssignment(aId).then(function(a) {
+    if (!a) { console.warn('Assignment not found or inactive:', aId); return; }
+    assignmentData = {
+      mode: a.mode || 'random',
+      seed: a.seed || null,
+      stdTargets: a.std_targets || null,
+      questionCount: a.question_count || 50,
+      allowRetake: a.allow_retake !== false,
+      title: a.title || 'Practice Test',
+      dueDate: a.due_date || null
+    };
+    // Show assignment title in the page header
+    var heroTitle = document.querySelector('.hero h1, .test-title');
+    if (heroTitle && assignmentData.title) heroTitle.textContent = assignmentData.title;
+    // Due date warning
+    if (assignmentData.dueDate && new Date(assignmentData.dueDate + 'T23:59:59') < new Date()) {
+      var warn = document.createElement('div');
+      warn.style.cssText = 'background:#fef2f2;border:2px solid #dc2626;color:#991b1b;padding:12px 18px;border-radius:10px;margin:12px 0;font-weight:600;text-align:center';
+      warn.textContent = 'This assignment was due ' + assignmentData.dueDate + '. Your score will still be recorded.';
+      var hero = document.querySelector('.hero, .test-header');
+      if (hero) hero.parentNode.insertBefore(warn, hero.nextSibling);
+    }
+  }).catch(function(e) { console.error('Failed to fetch assignment:', e); });
 })();
 
 /* ── SEEDED RANDOM (for fixed-mode assignments) ─── */
@@ -612,6 +635,13 @@ function startTest() {
     setTimeout(startTest, 500);
     return;
   }
+  // Wait for assignment config to finish loading (if applicable)
+  if (_assignmentReady && typeof _assignmentReady.then === 'function') {
+    var ready = _assignmentReady;
+    _assignmentReady = null; // consume — only await once
+    ready.then(function() { startTest(); });
+    return;
+  }
   /* SSO-PROCEED-OVERRIDE */
   /* When SSO is active, prefer the canonical Google display name over
      whatever's in the (disabled) input fields. */
@@ -647,9 +677,10 @@ function startTest() {
     document.getElementById('code-err').style.display = 'block';
     return;
   }
-  // Retake policy: when the class has allow_retakes=false, block any
-  // student who already submitted a practice-test score in this class.
-  var retakePolicy = solAPI.getAllowRetakes ? solAPI.getAllowRetakes() : true;
+  // Retake policy: block if EITHER the class OR the assignment disallows retakes.
+  var classAllows = solAPI.getAllowRetakes ? solAPI.getAllowRetakes() : true;
+  var assignmentAllows = assignmentData ? assignmentData.allowRetake : true;
+  var retakePolicy = classAllows && assignmentAllows;
   var priorP = (!retakePolicy && solAPI.hasPriorPracticeScore)
     ? solAPI.hasPriorPracticeScore(studentName, assignmentId || null)
     : Promise.resolve(null);
