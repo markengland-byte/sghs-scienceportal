@@ -237,15 +237,30 @@ var DSMPlayer = (function() {
     html += '<div class="dsm-question-card" id="dsm-active-card" data-answered="0">';
     html += '<div class="dsm-q-stem-live">' + escDSM(q.question_text) + '</div>';
     html += '<div class="dsm-opts-live">';
+    // Shuffle answer positions so the correct letter varies per question.
     var opts = [
-      { letter: 'A', text: q.option_a, value: 'a' },
-      { letter: 'B', text: q.option_b, value: 'b' },
-      { letter: 'C', text: q.option_c, value: 'c' },
-      { letter: 'D', text: q.option_d, value: 'd' }
+      { text: q.option_a, origValue: 'a' },
+      { text: q.option_b, origValue: 'b' },
+      { text: q.option_c, origValue: 'c' },
+      { text: q.option_d, origValue: 'd' }
     ];
-    opts.forEach(function(o) {
-      html += '<div class="dsm-opt-live" data-value="' + o.value + '" onclick="DSMPlayer.handleAnswer(\'' + o.value + '\')">';
-      html += '<div class="dsm-opt-letter">' + o.letter + '</div>';
+    // Fisher-Yates shuffle
+    for (var si = opts.length - 1; si > 0; si--) {
+      var sj = Math.floor(Math.random() * (si + 1));
+      var tmp = opts[si]; opts[si] = opts[sj]; opts[sj] = tmp;
+    }
+    var displayLetters = ['A', 'B', 'C', 'D'];
+    // Map original correct answer to its new display position
+    var correctOrig = q.correct_answer;
+    var newCorrectValue = '';
+    for (var oi = 0; oi < opts.length; oi++) {
+      if (opts[oi].origValue === correctOrig) newCorrectValue = displayLetters[oi].toLowerCase();
+    }
+    // Store the shuffled correct value on the card so handleAnswer can check it
+    html += '<div class="dsm-shuffled-correct" data-correct="' + newCorrectValue + '" style="display:none"></div>';
+    opts.forEach(function(o, di) {
+      html += '<div class="dsm-opt-live" data-value="' + displayLetters[di].toLowerCase() + '" onclick="DSMPlayer.handleAnswer(\'' + displayLetters[di].toLowerCase() + '\')">';
+      html += '<div class="dsm-opt-letter">' + displayLetters[di] + '</div>';
       html += '<div class="dsm-opt-text">' + escDSM(o.text) + '</div>';
       html += '</div>';
     });
@@ -268,7 +283,9 @@ var DSMPlayer = (function() {
 
     var qIdx = pool[currentIdx];
     var q = questions[qIdx];
-    var correctAns = q.correct_answer;
+    // Read the shuffled correct answer from the DOM (set by showQuestion)
+    var shuffledEl = document.querySelector('.dsm-shuffled-correct');
+    var correctAns = shuffledEl ? shuffledEl.dataset.correct : q.correct_answer;
     var isCorrect = chosen === correctAns;
 
     totalAnswered++;

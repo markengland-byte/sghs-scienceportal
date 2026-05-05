@@ -834,9 +834,26 @@ function renderQuestions() {
   var html = '';
   testQuestions.forEach(function(q, idx) {
     var num = idx + 1;
-    var keys = ['a','b','c','d'];
     var parentStd = q.stdParent || q.std.replace(/[a-z]$/, '');
-    html += '<div class="qq" id="qq-' + idx + '" data-ans="' + q.correct + '" data-std="' + q.std + '" data-idx="' + idx + '">';
+
+    // Shuffle answer positions so the correct letter varies per question.
+    // Skip shuffle for picture-option questions where options are just
+    // letter labels (A/B/C/D or F/G/H/J) referring to diagram images.
+    var isPictureOpt = q.is_picture_option || /^[A-DFGHJ]$/.test((q.options.a || '').trim());
+    var optArr = ['a','b','c','d'].map(function(k) { return { orig: k, text: q.options[k] }; });
+    if (!isPictureOpt) {
+      for (var si = optArr.length - 1; si > 0; si--) {
+        var sj = Math.floor(Math.random() * (si + 1));
+        var tmp = optArr[si]; optArr[si] = optArr[sj]; optArr[sj] = tmp;
+      }
+    }
+    var displayLetters = ['a','b','c','d'];
+    var newCorrect = '';
+    for (var oi = 0; oi < optArr.length; oi++) {
+      if (optArr[oi].orig === q.correct) newCorrect = displayLetters[oi];
+    }
+
+    html += '<div class="qq" id="qq-' + idx + '" data-ans="' + newCorrect + '" data-std="' + q.std + '" data-idx="' + idx + '">';
     html += '<div class="q-num">QUESTION ' + num + ' <span class="q-std">' + parentStd + '</span></div>';
     html += '<div class="q-stem">' + escHtml(q.stem) + '</div>';
     // Native renderings take priority over imageUrl (chart/table fields added in
@@ -850,10 +867,10 @@ function renderQuestions() {
       html += '<div class="q-img"><img src="' + q.imageUrl + '" alt="' + escHtml(q.imageNote || 'Question figure') + '" loading="lazy"></div>';
     }
     html += '<div class="q-opts">';
-    keys.forEach(function(k) {
-      html += '<div class="qo" data-v="' + k + '" onclick="pickAnswer(this)">';
-      html += '<div class="ol">' + k.toUpperCase() + '</div>';
-      html += '<span>' + escHtml(q.options[k]) + '</span>';
+    optArr.forEach(function(opt, di) {
+      html += '<div class="qo" data-v="' + displayLetters[di] + '" onclick="pickAnswer(this)">';
+      html += '<div class="ol">' + displayLetters[di].toUpperCase() + '</div>';
+      html += '<span>' + escHtml(opt.text) + '</span>';
       html += '</div>';
     });
     html += '</div>';
