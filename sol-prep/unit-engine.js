@@ -347,6 +347,10 @@ window.UnitEngine = (function() {
           msgEl.textContent = _state.vocabPassed
             ? '✅ Passed! Mastery Module unlocked.'
             : '❌ Score ' + _state.vqScore + '/' + c.vocab.total + '. Need ' + c.vocab.pass + '/' + c.vocab.total + '. Review missed terms and retry.';
+          if (!_state.vocabPassed) {
+            var retryBtn = document.getElementById('vq-retry-btn');
+            if (retryBtn) retryBtn.style.display = 'inline-block';
+          }
         }
       }
       if (_state.vocabPassed) {
@@ -935,6 +939,8 @@ window.UnitEngine = (function() {
         _initDSMPlayer();
       } else {
         msgEl.textContent = '❌ Score ' + score + '/' + c.vocab.total + '. Need ' + c.vocab.pass + '/' + c.vocab.total + '. Review missed terms and retry.';
+        var retryBtn = document.getElementById('vq-retry-btn');
+        if (retryBtn) retryBtn.style.display = 'inline-block';
       }
     }
     _scheduleSave();
