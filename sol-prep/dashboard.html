@@ -1498,13 +1498,35 @@ function renderHeatmap() {
     masteryByStudent[s.student_name][parent] = true;
   });
 
-  // Build the union set of standards: practice-test-tagged + any mastery passes.
+  // Module-level Practice Test score rows. Used as a fallback when a
+  // student's quiz_detail rows are all NULL standard (typically pre-5/3
+  // walks before per-question std capture went live). The cell renders
+  // with the unit's overall pct rather than a per-substandard rollup —
+  // less granular but at least the student appears on the heatmap.
+  // scores comes back order=created_at.desc; first match per (student,
+  // parent) wins, so a recent retake replaces an older score.
+  var practiceScoreByStudent = {};
+  scores.forEach(function(s) {
+    if (s.lesson !== 'Practice Test') return;
+    var parent = moduleToParentStd(s.module);
+    if (!parent) return;
+    if (!practiceScoreByStudent[s.student_name]) practiceScoreByStudent[s.student_name] = {};
+    if (practiceScoreByStudent[s.student_name][parent] == null) {
+      practiceScoreByStudent[s.student_name][parent] = s.pct;
+    }
+  });
+
+  // Build the union set of standards: practice-test-tagged + any mastery
+  // passes + score-row fallbacks.
   var stdSet = {};
   detail.forEach(function(r) {
     if (r.standard) stdSet[r.standard.replace(/[a-z]$/i, '')] = true;
   });
   Object.keys(masteryByStudent).forEach(function(name) {
     Object.keys(masteryByStudent[name]).forEach(function(p) { stdSet[p] = true; });
+  });
+  Object.keys(practiceScoreByStudent).forEach(function(name) {
+    Object.keys(practiceScoreByStudent[name]).forEach(function(p) { stdSet[p] = true; });
   });
   var standards = Object.keys(stdSet).sort();
 
@@ -1533,12 +1555,12 @@ function renderHeatmap() {
     if (r.is_correct === true || r.is_correct === 'true') studentData[name][parent].correct++;
   });
 
-  // Roster = union of students with practice data OR mastery passes.
-  // A student who's only passed Mastery still shows up — the heatmap is a
-  // standard-coverage view, not a practice-test-only view.
+  // Roster = union of students with practice detail OR mastery passes
+  // OR practice-test score-row fallbacks.
   var rosterSet = {};
   Object.keys(studentData).forEach(function(n) { rosterSet[n] = true; });
   Object.keys(masteryByStudent).forEach(function(n) { rosterSet[n] = true; });
+  Object.keys(practiceScoreByStudent).forEach(function(n) { rosterSet[n] = true; });
   var studentNames = Object.keys(rosterSet).sort();
 
   var tbody = '';
@@ -1549,21 +1571,28 @@ function renderHeatmap() {
     standards.forEach(function(s) {
       var d = studentData[name] && studentData[name][s];
       var passedMastery = !!(masteryByStudent[name] && masteryByStudent[name][s]);
+      var fallbackPct = practiceScoreByStudent[name] && practiceScoreByStudent[name][s];
       var check = passedMastery ? '<span class="hm-master" title="Passed Mastery Module">&#10003;</span>' : '';
 
-      if (!d || d.total === 0) {
-        // No practice test for this standard. Mastery-only cell vs empty.
-        if (passedMastery) {
-          tbody += '<td><span class="hm-cell hm-mastery-only" title="Passed Mastery Module — Practice Test not yet taken">&#10003;</span></td>';
-        } else {
-          tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
-        }
-      } else {
+      if (d && d.total > 0) {
+        // Per-question rollup (most accurate)
         var pct = Math.round(100 * d.correct / d.total);
         var cls = pct >= 80 ? 'hm-green' : pct >= 60 ? 'hm-yellow' : 'hm-red';
         tbody += '<td><span class="hm-cell ' + cls + '">' + pct + '%' + check + '</span></td>';
         totalCorrect += d.correct;
         totalAll += d.total;
+      } else if (fallbackPct != null) {
+        // Score-row fallback (no per-question detail tagged for this student/standard)
+        var pct2 = Math.round(fallbackPct);
+        var cls2 = pct2 >= 80 ? 'hm-green' : pct2 >= 60 ? 'hm-yellow' : 'hm-red';
+        tbody += '<td><span class="hm-cell ' + cls2 + '" title="Practice Test overall — per-question detail not tagged">' + pct2 + '%' + check + '</span></td>';
+        // Approximate the rollup contribution as if it were a 20-question test.
+        totalCorrect += Math.round(pct2 / 100 * 20);
+        totalAll += 20;
+      } else if (passedMastery) {
+        tbody += '<td><span class="hm-cell hm-mastery-only" title="Passed Mastery Module — Practice Test not yet taken">&#10003;</span></td>';
+      } else {
+        tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
       }
     });
 
