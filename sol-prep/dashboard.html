@@ -148,6 +148,10 @@ tr:hover td{background:#f8fafc}
 .hm-yellow{background:#fef3c7;color:#92400e}
 .hm-red{background:#fee2e2;color:#991b1b}
 .hm-gray{background:#f1f5f9;color:#94a3b8}
+.hm-mastery-only{background:#cffafe;color:#0e7490}
+.hm-master{display:inline-block;margin-left:4px;color:#15803d;font-weight:900}
+.hm-legend{padding:8px 20px;border-bottom:1px solid #e2e8f0;font-size:.72rem;color:#64748b;line-height:1.5}
+.hm-legend .lg-swatch{display:inline-block;padding:1px 7px;border-radius:3px;font-weight:700;font-size:.7rem;vertical-align:middle}
 
 /* Chart containers */
 .chart-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:20px;margin-bottom:24px}
@@ -451,6 +455,15 @@ tr:hover td{background:#f8fafc}
     <!-- Standard Mastery Heatmap -->
     <div class="heatmap-wrap" id="heatmap-section">
       <h3>Standard Mastery Heatmap</h3>
+      <div class="hm-legend">
+        Cells show <strong>Practice Test %</strong> by SOL standard.
+        <span class="lg-swatch hm-green">80+</span>
+        <span class="lg-swatch hm-yellow">60–79</span>
+        <span class="lg-swatch hm-red">&lt;60</span>
+        <span class="lg-swatch hm-mastery-only"><span class="hm-master">✓</span></span>
+        = passed Mastery Module (no Practice Test yet).
+        A <span class="hm-master" style="margin:0">✓</span> next to a percentage means the student passed Mastery for that standard too.
+      </div>
       <table class="heatmap" id="heatmap-table">
         <thead><tr><th>Student</th></tr></thead>
         <tbody></tbody>
@@ -1453,40 +1466,62 @@ function renderAnalytics() {
   renderMostMissed();
 }
 
-/* ── STANDARD MASTERY HEATMAP ── */
-function renderHeatmap() {
-  var detail = DATA.quizDetail;
-  if (!detail.length) {
-    document.getElementById('heatmap-table').querySelector('tbody').innerHTML =
-      '<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:40px">No question data yet.</td></tr>';
-    document.getElementById('heatmap-table').querySelector('thead tr').innerHTML = '<th>Student</th>';
-    return;
-  }
+/* ── STANDARD MASTERY HEATMAP ──
+   Two data sources merged into one cell-per-(student × parent standard):
+   1. Practice Test answers from quiz_detail (the % score by standard).
+   2. DSM Mastery Module passes from scores (a checkmark when the student
+      cleared Mastery for that standard's parent unit).
 
-  // Get all standards present in data
+   A student who's passed Mastery but not yet completed Practice Test
+   shows as a teal cell with just the checkmark. A student who's done
+   both shows the percentage with a checkmark appended. The Overall
+   column still aggregates Practice Test only — Mastery is a binary
+   indicator and doesn't roll into a numeric average. */
+function renderHeatmap() {
+  var detail = DATA.quizDetail || [];
+  var scores = DATA.scores || [];
+
+  // Map Mastery Module score row → parent standard. Each unit's DSM is
+  // mapped to one parent standard ("Unit 4: ..." → BIO.4). Passing the
+  // Mastery Module writes a row with lesson='Mastery Module' and pct
+  // ≥ threshold (only successful passes get persisted). Presence ⇒ pass.
+  function moduleToParentStd(name) {
+    var m = name && name.match(/Unit\s+(\d+)/);
+    return m ? 'BIO.' + m[1] : null;
+  }
+  var masteryByStudent = {};
+  scores.forEach(function(s) {
+    if (s.lesson !== 'Mastery Module') return;
+    var parent = moduleToParentStd(s.module);
+    if (!parent) return;
+    if (!masteryByStudent[s.student_name]) masteryByStudent[s.student_name] = {};
+    masteryByStudent[s.student_name][parent] = true;
+  });
+
+  // Build the union set of standards: practice-test-tagged + any mastery passes.
   var stdSet = {};
   detail.forEach(function(r) {
-    if (r.standard) {
-      var parent = r.standard.replace(/[a-z]$/i, '');
-      stdSet[parent] = true;
-    }
+    if (r.standard) stdSet[r.standard.replace(/[a-z]$/i, '')] = true;
+  });
+  Object.keys(masteryByStudent).forEach(function(name) {
+    Object.keys(masteryByStudent[name]).forEach(function(p) { stdSet[p] = true; });
   });
   var standards = Object.keys(stdSet).sort();
 
   if (standards.length === 0) {
-    // Fall back to module-based grouping if no standards tagged
     document.getElementById('heatmap-table').querySelector('tbody').innerHTML =
-      '<tr><td colspan="2" style="text-align:center;color:#94a3b8;padding:40px">No standard tags on questions. Heatmap requires quiz questions with BIO standard tags.</td></tr>';
+      '<tr><td colspan="2" style="text-align:center;color:#94a3b8;padding:40px">No standard tags on questions yet. Heatmap fills in as students complete tagged Practice Tests or pass Mastery Modules.</td></tr>';
+    document.getElementById('heatmap-table').querySelector('thead tr').innerHTML = '<th>Student</th>';
     return;
   }
 
-  // Build header
+  // Header
   var thead = '<th>Student</th>';
   standards.forEach(function(s) { thead += '<th>' + esc(s) + '</th>'; });
   thead += '<th>Overall</th>';
   document.getElementById('heatmap-table').querySelector('thead tr').innerHTML = thead;
 
-  // Aggregate: student → standard → { correct, total }
+  // Aggregate practice-test data: student → standard → { correct, total }
   var studentData = {};
   detail.forEach(function(r) {
     if (!r.standard) return;
@@ -1495,35 +1530,48 @@ function renderHeatmap() {
     if (!studentData[name]) studentData[name] = {};
     if (!studentData[name][parent]) studentData[name][parent] = { correct: 0, total: 0 };
     studentData[name][parent].total++;
-    var isCorrect = r.is_correct === true || r.is_correct === 'true';
-    if (isCorrect) studentData[name][parent].correct++;
+    if (r.is_correct === true || r.is_correct === 'true') studentData[name][parent].correct++;
   });
 
-  var studentNames = Object.keys(studentData).sort();
-  var tbody = '';
+  // Roster = union of students with practice data OR mastery passes.
+  // A student who's only passed Mastery still shows up — the heatmap is a
+  // standard-coverage view, not a practice-test-only view.
+  var rosterSet = {};
+  Object.keys(studentData).forEach(function(n) { rosterSet[n] = true; });
+  Object.keys(masteryByStudent).forEach(function(n) { rosterSet[n] = true; });
+  var studentNames = Object.keys(rosterSet).sort();
 
+  var tbody = '';
   studentNames.forEach(function(name) {
     tbody += '<tr><td>' + esc(name) + '</td>';
     var totalCorrect = 0, totalAll = 0;
 
     standards.forEach(function(s) {
-      var d = studentData[name][s];
+      var d = studentData[name] && studentData[name][s];
+      var passedMastery = !!(masteryByStudent[name] && masteryByStudent[name][s]);
+      var check = passedMastery ? '<span class="hm-master" title="Passed Mastery Module">&#10003;</span>' : '';
+
       if (!d || d.total === 0) {
-        tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
+        // No practice test for this standard. Mastery-only cell vs empty.
+        if (passedMastery) {
+          tbody += '<td><span class="hm-cell hm-mastery-only" title="Passed Mastery Module — Practice Test not yet taken">&#10003;</span></td>';
+        } else {
+          tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
+        }
       } else {
         var pct = Math.round(100 * d.correct / d.total);
         var cls = pct >= 80 ? 'hm-green' : pct >= 60 ? 'hm-yellow' : 'hm-red';
-        tbody += '<td><span class="hm-cell ' + cls + '">' + pct + '%</span></td>';
+        tbody += '<td><span class="hm-cell ' + cls + '">' + pct + '%' + check + '</span></td>';
         totalCorrect += d.correct;
         totalAll += d.total;
       }
     });
 
-    // Overall column
+    // Overall column = practice-test class average only (mastery is binary).
     if (totalAll > 0) {
       var overall = Math.round(100 * totalCorrect / totalAll);
-      var cls = overall >= 80 ? 'hm-green' : overall >= 60 ? 'hm-yellow' : 'hm-red';
-      tbody += '<td><span class="hm-cell ' + cls + '">' + overall + '%</span></td>';
+      var ovrCls = overall >= 80 ? 'hm-green' : overall >= 60 ? 'hm-yellow' : 'hm-red';
+      tbody += '<td><span class="hm-cell ' + ovrCls + '">' + overall + '%</span></td>';
     } else {
       tbody += '<td><span class="hm-cell hm-gray">&mdash;</span></td>';
     }
