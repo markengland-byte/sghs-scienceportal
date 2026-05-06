@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
 
   try {
     const rows = await serviceQuery(
-      `/rest/v1/quiz_detail?select=id,class_id,student_id,student_name,module,lesson,q_num,question_text,student_answer,correct_answer,is_correct,created_at&${filters.join('&')}&order=created_at.desc&limit=${limit}`
+      `/rest/v1/quiz_detail?select=id,class_id,student_id,student_name,module,lesson,q_num,question_text,student_answer,correct_answer,is_correct,standard,created_at&${filters.join('&')}&order=created_at.desc&limit=${limit}`
     );
     return res.status(200).json({ rows, teacher: ctx.teacher });
   } catch (e) {
