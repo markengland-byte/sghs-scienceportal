@@ -1357,7 +1357,6 @@ window.UnitEngine = (function() {
     goTo:           goTo,
     retakePractice: retakePractice,
     submitFinalScore: submitFinalScore,
-    showDangerZone:   _showDangerZone,
     showToast:        showToast,
     markAnswered:     markAnswered,
     retryVocab:       retryVocab,

@@ -940,8 +940,6 @@ var solAPI = (function() {
     clearClass: clearClass,
     getClassId: function() { return _classId; },
     getClassCode: function() { return _classCode; },
-    getClassName: function() { return _className; },
-    getTeacherName: function() { return _teacherName; },
     getExamDate: function() { return _examDate ? new Date(_examDate + 'T00:00:00') : null; },
     getDSMQuestions: getDSMQuestions,
     createDSMAttempt: createDSMAttempt,
@@ -955,9 +953,6 @@ var solAPI = (function() {
     getStudentId: function() { return _studentId; },
     getStudentEmail: function() { return _studentEmail; },
     getStudentDisplayName: function() { return _studentDisplayName; },
-    // Offline buffer (failed _postWithRetry writes)
-    drainBuffer: _drainBuffer,
-    getPendingWrites: function() { return _readBuffer().length; },
     // Cross-device progress sync
     saveProgress: saveProgress,
     getProgress: getProgress,
