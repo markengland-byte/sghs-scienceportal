@@ -1993,15 +1993,24 @@ function renderGradebook() {
       if (c.kind === 'unit-practice') {
         var p = _gbLatestForUnit(sRows, c.unit, 'Practice Test');
         var m = _gbLatestForUnit(sRows, c.unit, 'Mastery Module');
-        var prefix = (m && Number(m.pct) >= 100) ? '★ ' : '';
+        // Any Mastery Module row = passed (DSM player only persists on
+        // threshold-pass, configurable per-module 80–100). Earlier this
+        // gated on pct≥100, which marked legitimate passes at 92–96 as
+        // "quit" — Breonna Arnett's whole Mastery history was hidden.
+        var prefix = m ? '★ ' : '';
         html += _gbCell(p, prefix);
       } else if (c.kind === 'unit-pretest') {
         html += _gbCell(_gbLatestForUnit(sRows, c.unit, 'Pretest'));
       } else if (c.kind === 'unit-mastery') {
         var mm = _gbLatestForUnit(sRows, c.unit, 'Mastery Module');
-        if (!mm) { html += '<td class="gb-empty">—</td>'; }
-        else if (Number(mm.pct) >= 100) { html += '<td class="gb-green" title="' + esc(formatTimestamp(mm.created_at)) + '">★ done</td>'; }
-        else { html += '<td class="gb-red" title="quit">—</td>'; }
+        if (!mm) {
+          html += '<td class="gb-empty">—</td>';
+        } else {
+          // Show the actual pct so 92%-passes are visible. Tooltip carries
+          // the timestamp. ★ stays the visual cue for "Mastery cleared."
+          var mPct = Math.round(Number(mm.pct) || 0);
+          html += '<td class="gb-green" title="' + esc(formatTimestamp(mm.created_at)) + '">★ ' + mPct + '%</td>';
+        }
       } else {
         html += _gbCell(_gbLatestForAssignment(sRows, c.id));
       }
