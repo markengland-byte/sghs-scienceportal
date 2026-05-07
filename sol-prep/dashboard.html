@@ -325,7 +325,7 @@ tr:hover td{background:#f8fafc}
         <input class="filter" type="text" id="gradebook-filter" placeholder="Filter by student..." oninput="renderGradebook()">
         <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:#475569;cursor:pointer;user-select:none">
           <input type="checkbox" id="gradebook-show-all" onchange="renderGradebook()">
-          Show pretests + mastery as separate columns
+          Include Pretest columns
         </label>
         <button class="btn-export" onclick="exportGradebookCSV()">Export CSV</button>
       </div>
@@ -1966,13 +1966,17 @@ function renderGradebook() {
   // Assignment columns from scores with assignment_id set
   var assignments = _gbAssignmentColumns(rows);
 
-  // Build column list
+  // Build column list. Mastery + Practice both shown by default —
+  // raw pct values support correlation analysis and sit naturally next
+  // to each other (Mastery is the formative gate, Practice is summative).
+  // Pretest is opt-in via the checkbox since it's a pre-teaching diagnostic
+  // and would clutter daily grading workflow.
   var cols = [];
   GRADEBOOK_UNITS.forEach(function(u) {
+    cols.push({ kind: 'unit-mastery', unit: u, label: 'U' + u + ' Mastery' });
     cols.push({ kind: 'unit-practice', unit: u, label: 'U' + u + ' Practice' });
     if (showAll) {
       cols.push({ kind: 'unit-pretest', unit: u, label: 'U' + u + ' Pretest' });
-      cols.push({ kind: 'unit-mastery', unit: u, label: 'U' + u + ' Mastery' });
     }
   });
   assignments.forEach(function(a) {
