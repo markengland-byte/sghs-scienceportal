@@ -966,7 +966,7 @@ function pickAnswer(opt) {
 
   // Track detail
   var q = testQuestions[idx];
-  questionDetail.push({
+  var detail = {
     qNum: idx + 1,
     std: std,
     questionText: q.stem,
@@ -975,7 +975,25 @@ function pickAnswer(opt) {
     isCorrect: isCorrect,
     correct: correctKey,
     chosen: chosen
-  });
+  };
+  questionDetail.push(detail);
+
+  // Real-time per-question write — each answer hits quiz_detail immediately.
+  if (solAPI.submitOneAnswer) {
+    var lessonLabel = assignmentData ? assignmentData.title : 'Practice Test (Generated)';
+    solAPI.submitOneAnswer({
+      student: studentName,
+      module: 'SOL Prep \u2014 Practice Test Generator',
+      lesson: lessonLabel,
+      qNum: detail.qNum,
+      questionText: detail.questionText,
+      studentAnswer: detail.studentAnswer,
+      correctAnswer: detail.correctAnswer,
+      isCorrect: detail.isCorrect,
+      std: detail.std,
+      assignmentId: assignmentId || null
+    });
+  }
 
   saveProgressLocal();
   updateProgress();
@@ -990,8 +1008,9 @@ function pickAnswer(opt) {
     }
   }
 
-  // All done?
+  // All done — auto-submit summary score then show results
   if (answered === testQuestions.length) {
+    autoSubmitScore();
     setTimeout(showResults, 600);
   }
 }
@@ -1090,11 +1109,16 @@ function showResults() {
   localStorage.setItem('sol_practice_last_score', correct + '/' + testQuestions.length);
   localStorage.setItem('sol_practice_last_pct', pct);
 
-  // If retakes are disabled, hide the "Generate New Test" button.
-  if (solAPI.getAllowRetakes && !solAPI.getAllowRetakes()) {
-    var newBtn = document.querySelector('button[onclick="newTest()"]');
-    if (newBtn) newBtn.style.display = 'none';
+  // Score is already auto-submitted — update the Submit button to reflect this.
+  var submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    submitBtn.textContent = '\u2705 Score Submitted';
+    submitBtn.disabled = true;
   }
+
+  // Hide retake/"Generate New Test" — score is already in the database.
+  var newBtn = document.querySelector('button[onclick="newTest()"]');
+  if (newBtn) newBtn.style.display = 'none';
 
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1115,10 +1139,58 @@ function send(payload) {
   return solAPI.submit(payload) || Promise.resolve();
 }
 
-/* ── SUBMIT SCORE ─── */
-function submitScore() {
+/* ── AUTO-SUBMIT (on last question answered) ─── */
+function autoSubmitScore() {
   if (submitted || !studentName) return;
   submitted = true;
+
+  var pct = Math.round((correct / testQuestions.length) * 100);
+  var lessonLabel = assignmentData ? assignmentData.title : 'Practice Test (Generated)';
+
+  // Summary score
+  send({
+    action: 'score',
+    lesson: lessonLabel,
+    score: correct,
+    total: testQuestions.length,
+    pct: pct,
+    timeOnQuiz: Math.round((Date.now() - testStart) / 1000),
+    assignmentId: assignmentId || ''
+  });
+
+  // Batch quizDetail fallback for any per-question writes that failed
+  send({
+    action: 'quizDetail',
+    lesson: lessonLabel,
+    assignmentId: assignmentId || '',
+    questions: questionDetail.map(function(q) {
+      return {
+        qNum: q.qNum, questionText: q.questionText,
+        studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer,
+        isCorrect: q.isCorrect
+      };
+    })
+  });
+
+  // Activity log
+  var stdBreakdown = {};
+  ['BIO.1','BIO.2','BIO.3','BIO.4','BIO.5','BIO.6','BIO.7','BIO.8'].forEach(function(s) {
+    stdBreakdown[s] = { correct: stdCorrect[s] || 0, total: stdTotal[s] || 0 };
+  });
+  send({
+    action: 'activity', lesson: lessonLabel,
+    event: 'submit_score',
+    duration: Math.round((Date.now() - testStart) / 1000),
+    stdBreakdown: stdBreakdown
+  });
+
+  clearProgressAll();
+}
+
+/* ── LEGACY SUBMIT (fallback for restored sessions) ─── */
+function submitScore() {
+  if (submitted || !studentName) return;
+  autoSubmitScore();
 
   var pct = Math.round((correct / testQuestions.length) * 100);
 

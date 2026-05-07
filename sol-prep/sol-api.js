@@ -695,6 +695,31 @@ var solAPI = (function() {
       .catch(function() { return null; });
   }
 
+  // ── REAL-TIME PER-QUESTION SUBMISSION ─────────────────────────
+  // Writes a single quiz_detail row the moment a student answers.
+  // Best-effort (non-blocking, no retry) so it doesn't slow the quiz.
+  // The batch quizDetail submission at the end serves as a fallback
+  // for any per-question writes that silently failed.
+  function submitOneAnswer(payload) {
+    if (!_classId) return Promise.resolve();
+    var auid = _authUid();
+    return _postBestEffort('quiz_detail', {
+      class_id: _classId,
+      student_id: _studentId,
+      auth_user_id: auid,
+      student_name: payload.student || '',
+      module: payload.module || '',
+      lesson: payload.lesson || '',
+      q_num: payload.qNum || 0,
+      question_text: payload.questionText || '',
+      student_answer: payload.studentAnswer || '',
+      correct_answer: payload.correctAnswer || '',
+      is_correct: !!payload.isCorrect,
+      standard: payload.std || null,
+      assignment_id: payload.assignmentId || null
+    }, 'quiz answer');
+  }
+
   // ── ASSIGNMENTS ───────────────────────────────────────────────
   // Fetch an active assignment's config so practice-test.html can
   // apply the teacher's settings (mode, seed, std_targets, etc.).
@@ -947,6 +972,7 @@ var solAPI = (function() {
     getMasteryThreshold: function() { return _masteryThreshold; },
     hasPriorPracticeScore: hasPriorPracticeScore,
     getAssignment: getAssignment,
+    submitOneAnswer: submitOneAnswer,
     hasPriorScore: hasPriorScore,
     lookupScoreStrict: lookupScoreStrict
   };

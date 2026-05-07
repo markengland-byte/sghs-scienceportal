@@ -1004,24 +1004,48 @@ window.UnitEngine = (function() {
 
     var stemEl = qq.querySelector('.q-stem');
     var stem = stemEl ? stemEl.textContent.trim() : '';
+    // Capture answer text from the DOM for the detail record
+    var chosenText = '', correctText = '';
+    qq.querySelectorAll('.qo').forEach(function(o) {
+      var txt = o.textContent.replace(/^[A-D]\s*/, '').trim();
+      if (o.dataset.v === chosen) chosenText = txt;
+      if (o.dataset.v === ans) correctText = txt;
+    });
+    var isCorrect = chosen === ans;
+
     _state.questionDetail.push({
       std: standard, qNum: String(qNum), chosen: chosen, correct: ans,
-      isCorrect: chosen === ans, questionText: stem,
-      correctAnswer: '', studentAnswer: ''
+      isCorrect: isCorrect, questionText: stem,
+      correctAnswer: correctText, studentAnswer: chosenText
     });
 
+    // Real-time per-question write — each answer hits quiz_detail immediately.
+    // Best-effort (non-blocking); batch fallback sent with summary score.
+    if (solAPI.submitOneAnswer) {
+      solAPI.submitOneAnswer({
+        student: _state.studentName,
+        module: _config.moduleName,
+        lesson: 'Practice Test',
+        qNum: qNum,
+        questionText: stem,
+        studentAnswer: chosenText,
+        correctAnswer: correctText,
+        isCorrect: isCorrect,
+        std: standard
+      });
+    }
+
     _state.pracAnswered++;
-    if (chosen === ans) _state.pracCorrect++;
+    if (isCorrect) _state.pracCorrect++;
     else if (standard) _state.missedStds[standard] = (_state.missedStds[standard] || 0) + 1;
 
     var progMsg = document.getElementById('sol-progress-msg');
     if (progMsg) progMsg.textContent = _state.pracAnswered + ' of ' + _config.totalSolQ + ' answered';
 
     if (_state.pracAnswered >= _config.totalSolQ) {
+      // Auto-submit summary score — no manual Submit button needed.
+      _autoSubmitPracticeScore();
       _showDangerZone();
-      // Auto-scroll to the danger-zone summary after the explanation
-      // animation settles. Original behavior; gives the student a beat
-      // before the page jumps.
       setTimeout(function() {
         var dz = document.getElementById('dz-result');
         if (dz) dz.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1085,38 +1109,28 @@ window.UnitEngine = (function() {
     } catch (e) {}
   }
 
-  function submitFinalScore() {
-    if (_state.pracAnswered < _config.totalSolQ) {
-      showToast('Answer all ' + _config.totalSolQ + ' questions first!');
-      return;
-    }
-    // Audit #2: re-entry guard. Without this, a student who sees the
-    // 'retry?' state and clicks fast could fire a second submitFinalScore
-    // while the first is still in flight.
-    if (_state.practiceSubmitInFlight) {
-      showToast('Submission in progress — please wait.');
-      return;
-    }
-    _state.practiceSubmitInFlight = true;
+  // Auto-submit practice score when the last question is answered.
+  // No manual Submit button — the score is recorded the moment the
+  // student finishes. This prevents the retake-before-submit exploit.
+  function _autoSubmitPracticeScore() {
+    if (_state.practiceAlreadySubmitted) return;
+    _state.practiceAlreadySubmitted = true;
+
     var pct = Math.round((_state.pracCorrect / _config.totalSolQ) * 100);
-
-    // Disable the submit button immediately so the student can't double-click.
-    var dzBtn = document.getElementById('dz-submit-btn');
-    if (dzBtn) dzBtn.disabled = true;
-
     var practiceSeconds = _state.practiceStart
       ? Math.round((Date.now() - _state.practiceStart) / 1000)
       : null;
+
+    // Summary score to scores table
     _send({
       action: 'score', lesson: 'Practice Test',
       score: _state.pracCorrect, total: _config.totalSolQ, pct: pct,
       timeOnQuiz: practiceSeconds
     });
-    // Audit #2: only send quizDetail once per practice attempt. If a retry
-    // re-enters submitFinalScore, the score row is safe to retry (sol-api's
-    // _postWithRetry buffers it idempotently from the student's POV) but
-    // quiz_detail rows have no unique constraint — re-sending duplicates
-    // every per-question row in the gradebook.
+
+    // Batch quizDetail fallback — catches any per-question writes that
+    // failed silently. Has duplicates with the real-time writes, but
+    // that's better than missing data.
     if (!_state.practiceQuizDetailSent) {
       _send({
         action: 'quizDetail', lesson: 'Practice Test',
@@ -1124,33 +1138,30 @@ window.UnitEngine = (function() {
       });
       _state.practiceQuizDetailSent = true;
     }
-    _state.unlockedPanels.add(_config.totalPanels - 1);
 
-    // Wait for the score write to land before declaring success/failure.
-    Promise.resolve(_lastScorePromise || Promise.resolve()).then(function(result) {
-      _state.practiceAlreadySubmitted = true;
-      _state.priorPracticeScore = { score: _state.pracCorrect, total: _config.totalSolQ, pct: pct };
-      var rb = document.getElementById('dz-retake-btn');
-      if (rb) rb.style.display = 'none';
-      if (dzBtn) {
-        if (result && result.buffered) {
-          dzBtn.textContent = '✓ Saved offline — will sync on reload';
-        } else if (result) {
-          dzBtn.textContent = '✅ Score Sent!';
-        } else {
-          dzBtn.textContent = '⚠ Save failed — retry?';
-          dzBtn.disabled = false;
-          // Allow another attempt; quizDetail won't re-send (guarded above).
-          _state.practiceSubmitInFlight = false;
-        }
-      }
-      // Don't auto-navigate — student clicks "Continue to Results" via #to-results-btn.
-    });
+    _state.unlockedPanels.add(_config.totalPanels - 1);
+    _state.priorPracticeScore = { score: _state.pracCorrect, total: _config.totalSolQ, pct: pct };
+
+    // Update UI — score is already sent, no Submit button needed
+    var dzBtn = document.getElementById('dz-submit-btn');
+    if (dzBtn) { dzBtn.textContent = '\u2705 Score Submitted'; dzBtn.disabled = true; }
+    var rb = document.getElementById('dz-retake-btn');
+    if (rb) rb.style.display = 'none';
+  }
+
+  // Legacy manual submit — kept as a fallback in case auto-submit
+  // didn't fire (e.g., restored session). Calls _autoSubmitPracticeScore.
+  function submitFinalScore() {
+    if (_state.pracAnswered < _config.totalSolQ) {
+      showToast('Answer all ' + _config.totalSolQ + ' questions first!');
+      return;
+    }
+    _autoSubmitPracticeScore();
   }
 
   function retakePractice() {
     if (_state.practiceAlreadySubmitted) {
-      showToast('Practice test is locked — retake disabled by your teacher.');
+      showToast('Your score has been submitted. Retakes are not available.');
       return;
     }
     _state.pracAnswered = 0;
