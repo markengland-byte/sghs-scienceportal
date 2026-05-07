@@ -73,6 +73,7 @@ window.UnitEngine = (function() {
       // practiceQuizDetailSent persists across reload; in-flight is per-session.
       practiceQuizDetailSent: false,
       practiceSubmitInFlight: false,
+      perQuestionWriteOK: 0,  // count of successful real-time quiz_detail writes
 
       // per-quiz start timestamps (for time_on_quiz metric — set on first interaction)
       pretestStart:  null,
@@ -1020,7 +1021,8 @@ window.UnitEngine = (function() {
     });
 
     // Real-time per-question write — each answer hits quiz_detail immediately.
-    // Best-effort (non-blocking); batch fallback sent with summary score.
+    // Best-effort (non-blocking); batch fallback sent with summary score
+    // only if some writes failed.
     if (solAPI.submitOneAnswer) {
       solAPI.submitOneAnswer({
         student: _state.studentName,
@@ -1032,7 +1034,7 @@ window.UnitEngine = (function() {
         correctAnswer: correctText,
         isCorrect: isCorrect,
         std: standard
-      });
+      }).then(function() { _state.perQuestionWriteOK++; });
     }
 
     _state.pracAnswered++;
@@ -1128,10 +1130,9 @@ window.UnitEngine = (function() {
       timeOnQuiz: practiceSeconds
     });
 
-    // Batch quizDetail fallback — catches any per-question writes that
-    // failed silently. Has duplicates with the real-time writes, but
-    // that's better than missing data.
-    if (!_state.practiceQuizDetailSent) {
+    // Batch quizDetail fallback — only send if some per-question writes
+    // failed. If all real-time writes landed, skip to avoid duplicate rows.
+    if (!_state.practiceQuizDetailSent && _state.perQuestionWriteOK < _state.questionDetail.length) {
       _send({
         action: 'quizDetail', lesson: 'Practice Test',
         questions: _state.questionDetail
@@ -1168,6 +1169,7 @@ window.UnitEngine = (function() {
     _state.pracCorrect = 0;
     _state.questionDetail = [];
     _state.missedStds = {};
+    _state.perQuestionWriteOK = 0;
     document.querySelectorAll('#p' + (_config.totalPanels - 2) + ' .qq').forEach(function(qq) {
       qq.querySelectorAll('.qo').forEach(function(o) {
         o.classList.remove('revealed', 'correct', 'incorrect');

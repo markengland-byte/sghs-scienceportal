@@ -344,6 +344,7 @@ var stdTotal = {};
 var questionDetail = [];
 var testStart = 0;
 var submitted = false;
+var perQuestionWriteOK = 0;  // count of successful real-time quiz_detail writes
 
 /* ── HEARTBEAT-PRESENCE: live-pulse signal ─── */
 // Heartbeat keeps the Live Pulse dashboard accurate while a student
@@ -746,6 +747,7 @@ function actuallyGenerateTest() {
   stdTotal = {};
   questionDetail = [];
   submitted = false;
+  perQuestionWriteOK = 0;
   testStart = Date.now();
   document.getElementById('results-section').style.display = 'none';
   document.getElementById('prog-bar').style.display = 'flex';
@@ -992,7 +994,7 @@ function pickAnswer(opt) {
       isCorrect: detail.isCorrect,
       std: detail.std,
       assignmentId: assignmentId || null
-    });
+    }).then(function() { perQuestionWriteOK++; });
   }
 
   saveProgressLocal();
@@ -1158,19 +1160,22 @@ function autoSubmitScore() {
     assignmentId: assignmentId || ''
   });
 
-  // Batch quizDetail fallback for any per-question writes that failed
-  send({
-    action: 'quizDetail',
-    lesson: lessonLabel,
-    assignmentId: assignmentId || '',
-    questions: questionDetail.map(function(q) {
-      return {
-        qNum: q.qNum, questionText: q.questionText,
-        studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer,
-        isCorrect: q.isCorrect
-      };
-    })
-  });
+  // Batch quizDetail fallback — only send if some per-question writes failed.
+  // If all real-time writes landed, skip to avoid duplicate rows.
+  if (perQuestionWriteOK < questionDetail.length) {
+    send({
+      action: 'quizDetail',
+      lesson: lessonLabel,
+      assignmentId: assignmentId || '',
+      questions: questionDetail.map(function(q) {
+        return {
+          qNum: q.qNum, questionText: q.questionText,
+          studentAnswer: q.studentAnswer, correctAnswer: q.correctAnswer,
+          isCorrect: q.isCorrect, std: q.std
+        };
+      })
+    });
+  }
 
   // Activity log
   var stdBreakdown = {};
@@ -1191,74 +1196,6 @@ function autoSubmitScore() {
 function submitScore() {
   if (submitted || !studentName) return;
   autoSubmitScore();
-
-  var pct = Math.round((correct / testQuestions.length) * 100);
-
-  var lessonLabel = assignmentData ? assignmentData.title : 'Practice Test (Generated)';
-
-  showToast('Saving score\u2026');
-
-  // 1. Score summary — wait for confirmation before showing "saved"
-  var scorePromise = send({
-    action: 'score',
-    lesson: lessonLabel,
-    score: correct,
-    total: testQuestions.length,
-    pct: pct,
-    timeOnQuiz: Math.round((Date.now() - testStart) / 1000),
-    assignmentId: assignmentId || ''
-  });
-
-  // 2. Question detail
-  send({
-    action: 'quizDetail',
-    lesson: lessonLabel,
-    assignmentId: assignmentId || '',
-    questions: questionDetail.map(function(q) {
-      return {
-        qNum: q.qNum,
-        questionText: q.questionText,
-        studentAnswer: q.studentAnswer,
-        correctAnswer: q.correctAnswer,
-        isCorrect: q.isCorrect
-      };
-    })
-  });
-
-  // 3. Standard breakdown
-  var stdBreakdown = {};
-  ['BIO.1','BIO.2','BIO.3','BIO.4','BIO.5','BIO.6','BIO.7','BIO.8'].forEach(function(s) {
-    stdBreakdown[s] = { correct: stdCorrect[s] || 0, total: stdTotal[s] || 0 };
-  });
-  send({
-    action: 'activity',
-    lesson: lessonLabel,
-    event: 'submit_score',
-    duration: Math.round((Date.now() - testStart) / 1000),
-    stdBreakdown: stdBreakdown
-  });
-
-  var btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  // Only confirm "Submitted" once Supabase actually accepts the row.
-  // _postWithRetry surfaces its own "Could not save" toast on failure;
-  // stay silent here to avoid overwriting it.
-  Promise.resolve(scorePromise).then(function(result) {
-    if (result && result.buffered) {
-      // Audit #12: buffered to localStorage; will sync on next page load.
-      btn.textContent = 'Saved offline';
-      showToast('Score saved offline - will sync on next visit');
-      clearProgressAll();
-    } else if (result) {
-      btn.textContent = '\u2705 Score Submitted';
-      showToast('\u2713 Score saved: ' + correct + '/' + testQuestions.length + ' (' + pct + '%)');
-      clearProgressAll();
-    } else {
-      btn.textContent = '\u26A0 Save failed \u2014 retry?';
-      btn.disabled = false;
-      submitted = false;  // allow retry
-    }
-  });
 }
 
 /* ── PAGE EXIT — flush snapshot for cross-device resume ─── */
